@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=SofiOS
+Description=SofiOS
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/sofios
+ScriptFile=/usr/share/plymouth/themes/sofios/sofios.script

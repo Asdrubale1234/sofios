@@ -17,3 +17,13 @@ echo "sofios" > /etc/hostname
 mkdir -p /etc/xdg
 kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.sofios.desktop 2>/dev/null || \
  printf '[KDE]\nLookAndFeelPackage=org.sofios.desktop\n' >> /etc/xdg/kdeglobals
+
+# Niente finestra di benvenuto KDE
+rm -f /etc/xdg/autostart/org.kde.plasma-welcome.desktop
+# Niente portafogli KDE per tutti gli utenti
+mkdir -p /etc/xdg
+printf '[Wallet]\nEnabled=false\nFirst Use=false\n' > /etc/xdg/kwalletrc
+# Schermata di avvio SofiOS (Plymouth)
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+  plymouth-set-default-theme -R sofios || true
+fi

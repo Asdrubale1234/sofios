@@ -1,0 +1,15 @@
+#!/bin/sh
+# Menu di avvio della chiavetta: SofiOS al posto di Debian (gira nella cartella di costruzione)
+set -e
+[ -d binary ] || exit 0
+find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*.txt' \) 2>/dev/null | while read -r f; do
+  sed -i -e 's/Debian GNU\/Linux [0-9.]* ([a-z]*) amd64/SofiOS/g' -e 's/Debian GNU\/Linux/SofiOS/g' -e 's/Debian Live/SofiOS/g' -e 's/Debian/SofiOS/g' "$f"
+done
+exit 0
+find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*.txt' \) 2>/dev/null | while read -r f; do
+  sed -i -e 's/Debian GNU\/Linux [0-9.]* ([a-z]*) amd64/SofiOS/g' -e 's/Debian GNU\/Linux/SofiOS/g' -e 's/Debian Live/SofiOS/g' -e 's/Debian/SofiOS/g' "$f"
+done
+for img in binary/isolinux/splash.png binary/boot/grub/live-theme/background.png; do
+  [ -f "$img" ] && cp /work/live/config/includes.chroot_after_packages/usr/share/wallpapers/SofiOS/contents/images/1920x1080.png "$img" 2>/dev/null || true
+done
+exit 0
