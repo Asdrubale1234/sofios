@@ -1,0 +1,17 @@
+#!/bin/bash
+# Toglie i programmi tecnici non richiesti. Se la rimozione porterebbe via parti essenziali
+# del sistema, quel programma resta (e viene solo nascosto dal menu dal passo successivo).
+export DEBIAN_FRONTEND=noninteractive
+PROTETTI='kde-plasma-desktop plasma-desktop plasma-workspace task-italian-kde-desktop task-kde-desktop calamares sddm firefox-esr libreoffice-writer libreoffice-calc dolphin okular gwenview konsole kwrite kcalc plasma-discover plasma-nm plasma-pa systemsettings kwin-wayland kwin-x11 live-boot live-config'
+for p in kate konqueror khelpcenter kmenuedit kwalletmanager libreoffice-math plasma-vault plasma-thunderbolt; do
+  dpkg -s "$p" >/dev/null 2>&1 || continue
+  sim=$(apt-get -s purge "$p" 2>/dev/null | grep '^Remv' | awk '{print $2}')
+  blocca=0
+  for q in $PROTETTI; do echo "$sim" | grep -qx "$q" && blocca=1; done
+  if [ "$blocca" = 0 ]; then
+    echo "SOFIOS: rimuovo $p"; apt-get purge -y "$p" || true
+  else
+    echo "SOFIOS: $p resta (serve ad altri pacchetti), sara' solo nascosto"
+  fi
+done
+exit 0
