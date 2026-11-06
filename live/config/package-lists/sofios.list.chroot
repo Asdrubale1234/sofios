@@ -1,0 +1,71 @@
+# --- Ambiente grafico ---
+kde-plasma-desktop
+sddm
+plasma-nm
+plasma-pa
+plasma-systemmonitor
+bluedevil
+kscreen
+powerdevil
+kde-config-sddm
+dolphin
+konsole
+kwrite
+kcalc
+spectacle
+ark
+okular
+gwenview
+kdeconnect
+print-manager
+system-config-printer
+cups
+partitionmanager
+task-italian-kde-desktop
+# --- Sistema live e installatore ---
+live-boot
+live-config
+live-config-systemd
+calamares
+calamares-settings-debian
+# --- Rete, sicurezza ---
+network-manager
+network-manager-openvpn
+wireguard-tools
+ufw
+bluez
+fprintd
+libpam-fprintd
+cryptsetup
+# --- Tablet / touch ---
+iio-sensor-proxy
+libinput-tools
+# --- Programmi ---
+firefox-esr
+firefox-esr-l10n-it
+libreoffice-writer
+libreoffice-calc
+libreoffice-l10n-it
+hunspell-it
+vlc
+# --- Windows: livello di compatibilita (.exe) ---
+wine
+wine64
+fonts-wine
+# --- Dischi e file ---
+ntfs-3g
+exfatprogs
+dosfstools
+xdg-user-dirs
+# --- Font ---
+fonts-noto
+fonts-noto-color-emoji
+# --- Driver (Wi-Fi, scheda grafica, processore) ---
+firmware-linux
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-brcm80211
+firmware-misc-nonfree
+intel-microcode
+amd64-microcode

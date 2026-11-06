@@ -1,0 +1,6 @@
+#!/bin/sh
+# Programmi Windows a 32 bit (molti .exe vecchi ne hanno bisogno)
+set -e
+dpkg --add-architecture i386
+apt-get update
+apt-get install -y wine32:i386 || echo "ATTENZIONE: wine32 non installato"

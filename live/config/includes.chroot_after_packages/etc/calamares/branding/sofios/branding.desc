@@ -1,0 +1,28 @@
+---
+componentName: sofios
+welcomeStyleCalamares: true
+welcomeExpandingLogo: false
+windowExpanding: normal
+windowSize: 800px,520px
+windowPlacement: center
+strings:
+    productName:         SofiOS
+    shortProductName:    SofiOS
+    version:             1.0
+    shortVersion:        1.0
+    versionedName:       SofiOS 1.0
+    shortVersionedName:  SofiOS 1.0
+    bootloaderEntryName: SofiOS
+    productUrl:          https://github.com/Asdrubale1234/sofios
+    supportUrl:          https://github.com/Asdrubale1234/sofios
+    releaseNotesUrl:     https://github.com/Asdrubale1234/sofios
+images:
+    productLogo:         "logo.png"
+    productIcon:         "logo.png"
+    productWelcome:      "welcome.png"
+slideshow:               "show.qml"
+style:
+    sidebarBackground:        "#0b2740"
+    sidebarText:              "#e6f1ff"
+    sidebarTextSelect:        "#0b2740"
+    sidebarTextHighlight:     "#ffd479"

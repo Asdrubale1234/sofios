@@ -1,0 +1,59 @@
+name: Costruisci ISO SofiOS
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore: ['README.md', 'docs/**']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Libera spazio sul disco
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          sudo docker image prune -af || true
+          df -h /
+
+      - name: Costruisci la ISO
+        run: |
+          mkdir -p out
+          set -o pipefail
+          sudo docker run --rm --privileged -v "$PWD":/work -w /work debian:trixie bash build/build.sh 2>&1 | tee out/build.log
+
+      - name: Dividi la ISO in parti
+        run: |
+          cd out
+          ls -la
+          ISO=$(ls *.iso | head -n1)
+          sha256sum "$ISO" > sha256.txt
+          split -b 1900M -d "$ISO" sofios.iso.part
+          ls -la
+
+      - name: Pubblica in Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="iso-$(date +%Y%m%d-%H%M)"
+          gh release create "$TAG" out/sofios.iso.part* out/sha256.txt \
+            --title "SofiOS ISO $TAG" \
+            --notes "Per riunire le parti: su Mac/Linux  cat sofios.iso.part* > sofios.iso   |   su Windows (Prompt dei comandi)  copy /b sofios.iso.part00+sofios.iso.part01+sofios.iso.part02 sofios.iso  (aggiungi le parti che vedi). Poi controlla il codice con sha256.txt."
+
+      - name: Salva il registro nel ramo logs
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/lg && cd /tmp/lg
+          cp "$GITHUB_WORKSPACE/out/build.log" . 2>/dev/null || echo "nessun registro" > build.log
+          tail -n 3000 build.log > build-tail.log
+          gzip -f build.log
+          git init -q && git checkout -q -b logs
+          git config user.name "sofios-build" && git config user.email "build@sofios.local"
+          git add . && git commit -q -m "Registro costruzione ${GITHUB_RUN_ID}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" logs

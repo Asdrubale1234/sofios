@@ -1,0 +1,18 @@
+#!/bin/sh
+# Installatore: marchio SofiOS e nessun obbligo di internet
+set -e
+S=/etc/calamares/settings.conf
+if [ -f "$S" ]; then
+  sed -i 's/^branding:.*/branding: sofios/' "$S"
+else
+  echo "ATTENZIONE: $S non trovato"
+fi
+W=/etc/calamares/modules/welcome.conf
+if [ -f "$W" ]; then
+  sed -i '/^ *- *internet *$/d' "$W"
+  sed -i 's/^\( *\)internet:.*/\1internet: false/' "$W" || true
+fi
+# Icona e nome "Installa SofiOS" per il lanciatore
+for f in $(grep -ril calamares /usr/share/applications 2>/dev/null); do
+  sed -i 's/^Name=.*/Name=Installa SofiOS/;s/^Name\[[^]]*\]=.*/Name[it]=Installa SofiOS/;s#^Icon=.*#Icon=/usr/share/sofios/logo.png#' "$f"
+done

@@ -1,0 +1,19 @@
+#!/bin/sh
+# Nome SofiOS al posto di Debian dove l'utente lo vede
+set -e
+cat > /etc/os-release <<'OSR'
+PRETTY_NAME="SofiOS"
+NAME="SofiOS"
+VERSION="1.0"
+VERSION_ID="1.0"
+ID=sofios
+ID_LIKE=debian
+HOME_URL="https://github.com/Asdrubale1234/sofios"
+OSR
+echo "SofiOS" > /etc/issue
+echo "SofiOS" > /etc/issue.net
+echo "sofios" > /etc/hostname
+# Tema SofiOS come predefinito di Plasma
+mkdir -p /etc/xdg
+kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.sofios.desktop 2>/dev/null || \
+ printf '[KDE]\nLookAndFeelPackage=org.sofios.desktop\n' >> /etc/xdg/kdeglobals

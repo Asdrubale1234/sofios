@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+lb config noauto \
+  --distribution trixie \
+  --architectures amd64 \
+  --linux-flavours amd64 \
+  --archive-areas "main contrib non-free non-free-firmware" \
+  --binary-images iso-hybrid \
+  --bootloaders "grub-efi,syslinux" \
+  --debian-installer none \
+  --iso-application "SofiOS" \
+  --iso-publisher "SofiOS" \
+  --iso-volume "SofiOS" \
+  --image-name "sofios" \
+  --memtest none \
+  --security true \
+  --updates true \
+  --apt-indices false \
+  --chroot-squashfs-compression-type xz \
+  --bootappend-live "boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS" \
+  "${@}"
