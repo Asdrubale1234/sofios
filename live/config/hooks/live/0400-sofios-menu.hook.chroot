@@ -1,0 +1,61 @@
+#!/bin/bash
+# Menu SofiOS: nomi italiani senza la K, programmi tecnici nascosti (non cancellati)
+D=/usr/share/applications
+O=/usr/local/share/applications
+mkdir -p "$O"
+
+rinomina() {  # file-pattern  nuovo-nome
+  for f in $D/$1; do
+    [ -f "$f" ] || continue
+    b=$(basename "$f")
+    grep -v -E '^(Name|GenericName|Comment)(\[[^]]*\])?=' "$f" > "$O/$b"
+    # il Name va subito dopo [Desktop Entry]
+    sed -i "0,/^\[Desktop Entry\]/s//[Desktop Entry]\nName=$2/" "$O/$b"
+  done
+}
+nascondi() {
+  for f in $D/$1; do
+    [ -f "$f" ] || continue
+    b=$(basename "$f")
+    printf '[Desktop Entry]\nType=Application\nName=%s\nNoDisplay=true\nHidden=true\n' "$b" > "$O/$b"
+  done
+}
+
+rinomina 'org.kde.dolphin.desktop' 'File'
+rinomina 'org.kde.konsole.desktop' 'Terminale'
+rinomina 'org.kde.kwrite.desktop' 'Editor di testo'
+rinomina 'org.kde.kcalc.desktop' 'Calcolatrice'
+rinomina 'org.kde.spectacle.desktop' 'Schermate'
+rinomina 'org.kde.okular.desktop' 'Lettore PDF'
+rinomina 'org.kde.gwenview.desktop' 'Foto'
+rinomina 'org.kde.ark.desktop' 'Archivi'
+rinomina 'org.kde.kdeconnect*.desktop' 'Collega telefono'
+rinomina 'org.kde.discover.desktop' 'SoStore'
+rinomina 'org.kde.partitionmanager.desktop' 'Dischi'
+rinomina 'systemsettings.desktop' 'Impostazioni'
+rinomina 'org.kde.systemsettings.desktop' 'Impostazioni'
+rinomina 'firefox-esr.desktop' 'Browser'
+rinomina 'libreoffice-writer.desktop' 'Scrittura'
+rinomina 'libreoffice-calc.desktop' 'Fogli'
+rinomina 'vlc.desktop' 'Video'
+rinomina 'org.kde.kfind.desktop' 'Cerca file'
+rinomina 'org.kde.kinfocenter.desktop' 'Informazioni sul sistema'
+rinomina 'org.kde.kup*.desktop' 'Backup'
+rinomina 'org.kde.plasma-systemmonitor.desktop' 'Monitor di sistema'
+
+nascondi 'org.kde.kate.desktop'
+nascondi 'org.kde.konqueror.desktop'
+nascondi 'org.kde.khelpcenter.desktop'
+nascondi 'org.kde.kmenuedit.desktop'
+nascondi 'org.kde.kwalletmanager*.desktop'
+nascondi 'libreoffice-math.desktop'
+nascondi 'vim.desktop'
+nascondi 'gvim.desktop'
+nascondi 'org.kde.plasma.vault*.desktop'
+nascondi 'org.kde.plasma.thunderbolt*.desktop'
+nascondi 'org.kde.plasma.firewall*.desktop'
+nascondi 'org.kde.kdeconnect.sms.desktop'
+nascondi 'org.kde.kdeconnect.nonplasma.desktop'
+nascondi 'org.kde.kdeconnect-settings.desktop'
+update-desktop-database "$O" 2>/dev/null || true
+exit 0
