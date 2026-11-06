@@ -4,13 +4,14 @@ D=/usr/share/applications
 O=/usr/local/share/applications
 mkdir -p "$O"
 
-rinomina() {  # file-pattern  nuovo-nome
+rinomina() {  # file-pattern  nuovo-nome  [icona]
   for f in $D/$1; do
     [ -f "$f" ] || continue
     b=$(basename "$f")
     grep -v -E '^(Name|GenericName|Comment)(\[[^]]*\])?=' "$f" > "$O/$b"
     # il Name va subito dopo [Desktop Entry]
     sed -i "0,/^\[Desktop Entry\]/s//[Desktop Entry]\nName=$2/" "$O/$b"
+    if [ -n "$3" ]; then sed -i -e "/^Icon=/d" "$O/$b"; sed -i "0,/^Name=/s//Icon=$3\nName=/" "$O/$b"; fi
   done
 }
 nascondi() {
@@ -21,27 +22,27 @@ nascondi() {
   done
 }
 
-rinomina 'org.kde.dolphin.desktop' 'File'
-rinomina 'org.kde.konsole.desktop' 'Terminale'
-rinomina 'org.kde.kwrite.desktop' 'Editor di testo'
-rinomina 'org.kde.kcalc.desktop' 'Calcolatrice'
-rinomina 'org.kde.spectacle.desktop' 'Schermate'
-rinomina 'org.kde.okular.desktop' 'Lettore PDF'
-rinomina 'org.kde.gwenview.desktop' 'Foto'
-rinomina 'org.kde.ark.desktop' 'Archivi'
-rinomina 'org.kde.kdeconnect*.desktop' 'Collega telefono'
-rinomina 'org.kde.discover.desktop' 'SoStore'
-rinomina 'org.kde.partitionmanager.desktop' 'Dischi'
-rinomina 'systemsettings.desktop' 'Impostazioni'
-rinomina 'org.kde.systemsettings.desktop' 'Impostazioni'
-rinomina 'firefox-esr.desktop' 'Browser'
-rinomina 'libreoffice-writer.desktop' 'Scrittura'
-rinomina 'libreoffice-calc.desktop' 'Fogli'
-rinomina 'vlc.desktop' 'Video'
-rinomina 'org.kde.kfind.desktop' 'Cerca file'
-rinomina 'org.kde.kinfocenter.desktop' 'Informazioni sul sistema'
-rinomina 'org.kde.kup*.desktop' 'Backup'
-rinomina 'org.kde.plasma-systemmonitor.desktop' 'Monitor di sistema'
+rinomina 'org.kde.dolphin.desktop' 'File' sofios-file
+rinomina 'org.kde.konsole.desktop' 'Terminale' sofios-terminale
+rinomina 'org.kde.kwrite.desktop' 'Editor di testo' sofios-editor
+rinomina 'org.kde.kcalc.desktop' 'Calcolatrice' sofios-calcolatrice
+rinomina 'org.kde.spectacle.desktop' 'Schermate' sofios-schermate
+rinomina 'org.kde.okular.desktop' 'Lettore PDF' sofios-pdf
+rinomina 'org.kde.gwenview.desktop' 'Foto' sofios-foto
+rinomina 'org.kde.ark.desktop' 'Archivi' sofios-archivi
+rinomina 'org.kde.kdeconnect*.desktop' 'Collega telefono' sofios-telefono
+rinomina 'org.kde.discover.desktop' 'SoStore' sofios-store
+rinomina 'org.kde.partitionmanager.desktop' 'Dischi' sofios-dischi
+rinomina 'systemsettings.desktop' 'Impostazioni' sofios-impostazioni
+rinomina 'org.kde.systemsettings.desktop' 'Impostazioni' sofios-impostazioni
+rinomina 'firefox-esr.desktop' 'Browser' sofios-browser
+rinomina 'libreoffice-writer.desktop' 'Scrittura' sofios-scrittura
+rinomina 'libreoffice-calc.desktop' 'Fogli' sofios-fogli
+rinomina 'vlc.desktop' 'Video' sofios-video
+rinomina 'org.kde.kfind.desktop' 'Cerca file' sofios-cerca
+rinomina 'org.kde.kinfocenter.desktop' 'Informazioni sul sistema' sofios-info
+rinomina 'org.kde.kup*.desktop' 'Backup' sofios-backup
+rinomina 'org.kde.plasma-systemmonitor.desktop' 'Monitor di sistema' sofios-monitor
 
 nascondi 'org.kde.kate.desktop'
 nascondi 'org.kde.konqueror.desktop'
@@ -57,5 +58,7 @@ nascondi 'org.kde.plasma.firewall*.desktop'
 nascondi 'org.kde.kdeconnect.sms.desktop'
 nascondi 'org.kde.kdeconnect.nonplasma.desktop'
 nascondi 'org.kde.kdeconnect-settings.desktop'
+printf '[Icons]\nTheme=SofiOS\n' >> /etc/xdg/kdeglobals
+gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
 update-desktop-database "$O" 2>/dev/null || true
 exit 0
