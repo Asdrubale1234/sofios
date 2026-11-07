@@ -13,6 +13,7 @@ find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*
     -e 's/menuentry "Live system ([^"]*fail-safe[^"]*)"/menuentry "Prova SofiOS (modalità sicura)"/' \
     -e 's/menuentry "Live system[^"]*"/menuentry "Prova SofiOS"/' \
     -e "s/submenu 'Utilities\.\.\.'/submenu 'Strumenti...'/" \
+    -e 's/menuentry "UEFI Firmware Settings"/menuentry "Impostazioni del firmware (UEFI)"/' \
     -e 's/menu label \^\?Live (\([^)]*\) failsafe)/menu label Prova SofiOS (avvio sicuro)/' \
     -e 's/menu label \^\?Live (\([^)]*\))/menu label ^Prova SofiOS/' \
     -e 's/^menu title Boot menu/menu title SofiOS/' \
