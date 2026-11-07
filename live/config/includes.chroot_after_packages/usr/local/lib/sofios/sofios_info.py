@@ -4,7 +4,7 @@ from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QShortcut
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QWidget
 
 VERSIONE = "1.0"
-CREDITI = "Ideato e creato da Luca"
+CREDITI = "Sviluppato da Luca"
 ANNO = "2026"
 import os
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
@@ -35,7 +35,7 @@ def mostra_informazioni(genitore, nome, descrizione="", logo=LOGO):
     v.addSpacing(12)
     sc = QWidget(); sc.setObjectName("scheda"); l = QVBoxLayout(sc); l.setContentsMargins(16, 14, 16, 14); l.setSpacing(2)
     c = QLabel(CREDITI); c.setObjectName("crediti"); c.setAlignment(Qt.AlignmentFlag.AlignCenter); l.addWidget(c)
-    a = QLabel("© " + ANNO + " Luca. Tutti i diritti riservati."); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); l.addWidget(a)
+    a = QLabel("© " + ANNO + " SofiOS · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); l.addWidget(a)
     v.addWidget(sc)
     v.addSpacing(10)
     b = QPushButton("Chiudi"); b.clicked.connect(d.accept); v.addWidget(b, alignment=Qt.AlignmentFlag.AlignCenter)
