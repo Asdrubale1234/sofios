@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Password di SofiOS",
+  "version": "1.0",
+  "description": "Ti ricorda di usare l'app Password di SofiOS quando un sito chiede una password.",
+  "icons": { "128": "logo.png" },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["contenuto.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    { "resources": ["logo.png"], "matches": ["http://*/*", "https://*/*"] }
+  ]
+}
