@@ -13,8 +13,8 @@ jobs:
       - name: Pacchetti
         run: |
           apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates qt6-style-kvantum kvantum dolphin breeze breeze-icon-theme xvfb xauth imagemagick dbus-x11 python3 python3-pyqt6 python3-pykeepass fonts-inter fonts-noto-core openbox x11-utils || \
-          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates qt6-style-kvantum dolphin breeze breeze-icon-theme xvfb xauth imagemagick dbus-x11 python3 python3-pyqt6 openbox x11-utils
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates qt6-style-kvantum kvantum dolphin breeze breeze-icon-theme plasma-integration xvfb xauth imagemagick dbus-x11 python3 python3-pyqt6 python3-pykeepass python3-pyqt6.qtsvg fonts-inter fonts-noto-core openbox x11-utils || \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates qt6-style-kvantum dolphin breeze breeze-icon-theme plasma-integration xvfb xauth imagemagick dbus-x11 python3 python3-pyqt6 python3-pykeepass plasma-integration openbox x11-utils
       - uses: actions/checkout@v4
       - name: Temi
         run: |
@@ -44,12 +44,12 @@ jobs:
           else
             export QT_STYLE_OVERRIDE=Breeze
           fi
-          export XDG_RUNTIME_DIR=/tmp/run-$1; mkdir -p $XDG_RUNTIME_DIR; chmod 700 $XDG_RUNTIME_DIR
+          export QT_QPA_PLATFORMTHEME=kde; export XDG_RUNTIME_DIR=/tmp/run-$1; mkdir -p $XDG_RUNTIME_DIR; chmod 700 $XDG_RUNTIME_DIR
           Xvfb :9 -screen 0 1100x700x24 & sleep 2; export DISPLAY=:9
           openbox & sleep 1
           dbus-run-session -- bash -c '
             dolphin --new-window /tmp/cartella & sleep 12; import -window root /tmp/out/'$1'-file.png; pkill dolphin; sleep 1
-            SOFIOS_FOTO=/tmp/out/'$1'-cassaforte.png SOFIOS_LOGO=/usr/share/sofios/logo.png QT_QPA_PLATFORM=xcb python3 -I bin_pw.py || true
+            SOFIOS_FOTO=/tmp/out/'$1'-cassaforte.png SOFIOS_LOGO=/usr/share/sofios/logo.png QT_QPA_PLATFORM=xcb python3 -I bin_pw.py 2>&1 | tail -5 || true
           '
           kill %1 %2 2>/dev/null
           EOS
