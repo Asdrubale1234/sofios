@@ -25,3 +25,11 @@ printf '[Wallet]\nEnabled=false\nFirst Use=false\n' > /etc/xdg/kwalletrc
 if command -v plymouth-set-default-theme >/dev/null 2>&1; then
   plymouth-set-default-theme -R sofios || true
 fi
+# Prova da chiavetta: niente blocco schermo (servizio attivo solo con boot=live)
+systemctl enable sofios-live-impostazioni.service 2>/dev/null || \
+  { mkdir -p /etc/systemd/system/multi-user.target.wants; ln -sf /etc/systemd/system/sofios-live-impostazioni.service /etc/systemd/system/multi-user.target.wants/sofios-live-impostazioni.service; }
+# Elenco dei file con il simbolo Debian (per il registro: cosa resta da cambiare)
+echo "== SOFIOS: file con marchio Debian (avatar, loghi) =="
+find /usr/share /var/lib/AccountsService -iname '*debian*' \( -name '*.png' -o -name '*.svg' -o -name '*.icon' \) 2>/dev/null | head -40
+find /usr/share/sddm/faces -type f 2>/dev/null
+exit 0

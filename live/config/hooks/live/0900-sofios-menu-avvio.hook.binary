@@ -10,8 +10,9 @@ find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*
   sed -i \
     -e 's/Debian GNU\/Linux [0-9.]* ([a-z]*) amd64/SofiOS/g' \
     -e 's/Debian GNU\/Linux/SofiOS/g' -e 's/Debian Live/SofiOS/g' -e 's/Debian/SofiOS/g' \
-    -e 's/menuentry "Live system (fail-safe mode)"/menuentry "Prova SofiOS (modalità sicura)"/' \
-    -e 's/menuentry "Live system"/menuentry "Prova SofiOS"/' \
+    -e 's/menuentry "Live system ([^"]*fail-safe[^"]*)"/menuentry "Prova SofiOS (modalità sicura)"/' \
+    -e 's/menuentry "Live system[^"]*"/menuentry "Prova SofiOS"/' \
+    -e "s/submenu 'Utilities\.\.\.'/submenu 'Strumenti...'/" \
     -e 's/menu label \^\?Live (\([^)]*\) failsafe)/menu label Prova SofiOS (avvio sicuro)/' \
     -e 's/menu label \^\?Live (\([^)]*\))/menu label ^Prova SofiOS/' \
     -e 's/^menu title Boot menu/menu title SofiOS/' \

@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=SofiOS sessione di prova
-Exec=/usr/local/bin/sofios-sessione-live
-NoDisplay=true
-X-KDE-autostart-phase=2

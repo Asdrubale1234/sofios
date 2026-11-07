@@ -1,0 +1,11 @@
+[Unit]
+Description=Impostazioni della prova da chiavetta (niente blocco schermo)
+ConditionKernelCommandLine=boot=live
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sofios-live-impostazioni
+
+[Install]
+WantedBy=multi-user.target
