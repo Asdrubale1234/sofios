@@ -22,7 +22,7 @@ cmd = ["qemu-system-x86_64", "-machine", "q35,accel=kvm:tcg", "-cpu", "max", "-s
        "-drive", "file=/tmp/disco.qcow2,if=virtio,format=qcow2",
        "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
        "-netdev", "user,id=n0", "-device", "virtio-net-pci,netdev=n0",
-       "-monitor", "unix:/tmp/qmon,server,nowait",
+       "-monitor", "unix:/tmp/qmon,server,nowait", "-qmp", "unix:/tmp/qmp,server,nowait",
        "-serial", "file:" + os.path.join(out, "seriale.txt")]
 if codice and vars_src:
     shutil.copy(vars_src, "/tmp/OVMF_VARS.fd")
@@ -37,6 +37,21 @@ mon = socket.socket(socket.AF_UNIX); mon.connect("/tmp/qmon"); mon.settimeout(5)
 def cmdmon(c):
     mon.sendall((c + "\n").encode()); time.sleep(0.4)
     try: mon.recv(65536)
+    except Exception: pass
+import json
+qmp = None
+try:
+    for _ in range(15):
+        if os.path.exists("/tmp/qmp"): break
+        time.sleep(1)
+    qmp = socket.socket(socket.AF_UNIX); qmp.connect("/tmp/qmp"); qmp.settimeout(5)
+    qmp.recv(65536); qmp.sendall(b'{"execute":"qmp_capabilities"}\n'); time.sleep(0.3); qmp.recv(65536)
+    L("QMP collegato (mouse assoluto)")
+except Exception as e:
+    L("QMP non disponibile:", repr(e)); qmp = None
+def qmp_eventi(ev):
+    qmp.sendall((json.dumps({"execute": "input-send-event", "arguments": {"events": ev}}) + "\n").encode()); time.sleep(0.3)
+    try: qmp.recv(65536)
     except Exception: pass
 cmdmon("")  # saluto
 inizio = time.time(); n = 0; ultimo_hash = None; visti = set()
@@ -61,8 +76,12 @@ def foto(nome):
     return nuova
 
 def clic(x, y, w=1280, h=800):
-    cmdmon(f"mouse_move {int(x*32767/w)} {int(y*32767/h)}"); time.sleep(0.5)
-    cmdmon("mouse_button 1"); time.sleep(0.2); cmdmon("mouse_button 0"); time.sleep(0.5)
+    """clic con il mouse assoluto (tavoletta USB) tramite QMP: 'mouse_move' di HMP e' solo relativo e con la tavoletta non muove nulla"""
+    if qmp is None: return
+    ax = int(x * 32767 / w); ay = int(y * 32767 / h)
+    qmp_eventi([{"type": "abs", "data": {"axis": "x", "value": ax}}, {"type": "abs", "data": {"axis": "y", "value": ay}}]); time.sleep(0.6)
+    qmp_eventi([{"type": "btn", "data": {"down": True, "button": "left"}}]); time.sleep(0.2)
+    qmp_eventi([{"type": "btn", "data": {"down": False, "button": "left"}}]); time.sleep(0.8)
 def tasti(*k):
     for t in k:
         cmdmon(f"sendkey {t}"); time.sleep(0.3)
@@ -131,11 +150,11 @@ try:
     # pagine dell'installer: si clicca "Avanti" (Alt+A e' condiviso con "Annulla"); non si preme mai "Installa"
     for pagina in range(1, 4):
         time.sleep(6); foto(f"pagina{pagina}")
-        clic(1020, 707); time.sleep(6)      # "Avanti"
+        clic(1020, 690); time.sleep(6)      # "Avanti"
     time.sleep(6); foto("partizioni")
     clic(335, 238)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
     time.sleep(5); foto("partizioni-cancella")
-    clic(1020, 707); time.sleep(8); foto("utente")
+    clic(1020, 690); time.sleep(8); foto("utente")
 except Exception as e:
     L("errore:", repr(e))
 finally:
