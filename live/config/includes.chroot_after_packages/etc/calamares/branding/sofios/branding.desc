@@ -1,6 +1,6 @@
 ---
 componentName: sofios
-welcomeStyleCalamares: true
+welcomeStyleCalamares: false
 welcomeExpandingLogo: false
 windowExpanding: normal
 windowSize: 800px,520px
@@ -10,12 +10,9 @@ strings:
     shortProductName:    SofiOS
     version:             1.0
     shortVersion:        1.0
-    versionedName:       SofiOS 1.0
-    shortVersionedName:  SofiOS 1.0
+    versionedName:       SofiOS
+    shortVersionedName:  SofiOS
     bootloaderEntryName: SofiOS
-    productUrl:          https://github.com/Asdrubale1234/sofios
-    supportUrl:          https://github.com/Asdrubale1234/sofios
-    releaseNotesUrl:     https://github.com/Asdrubale1234/sofios
 images:
     productLogo:         "logo.png"
     productIcon:         "logo.png"
