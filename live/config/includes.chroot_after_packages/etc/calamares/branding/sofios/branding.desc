@@ -3,7 +3,7 @@ componentName: sofios
 welcomeStyleCalamares: false
 welcomeExpandingLogo: false
 windowExpanding: normal
-windowSize: 800px,520px
+windowSize: 920px,600px
 windowPlacement: center
 strings:
     productName:         SofiOS
@@ -19,7 +19,7 @@ images:
     productWelcome:      "welcome.png"
 slideshow:               "show.qml"
 style:
-    sidebarBackground:        "#0b2740"
-    sidebarText:              "#e6f1ff"
-    sidebarTextSelect:        "#0b2740"
-    sidebarTextHighlight:     "#ffd479"
+    SidebarBackground:        "#0b2740"
+    SidebarText:              "#e6f1ff"
+    SidebarTextCurrent:       "#0b2740"
+    SidebarBackgroundCurrent: "#ffd479"

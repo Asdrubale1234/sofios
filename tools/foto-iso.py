@@ -60,6 +60,9 @@ def foto(nome):
         L("foto", os.path.basename(png))
     return nuova
 
+def clic(x, y, w=1280, h=800):
+    cmdmon(f"mouse_move {int(x*32767/w)} {int(y*32767/h)}"); time.sleep(0.5)
+    cmdmon("mouse_button 1"); time.sleep(0.2); cmdmon("mouse_button 0"); time.sleep(0.5)
 def tasti(*k):
     for t in k:
         cmdmon(f"sendkey {t}"); time.sleep(0.3)
@@ -96,11 +99,14 @@ try:
     tasti("alt-f2"); time.sleep(3); scrivi("Installa"); time.sleep(4); foto("krunner")
     tasti("ret")
     aspetta(150, "installer", 15)
-    for pagina in range(1, 7):
-        for t in ("alt-v", "ret", "alt-n"):
-            tasti(t); time.sleep(8)
-            if foto(f"pagina{pagina}"): break
-        aspetta(10, f"pagina{pagina}", 5)
+    # pagine dell'installer: avanti con Alt+A (italiano); non si preme mai "Installa"
+    for pagina in range(1, 4):
+        time.sleep(6); foto(f"pagina{pagina}")
+        tasti("alt-a"); time.sleep(6)
+    time.sleep(6); foto("partizioni")
+    clic(335, 238)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
+    time.sleep(5); foto("partizioni-cancella")
+    tasti("alt-a"); time.sleep(8); foto("utente")
 except Exception as e:
     L("errore:", repr(e))
 finally:

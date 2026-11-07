@@ -1,7 +1,8 @@
 #!/bin/sh
 # SOLO PROVA (macchina virtuale): scrive nella porta seriale lo stato del desktop, per le schermate di prova. Da togliere nella ISO ufficiale.
-[ -w /dev/ttyS0 ] || exit 0
-U=live; N=$(id -u $U 2>/dev/null) || exit 0
+echo "DIAG: servizio avviato $(date +%T)" > /dev/ttyS0 2>/dev/null
+[ -w /dev/ttyS0 ] || { echo "ttyS0 non scrivibile" >> /tmp/sofios-diag.txt; exit 0; }
+U=sofios; N=$(id -u $U 2>/dev/null) || exit 0
 rapporto() {
   echo "=== RAPPORTO $1 $(date +%T) virt=$(systemd-detect-virt) uid=$N ==="
   echo "--- sessioni"; loginctl list-sessions --no-legend 2>&1

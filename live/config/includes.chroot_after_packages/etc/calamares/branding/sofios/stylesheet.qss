@@ -1,0 +1,17 @@
+/* Aspetto SofiOS dell'installer: blu mare, giallo faro */
+QWidget { background-color: #0b2740; color: #e6f1ff; font-family: "Inter"; }
+QLabel { background: transparent; }
+QComboBox, QLineEdit, QListView, QTreeView, QPlainTextEdit, QTextEdit, QAbstractItemView {
+  background-color: #12365a; color: #e6f1ff; border: 1px solid #1e4f7c; border-radius: 6px;
+  selection-background-color: #1e6fa8; selection-color: #ffffff; }
+QComboBox QAbstractItemView { background-color: #12365a; }
+QPushButton { background-color: #1e4f7c; color: #ffffff; border: none; border-radius: 8px; padding: 7px 16px; }
+QPushButton:hover { background-color: #2a82c2; }
+QPushButton:disabled { background-color: #12365a; color: #6f8fae; }
+QPushButton:default, QPushButton#nextButton { background-color: #ffd479; color: #0b2740; font-weight: 600; }
+QPushButton:default:disabled, QPushButton#nextButton:disabled { background-color: #4b4a3e; color: #8c8a78; }
+QCheckBox, QRadioButton { background: transparent; }
+QScrollBar:vertical { background: #0b2740; width: 12px; }
+QScrollBar::handle:vertical { background: #1e4f7c; border-radius: 5px; min-height: 24px; }
+QProgressBar { background: #12365a; border: none; border-radius: 6px; text-align: center; }
+QProgressBar::chunk { background: #ffd479; border-radius: 6px; }

@@ -15,8 +15,18 @@ fi
 # Icona e nome "Installa SofiOS" per il lanciatore
 for f in $(grep -ril calamares /usr/share/applications 2>/dev/null); do
   sed -i 's/^Name=.*/Name=Installa SofiOS/;s/^Name\[[^]]*\]=.*/Name[it]=Installa SofiOS/;s#^Icon=.*#Icon=/usr/share/sofios/logo.png#' "$f"
+  sed -i '/^GenericName\(\[[^]]*\]\)\?=/d;/^Comment\(\[[^]]*\]\)\?=/d' "$f"
+  sed -i '0,/^Name=/s//Comment=Installa SofiOS sul computer\nName=/' "$f"
 done
 # Partizioni: niente cifratura del disco nell'installer (scelta di Luca); il resto resta com'e'
+echo "SOFIOS: moduli Calamares in /etc e /usr/share:"; ls /etc/calamares/modules /usr/share/calamares/modules 2>&1 | head -80
+# Se il pacchetto non mette i file in /etc, partiamo dagli esempi di /usr/share (Calamares usa prima /etc)
+for f in partition mount; do
+  if [ ! -f /etc/calamares/modules/$f.conf ] && [ -f /usr/share/calamares/modules/$f.conf ]; then
+    mkdir -p /etc/calamares/modules; cp /usr/share/calamares/modules/$f.conf /etc/calamares/modules/$f.conf
+    echo "SOFIOS: copiato $f.conf da /usr/share"
+  fi
+done
 P=/etc/calamares/modules/partition.conf
 if [ -f "$P" ]; then
   sed -i '/^enableLuksAutomatedPartitioning:/d' "$P"
