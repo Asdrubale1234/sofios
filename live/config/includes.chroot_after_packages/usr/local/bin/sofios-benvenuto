@@ -31,18 +31,16 @@ QCheckBox { color: #9fc2e4; font-size: 12px; }
 """
 
 class Mascotte(QWidget):
-    """La mascotte originale, ridimensionata, in una scheda arrotondata dello stesso colore dello sfondo."""
-    def __init__(self, percorso, lato):
+    """La mascotte (sfondo trasparente) ridimensionata, disegnata direttamente sul blu mare."""
+    def __init__(self, percorso, larghezza):
         super().__init__()
         self.pm = QPixmap(percorso)
-        self.setFixedSize(lato, lato)
+        self.setFixedSize(larghezza, int(larghezza * self.pm.height() / self.pm.width()))
     def paintEvent(self, _):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
         r = QRectF(0, 0, self.width(), self.height())
-        c = QPainterPath(); c.addRoundedRect(r, 20, 20)
-        p.setClipPath(c)
         p.drawPixmap(r.toRect(), self.pm)
 
 def scheda(titolo, testo, bottone=None):
@@ -68,7 +66,7 @@ class Benvenuto(QWidget):
         radice = QHBoxLayout(self); radice.setContentsMargins(28, 26, 28, 22); radice.setSpacing(26)
 
         sx = QVBoxLayout(); sx.setSpacing(14)
-        sx.addWidget(Mascotte(os.path.join(DATI, "mascotte.png"), 230), alignment=Qt.AlignmentFlag.AlignTop)
+        sx.addWidget(Mascotte(os.path.join(DATI, "mascotte.png"), 236), alignment=Qt.AlignmentFlag.AlignTop)
         sx.addStretch()
         radice.addLayout(sx)
 
