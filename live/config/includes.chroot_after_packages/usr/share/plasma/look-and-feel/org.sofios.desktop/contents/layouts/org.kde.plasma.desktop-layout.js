@@ -1,5 +1,5 @@
 // SofiOS: Dock fluttuante in basso (solo icone) + barra sottile in alto con menu, rete, volume e orologio
-desktopsArray().forEach(function (d) {
+desktops().forEach(function (d) {
     d.wallpaperPlugin = "org.kde.image";
     d.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
     d.writeConfig("Image", "file:///usr/share/wallpapers/SofiOS");
