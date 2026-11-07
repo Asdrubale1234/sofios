@@ -43,6 +43,18 @@ jobs:
             --title "SofiOS ISO $TAG" \
             --notes "Per riunire le parti: su Mac/Linux  cat sofios.iso.part* > sofios.iso   |   su Windows (Prompt dei comandi)  copy /b sofios.iso.part00+sofios.iso.part01+sofios.iso.part02 sofios.iso  (aggiungi le parti che vedi). Poi controlla il codice con sha256.txt."
 
+      - name: Avvia la ISO e salva schermate vere
+        continue-on-error: true
+        timeout-minutes: 55
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-system-x86 qemu-utils ovmf imagemagick
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
+          ls -l /dev/kvm || echo "niente KVM: avvio lento"
+          ISO=$(ls out/*.iso | head -n1)
+          python3 tools/foto-iso.py "$ISO" out/foto 40
+
       - name: Salva il registro nel ramo logs
         if: always()
         env:
@@ -51,6 +63,7 @@ jobs:
         run: |
           mkdir -p /tmp/lg && cd /tmp/lg
           cp "$GITHUB_WORKSPACE/out/build.log" . 2>/dev/null || echo "nessun registro" > build.log
+          cp -r "$GITHUB_WORKSPACE/out/foto" ./foto 2>/dev/null || true
           tail -n 3000 build.log > build-tail.log
           gzip -f build.log
           git init -q && git checkout -q -b logs
