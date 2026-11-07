@@ -1,7 +1,26 @@
 #!/bin/sh
-# Menu di avvio della chiavetta: SofiOS al posto di Debian (gira nella cartella di costruzione)
+# Menu di avvio della chiavetta: SofiOS al posto di Debian (gira nella cartella di costruzione).
+# Lo sfondo (logo) e il tema di GRUB arrivano da config/bootloaders; qui si sistemano i testi.
+# Ogni file toccato e il contenuto finale delle voci finiscono nel registro di costruzione.
 [ -d binary ] || exit 0
+echo "== SofiOS menu avvio: file nel menu =="
+find binary/boot binary/isolinux binary/EFI -type f 2>/dev/null | sort
 find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*.txt' \) 2>/dev/null | while read -r f; do
-  sed -i -e 's/Debian GNU\/Linux [0-9.]* ([a-z]*) amd64/SofiOS/g' -e 's/Debian GNU\/Linux/SofiOS/g' -e 's/Debian Live/SofiOS/g' -e 's/Debian/SofiOS/g' "$f"
+  cp "$f" "$f.sofios-orig"
+  sed -i \
+    -e 's/Debian GNU\/Linux [0-9.]* ([a-z]*) amd64/SofiOS/g' \
+    -e 's/Debian GNU\/Linux/SofiOS/g' -e 's/Debian Live/SofiOS/g' -e 's/Debian/SofiOS/g' \
+    -e 's/menuentry "Live system (fail-safe mode)"/menuentry "Prova SofiOS (modalità sicura)"/' \
+    -e 's/menuentry "Live system"/menuentry "Prova SofiOS"/' \
+    -e 's/menu label \^\?Live (\([^)]*\) failsafe)/menu label Prova SofiOS (avvio sicuro)/' \
+    -e 's/menu label \^\?Live (\([^)]*\))/menu label ^Prova SofiOS/' \
+    -e 's/^menu title Boot menu/menu title SofiOS/' \
+    -e 's/Press ENTER to boot or TAB to edit a menu entry/Premi INVIO per avviare/' \
+    -e 's/#76a1d0ff/#1e6fa8ff/g' \
+    "$f"
+  if cmp -s "$f" "$f.sofios-orig"; then :; else echo "modificato: $f"; fi
+  rm -f "$f.sofios-orig"
 done
+echo "== SofiOS menu avvio: voci finali =="
+grep -rhn -E 'menuentry|menu label|menu title|title-text' binary/boot/grub binary/isolinux 2>/dev/null | head -40
 exit 0
