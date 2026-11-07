@@ -15,3 +15,6 @@ QScrollBar:vertical { background: #0b2740; width: 12px; }
 QScrollBar::handle:vertical { background: #1e4f7c; border-radius: 5px; min-height: 24px; }
 QProgressBar { background: #12365a; border: none; border-radius: 6px; text-align: center; }
 QProgressBar::chunk { background: #ffd479; border-radius: 6px; }
+
+/* Il pulsante "Informazioni su" mostra i crediti di Calamares: lo nascondiamo (dimensione zero). */
+QPushButton#aboutButton { min-width: 0px; max-width: 0px; min-height: 0px; max-height: 0px; padding: 0px; margin: 0px; border: none; }
