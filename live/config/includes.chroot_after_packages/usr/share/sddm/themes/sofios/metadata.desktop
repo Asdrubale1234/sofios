@@ -1,0 +1,12 @@
+[SddmGreeterTheme]
+Name=SofiOS
+Description=Schermata di accesso di SofiOS
+Author=Sofi Labs
+Version=1.0
+Type=sddm-theme
+Screenshot=
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=sofios
+Theme-API=2.0
+QTVersion=6
