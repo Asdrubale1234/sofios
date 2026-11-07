@@ -26,4 +26,24 @@ if [ -f "$P" ]; then
 else
   echo "ATTENZIONE: $P non trovato"
 fi
+# Disco: btrfs come predefinito, con sottovolumi separati per sistema (@) e file personali (@home), cosi le istantanee
+# ripristinano solo il sistema. Scelta di Luca (7 novembre 2026).
+if [ -f "$P" ]; then
+  sed -i '/^defaultFileSystemType:/d' "$P"
+  echo 'defaultFileSystemType: "btrfs"' >> "$P"
+  echo "SOFIOS: filesystem predefinito e disponibili:"; grep -n -E '^(defaultFileSystemType|availableFileSystemTypes)' "$P"
+fi
+M=/etc/calamares/modules/mount.conf
+if [ -f "$M" ]; then
+  if grep -q '^btrfsSubvolumes:' "$M" && grep -q '/@home' "$M"; then
+    echo "SOFIOS: mount.conf ha gia i sottovolumi @ e @home"
+  elif ! grep -q '^btrfsSubvolumes:' "$M"; then
+    printf 'btrfsSubvolumes:\n    - mountPoint: /\n      subvolume: /@\n    - mountPoint: /home\n      subvolume: /@home\n    - mountPoint: /var/log\n      subvolume: /@log\n    - mountPoint: /var/cache\n      subvolume: /@cache\n' >> "$M"
+  else
+    echo "ATTENZIONE: mount.conf ha btrfsSubvolumes diversi, da controllare"
+  fi
+  echo "SOFIOS: mount.conf (righe attive):"; grep -v -E '^\s*(#|$)' "$M" | head -40
+else
+  echo "ATTENZIONE: $M non trovato"
+fi
 exit 0
