@@ -1,0 +1,158 @@
+#!/usr/bin/python3
+# Benvenuto di SofiOS: la prima finestra che si vede. Testi e grafica sono nostri.
+import os, sys, subprocess
+from PyQt6.QtCore import Qt, QSize, QRectF
+from PyQt6.QtGui import QPixmap, QPainter, QPainterPath, QFont, QIcon
+from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout,
+                             QHBoxLayout, QFrame, QCheckBox)
+
+DATI = os.environ.get("SOFIOS_DATI", "/usr/share/sofios/benvenuto")
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+FLAG = os.path.join(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")), "sofios-benvenuto-fatto")
+LIVE = os.environ.get("SOFIOS_LIVE") == "1" if "SOFIOS_LIVE" in os.environ else \
+    ("boot=live" in open("/proc/cmdline").read() if os.path.exists("/proc/cmdline") else False)
+
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel { color: #e6f1ff; }
+QLabel#titolo { font-size: 30px; font-weight: 700; color: #ffffff; }
+QLabel#sotto { font-size: 15px; color: #9fc2e4; }
+QFrame#scheda { background: #12365a; border-radius: 14px; }
+QLabel#sch_t { font-size: 15px; font-weight: 700; color: #ffd479; }
+QLabel#sch_x { font-size: 13px; color: #d4e6f8; }
+QPushButton#primario { background: #ffd479; color: #0b2740; border: none; border-radius: 10px;
+                        padding: 10px 22px; font-size: 14px; font-weight: 700; }
+QPushButton#primario:hover { background: #ffe19e; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; border: none; border-radius: 10px;
+                          padding: 9px 16px; font-size: 13px; font-weight: 600; }
+QPushButton#secondario:hover { background: #2a82c0; }
+QPushButton#secondario:disabled { background: #2a4d6e; color: #9fc2e4; }
+QCheckBox { color: #9fc2e4; font-size: 12px; }
+"""
+
+class Mascotte(QWidget):
+    """La mascotte originale, ridimensionata, in una scheda arrotondata dello stesso colore dello sfondo."""
+    def __init__(self, percorso, lato):
+        super().__init__()
+        self.pm = QPixmap(percorso)
+        self.setFixedSize(lato, lato)
+    def paintEvent(self, _):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        r = QRectF(0, 0, self.width(), self.height())
+        c = QPainterPath(); c.addRoundedRect(r, 20, 20)
+        p.setClipPath(c)
+        p.drawPixmap(r.toRect(), self.pm)
+
+def scheda(titolo, testo, bottone=None):
+    f = QFrame(); f.setObjectName("scheda")
+    v = QVBoxLayout(f); v.setContentsMargins(16, 12, 16, 12); v.setSpacing(4)
+    t = QLabel(titolo); t.setObjectName("sch_t")
+    x = QLabel(testo); x.setObjectName("sch_x"); x.setWordWrap(True)
+    v.addWidget(t); v.addWidget(x)
+    if bottone is not None:
+        v.addSpacing(6)
+        h = QHBoxLayout(); h.addWidget(bottone); h.addStretch(); v.addLayout(h)
+    return f
+
+class Benvenuto(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra")
+        self.setWindowTitle("Benvenuto in SofiOS")
+        self.setWindowIcon(QIcon(LOGO))
+        self.setStyleSheet(STILE)
+        self.resize(820, 600)
+
+        radice = QHBoxLayout(self); radice.setContentsMargins(28, 26, 28, 22); radice.setSpacing(26)
+
+        sx = QVBoxLayout(); sx.setSpacing(14)
+        sx.addWidget(Mascotte(os.path.join(DATI, "mascotte.png"), 230), alignment=Qt.AlignmentFlag.AlignTop)
+        sx.addStretch()
+        radice.addLayout(sx)
+
+        dx = QVBoxLayout(); dx.setSpacing(12)
+        testa = QHBoxLayout()
+        logo = QLabel(); logo.setPixmap(QPixmap(LOGO).scaled(44, 44, Qt.AspectRatioMode.KeepAspectRatio,
+                                                           Qt.TransformationMode.SmoothTransformation))
+        testa.addWidget(logo); testa.addStretch()
+        dx.addLayout(testa)
+        t = QLabel("Benvenuto in SofiOS"); t.setObjectName("titolo"); dx.addWidget(t)
+        s = QLabel("Il tuo computer, semplice e tuo."); s.setObjectName("sotto"); dx.addWidget(s)
+        dx.addSpacing(4)
+
+        dx.addWidget(scheda("Collegati a internet",
+            "Clicca l'icona della rete in alto a destra, nell'area di notifica: scegli la tua rete Wi-Fi "
+            "oppure collega il cavo Ethernet."))
+
+        if LIVE:
+            dx.addWidget(scheda("Stai provando SofiOS dalla chiavetta",
+                "Per installarlo sul computer apri il menu e scegli «Installa SofiOS». "
+                "Se il sistema chiede una password, è «live»."))
+        else:
+            self.btn_agg = QPushButton("Attiva gli aggiornamenti automatici")
+            self.btn_agg.setObjectName("secondario")
+            self.btn_agg.setCursor(Qt.CursorShape.PointingHandCursor)
+            self.btn_agg.clicked.connect(self.attiva_aggiornamenti)
+            dx.addWidget(scheda("Aggiornamenti",
+                "SofiOS si aggiorna con pacchetti firmati. Puoi farlo quando vuoi da «Aggiorna SofiOS» "
+                "nel menu, oppure lasciare che avvenga da solo.", self.btn_agg))
+            self.controlla_stato()
+
+        dx.addWidget(scheda("Programmi",
+            "Apri il menu (il logo in alto a sinistra) per trovare i programmi. "
+            "Con «SoStore» puoi installarne altri."))
+        dx.addStretch()
+
+        piede = QHBoxLayout()
+        self.ancora = QCheckBox("Mostra ancora al prossimo avvio")
+        piede.addWidget(self.ancora); piede.addStretch()
+        b = QPushButton("Inizia"); b.setObjectName("primario"); b.setCursor(Qt.CursorShape.PointingHandCursor)
+        b.clicked.connect(self.chiudi); piede.addWidget(b)
+        dx.addLayout(piede)
+        radice.addLayout(dx, 1)
+
+    def controlla_stato(self):
+        try:
+            r = subprocess.run(["systemctl", "is-enabled", "sofios-aggiorna.timer"],
+                               capture_output=True, text=True, timeout=5)
+            if r.stdout.strip() == "enabled":
+                self.btn_agg.setText("Aggiornamenti automatici attivi ✓"); self.btn_agg.setEnabled(False)
+        except Exception:
+            pass
+
+    def attiva_aggiornamenti(self):
+        self.btn_agg.setEnabled(False); self.btn_agg.setText("Attivo…")
+        QApplication.processEvents()
+        try:
+            r = subprocess.run(["pkexec", "systemctl", "enable", "--now", "sofios-aggiorna.timer"], timeout=120)
+            ok = r.returncode == 0
+        except Exception:
+            ok = False
+        if ok:
+            self.btn_agg.setText("Aggiornamenti automatici attivi ✓")
+        else:
+            self.btn_agg.setText("Non è stato attivato: riprova"); self.btn_agg.setEnabled(True)
+
+    def chiudi(self):
+        if not self.ancora.isChecked():
+            try:
+                os.makedirs(os.path.dirname(FLAG), exist_ok=True); open(FLAG, "w").close()
+            except OSError:
+                pass
+        self.close()
+
+def main():
+    if "--solo-prima-volta" in sys.argv and os.path.exists(FLAG) and not LIVE:
+        return 0
+    app = QApplication(sys.argv)
+    app.setApplicationName("SofiOS")
+    w = Benvenuto()
+    if os.environ.get("SOFIOS_FOTO"):
+        w.show(); app.processEvents(); w.grab().save(os.environ["SOFIOS_FOTO"]); return 0
+    w.show()
+    return app.exec()
+
+if __name__ == "__main__":
+    sys.exit(main())

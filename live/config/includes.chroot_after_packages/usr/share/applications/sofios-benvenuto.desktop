@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Benvenuto
+Comment=Il benvenuto di SofiOS
+Exec=/usr/local/bin/sofios-benvenuto
+Icon=sofios-logo
+Categories=System;

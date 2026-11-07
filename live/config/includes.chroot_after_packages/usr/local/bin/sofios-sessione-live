@@ -1,0 +1,12 @@
+#!/bin/sh
+# Solo nella prova da chiavetta: niente blocco schermo e niente standby (sul sistema installato non fa nulla)
+grep -q 'boot=live' /proc/cmdline || exit 0
+w() { kwriteconfig6 --notify --file "$1" --group "$2" ${3:+--group "$3"} --key "$4" "$5"; }
+w kscreenlockerrc Daemon "" Autolock false
+w kscreenlockerrc Daemon "" LockOnResume false
+for P in AC Battery LowBattery; do
+  w powerdevilrc "$P" SuspendAndShutdown AutoSuspendAction 0
+  w powerdevilrc "$P" Display TurnOffDisplayWhenIdle false
+  w powerdevilrc "$P" Display DimDisplayWhenIdle false
+done
+exit 0

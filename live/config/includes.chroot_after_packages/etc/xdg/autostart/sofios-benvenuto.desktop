@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Benvenuto in SofiOS
+Exec=/usr/local/bin/sofios-benvenuto --solo-prima-volta
+Icon=sofios-logo
+NoDisplay=true
+X-KDE-autostart-phase=2
+X-KDE-autostart-after=panel

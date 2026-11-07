@@ -44,6 +44,7 @@ rinomina 'org.kde.kinfocenter.desktop' 'Informazioni sul sistema' sofios-info
 rinomina 'org.kde.kup*.desktop' 'Backup' sofios-backup
 rinomina 'org.kde.plasma-systemmonitor.desktop' 'Monitor di sistema' sofios-monitor
 
+nascondi 'org.kde.plasma-welcome.desktop'
 nascondi 'org.kde.kate.desktop'
 nascondi 'org.kde.konqueror.desktop'
 nascondi 'org.kde.khelpcenter.desktop'

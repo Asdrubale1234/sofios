@@ -1,0 +1,14 @@
+#!/bin/sh
+# Font Inter in tutto il sistema (se il pacchetto c'e')
+fc-list 2>/dev/null | grep -qi 'Inter' || { echo "ATTENZIONE: font Inter non trovato"; exit 0; }
+F="Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+S="Inter,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+K=/etc/xdg/kdeglobals
+kwriteconfig6 --file $K --group General --key font "$F"
+kwriteconfig6 --file $K --group General --key menuFont "$F"
+kwriteconfig6 --file $K --group General --key toolBarFont "$F"
+kwriteconfig6 --file $K --group General --key smallestReadableFont "$S"
+kwriteconfig6 --file $K --group WM --key activeFont "$F"
+fc-cache -f 2>/dev/null || true
+echo "Inter impostato in $K"
+exit 0
