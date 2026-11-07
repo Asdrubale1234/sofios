@@ -77,3 +77,4 @@ openssh-client
 curl
 fonts-inter
 python3-pyqt6
+python3-pykeepass
