@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Aggiorna SofiOS
+Comment=Controlla e installa gli aggiornamenti di SofiOS
+Exec=konsole --hold -e /usr/local/bin/sofios-aggiorna
+Icon=sofios-logo
+Categories=System;
+Terminal=false

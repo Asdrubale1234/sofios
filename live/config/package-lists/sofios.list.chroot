@@ -71,3 +71,5 @@ intel-microcode
 amd64-microcode
 os-prober
 ntfs-3g
+openssh-client
+curl

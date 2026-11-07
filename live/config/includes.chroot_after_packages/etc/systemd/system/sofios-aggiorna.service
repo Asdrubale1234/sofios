@@ -1,0 +1,8 @@
+[Unit]
+Description=Aggiornamenti di SofiOS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sofios-aggiorna

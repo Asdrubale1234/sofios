@@ -1,0 +1,44 @@
+#!/bin/bash
+# Aggiornamenti di SofiOS: scarica, verifica la firma, applica.
+set -euo pipefail
+BASE="${SOFIOS_URL:-https://github.com/Asdrubale1234/sofios-aggiornamenti/releases/latest/download}"
+SIGNERS="${SOFIOS_SIGNERS:-/etc/sofios/allowed_signers}"
+ROOT="${SOFIOS_ROOT:-/}"
+VERF="${SOFIOS_VERSIONE:-/etc/sofios/versione}"
+
+if [ "$(id -u)" -ne 0 ] && [ -z "${SOFIOS_PROVA:-}" ]; then
+  exec pkexec "$0" "$@"
+fi
+
+T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
+dica(){ echo "$*"; }
+cur=$(tr -dc 0-9 < "$VERF" 2>/dev/null || true); cur=${cur:-0}
+
+curl -fsSL --max-time 60 "$BASE/versione.txt" -o "$T/v.txt" || { dica "Non riesco a controllare gli aggiornamenti: verifica la connessione a Internet."; exit 2; }
+hint=$(tr -dc 0-9 < "$T/v.txt"); hint=${hint:-0}
+if [ "$hint" -le "$cur" ]; then dica "SofiOS è già aggiornato."; exit 0; fi
+
+curl -fsSL --max-time 600 "$BASE/aggiornamento.tar.gz" -o "$T/a.tgz"
+curl -fsSL --max-time 60 "$BASE/aggiornamento.tar.gz.sig" -o "$T/a.sig"
+
+# 1. La firma deve essere quella di SofiOS
+if ! ssh-keygen -Y verify -f "$SIGNERS" -I sofios-aggiornamenti -n sofios-update -s "$T/a.sig" < "$T/a.tgz" >/dev/null 2>&1; then
+  dica "Aggiornamento non valido: la firma non corrisponde. Non è stato installato nulla."; exit 3
+fi
+
+# 2. Il contenuto deve stare solo nelle cartelle consentite
+bad=$(tar -tvzf "$T/a.tgz" | awk '{print substr($1,1,1)}' | grep -v '^[-d]$' || true)
+[ -z "$bad" ] || { dica "Aggiornamento non valido (contenuto non consentito)."; exit 3; }
+if tar -tzf "$T/a.tgz" | grep -Ev '^(VERSIONE|aggiorna\.sh|files/?|files/(usr|etc)/?|files/(usr/share|usr/local|etc/sofios|etc/xdg|etc/skel)(/.*)?)$' | grep -q .; then
+  dica "Aggiornamento non valido (percorsi non consentiti)."; exit 3
+fi
+if tar -tzf "$T/a.tgz" | grep -q '\.\.'; then dica "Aggiornamento non valido."; exit 3; fi
+
+mkdir "$T/x"; tar -xzf "$T/a.tgz" -C "$T/x" --no-same-owner --no-same-permissions
+new=$(tr -dc 0-9 < "$T/x/VERSIONE"); new=${new:-0}
+if [ "$new" -le "$cur" ]; then dica "SofiOS è già aggiornato."; exit 0; fi
+
+[ -d "$T/x/files" ] && cp -a "$T/x/files/." "$ROOT/"
+if [ -f "$T/x/aggiorna.sh" ] && [ -z "${SOFIOS_PROVA:-}" ]; then bash "$T/x/aggiorna.sh" || true; fi
+echo "$new" > "$VERF"
+dica "SofiOS aggiornato alla versione $new."
