@@ -89,6 +89,10 @@ try:
     aspetta(60, "sbloccato", 12)
     L("chiudo il benvenuto e apro l'installer")
     tasti("alt-f4"); time.sleep(4); foto("dopo-benvenuto")
+    for app_nome in ("Mail", "Password", "Note", "Browser"):     # i programmi nuovi, aperti dal menu veloce
+        tasti("alt-f2"); time.sleep(3); scrivi(app_nome); time.sleep(4); tasti("ret")
+        aspetta(40 if app_nome in ("Mail", "Browser") else 15, "app-" + app_nome.lower(), 8)
+        tasti("alt-f4"); time.sleep(4)
     tasti("alt-f2"); time.sleep(3); scrivi("Installa"); time.sleep(4); foto("krunner")
     tasti("ret")
     aspetta(150, "installer", 15)
