@@ -5,6 +5,8 @@ from PyQt6.QtCore import Qt, QSize, QRectF
 from PyQt6.QtGui import QPixmap, QPainter, QPainterPath, QFont, QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout,
                              QHBoxLayout, QFrame, QCheckBox)
+sys.path.insert(0, "/usr/local/lib/sofios")
+from sofios_info import bottone_informazioni
 
 DATI = os.environ.get("SOFIOS_DATI", "/usr/share/sofios/benvenuto")
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
@@ -105,7 +107,7 @@ class Benvenuto(QWidget):
 
         piede = QHBoxLayout()
         self.ancora = QCheckBox("Mostra ancora al prossimo avvio")
-        piede.addWidget(self.ancora); piede.addStretch()
+        piede.addWidget(self.ancora); piede.addWidget(bottone_informazioni(self, "Benvenuto in SofiOS", "Una breve guida per iniziare con il tuo nuovo computer.")); piede.addStretch()
         b = QPushButton("Inizia"); b.setObjectName("primario"); b.setCursor(Qt.CursorShape.PointingHandCursor)
         b.clicked.connect(self.chiudi); piede.addWidget(b)
         dx.addLayout(piede)

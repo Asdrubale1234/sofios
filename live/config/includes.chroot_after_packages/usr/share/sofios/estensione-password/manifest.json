@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Password di SofiOS",
+  "name": "Cassaforte Password",
   "version": "1.0",
-  "description": "Ti ricorda di usare l'app Password di SofiOS quando un sito chiede una password.",
+  "description": "Ti ricorda di usare l'app Cassaforte Password di SofiOS quando un sito chiede una password.",
   "icons": { "128": "logo.png" },
   "content_scripts": [
     {

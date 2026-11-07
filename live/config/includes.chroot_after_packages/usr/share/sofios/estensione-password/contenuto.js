@@ -1,4 +1,4 @@
-// Password di SofiOS: quando un sito chiede una password, propone l'app Password.
+// Cassaforte Password: quando un sito chiede una password, propone l'app Password.
 (function () {
   "use strict";
   var api = (typeof browser !== "undefined" ? browser : chrome);
@@ -21,9 +21,9 @@
       '.s{background:#ffd479;color:#0b2740}.n{background:#12365a;color:#e6f1ff;margin-left:6px}' +
       '</style>' +
       '<div class="b"><img alt="">' +
-      '<div><div class="t">Password di SofiOS</div>' +
+      '<div><div class="t">Cassaforte Password</div>' +
       '<div class="d">Cerca o salva questa password nella tua cassaforte.</div>' +
-      '<button class="s">Apri Password</button><button class="n">Non ora</button></div></div>';
+      '<button class="s">Apri Cassaforte</button><button class="n">Non ora</button></div></div>';
     ombra.querySelector("img").src = api.runtime.getURL("logo.png");
     ombra.querySelector(".n").addEventListener("click", chiudi);
     ombra.querySelector(".s").addEventListener("click", function () {

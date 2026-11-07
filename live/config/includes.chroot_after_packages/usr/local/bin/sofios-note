@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # Note di SofiOS: un file di testo per nota nella cartella "Note" della tua casa. Salvataggio automatico.
 import os, sys, time, re
+sys.path.insert(0, "/usr/local/lib/sofios")
+from sofios_info import bottone_informazioni
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QListWidget, QListWidgetItem, QPlainTextEdit,
@@ -37,6 +39,7 @@ class Note(QWidget):
         self.elenco = QListWidget(); self.elenco.setFixedWidth(250); sx.addWidget(self.elenco, 1)
         nuova = QPushButton("Nuova nota"); nuova.clicked.connect(self.nuova); sx.addWidget(nuova)
         cancella = QPushButton("Elimina nota"); cancella.setObjectName("vuoto"); cancella.clicked.connect(self.elimina); sx.addWidget(cancella)
+        sx.addWidget(bottone_informazioni(self, "Note", "Le tue note, salvate da sole nella cartella Note."))
         radice.addLayout(sx)
         self.testo = QPlainTextEdit(); self.testo.setPlaceholderText("Scrivi qui la tua nota…")
         radice.addWidget(self.testo, 1)
