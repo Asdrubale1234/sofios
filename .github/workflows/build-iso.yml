@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths-ignore: ['README.md', 'docs/**']
+    paths-ignore: ['README.md', 'docs/**', 'tools/foto-iso.py', '.github/workflows/foto.yml', '.github/workflows/build-iso.yml']
 permissions:
   contents: write
 jobs:

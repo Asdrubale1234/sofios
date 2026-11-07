@@ -74,15 +74,17 @@ def aspetta(sec, nome, ogni=15):
 
 try:
     L("attendo il menu di avvio")
-    aspetta(40, "avvio", 10)
+    aspetta(30, "avvio", 10)
     tasti("ret")          # avvia la voce predefinita se il menu aspetta
     L("avvio premuto, attendo il caricamento")
     aspetta(60, "caricamento", 10)
-    L("attendo il desktop (max", massimo, "minuti)")
-    t_fine = inizio + massimo * 60
-    while time.time() < t_fine and proc.poll() is None:
+    L("desktop appena avviato")
+    t0 = time.time()
+    while time.time() - t0 < 330 and proc.poll() is None:   # prima del blocco schermo (5 minuti)
         foto("desktop"); time.sleep(20)
-        if time.time() - inizio > 240 and n > 12: break   # abbastanza: il resto si decide guardando
+    L("provo a sbloccare con la password della prova (live)")
+    scrivi("live"); tasti("ret"); time.sleep(8)
+    aspetta(60, "sbloccato", 12)
     L("chiudo il benvenuto e apro l'installer")
     tasti("alt-f4"); time.sleep(4); foto("dopo-benvenuto")
     tasti("alt-f2"); time.sleep(3); scrivi("Installa"); time.sleep(4); foto("krunner")

@@ -1,0 +1,47 @@
+name: Schermate della ISO
+on:
+  push:
+    branches: [main]
+    paths: ['tools/foto-iso.py', '.github/workflows/foto.yml']
+permissions:
+  contents: write
+jobs:
+  foto:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scarica l'ultima ISO
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+          echo "Uso la ISO $TAG"
+          mkdir -p iso && gh release download "$TAG" -D iso
+          cat iso/sofios.iso.part* > sofios.iso
+          (cd iso && sha256sum -c sha256.txt 2>/dev/null || true)
+          sha256sum sofios.iso | cut -c1-16
+          rm -rf iso/sofios.iso.part*
+          echo "$TAG" > tag.txt
+      - name: Avvia la ISO e salva schermate vere
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-system-x86 qemu-utils ovmf imagemagick
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
+          mkdir -p out
+          python3 tools/foto-iso.py sofios.iso out/foto 40
+      - name: Salva le schermate nel ramo schermate
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/sc && cd /tmp/sc
+          cp -r "$GITHUB_WORKSPACE/out/foto" ./foto 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE/tag.txt" . 2>/dev/null || true
+          git init -q && git checkout -q -b schermate
+          git config user.name "sofios-build" && git config user.email "build@sofios.local"
+          git add . && git commit -q -m "Schermate ${GITHUB_RUN_ID}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" schermate
