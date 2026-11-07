@@ -3,5 +3,5 @@ Type=Application
 Name=Note
 Comment=Le tue note
 Exec=/usr/local/bin/sofios-note
-Icon=sofios-logo
+Icon=sofios-note
 Categories=Utility;
