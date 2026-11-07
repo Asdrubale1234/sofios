@@ -1,0 +1,77 @@
+name: Anteprime Kvantum
+on:
+  push:
+    branches: [kvantum-prova]
+permissions:
+  contents: write
+jobs:
+  anteprime:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 30
+    steps:
+      - name: Pacchetti
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates qt6-style-kvantum kvantum dolphin breeze breeze-icon-theme xvfb xauth imagemagick dbus-x11 python3 python3-pyqt6 python3-pykeepass fonts-inter fonts-noto-core openbox x11-utils || \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates qt6-style-kvantum dolphin breeze breeze-icon-theme xvfb xauth imagemagick dbus-x11 python3 python3-pyqt6 openbox x11-utils
+      - uses: actions/checkout@v4
+      - name: Temi
+        run: |
+          git clone -q --depth 1 https://github.com/vinceliuice/WhiteSur-kde /tmp/ws
+          mkdir -p /tmp/kvt/grigio /tmp/kvt/sofios
+          cp /tmp/ws/Kvantum/WhiteSur/WhiteSurDark.* /tmp/kvt/grigio/
+          python3 tools/kvantum_sofios.py /tmp/ws/Kvantum/WhiteSur WhiteSurDark SofiOS /tmp/kvt/sofios
+      - name: Schermate
+        run: |
+          set -x
+          mkdir -p /tmp/cartella/Documenti /tmp/cartella/Immagini /tmp/cartella/Musica /tmp/out
+          for n in "Fatture 2026.pdf" "Appunti.txt" "Vacanze.jpg" "Bilancio.ods" "Canzone.mp3" "Progetto.zip"; do echo x > "/tmp/cartella/$n"; done
+          cat > /tmp/giro.sh <<'EOS'
+          #!/bin/bash
+          # $1 = nome, $2 = stile (breeze|kvantum), $3 = cartella tema kvantum (opzionale)
+          export HOME=/tmp/casa-$1; rm -rf $HOME; mkdir -p $HOME/.config/Kvantum $HOME/.local/share/color-schemes
+          cp live/config/includes.chroot_after_packages/usr/share/color-schemes/SofiOS.colors $HOME/.local/share/color-schemes/
+          cp live/config/includes.chroot_after_packages/usr/share/color-schemes/SofiOS.colors $HOME/.config/kdeglobals
+          cat >> $HOME/.config/kdeglobals <<EOF2
+          [Icons]
+          Theme=breeze-dark
+          EOF2
+          if [ "$2" = kvantum ]; then
+            mkdir -p $HOME/.config/Kvantum/$4; cp /tmp/kvt/$3/* $HOME/.config/Kvantum/$4/
+            printf '[General]\ntheme=%s\n' "$4" > $HOME/.config/Kvantum/kvantum.kvconfig
+            export QT_STYLE_OVERRIDE=kvantum
+          else
+            export QT_STYLE_OVERRIDE=Breeze
+          fi
+          export XDG_RUNTIME_DIR=/tmp/run-$1; mkdir -p $XDG_RUNTIME_DIR; chmod 700 $XDG_RUNTIME_DIR
+          Xvfb :9 -screen 0 1100x700x24 & sleep 2; export DISPLAY=:9
+          openbox & sleep 1
+          dbus-run-session -- bash -c '
+            dolphin --new-window /tmp/cartella & sleep 12; import -window root /tmp/out/'$1'-file.png; pkill dolphin; sleep 1
+            SOFIOS_FOTO=/tmp/out/'$1'-cassaforte.png SOFIOS_LOGO=/usr/share/sofios/logo.png QT_QPA_PLATFORM=xcb python3 -I bin_pw.py || true
+          '
+          kill %1 %2 2>/dev/null
+          EOS
+          chmod +x /tmp/giro.sh
+          sed -i 's/^          //' /tmp/giro.sh
+          mkdir -p /usr/share/sofios /usr/local/lib/sofios
+          cp live/config/includes.chroot_after_packages/usr/share/sofios/* /usr/share/sofios/ 2>/dev/null || true
+          cp live/config/includes.chroot_after_packages/usr/local/lib/sofios/*.py /usr/local/lib/sofios/
+          cp live/config/includes.chroot_after_packages/usr/local/bin/sofios-password bin_pw.py
+          /tmp/giro.sh breeze breeze || true
+          /tmp/giro.sh grigio kvantum grigio WhiteSurDark || true
+          /tmp/giro.sh sofios kvantum sofios SofiOS || true
+          ls -la /tmp/out
+      - name: Salva nel ramo kvantum
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/sc && cd /tmp/sc
+          cp -r /tmp/out ./foto 2>/dev/null || true
+          git init -q && git checkout -q -b kvantum
+          git config user.name "sofios-build" && git config user.email "build@sofios.local"
+          git add . && git commit -q -m "Anteprime Kvantum ${GITHUB_RUN_ID}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" kvantum
