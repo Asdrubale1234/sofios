@@ -2,7 +2,7 @@
 # Informazioni su SofiOS: nome, versione, crediti e i dati del computer (processore, memoria, disco, grafica).
 import os, sys, shutil, socket, subprocess, platform
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
-from sofios_info import CREDITI, ANNO, VERSIONE
+from sofios_info import CREDITI, ANNO, VERSIONE, AZIENDA, CONTATTI
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QPixmap, QGuiApplication
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGridLayout)
@@ -86,7 +86,9 @@ class Info(QWidget):
         v.addWidget(sc)
         v.addSpacing(12)
         c = QLabel(CREDITI); c.setObjectName("crediti"); c.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(c)
-        a = QLabel("© " + ANNO + " Sofi Labs · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(a)
+        a = QLabel("© " + ANNO + " " + AZIENDA + " · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(a)
+        if CONTATTI:
+            k = QLabel(CONTATTI); k.setObjectName("sotto"); k.setAlignment(Qt.AlignmentFlag.AlignCenter); k.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); v.addWidget(k)
         v.addSpacing(10)
         r = QHBoxLayout(); r.addStretch()
         self.copia = QPushButton("Copia informazioni"); self.copia.setObjectName("secondario"); self.copia.clicked.connect(self.copia_info); r.addWidget(self.copia)

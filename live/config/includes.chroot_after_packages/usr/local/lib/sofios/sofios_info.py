@@ -4,9 +4,19 @@ from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QShortcut
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QWidget
 
 VERSIONE = "1.0"
-CREDITI = "Sviluppato da Sofi Labs"
-ANNO = "2026"
 import os
+import json
+def _crediti():
+    base = {"azienda": "Sofi Labs", "anno": "2026", "email": "", "sito": ""}
+    try:
+        with open(os.environ.get("SOFIOS_CREDITI", "/usr/share/sofios/crediti.json")) as f: base.update(json.load(f))
+    except Exception: pass
+    return base
+DATI_CREDITI = _crediti()
+AZIENDA = DATI_CREDITI["azienda"]
+CREDITI = "Sviluppato da " + AZIENDA
+ANNO = DATI_CREDITI["anno"]
+CONTATTI = "  ·  ".join(x for x in (DATI_CREDITI["sito"], DATI_CREDITI["email"]) if x)
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 
 STILE = """
@@ -35,7 +45,9 @@ def mostra_informazioni(genitore, nome, descrizione="", logo=LOGO):
     v.addSpacing(12)
     sc = QWidget(); sc.setObjectName("scheda"); l = QVBoxLayout(sc); l.setContentsMargins(16, 14, 16, 14); l.setSpacing(2)
     c = QLabel(CREDITI); c.setObjectName("crediti"); c.setAlignment(Qt.AlignmentFlag.AlignCenter); l.addWidget(c)
-    a = QLabel("© " + ANNO + " Sofi Labs · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); l.addWidget(a)
+    a = QLabel("© " + ANNO + " " + AZIENDA + " · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); l.addWidget(a)
+    if CONTATTI:
+        k = QLabel(CONTATTI); k.setObjectName("sotto"); k.setAlignment(Qt.AlignmentFlag.AlignCenter); k.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); l.addWidget(k)
     v.addWidget(sc)
     v.addSpacing(10)
     b = QPushButton("Chiudi"); b.clicked.connect(d.accept); v.addWidget(b, alignment=Qt.AlignmentFlag.AlignCenter)
