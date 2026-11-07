@@ -1,0 +1,105 @@
+#!/usr/bin/python3
+# Note di SofiOS: un file di testo per nota nella cartella "Note" della tua casa. Salvataggio automatico.
+import os, sys, time, re
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import (QApplication, QWidget, QListWidget, QListWidgetItem, QPlainTextEdit,
+                             QPushButton, QHBoxLayout, QVBoxLayout, QLabel, QMessageBox)
+
+CARTELLA = os.environ.get("SOFIOS_NOTE", os.path.expanduser("~/Note"))
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel#titolo { color: #ffffff; font-size: 18px; font-weight: 700; }
+QListWidget { background: #12365a; border: none; border-radius: 12px; color: #e6f1ff; font-size: 13px; padding: 6px; outline: 0; }
+QListWidget::item { padding: 9px 10px; border-radius: 8px; }
+QListWidget::item:selected { background: #1e6fa8; color: #ffffff; }
+QPlainTextEdit { background: #12365a; border: none; border-radius: 12px; color: #e6f1ff; font-size: 14px; padding: 14px; selection-background-color: #1e6fa8; }
+QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 9px 16px; font-size: 13px; font-weight: 700; }
+QPushButton:hover { background: #ffe19e; }
+QPushButton#vuoto { background: #1e6fa8; color: #ffffff; font-weight: 600; }
+"""
+
+def titolo_di(testo, nome):
+    riga = next((r.strip() for r in testo.splitlines() if r.strip()), "")
+    return riga[:48] if riga else "Nota vuota"
+
+class Note(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("Note"); self.setWindowIcon(QIcon(LOGO))
+        self.setStyleSheet(STILE); self.resize(860, 560)
+        os.makedirs(CARTELLA, exist_ok=True)
+        self.corrente = None
+        radice = QHBoxLayout(self); radice.setContentsMargins(20, 18, 20, 18); radice.setSpacing(16)
+        sx = QVBoxLayout(); sx.setSpacing(10)
+        t = QLabel("Note"); t.setObjectName("titolo"); sx.addWidget(t)
+        self.elenco = QListWidget(); self.elenco.setFixedWidth(250); sx.addWidget(self.elenco, 1)
+        nuova = QPushButton("Nuova nota"); nuova.clicked.connect(self.nuova); sx.addWidget(nuova)
+        cancella = QPushButton("Elimina nota"); cancella.setObjectName("vuoto"); cancella.clicked.connect(self.elimina); sx.addWidget(cancella)
+        radice.addLayout(sx)
+        self.testo = QPlainTextEdit(); self.testo.setPlaceholderText("Scrivi qui la tua nota…")
+        radice.addWidget(self.testo, 1)
+        self.salva_t = QTimer(self); self.salva_t.setSingleShot(True); self.salva_t.setInterval(600); self.salva_t.timeout.connect(self.salva)
+        self.testo.textChanged.connect(self.salva_t.start)
+        self.elenco.currentItemChanged.connect(self.apri)
+        self.carica()
+        if self.elenco.count() == 0: self.nuova()
+
+    def percorsi(self):
+        f = [os.path.join(CARTELLA, n) for n in os.listdir(CARTELLA) if n.endswith(".txt")]
+        return sorted(f, key=os.path.getmtime, reverse=True)
+
+    def carica(self, scegli=None):
+        self.elenco.blockSignals(True); self.elenco.clear()
+        for p in self.percorsi():
+            try: tx = open(p, encoding="utf-8").read()
+            except OSError: continue
+            it = QListWidgetItem(titolo_di(tx, p)); it.setData(Qt.ItemDataRole.UserRole, p); self.elenco.addItem(it)
+        self.elenco.blockSignals(False)
+        if self.elenco.count():
+            riga = 0
+            for i in range(self.elenco.count()):
+                if self.elenco.item(i).data(Qt.ItemDataRole.UserRole) == scegli: riga = i
+            self.elenco.setCurrentRow(riga); self.apri(self.elenco.currentItem(), None)
+
+    def apri(self, it, _):
+        if it is None: return
+        self.salva()
+        self.corrente = it.data(Qt.ItemDataRole.UserRole)
+        self.testo.blockSignals(True)
+        try: self.testo.setPlainText(open(self.corrente, encoding="utf-8").read())
+        except OSError: self.testo.setPlainText("")
+        self.testo.blockSignals(False)
+
+    def salva(self):
+        if not self.corrente: return
+        try: open(self.corrente, "w", encoding="utf-8").write(self.testo.toPlainText())
+        except OSError: return
+        it = self.elenco.currentItem()
+        if it: it.setText(titolo_di(self.testo.toPlainText(), self.corrente))
+
+    def nuova(self):
+        self.salva()
+        p = os.path.join(CARTELLA, time.strftime("nota-%Y%m%d-%H%M%S.txt"))
+        open(p, "w", encoding="utf-8").close()
+        self.carica(scegli=p); self.testo.setFocus()
+
+    def elimina(self):
+        if not self.corrente: return
+        if QMessageBox.question(self, "Elimina nota", "Vuoi eliminare questa nota?") == QMessageBox.StandardButton.Yes:
+            try: os.remove(self.corrente)
+            except OSError: pass
+            self.corrente = None; self.carica()
+            if self.elenco.count() == 0: self.nuova()
+
+    def closeEvent(self, e):
+        self.salva(); e.accept()
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("Note")
+    w = Note()
+    if os.environ.get("SOFIOS_FOTO"):
+        w.show(); app.processEvents(); w.grab().save(os.environ["SOFIOS_FOTO"]); return 0
+    w.show(); return app.exec()
+if __name__ == "__main__": sys.exit(main())
