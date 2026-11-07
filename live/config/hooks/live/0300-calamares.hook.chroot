@@ -16,3 +16,14 @@ fi
 for f in $(grep -ril calamares /usr/share/applications 2>/dev/null); do
   sed -i 's/^Name=.*/Name=Installa SofiOS/;s/^Name\[[^]]*\]=.*/Name[it]=Installa SofiOS/;s#^Icon=.*#Icon=/usr/share/sofios/logo.png#' "$f"
 done
+# Partizioni: niente cifratura del disco nell'installer (scelta di Luca); il resto resta com'e'
+P=/etc/calamares/modules/partition.conf
+if [ -f "$P" ]; then
+  sed -i '/^enableLuksAutomatedPartitioning:/d' "$P"
+  [ -n "$(tail -c1 "$P")" ] && echo >> "$P"
+  echo 'enableLuksAutomatedPartitioning: false' >> "$P"
+  echo "SOFIOS: partition.conf (righe attive):"; grep -v -E '^\s*(#|$)' "$P" | head -40
+else
+  echo "ATTENZIONE: $P non trovato"
+fi
+exit 0
