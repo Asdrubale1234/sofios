@@ -25,6 +25,7 @@ grep -rilE 'debian|kde|plasma|calamares|konqi' /usr/share/applications /usr/loca
   n=$(grep -m1 '^Name=' "$f"); nit=$(grep -m1 '^Name\[it\]=' "$f"); h=$(grep -m1 '^NoDisplay=' "$f"); o=$(grep -m1 '^OnlyShowIn=' "$f")
   echo "$f | $n | $nit | $h | $o"
 done | head -150
+echo "-- Utenti (cambio avatar) --"; find /usr -name "kcm_users*" 2>/dev/null | head -5; ls /usr/share/sddm/faces -la 2>&1
 echo "-- Informazioni sul sistema (KDE) --"; ls /usr/share/kservices6 2>/dev/null | grep -i about; find /usr/share -name 'kcm_about*' 2>/dev/null | head
 echo "-- Plymouth --"; plymouth-set-default-theme 2>&1; ls /usr/share/plymouth/themes
 echo "-- Locale / tastiera di base --"; cat /etc/default/locale /etc/default/keyboard /etc/timezone 2>&1

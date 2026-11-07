@@ -13,16 +13,20 @@ Rectangle {
 
     property var nomi: []
     property var reali: []
+    property var icone: []
+    property string avatar: "avatar.png"
     function leggiUtente() {
         var n = nomi.length
         if (n === 0) { nomeUtente = ""; nomeVisibile = ""; return }
         var i = Math.max(0, Math.min(utenteIdx, n - 1))
         nomeUtente = nomi[i] || ""
         nomeVisibile = (reali[i] && reali[i].length > 0) ? reali[i] : nomeUtente
+        var ic = icone[i] ? ("" + icone[i]) : ""
+        avatar = ic.length > 0 ? (ic.indexOf("://") >= 0 ? ic : "file://" + ic) : "avatar.png"
     }
     Repeater {
         model: (typeof userModel !== "undefined") ? userModel : 0
-        delegate: Item { Component.onCompleted: { radice.nomi[index] = model.name; radice.reali[index] = model.realName; radice.leggiUtente() } }
+        delegate: Item { Component.onCompleted: { radice.nomi[index] = model.name; radice.reali[index] = model.realName; radice.icone[index] = model.icon; radice.leggiUtente() } }
     }
     function dataItaliana() {
         var g = ["Domenica", "Luned\u00ec", "Marted\u00ec", "Mercoled\u00ec", "Gioved\u00ec", "Venerd\u00ec", "Sabato"]
@@ -49,6 +53,13 @@ Rectangle {
         function onLoginFailed() { campo.text = ""; radice.errore = true; campo.forceActiveFocus() }
     }
 
+    // marchio in alto a sinistra
+    Row {
+        anchors.left: parent.left; anchors.top: parent.top; anchors.margins: 24; spacing: 12
+        Image { source: "logo.png"; width: 44; height: 44; smooth: true }
+        Text { anchors.verticalCenter: parent.verticalCenter; text: "SofiOS"; color: "#ffffff"; font.family: radice.fam; font.pixelSize: 20; font.weight: Font.DemiBold }
+    }
+
     // orologio e data
     Column {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -66,7 +77,8 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         y: parent.height * 0.42
         spacing: 14
-        Image { anchors.horizontalCenter: parent.horizontalCenter; source: "logo.png"; width: 96; height: 96; smooth: true }
+        Image { anchors.horizontalCenter: parent.horizontalCenter; source: radice.avatar; width: 112; height: 112; smooth: true; fillMode: Image.PreserveAspectCrop
+            onStatusChanged: if (status === Image.Error) source = "avatar.png" }
         Text { anchors.horizontalCenter: parent.horizontalCenter; color: "#ffffff"; font.family: radice.fam; font.pixelSize: 22; font.weight: Font.DemiBold; text: radice.nomeVisibile }
 
         Row {
