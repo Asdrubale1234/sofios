@@ -1,0 +1,11 @@
+[Unit]
+Description=SofiOS rapporto di prova (solo macchina virtuale)
+After=graphical.target
+ConditionVirtualization=vm
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/sofios-diag-seriale
+
+[Install]
+WantedBy=graphical.target

@@ -22,7 +22,8 @@ cmd = ["qemu-system-x86_64", "-machine", "q35,accel=kvm:tcg", "-cpu", "max", "-s
        "-drive", "file=/tmp/disco.qcow2,if=virtio,format=qcow2",
        "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
        "-netdev", "user,id=n0", "-device", "virtio-net-pci,netdev=n0",
-       "-monitor", "unix:/tmp/qmon,server,nowait"]
+       "-monitor", "unix:/tmp/qmon,server,nowait",
+       "-serial", "file:" + os.path.join(out, "seriale.txt")]
 if codice and vars_src:
     shutil.copy(vars_src, "/tmp/OVMF_VARS.fd")
     cmd += ["-drive", f"if=pflash,format=raw,readonly=on,file={codice}", "-drive", "if=pflash,format=raw,file=/tmp/OVMF_VARS.fd"]
@@ -83,6 +84,7 @@ try:
     while time.time() - t0 < 330 and proc.poll() is None:   # prima del blocco schermo (5 minuti)
         foto("desktop"); time.sleep(20)
     L("provo a sbloccare con la password della prova (live)")
+    tasti("shift"); time.sleep(4)     # il primo tasto sveglia la schermata di blocco, se c'e'
     scrivi("live"); tasti("ret"); time.sleep(8)
     aspetta(60, "sbloccato", 12)
     L("chiudo il benvenuto e apro l'installer")

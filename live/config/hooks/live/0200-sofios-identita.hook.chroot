@@ -28,6 +28,9 @@ fi
 # Prova da chiavetta: niente blocco schermo (servizio attivo solo con boot=live)
 systemctl enable sofios-live-impostazioni.service 2>/dev/null || \
   { mkdir -p /etc/systemd/system/multi-user.target.wants; ln -sf /etc/systemd/system/sofios-live-impostazioni.service /etc/systemd/system/multi-user.target.wants/sofios-live-impostazioni.service; }
+# SOLO PROVA: rapporto sul desktop via porta seriale (solo macchina virtuale), da togliere nella ISO ufficiale
+systemctl enable sofios-diag-seriale.service 2>/dev/null || \
+  { mkdir -p /etc/systemd/system/graphical.target.wants; ln -sf /etc/systemd/system/sofios-diag-seriale.service /etc/systemd/system/graphical.target.wants/sofios-diag-seriale.service; }
 # Elenco dei file con il simbolo Debian (per il registro: cosa resta da cambiare)
 echo "== SOFIOS: file con marchio Debian (avatar, loghi) =="
 find /usr/share /var/lib/AccountsService -iname '*debian*' \( -name '*.png' -o -name '*.svg' -o -name '*.icon' \) 2>/dev/null | head -40

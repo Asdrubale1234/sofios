@@ -145,7 +145,7 @@ def main():
     if "--solo-prima-volta" in sys.argv and os.path.exists(FLAG) and not LIVE:
         return 0
     app = QApplication(sys.argv)
-    app.setApplicationName("SofiOS")
+    app.setApplicationName("SofiOS"); app.setDesktopFileName("sofios-benvenuto")
     w = Benvenuto()
     if os.environ.get("SOFIOS_FOTO"):
         w.show(); app.processEvents(); w.grab().save(os.environ["SOFIOS_FOTO"]); return 0

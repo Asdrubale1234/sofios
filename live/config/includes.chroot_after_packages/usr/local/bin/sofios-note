@@ -97,7 +97,7 @@ class Note(QWidget):
         self.salva(); e.accept()
 
 def main():
-    app = QApplication(sys.argv); app.setApplicationName("Note")
+    app = QApplication(sys.argv); app.setApplicationName("Note"); app.setDesktopFileName("sofios-note")
     w = Note()
     if os.environ.get("SOFIOS_FOTO"):
         w.show(); app.processEvents(); w.grab().save(os.environ["SOFIOS_FOTO"]); return 0

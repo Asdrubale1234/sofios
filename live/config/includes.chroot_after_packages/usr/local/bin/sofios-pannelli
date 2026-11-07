@@ -1,0 +1,27 @@
+#!/bin/sh
+# Al primo accesso: se Plasma non ha creato la barra in alto e il Dock, li crea con il disegno SofiOS.
+FLAG="$HOME/.config/sofios-pannelli-fatto"
+LOG="$HOME/.cache/sofios-pannelli.log"
+LAYOUT=/usr/share/plasma/look-and-feel/org.sofios.desktop/contents/layouts/org.kde.plasma.desktop-layout.js
+mkdir -p "$HOME/.cache" "$HOME/.config"
+[ -e "$FLAG" ] && exit 0
+chiama() { busctl --user call org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell evaluateScript s "$1" 2>&1; }
+echo "$(date +%T) avvio" >> "$LOG"
+i=0
+until R=$(chiama 'print(panels().length)') && echo "$R" | grep -q '^s '; do
+  i=$((i+1)); [ "$i" -gt 40 ] && { echo "$(date +%T) plasmashell non risponde: $R" >> "$LOG"; exit 0; }
+  sleep 2
+done
+sleep 10
+R=$(chiama 'print(panels().length)')
+echo "$(date +%T) pannelli trovati: $R" >> "$LOG"
+case "$R" in
+  's "0'*)
+    S=$(cat "$LAYOUT")
+    O=$(chiama "$S")
+    echo "$(date +%T) disegno applicato: $O" >> "$LOG"
+    sleep 3
+    echo "$(date +%T) pannelli ora: $(chiama 'print(panels().length)')" >> "$LOG" ;;
+esac
+: > "$FLAG"
+exit 0

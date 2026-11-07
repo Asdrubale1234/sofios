@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=SofiOS pannelli
+Exec=/usr/local/bin/sofios-pannelli
+NoDisplay=true
+X-KDE-autostart-phase=2
