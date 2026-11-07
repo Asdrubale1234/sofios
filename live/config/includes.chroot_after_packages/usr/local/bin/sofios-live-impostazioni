@@ -1,7 +1,7 @@
 #!/bin/sh
 # Solo dalla chiavetta (boot=live): niente blocco schermo e niente standby. Sul sistema installato non gira.
 mkdir -p /etc/xdg
-printf '[Daemon]\nAutolock=false\nLockOnResume=false\n' > /etc/xdg/kscreenlockerrc
+printf '\n[Daemon]\nAutolock=false\nLockOnResume=false\n' >> /etc/xdg/kscreenlockerrc
 : > /etc/xdg/powerdevilrc
 for P in AC Battery LowBattery; do
   printf '[%s][SuspendAndShutdown]\nAutoSuspendAction=0\n\n[%s][Display]\nTurnOffDisplayWhenIdle=false\nDimDisplayWhenIdle=false\n\n' "$P" "$P" >> /etc/xdg/powerdevilrc

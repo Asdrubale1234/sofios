@@ -66,10 +66,12 @@ def clic(x, y, w=1280, h=800):
 def tasti(*k):
     for t in k:
         cmdmon(f"sendkey {t}"); time.sleep(0.3)
+SPECIALI = {"-": "minus", "/": "slash", ".": "dot", "_": "shift-minus", ":": "shift-semicolon", "=": "equal"}
 def scrivi(testo):
     for c in testo:
         if c == " ": tasti("spc")
         elif c.isupper(): tasti("shift-" + c.lower())
+        elif c in SPECIALI: tasti(SPECIALI[c])
         else: tasti(c)
 def aspetta(sec, nome, ogni=15):
     fine = time.time() + sec
@@ -96,6 +98,31 @@ try:
         tasti("alt-f2"); time.sleep(3); scrivi(app_nome); time.sleep(4); tasti("ret")
         aspetta(40 if app_nome in ("Mail", "Browser") else 15, "app-" + app_nome.lower(), 8)
         tasti("alt-f4"); time.sleep(4)
+    # altre schermate del sistema: ognuna provata da sola (se una fallisce si va avanti)
+    def schermata(nome, comando, attesa, chiudi="alt-f4"):
+        try:
+            L("schermata:", nome)
+            tasti("alt-f2"); time.sleep(3); scrivi(comando); time.sleep(3); tasti("ret")
+            time.sleep(attesa); foto(nome); time.sleep(1); foto(nome + "-b")
+            if chiudi: tasti(chiudi); time.sleep(3)
+        except Exception as e:
+            L("errore nella schermata", nome, repr(e))
+    schermata("accesso-sddm", "sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sofios", 12)
+    schermata("info-sistema", "systemsettings kcm_about-distro", 15)
+    schermata("file", "File", 15)
+    schermata("sostore", "SoStore", 25)
+    try:
+        L("schermata: menu")
+        tasti("meta_l"); time.sleep(4); foto("menu-applicazioni"); tasti("esc"); time.sleep(2)
+    except Exception as e:
+        L("errore nel menu", repr(e))
+    try:
+        L("schermata: blocco")
+        tasti("alt-f2"); time.sleep(3); scrivi("loginctl lock-session"); time.sleep(3); tasti("ret")
+        time.sleep(8); foto("blocco"); time.sleep(1)
+        scrivi("live"); tasti("ret"); time.sleep(6); foto("dopo-blocco")
+    except Exception as e:
+        L("errore nel blocco", repr(e))
     tasti("alt-f2"); time.sleep(3); scrivi("Installa"); time.sleep(4); foto("krunner")
     tasti("ret")
     aspetta(150, "installer", 15)

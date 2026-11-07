@@ -1,0 +1,32 @@
+#!/bin/sh
+# Ultimo passo nella costruzione: sfondo di GRUB nostro e REGISTRO di controllo: dove compaiono ancora Debian/KDE/Plasma/Calamares.
+# Il registro finisce nel build.log (ramo "logs"), cosi' si controlla senza avviare la ISO.
+echo "== SOFIOS: sfondo GRUB (sistema installato) =="
+if command -v update-alternatives >/dev/null 2>&1 && [ -f /usr/share/sofios/grub-sfondo.png ]; then
+  update-alternatives --install /usr/share/images/desktop-base/desktop-grub.png desktop-grub /usr/share/sofios/grub-sfondo.png 200 || true
+  update-alternatives --set desktop-grub /usr/share/sofios/grub-sfondo.png || true
+  update-alternatives --display desktop-grub 2>&1 | head -8
+else
+  echo "ATTENZIONE: update-alternatives o grub-sfondo.png mancanti"
+fi
+# Voci del menu GRUB: senza "GNU/Linux" (resta solo "SofiOS")
+if [ -f /etc/grub.d/10_linux ]; then
+  sed -i 's|OS="${GRUB_DISTRIBUTOR} GNU/Linux"|OS="${GRUB_DISTRIBUTOR}"|' /etc/grub.d/10_linux || true
+  echo "SOFIOS: 10_linux, riga OS=:"; grep -n '^ *OS=' /etc/grub.d/10_linux | head -5
+fi
+echo "== SOFIOS: controllo marchi =="
+echo "-- os-release / issue / lsb --"; cat /etc/os-release 2>&1 | head -12; cat /etc/issue /etc/issue.net 2>&1; ls -l /etc/lsb-release /etc/debian_version 2>&1; cat /etc/debian_version 2>&1
+echo "-- grub: file e impostazioni --"; cat /etc/default/grub 2>&1 | grep -v '^#' | grep -v '^$' | head -20; ls /etc/default/grub.d 2>&1; cat /etc/default/grub.d/*.cfg 2>&1
+echo "-- 05_debian_theme --"; cat /etc/grub.d/05_debian_theme 2>&1 | head -60
+echo "-- desktop-base grub --"; ls -l /usr/share/images/desktop-base/ 2>&1 | head; cat /usr/share/desktop-base/grub_background.sh 2>&1 | head -20
+echo "-- sddm --"; cat /etc/sddm.conf.d/*.conf 2>&1; ls /usr/share/sddm/themes 2>&1; ls /usr/share/sddm/faces 2>&1
+echo "-- voci di menu con Debian/KDE/Plasma/Calamares (Name/Comment) --"
+grep -rilE 'debian|kde|plasma|calamares|konqi' /usr/share/applications /usr/local/share/applications 2>/dev/null | while read -r f; do
+  n=$(grep -m1 '^Name=' "$f"); nit=$(grep -m1 '^Name\[it\]=' "$f"); h=$(grep -m1 '^NoDisplay=' "$f"); o=$(grep -m1 '^OnlyShowIn=' "$f")
+  echo "$f | $n | $nit | $h | $o"
+done | head -150
+echo "-- Informazioni sul sistema (KDE) --"; ls /usr/share/kservices6 2>/dev/null | grep -i about; find /usr/share -name 'kcm_about*' 2>/dev/null | head
+echo "-- Plymouth --"; plymouth-set-default-theme 2>&1; ls /usr/share/plymouth/themes
+echo "-- Locale / tastiera di base --"; cat /etc/default/locale /etc/default/keyboard /etc/timezone 2>&1
+echo "== SOFIOS: fine controllo marchi =="
+exit 0

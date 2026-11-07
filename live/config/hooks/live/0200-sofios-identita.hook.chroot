@@ -1,7 +1,14 @@
 #!/bin/sh
 # Nome SofiOS al posto di Debian dove l'utente lo vede
 set -e
-cat > /etc/os-release <<'OSR'
+# /usr/lib/os-release e' di base-files: lo "deviamo" cosi' un aggiornamento di Debian non rimette il nome Debian
+if [ -e /usr/lib/os-release ] && ! dpkg-divert --list /usr/lib/os-release | grep -q os-release; then
+  dpkg-divert --local --rename --divert /usr/lib/os-release.debian --add /usr/lib/os-release || true
+fi
+[ -e /etc/os-release ] && [ ! -L /etc/os-release ] && rm -f /etc/os-release
+[ -e /usr/lib/os-release ] || touch /usr/lib/os-release
+ln -sf ../usr/lib/os-release /etc/os-release
+cat > /usr/lib/os-release <<'OSR'
 PRETTY_NAME="SofiOS"
 NAME="SofiOS"
 VERSION="1.0"
@@ -9,6 +16,7 @@ VERSION_ID="1.0"
 ID=sofios
 ID_LIKE=debian
 HOME_URL="https://github.com/Asdrubale1234/sofios"
+LOGO=sofios-logo
 OSR
 echo "SofiOS" > /etc/issue
 echo "SofiOS" > /etc/issue.net
