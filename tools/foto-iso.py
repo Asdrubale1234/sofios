@@ -99,14 +99,14 @@ try:
     tasti("alt-f2"); time.sleep(3); scrivi("Installa"); time.sleep(4); foto("krunner")
     tasti("ret")
     aspetta(150, "installer", 15)
-    # pagine dell'installer: avanti con Alt+A (italiano); non si preme mai "Installa"
+    # pagine dell'installer: si clicca "Avanti" (Alt+A e' condiviso con "Annulla"); non si preme mai "Installa"
     for pagina in range(1, 4):
         time.sleep(6); foto(f"pagina{pagina}")
-        tasti("alt-a"); time.sleep(6)
+        clic(1020, 707); time.sleep(6)      # "Avanti"
     time.sleep(6); foto("partizioni")
     clic(335, 238)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
     time.sleep(5); foto("partizioni-cancella")
-    tasti("alt-a"); time.sleep(8); foto("utente")
+    clic(1020, 707); time.sleep(8); foto("utente")
 except Exception as e:
     L("errore:", repr(e))
 finally:

@@ -18,31 +18,27 @@ for f in $(grep -ril calamares /usr/share/applications 2>/dev/null); do
   sed -i '/^GenericName\(\[[^]]*\]\)\?=/d;/^Comment\(\[[^]]*\]\)\?=/d' "$f"
   sed -i '0,/^Name=/s//Comment=Installa SofiOS sul computer\nName=/' "$f"
 done
-# Partizioni: niente cifratura del disco nell'installer (scelta di Luca); il resto resta com'e'
-echo "SOFIOS: moduli Calamares in /etc e /usr/share:"; ls /etc/calamares/modules /usr/share/calamares/modules 2>&1 | head -80
-# Se il pacchetto non mette i file in /etc, partiamo dagli esempi di /usr/share (Calamares usa prima /etc)
-for f in partition mount; do
-  if [ ! -f /etc/calamares/modules/$f.conf ] && [ -f /usr/share/calamares/modules/$f.conf ]; then
-    mkdir -p /etc/calamares/modules; cp /usr/share/calamares/modules/$f.conf /etc/calamares/modules/$f.conf
-    echo "SOFIOS: copiato $f.conf da /usr/share"
-  fi
-done
-P=/etc/calamares/modules/partition.conf
-if [ -f "$P" ]; then
-  sed -i '/^enableLuksAutomatedPartitioning:/d' "$P"
-  [ -n "$(tail -c1 "$P")" ] && echo >> "$P"
-  echo 'enableLuksAutomatedPartitioning: false' >> "$P"
-  echo "SOFIOS: partition.conf (righe attive):"; grep -v -E '^\s*(#|$)' "$P" | head -40
-else
-  echo "ATTENZIONE: $P non trovato"
-fi
-# Disco: btrfs come predefinito, con sottovolumi separati per sistema (@) e file personali (@home), cosi le istantanee
-# ripristinano solo il sistema. Scelta di Luca (7 novembre 2026).
-if [ -f "$P" ]; then
-  sed -i '/^defaultFileSystemType:/d' "$P"
-  echo 'defaultFileSystemType: "btrfs"' >> "$P"
-  echo "SOFIOS: filesystem predefinito e disponibili:"; grep -n -E '^(defaultFileSystemType|availableFileSystemTypes)' "$P"
-fi
+# Partizioni: scritto da noi per intero (il pacchetto non lo mette in /etc). Niente cifratura del disco (scelta di Luca),
+# btrfs predefinito (istantanee), niente swap su partizione/ibernazione (verra usata la memoria compressa zram).
+mkdir -p /etc/calamares/modules
+cat > /etc/calamares/modules/partition.conf <<'EOF'
+---
+efiSystemPartition: "/boot/efi"
+userSwapChoices:
+  - none
+  - small
+drawNestedPartitions: false
+alwaysShowPartitionLabels: true
+allowManualPartitioning: true
+initialPartitioningChoice: none
+initialSwapChoice: none
+defaultPartitionTableType: msdos
+defaultFileSystemType: "btrfs"
+availableFileSystemTypes: ["btrfs", "ext4"]
+enableLuksAutomatedPartitioning: false
+requiredStorage: 10.0
+EOF
+echo "SOFIOS: partition.conf scritto:"; cat /etc/calamares/modules/partition.conf
 M=/etc/calamares/modules/mount.conf
 if [ -f "$M" ]; then
   if grep -q '^btrfsSubvolumes:' "$M" && grep -q '/@home' "$M"; then
