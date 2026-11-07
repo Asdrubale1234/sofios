@@ -39,6 +39,8 @@ rinomina 'firefox-esr.desktop' 'Browser' sofios-browser
 rinomina 'libreoffice-writer.desktop' 'Scrittura' sofios-scrittura
 rinomina 'libreoffice-calc.desktop' 'Fogli' sofios-fogli
 rinomina 'vlc.desktop' 'Video' sofios-video
+rinomina 'thunderbird.desktop' 'Mail' sofios-mail
+rinomina 'org.mozilla.Thunderbird.desktop' 'Mail' sofios-mail
 rinomina 'org.kde.kfind.desktop' 'Cerca file' sofios-cerca
 rinomina 'org.kde.kinfocenter.desktop' 'Informazioni sul sistema' sofios-info
 rinomina 'org.kde.kup*.desktop' 'Backup' sofios-backup

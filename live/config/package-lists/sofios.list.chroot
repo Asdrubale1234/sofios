@@ -43,6 +43,8 @@ libinput-tools
 # --- Programmi ---
 firefox-esr
 firefox-esr-l10n-it
+thunderbird
+thunderbird-l10n-it
 libreoffice-writer
 libreoffice-calc
 libreoffice-l10n-it
