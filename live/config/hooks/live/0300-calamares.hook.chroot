@@ -39,6 +39,15 @@ enableLuksAutomatedPartitioning: false
 requiredStorage: 10.0
 EOF
 echo "SOFIOS: partition.conf scritto:"; cat /etc/calamares/modules/partition.conf
+# Accesso: nell'installer resta la casella "Accedi automaticamente senza chiedere la password" (la sceglie l'utente);
+# di partenza NON spuntata, cioe' la password viene chiesta.
+U=/etc/calamares/modules/users.conf
+if [ -f "$U" ]; then
+  if grep -q '^ *doAutologin:' "$U"; then sed -i 's/^ *doAutologin:.*/doAutologin:     false/' "$U"; else echo 'doAutologin:     false' >> "$U"; fi
+  echo "SOFIOS: users.conf (righe attive):"; grep -v -E '^\s*(#|$)' "$U" | head -30
+else
+  echo "ATTENZIONE: $U non trovato"
+fi
 M=/etc/calamares/modules/mount.conf
 if [ -f "$M" ]; then
   if grep -q '^btrfsSubvolumes:' "$M" && grep -q '/@home' "$M"; then
