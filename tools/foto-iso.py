@@ -108,7 +108,8 @@ try:
         except Exception as e:
             L("errore nella schermata", nome, repr(e))
     schermata("accesso-sddm", "sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sofios", 12)
-    schermata("info-sistema", "systemsettings kcm_about-distro", 15)
+    schermata("info-sistema", "Informazioni su SofiOS", 15)
+    schermata("impostazioni", "Impostazioni", 20)
     schermata("utenti", "systemsettings kcm_users", 15)
     schermata("file", "File", 15)
     schermata("sostore", "SoStore", 25)

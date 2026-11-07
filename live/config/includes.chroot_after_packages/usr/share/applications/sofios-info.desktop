@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Informazioni su SofiOS
+Comment=Versione di SofiOS e dati del computer
+Exec=/usr/local/bin/sofios-info
+Icon=sofios-logo
+Categories=System;Settings;
+Keywords=informazioni;sistema;versione;computer;

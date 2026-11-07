@@ -1,0 +1,107 @@
+#!/usr/bin/python3
+# Informazioni su SofiOS: nome, versione, crediti e i dati del computer (processore, memoria, disco, grafica).
+import os, sys, shutil, socket, subprocess, platform
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+from sofios_info import CREDITI, ANNO, VERSIONE
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QPixmap, QGuiApplication
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGridLayout)
+
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel { color: #e6f1ff; font-size: 13px; }
+QLabel#nome { color: #ffffff; font-size: 26px; font-weight: 700; }
+QLabel#sotto { color: #8fb3d4; font-size: 12px; }
+QLabel#crediti { color: #ffd479; font-size: 14px; font-weight: 700; }
+QLabel#chiave { color: #8fb3d4; font-size: 12px; }
+QLabel#valore { color: #ffffff; font-size: 13px; font-weight: 600; }
+QWidget#scheda { background: #12365a; border-radius: 14px; }
+QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 700; }
+QPushButton:hover { background: #ffe19e; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; font-weight: 600; }
+QPushButton#secondario:hover { background: #2a82c2; }
+"""
+
+def esegui(*cmd):
+    try: return subprocess.run(cmd, capture_output=True, text=True, timeout=5).stdout.strip()
+    except Exception: return ""
+
+def leggi(percorso):
+    try:
+        with open(percorso) as f: return f.read().strip()
+    except Exception: return ""
+
+def gb(byte): return ("%.1f" % (byte / 1e9)).replace(".", ",")
+
+def dati():
+    d = []
+    prod = " ".join(x for x in (leggi("/sys/class/dmi/id/sys_vendor"), leggi("/sys/class/dmi/id/product_name")) if x)
+    if prod and "O.E.M." not in prod and "System" not in prod: d.append(("Computer", prod))
+    d.append(("Nome del computer", socket.gethostname()))
+    cpu = ""
+    for r in leggi("/proc/cpuinfo").splitlines():
+        if r.startswith("model name"): cpu = r.split(":", 1)[1].strip(); break
+    if cpu: d.append(("Processore", " ".join(cpu.replace("(R)", "").replace("(TM)", "").replace("CPU ", "").split())))
+    for r in leggi("/proc/meminfo").splitlines():
+        if r.startswith("MemTotal"):
+            d.append(("Memoria", gb(int(r.split()[1]) * 1024) + " GB")); break
+    try:
+        u = shutil.disk_usage("/")
+        d.append(("Spazio sul disco", gb(u.free) + " GB liberi su " + gb(u.total) + " GB"))
+    except Exception: pass
+    gpu = esegui("lspci", "-mm")
+    for r in gpu.splitlines():
+        if "VGA" in r or "3D controller" in r or "Display controller" in r:
+            p = [x.strip('"') for x in r.split('"') if x.strip() and x.strip() != ""]
+            if len(p) >= 4: d.append(("Grafica", p[3] if len(p) > 3 else p[-1])); break
+    agg = esegui("systemctl", "is-enabled", "sofios-aggiorna.timer")
+    d.append(("Aggiornamenti automatici", "Attivi" if agg == "enabled" else "Non attivi"))
+    return d
+
+def testo_per_assistenza(d):
+    righe = ["SofiOS " + VERSIONE] + ["%s: %s" % x for x in d]
+    righe.append("Sistema: " + platform.system() + " " + platform.release() + " " + platform.machine())
+    return "\n".join(righe)
+
+class Info(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("Informazioni su SofiOS"); self.setWindowIcon(QIcon(LOGO))
+        self.setStyleSheet(STILE); self.setFixedWidth(500)
+        v = QVBoxLayout(self); v.setContentsMargins(30, 28, 30, 24); v.setSpacing(6)
+        i = QLabel(); i.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        i.setPixmap(QPixmap(LOGO).scaled(96, 96, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        v.addWidget(i)
+        n = QLabel("SofiOS"); n.setObjectName("nome"); n.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(n)
+        s = QLabel("Versione " + VERSIONE); s.setObjectName("sotto"); s.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(s)
+        v.addSpacing(14)
+        self.d = dati()
+        sc = QWidget(); sc.setObjectName("scheda"); g = QGridLayout(sc); g.setContentsMargins(20, 16, 20, 16); g.setHorizontalSpacing(18); g.setVerticalSpacing(8)
+        for r, (k, val) in enumerate(self.d):
+            a = QLabel(k); a.setObjectName("chiave"); b = QLabel(val); b.setObjectName("valore"); b.setWordWrap(True)
+            b.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+            g.addWidget(a, r, 0, Qt.AlignmentFlag.AlignTop); g.addWidget(b, r, 1)
+        g.setColumnStretch(1, 1)
+        v.addWidget(sc)
+        v.addSpacing(12)
+        c = QLabel(CREDITI); c.setObjectName("crediti"); c.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(c)
+        a = QLabel("© " + ANNO + " Sofi Labs · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(a)
+        v.addSpacing(10)
+        r = QHBoxLayout(); r.addStretch()
+        self.copia = QPushButton("Copia informazioni"); self.copia.setObjectName("secondario"); self.copia.clicked.connect(self.copia_info); r.addWidget(self.copia)
+        ch = QPushButton("Chiudi"); ch.clicked.connect(self.close); r.addWidget(ch); r.addStretch()
+        v.addLayout(r)
+
+    def copia_info(self):
+        QGuiApplication.clipboard().setText(testo_per_assistenza(self.d))
+        self.copia.setText("Copiato ✓")
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("Informazioni su SofiOS"); app.setDesktopFileName("sofios-info")
+    w = Info()
+    foto = os.environ.get("SOFIOS_FOTO")
+    if foto:
+        w.show(); app.processEvents(); w.grab().save(foto); return 0
+    w.show(); return app.exec()
+if __name__ == "__main__": sys.exit(main())

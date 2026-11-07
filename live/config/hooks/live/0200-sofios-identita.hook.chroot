@@ -26,6 +26,11 @@ mkdir -p /etc/xdg
 kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.sofios.desktop 2>/dev/null || \
  printf '[KDE]\nLookAndFeelPackage=org.sofios.desktop\n' >> /etc/xdg/kdeglobals
 
+# "Informazioni su questo sistema" di KDE (mostra Plasma/Qt): tolto da Impostazioni; c'e' "Informazioni su SofiOS" (nostra)
+kwriteconfig6 --file /etc/xdg/kdeglobals --group "KDE Control Module Restrictions" --key kcm_about-distro false 2>/dev/null || \
+ printf '\n[KDE Control Module Restrictions]\nkcm_about-distro=false\n' >> /etc/xdg/kdeglobals
+echo "SOFIOS: kdeglobals:"; cat /etc/xdg/kdeglobals
+
 # Niente portafogli KDE per tutti gli utenti
 mkdir -p /etc/xdg
 printf '[Wallet]\nEnabled=false\nFirst Use=false\n' > /etc/xdg/kwalletrc
