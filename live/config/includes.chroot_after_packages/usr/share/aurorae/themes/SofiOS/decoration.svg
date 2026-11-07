@@ -239,7 +239,7 @@
         <path
            transform="translate(-121,89.063)"
            d="m 453,86 c -6.648,0 -12,5.352 -12,12 v 18 h 29 V 86 Z"
-           fill="#2d2d2d"
+           fill="#0b2740"
            id="path44" />
         <path
            transform="translate(-121,89.063)"
@@ -274,7 +274,7 @@
     <path
        transform="translate(-255.12,76)"
        d="m 576,121 v 86 h 29 v -86 z"
-       fill="#363636"
+       fill="#0e2e4d"
        id="path59" />
   </g>
   <g
@@ -293,14 +293,14 @@
        id="path64" />
     <path
        d="M 470,277 H 325 v 12 h 145 z"
-       fill="#242424"
+       fill="#08203a"
        opacity="0.75"
        id="path66" />
   </g>
   <path
      id="decoration-center"
      d="m 105,110 v 86 h 145 v -86 z"
-     fill="#363636" />
+     fill="#0e2e4d" />
   <g
      id="decoration-top"
      transform="translate(-220,-96)">
@@ -319,7 +319,7 @@
        id="path72" />
     <path
        d="m 325,176 v 30 h 145 v -30 z"
-       fill="#363636"
+       fill="#0e2e4d"
        id="path74" />
     <path
        d="m 325,176 v 1 h 145 v -1 z"
@@ -344,7 +344,7 @@
     <path
        transform="translate(-255.12,76)"
        d="m 576,121 v 86 h 29 v -86 z"
-       fill="#363636"
+       fill="#0e2e4d"
        id="path83" />
   </g>
   <g
@@ -363,14 +363,14 @@
        id="path88" />
     <path
        d="M 470,276.92 H 325 v 12 h 145 z"
-       fill="#1a1a1a"
+       fill="#06182c"
        opacity="0.75"
        id="path90" />
   </g>
   <path
      id="decoration-inactive-center"
      d="m 470,110 v 86 h 145 v -86 z"
-     fill="#2d2d2d" />
+     fill="#0b2740" />
   <g
      id="decoration-inactive-top"
      transform="translate(145,-96)">
@@ -389,7 +389,7 @@
        id="path96" />
     <path
        d="m 325,176 v 30 h 145 v -30 z"
-       fill="#2d2d2d"
+       fill="#0b2740"
        id="path98" />
     <path
        d="m 325,176 v 1 h 145 v -1 z"
@@ -413,7 +413,7 @@
        id="path105" />
     <path
        d="m 320.88,197.02 v 86 h 29 v -86 z"
-       fill="#2d2d2d"
+       fill="#0b2740"
        id="path107" />
   </g>
   <g
@@ -422,7 +422,7 @@
     <path
        transform="translate(385,94)"
        d="m 81,196 c 0,6.648 5.352,12 12,12 h 17 v -12 z"
-       fill="#242424"
+       fill="#08203a"
        opacity="0.75"
        id="path110" />
     <g
@@ -451,7 +451,7 @@
     <path
        transform="translate(0,90)"
        d="m 441,196 c 0,6.648 5.352,12 12,12 h 17 v -12 z"
-       fill="#1a1a1a"
+       fill="#06182c"
        opacity="0.75"
        id="path121" />
     <g
@@ -552,7 +552,7 @@
         <path
            transform="translate(239,89.062)"
            d="m 93,86 c -6.648,0 -12,5.352 -12,12 v 18 h 29 V 86 Z"
-           fill="#363636"
+           fill="#0e2e4d"
            id="path142" />
         <path
            transform="translate(239,95.062)"
@@ -585,7 +585,7 @@
        id="path155" />
     <path
        d="m 320.88,197.02 v 86 h 29 v -86 z"
-       fill="#2d2d2d"
+       fill="#0b2740"
        id="path157" />
   </g>
   <use
