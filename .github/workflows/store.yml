@@ -45,6 +45,8 @@ jobs:
             python3 -c "
           import gi; gi.require_version('AppStream','1.0'); from gi.repository import AppStream as A
           p=A.Pool(); p.load(); b=p.get_components(); print('componenti', b.get_size() if hasattr(b,'get_size') else len(b))"
+            ls /var/lib/apt/lists | grep -i -E "icon|dep11|Components" | head; cat /etc/apt/apt.conf.d/*appstream* 2>&1 | head -40
+            apt-get install -y -qq curl >/dev/null; curl -sSI "https://appstream.debian.org/media/trixie/org/gimp/GIMP/81aa8be6edc018b9d60a2f0cd75bd113/icons/128x128/gimp_gimp.png" | head -12
           } > /tmp/out/diagnosi.txt 2>&1
           SOFIOS_FOTO=/tmp/out/store.png SOFIOS_CERCA="foto" SOFIOS_DETTAGLIO=gimp SOFIOS_INSTALLA=kpat timeout 900 python3 $I/usr/local/bin/sofios-store > /tmp/out/programma.txt 2>&1 || true
           ls -la /tmp/out; dpkg -l kpat 2>&1 | tail -1

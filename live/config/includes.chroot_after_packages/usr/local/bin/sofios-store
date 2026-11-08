@@ -217,7 +217,7 @@ class Icone:
         r = self.rete.get(QNetworkRequest(QUrl(sorgente)))
         def arrivata():
             dati = bytes(r.readAll()); r.deleteLater()
-            if r.error() != r.NetworkError.NoError: print("SoStore: icona non scaricata:", sorgente, r.errorString(), file=sys.stderr)
+            if r.error() != r.NetworkError.NoError: print("SoStore: icona non scaricata:", r.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute), r.errorString()[-120:], file=sys.stderr)
             if dati[:8] == b"\x89PNG\r\n\x1a\n":
                 try:
                     os.makedirs(CACHE_ICONE, exist_ok=True); open(f, "wb").write(dati)
