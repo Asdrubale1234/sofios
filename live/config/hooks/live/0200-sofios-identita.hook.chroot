@@ -21,6 +21,9 @@ OSR
 echo "SofiOS" > /etc/issue
 echo "SofiOS" > /etc/issue.net
 echo "sofios" > /etc/hostname
+# Cartelle dell'utente gia' pronte (in italiano)
+for d in Scrivania Scaricati Modelli Pubblici Documenti Musica Immagini Video; do mkdir -p "/etc/skel/$d"; done
+
 # Tema SofiOS come predefinito di Plasma
 mkdir -p /etc/xdg
 kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.sofios.desktop 2>/dev/null || \

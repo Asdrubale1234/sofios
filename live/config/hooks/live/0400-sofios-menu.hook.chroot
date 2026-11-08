@@ -47,6 +47,10 @@ rinomina 'org.kde.plasma-systemmonitor.desktop' 'Monitor di sistema' sofios-moni
 
 nascondi 'org.kde.plasma-welcome.desktop'
 nascondi 'org.kde.kinfocenter.desktop'
+# "Centro d'informazione" di KDE restava nel menu (categoria Aiuto) nonostante l'override: tolto del tutto,
+# anche dopo gli aggiornamenti (dpkg-divert lo mette da parte). Al suo posto c'e' "Informazioni su SofiOS".
+mkdir -p /usr/share/sofios/nascosti
+dpkg-divert --local --rename --divert /usr/share/sofios/nascosti/org.kde.kinfocenter.desktop --add /usr/share/applications/org.kde.kinfocenter.desktop || true
 nascondi 'kcm_about-distro.desktop'
 nascondi 'org.kde.kate.desktop'
 nascondi 'org.kde.konqueror.desktop'

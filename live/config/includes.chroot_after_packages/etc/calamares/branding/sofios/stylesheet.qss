@@ -18,3 +18,9 @@ QProgressBar::chunk { background: #ffd479; border-radius: 6px; }
 
 /* Il pulsante "Informazioni su" mostra i crediti di Calamares: lo nascondiamo (dimensione zero). */
 QPushButton#aboutButton { min-width: 0px; max-width: 0px; min-height: 0px; max-height: 0px; padding: 0px; margin: 0px; border: none; }
+
+/* caselle da spuntare ben visibili (es. "Accedere automaticamente") */
+QCheckBox { color: #e6f1ff; spacing: 10px; }
+QCheckBox::indicator { width: 18px; height: 18px; border: 2px solid #8fb3d4; border-radius: 5px; background: #12365a; }
+QCheckBox::indicator:hover { border-color: #ffd479; }
+QCheckBox::indicator:checked { background: #ffd479; border-color: #ffd479; image: url(/etc/calamares/branding/sofios/spunta.svg); }
