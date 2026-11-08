@@ -1,0 +1,313 @@
+{
+  "versione": 1,
+  "vetrina": [
+    {
+      "categoria": "Foto e disegno",
+      "pacchetto": "gimp",
+      "nome": "GIMP",
+      "descrizione": "Ritocca e modifica le foto: ritaglio, colori, livelli, filtri.",
+      "icona": "gimp"
+    },
+    {
+      "categoria": "Foto e disegno",
+      "pacchetto": "krita",
+      "nome": "Krita",
+      "descrizione": "Disegno e pittura digitale, anche con la penna.",
+      "icona": "krita"
+    },
+    {
+      "categoria": "Foto e disegno",
+      "pacchetto": "inkscape",
+      "nome": "Inkscape",
+      "descrizione": "Loghi, volantini e disegni che restano nitidi a qualsiasi grandezza.",
+      "icona": "org.inkscape.Inkscape"
+    },
+    {
+      "categoria": "Foto e disegno",
+      "pacchetto": "kolourpaint",
+      "nome": "KolourPaint",
+      "descrizione": "Disegno semplice, come il vecchio Paint.",
+      "icona": "kolourpaint"
+    },
+    {
+      "categoria": "Foto e disegno",
+      "pacchetto": "darktable",
+      "nome": "darktable",
+      "descrizione": "Sviluppo e archivio delle foto per chi fotografa in RAW.",
+      "icona": "darktable"
+    },
+    {
+      "categoria": "Video e musica",
+      "pacchetto": "kdenlive",
+      "nome": "Kdenlive",
+      "descrizione": "Monta i tuoi video: tagli, transizioni, titoli e musica.",
+      "icona": "kdenlive"
+    },
+    {
+      "categoria": "Video e musica",
+      "pacchetto": "obs-studio",
+      "nome": "OBS Studio",
+      "descrizione": "Registra lo schermo o trasmetti in diretta.",
+      "icona": "com.obsproject.Studio"
+    },
+    {
+      "categoria": "Video e musica",
+      "pacchetto": "audacity",
+      "nome": "Audacity",
+      "descrizione": "Registra e modifica l'audio: voce, podcast, musica.",
+      "icona": "audacity"
+    },
+    {
+      "categoria": "Video e musica",
+      "pacchetto": "handbrake",
+      "nome": "HandBrake",
+      "descrizione": "Converte i video in altri formati e li rimpicciolisce.",
+      "icona": "fr.handbrake.ghb"
+    },
+    {
+      "categoria": "Video e musica",
+      "pacchetto": "elisa",
+      "nome": "Elisa",
+      "descrizione": "Ascolta la tua musica, ordinata per album e artisti.",
+      "icona": "elisa"
+    },
+    {
+      "categoria": "Internet",
+      "pacchetto": "chromium",
+      "nome": "Chromium",
+      "descrizione": "Un secondo browser, utile per i siti che vanno meglio con Chrome.",
+      "icona": "chromium"
+    },
+    {
+      "categoria": "Internet",
+      "pacchetto": "telegram-desktop",
+      "nome": "Telegram",
+      "descrizione": "Messaggi e chiamate con i tuoi contatti di Telegram.",
+      "icona": "telegram"
+    },
+    {
+      "categoria": "Internet",
+      "pacchetto": "qbittorrent",
+      "nome": "qBittorrent",
+      "descrizione": "Scarica file con i torrent.",
+      "icona": "qbittorrent"
+    },
+    {
+      "categoria": "Internet",
+      "pacchetto": "filezilla",
+      "nome": "FileZilla",
+      "descrizione": "Copia file da e verso un server (FTP).",
+      "icona": "filezilla"
+    },
+    {
+      "categoria": "Internet",
+      "pacchetto": "remmina",
+      "nome": "Remmina",
+      "descrizione": "Collegati a un altro computer a distanza.",
+      "icona": "org.remmina.Remmina"
+    },
+    {
+      "categoria": "Ufficio",
+      "pacchetto": "libreoffice-impress",
+      "nome": "Presentazioni",
+      "descrizione": "Crea presentazioni, apre anche i file di PowerPoint.",
+      "icona": "libreoffice-impress"
+    },
+    {
+      "categoria": "Ufficio",
+      "pacchetto": "libreoffice-draw",
+      "nome": "Disegno e PDF",
+      "descrizione": "Schemi e volantini; modifica anche i PDF.",
+      "icona": "libreoffice-draw"
+    },
+    {
+      "categoria": "Ufficio",
+      "pacchetto": "calibre",
+      "nome": "Calibre",
+      "descrizione": "La tua biblioteca di libri elettronici, da leggere e convertire.",
+      "icona": "calibre-gui"
+    },
+    {
+      "categoria": "Ufficio",
+      "pacchetto": "simple-scan",
+      "nome": "Scanner",
+      "descrizione": "Acquisisci documenti e foto dallo scanner.",
+      "icona": "org.gnome.SimpleScan"
+    },
+    {
+      "categoria": "Ufficio",
+      "pacchetto": "scribus",
+      "nome": "Scribus",
+      "descrizione": "Impagina riviste, opuscoli e locandine.",
+      "icona": "scribus"
+    },
+    {
+      "categoria": "Giochi",
+      "pacchetto": "supertuxkart",
+      "nome": "SuperTuxKart",
+      "descrizione": "Corse sui kart in 3D, anche in due sullo stesso schermo.",
+      "icona": "supertuxkart"
+    },
+    {
+      "categoria": "Giochi",
+      "pacchetto": "0ad",
+      "nome": "0 A.D.",
+      "descrizione": "Strategia in tempo reale tra civiltà antiche.",
+      "icona": "0ad"
+    },
+    {
+      "categoria": "Giochi",
+      "pacchetto": "kpat",
+      "nome": "Solitari",
+      "descrizione": "Tanti solitari con le carte.",
+      "icona": "kpat"
+    },
+    {
+      "categoria": "Giochi",
+      "pacchetto": "kmahjongg",
+      "nome": "Mahjong",
+      "descrizione": "Il classico gioco delle tessere da accoppiare.",
+      "icona": "kmahjongg"
+    },
+    {
+      "categoria": "Giochi",
+      "pacchetto": "ksudoku",
+      "nome": "Sudoku",
+      "descrizione": "Sudoku di varie difficoltà.",
+      "icona": "ksudoku"
+    },
+    {
+      "categoria": "Scuola e bambini",
+      "pacchetto": "gcompris-qt",
+      "nome": "GCompris",
+      "descrizione": "Più di cento giochi educativi per bambini dai 2 ai 10 anni.",
+      "icona": "gcompris-qt"
+    },
+    {
+      "categoria": "Scuola e bambini",
+      "pacchetto": "stellarium",
+      "nome": "Stellarium",
+      "descrizione": "Il cielo stellato sul tuo schermo, come in un planetario.",
+      "icona": "stellarium"
+    },
+    {
+      "categoria": "Scuola e bambini",
+      "pacchetto": "blender",
+      "nome": "Blender",
+      "descrizione": "Modelli 3D, animazioni ed effetti speciali.",
+      "icona": "blender"
+    }
+  ],
+  "android": [
+    {
+      "pacchetto": "app.organicmaps",
+      "nome": "Organic Maps",
+      "descrizione": "Mappe e navigatore che funzionano anche senza Internet."
+    },
+    {
+      "pacchetto": "org.schabi.newpipe",
+      "nome": "NewPipe",
+      "descrizione": "Guarda i video di YouTube senza pubblicità e senza account."
+    },
+    {
+      "pacchetto": "org.videolan.vlc",
+      "nome": "VLC",
+      "descrizione": "Riproduce qualsiasi video e musica."
+    },
+    {
+      "pacchetto": "org.mozilla.fennec_fdroid",
+      "nome": "Fennec",
+      "descrizione": "Il browser Firefox, versione libera."
+    },
+    {
+      "pacchetto": "com.kunzisoft.keepass.libre",
+      "nome": "KeePassDX",
+      "descrizione": "Le password della tua Cassaforte anche nelle app Android."
+    },
+    {
+      "pacchetto": "org.telegram.messenger",
+      "nome": "Telegram FOSS",
+      "descrizione": "Messaggi e chiamate Telegram, versione libera."
+    },
+    {
+      "pacchetto": "im.vector.app",
+      "nome": "Element",
+      "descrizione": "Chat sicura e privata (Matrix)."
+    },
+    {
+      "pacchetto": "net.thunderbird.android",
+      "nome": "Thunderbird",
+      "descrizione": "La posta elettronica sul telefono."
+    },
+    {
+      "pacchetto": "de.danoeh.antennapod",
+      "nome": "AntennaPod",
+      "descrizione": "Ascolta e scarica i podcast."
+    },
+    {
+      "pacchetto": "com.beemdevelopment.aegis",
+      "nome": "Aegis",
+      "descrizione": "Codici di verifica a due passaggi, al sicuro."
+    },
+    {
+      "pacchetto": "net.osmand.plus",
+      "nome": "OsmAnd",
+      "descrizione": "Mappe dettagliate, anche per escursioni e bicicletta."
+    },
+    {
+      "pacchetto": "org.fossify.gallery",
+      "nome": "Galleria",
+      "descrizione": "Guarda e organizza le tue foto."
+    },
+    {
+      "pacchetto": "com.foobnix.pro.pdf.reader",
+      "nome": "Librera",
+      "descrizione": "Legge libri elettronici e PDF."
+    },
+    {
+      "pacchetto": "net.gsantner.markor",
+      "nome": "Markor",
+      "descrizione": "Appunti e liste, semplici e veloci."
+    }
+  ],
+  "windows": [
+    {
+      "tipo": "windows",
+      "pacchetto": "win-notepadplusplus",
+      "nome": "Notepad++",
+      "descrizione": "Editor di testo per Windows, molto usato per scrivere codice.",
+      "github": "notepad-plus-plus/notepad-plus-plus",
+      "file": "npp\\.[0-9.]+\\.Installer\\.x64\\.exe",
+      "argomenti": [
+        "/S"
+      ],
+      "eseguibile": [
+        "C:\\Program Files\\Notepad++\\notepad++.exe"
+      ],
+      "disinstalla": [
+        "C:\\Program Files\\Notepad++\\uninstall.exe",
+        "/S"
+      ],
+      "icona": "accessories-text-editor"
+    },
+    {
+      "tipo": "windows",
+      "pacchetto": "win-7zip",
+      "nome": "7-Zip",
+      "descrizione": "Apre e crea archivi compressi (zip, 7z, rar) con la versione Windows.",
+      "github": "ip7z/7zip",
+      "file": "7z[0-9]+-x64\\.exe",
+      "argomenti": [
+        "/S"
+      ],
+      "eseguibile": [
+        "C:\\Program Files\\7-Zip\\7zFM.exe"
+      ],
+      "disinstalla": [
+        "C:\\Program Files\\7-Zip\\Uninstall.exe",
+        "/S"
+      ],
+      "icona": "package-x-generic"
+    }
+  ]
+}
