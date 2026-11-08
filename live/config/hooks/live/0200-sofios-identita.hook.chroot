@@ -45,9 +45,9 @@ systemctl enable sofios-live-impostazioni.service 2>/dev/null || \
 systemctl enable sofios-diag-seriale.service 2>/dev/null || \
   { mkdir -p /etc/systemd/system/graphical.target.wants; ln -sf /etc/systemd/system/sofios-diag-seriale.service /etc/systemd/system/graphical.target.wants/sofios-diag-seriale.service; }
 echo "SOFIOS: diag-seriale abilitato? $(systemctl is-enabled sofios-diag-seriale.service 2>&1)"
-echo "SOFIOS: sorgenti apt nell'immagine:"; cat /etc/apt/sources.list 2>/dev/null; cat /etc/apt/sources.list.d/* 2>/dev/null; echo "SOFIOS: unattended-upgrades: $(dpkg -s unattended-upgrades 2>&1 | head -1)"
+echo "SOFIOS: sorgenti apt nell'immagine:"; cat /etc/apt/sources.list 2>/dev/null || true; cat /etc/apt/sources.list.d/* 2>/dev/null || true; echo "SOFIOS: unattended-upgrades: $(dpkg -s unattended-upgrades 2>&1 | head -1)"
 # Elenco dei file con il simbolo Debian (per il registro: cosa resta da cambiare)
 echo "== SOFIOS: file con marchio Debian (avatar, loghi) =="
 find /usr/share /var/lib/AccountsService -iname '*debian*' \( -name '*.png' -o -name '*.svg' -o -name '*.icon' \) 2>/dev/null | head -40
-find /usr/share/sddm/faces -type f 2>/dev/null
+find /usr/share/sddm/faces -type f 2>/dev/null || true
 exit 0
