@@ -1,0 +1,11 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+totale 70352
+drwxr-xr-x 2 root root     4096  8 nov 17.10 .
+drwxr-xr-x 4 root root     4096  8 nov 17.09 ..
+-rw-r--r-- 1 root root 72025232  8 nov 17.10 index-v2.json
+-rw-r--r-- 1 root root      659  8 nov 17.10 index-v2.json.asc
+caricato True app compatibili 4645
+prova app.organicmaps https://f-droid.org/repo/app.organicmaps_26092932.apk
+sha256 corrisponde: True 63797784
+file alterato riconosciuto: True

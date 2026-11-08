@@ -1,0 +1,70 @@
+/var/lib/app-info/icons/debian-trixie-main/64x64
+/var/lib/swcatalog/icons/debian-trixie-main/64x64
+org.gimp.GIMP.data_extras gimp-data-extras debian-trixie-main []
+org.gimp.GIMP gimp debian-trixie-main [(<enum AS_ICON_KIND_CACHED of type AppStream.IconKind>, 'gimp_gimp.png', '/var/lib/swcatalog/icons/debian-trixie-main/64x64/gimp_gimp.png', 'file:///var/lib/swcatalog/icons/debian-trixie-main/64x64/gimp_gimp.png', 64), (<enum AS_ICON_KIND_REMOTE of type AppStream.IconKind>, 'gimp_gimp.png', None, 'https://appstream.debian.org/media/trixie/org/gimp/GIMP/81aa8be6edc018b9d60a2f0cd75bd113/icons/128x128/gimp_gimp.png', 128), (<enum AS_ICON_KIND_STOCK of type AppStream.IconKind>, 'gimp', None, None, 0)]
+xzgv.desktop xzgv debian-trixie-main [(<enum AS_ICON_KIND_CACHED of type AppStream.IconKind>, 'xzgv_xzgv.png', '/var/lib/swcatalog/icons/debian-trixie-main/64x64/xzgv_xzgv.png', 'file:///var/lib/swcatalog/icons/debian-trixie-main/64x64/xzgv_xzgv.png', 64), (<enum AS_ICON_KIND_STOCK of type AppStream.IconKind>, 'xzgv', None, None, 0)]
+qt.core.qobject.connect: QObject::connect(QObject, Unknown): invalid nullptr parameter
+ssl True OpenSSL 3.5.7 9 Jun 2026
+componenti 2516
+deb.debian.org_debian_dists_trixie_main_dep11_Components-amd64.yml.gz
+deb.debian.org_debian_dists_trixie_main_dep11_icons-64x64.tar.gz
+## This file is provided by appstreamcli(1) to download DEP-11
+## metadata files.
+
+Acquire::IndexTargets {
+    # The YAML metadata files
+    deb::DEP-11  {
+        MetaKey "$(COMPONENT)/dep11/Components-$(NATIVE_ARCHITECTURE).yml";
+        ShortDescription "Components-$(NATIVE_ARCHITECTURE)";
+        Description "$(RELEASE)/$(COMPONENT) $(NATIVE_ARCHITECTURE) Components";
+
+        KeepCompressed "true";
+        KeepCompressedAs "gz";
+    };
+
+    # Small icons for GUI components described in the DEP-11
+    # YAML metadata.
+    deb::DEP-11-icons-small  {
+        MetaKey "$(COMPONENT)/dep11/icons-48x48.tar";
+        ShortDescription "icons-48x48";
+        Description "$(RELEASE)/$(COMPONENT) Icons (48x48)";
+
+        KeepCompressed "true";
+        KeepCompressedAs "gz";
+        DefaultEnabled "false";
+    };
+
+    # Normal-sized icons for GUI components described in the DEP-11
+    # YAML metadata.
+    deb::DEP-11-icons  {
+        MetaKey "$(COMPONENT)/dep11/icons-64x64.tar";
+        ShortDescription "icons-64x64";
+        Description "$(RELEASE)/$(COMPONENT) Icons (64x64)";
+
+        KeepCompressed "true";
+        KeepCompressedAs "gz";
+        DefaultEnabled "false";
+    };
+
+    # Icons suitable for HiDPI displays, for GUI components described in
+    # the DEP-11 YAML metadata.
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+debconf: unable to initialize frontend: Teletype
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Noninteractive
+HTTP/2 404 
+x-content-type-options: nosniff
+x-frame-options: sameorigin
+referrer-policy: no-referrer
+x-xss-protection: 1
+permissions-policy: interest-cohort=()
+strict-transport-security: max-age=15552000
+content-type: text/html; charset=iso-8859-1
+date: Sun, 08 Nov 2026 17:08:18 GMT
+server: Apache
+

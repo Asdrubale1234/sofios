@@ -1,0 +1,15 @@
+-rw-r--r-- 1 root root  7366548 Aug  2  2025 deb.debian.org_debian_dists_trixie_main_dep11_icons-64x64.tar.gz
+/var/lib/swcatalog:
+icons
+yaml
+
+/var/lib/swcatalog/icons:
+debian-trixie-main
+
+/var/lib/swcatalog/icons/debian-trixie-main:
+64x64
+
+/var/lib/apt/lists/deb.debian.org_debian_dists_trixie_main_dep11_icons-64x64.tar.gz
+3dchess_3dchess.png
+3depict_3depict.png
+4pane_4Pane.png

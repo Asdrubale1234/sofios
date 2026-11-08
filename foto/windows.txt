@@ -1,0 +1,28 @@
+wine-10.0 (Debian 10.0~repack-6)
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+QProcess: Destroyed while process ("wineserver") is still running.
+Traceback (most recent call last):
+  File "/__w/sofios/sofios/live/config/includes.chroot_after_packages/usr/local/bin/sofios-store", line 738, in <lambda>
+    w.finished.connect(lambda *_: concludi()); w.errorOccurred.connect(lambda _: concludi())
+                                                                                 ~~~~~~~~^^
+  File "/__w/sofios/sofios/live/config/includes.chroot_after_packages/usr/local/bin/sofios-store", line 743, in concludi
+    self.stato.setText(("Fatto: «%s»." if fatto() else "Non è riuscito: «%s».") % app["nome"])
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: wrapped C/C++ object of type QLabel has been deleted
+timeout: the monitored command dumped core
+Aborted
+---LOG
+codice 1 Unknown error
+wine: socket : Funzione non implementata
+totale 6880
+drwxr-xr-x 2 root root    4096  8 nov 17.11 .
+drwxr-xr-x 5 root root    4096  8 nov 17.11 ..
+-rw-r--r-- 1 root root 7028968  8 nov 17.11 npp.8.9.9.Installer.x64.exe
+-rw-r--r-- 1 root root      64  8 nov 17.11 ultimo.log
+---C
+ls: impossibile accedere a '/tmp/wp/drive_c/Program Files': File o directory non esistente
+/tmp/wp/drive_c:
+windows
+ls: impossibile accedere a '/tmp/wp/drive_c/Program Files/Notepad++/': File o directory non esistente

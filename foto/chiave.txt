@@ -1,0 +1,12 @@
+gpg: keybox '/tmp/gpg/pubring.kbx' created
+gpg: key 41E7044E1DBA2E89: 1 duplicate signature removed
+gpg: /tmp/gpg/trustdb.gpg: trustdb created
+gpg: key 41E7044E1DBA2E89: public key "F-Droid <admin@f-droid.org>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+pub   rsa4096 2014-04-25 [C]
+      37D2 C987 89D8 3119 4839  4E3E 41E7 044E 1DBA 2E89
+uid           [ unknown] F-Droid <admin@f-droid.org>
+sub   rsa3072 2014-04-25 [E]
+sub   rsa3072 2014-04-25 [S]
+
