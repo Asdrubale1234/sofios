@@ -137,7 +137,9 @@ try:
     schermata("sostore", "SoStore", 25)
     try:
         L("schermata: menu")
-        tasti("meta_l"); time.sleep(4); foto("menu-applicazioni"); tasti("esc"); time.sleep(2)
+        tasti("meta_l"); time.sleep(4); foto("menu-applicazioni")
+        clic(60, 203); time.sleep(3); foto("menu-aiuto")          # categoria "Aiuto": cosa contiene?
+        tasti("esc"); time.sleep(2)
     except Exception as e:
         L("errore nel menu", repr(e))
     try:
@@ -158,7 +160,7 @@ try:
         time.sleep(6); foto(f"pagina{pagina}")
         clic(1020, 690); time.sleep(6)      # "Avanti"
     time.sleep(6); foto("partizioni")
-    clic(420, 189)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
+    clic(376, 186)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
     time.sleep(5); foto("partizioni-cancella")
     clic(1020, 690); time.sleep(8); foto("utente")
 except Exception as e:
