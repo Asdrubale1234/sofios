@@ -728,6 +728,11 @@ class SoStore(QWidget):
         p.setProcessEnvironment(amb); p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
         self.in_corso[app["pacchetto"]] = p; self.stato.setText("%s «%s»…" % (verbo, app["nome"])); self.aggiorna_tutto()
         def fine(codice, _):
+            try:
+                os.makedirs(WIN.CACHE, exist_ok=True)
+                with open(os.path.join(WIN.CACHE, "ultimo.log"), "w", encoding="utf-8") as h:
+                    h.write("codice %s %s\n" % (codice, p.errorString())); h.write(bytes(p.readAll()).decode("utf-8", "replace"))
+            except Exception: pass
             # alcuni programmi di installazione finiscono "in sottofondo": prima aspetta che Wine abbia chiuso tutto
             w = QProcess(self); w.setProcessEnvironment(amb)
             w.finished.connect(lambda *_: concludi()); w.errorOccurred.connect(lambda _: concludi())

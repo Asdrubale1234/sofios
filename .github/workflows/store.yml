@@ -86,6 +86,7 @@ jobs:
           Xvfb :7 -screen 0 1280x800x24 & sleep 2; export DISPLAY=:7
           { wine --version; } > /tmp/out/windows.txt 2>&1
           SOFIOS_FOTO=/tmp/out/win.png SOFIOS_WINDOWS_FOTO=win-notepadplusplus QT_QPA_PLATFORM=offscreen timeout 900 python3 $I/usr/local/bin/sofios-store >> /tmp/out/windows.txt 2>&1 || true
+          { echo ---LOG; cat ~/.cache/sofios-store/windows/ultimo.log; ls -la ~/.cache/sofios-store/windows/; echo ---C; ls "$HOME/.wine/drive_c" "$HOME/.wine/drive_c/Program Files"; } >> /tmp/out/windows.txt 2>&1 || true
           ls -la "$HOME/.wine/drive_c/Program Files/Notepad++/" >> /tmp/out/windows.txt 2>&1
           # il programma Windows aperto davvero
           WINEDEBUG=-all wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" >/dev/null 2>&1 & sleep 25
