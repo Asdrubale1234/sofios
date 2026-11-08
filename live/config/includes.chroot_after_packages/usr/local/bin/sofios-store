@@ -5,13 +5,15 @@ Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il siste
 import json, os, re, shlex, subprocess, sys, glob
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import bottone_informazioni
-from PyQt6.QtCore import Qt, QProcess, QSize, QTimer
+from PyQt6.QtCore import Qt, QProcess, QSize, QTimer, QUrl
+from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit,
                              QStackedWidget, QScrollArea, QGridLayout, QProgressBar, QFrame, QMessageBox)
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 CATALOGI = [os.environ.get("SOFIOS_CATALOGO", ""), "/var/lib/sofios/store/catalogo.json", "/usr/share/sofios/store/catalogo.json"]
+CACHE_ICONE = os.path.join(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")), "sofios-store", "icone")
 CARTELLE_ICONE = ["/var/lib/swcatalog/icons", "/usr/share/swcatalog/icons", "/var/lib/app-info/icons", "/usr/share/app-info/icons"]
 
 STILE = """
@@ -140,6 +142,10 @@ class Catalogo:
         for ic in c.get_icons() or []:
             k = ic.get_kind()
             if k == self.AS.IconKind.STOCK: nome_tema = ic.get_name()
+            elif k == self.AS.IconKind.REMOTE and ic.get_url():
+                w = ic.get_width() or 0
+                if migliore is None or (w > migliore[0] and not str(migliore[1]).startswith("/")):
+                    migliore = (w, ic.get_url())
             elif k in (self.AS.IconKind.CACHED, self.AS.IconKind.LOCAL):
                 f = ic.get_filename() or ""
                 if not f or not os.path.exists(f):
@@ -147,7 +153,7 @@ class Catalogo:
                     for base in CARTELLE_ICONE:
                         trovati = glob.glob(f"{base}/*/{w}x{w}/{nome}") or glob.glob(f"{base}/*/{w}x{w}@*/{nome}")
                         if trovati: f = trovati[0]; break
-                if f and os.path.exists(f) and (migliore is None or (ic.get_width() or 0) > migliore[0]):
+                if f and os.path.exists(f) and (migliore is None or str(migliore[1]).startswith("http") or (ic.get_width() or 0) > migliore[0]):
                     migliore = (ic.get_width() or 0, f)
         return migliore[1] if migliore else nome_tema
 
@@ -193,13 +199,41 @@ class Catalogo:
             if x["pacchetto"] == pacchetto: return x
         return None
 
+class Icone:
+    """icone dei programmi non ancora installati: scaricate una volta e tenute in ~/.cache"""
+    def __init__(self):
+        self.rete = QNetworkAccessManager(); self.attese = {}
+
+    def metti(self, etichetta, sorgente, lato):
+        if not (isinstance(sorgente, str) and sorgente.startswith("https://")):
+            etichetta.setPixmap(icona_da_nome(sorgente).pixmap(QSize(lato, lato))); return
+        nome = re.sub(r"[^A-Za-z0-9._-]", "_", sorgente.split("://", 1)[1])[-120:]
+        f = os.path.join(CACHE_ICONE, nome)
+        if os.path.exists(f):
+            etichetta.setPixmap(QIcon(f).pixmap(QSize(lato, lato))); return
+        etichetta.setPixmap(QIcon.fromTheme("application-x-executable").pixmap(QSize(lato, lato)))
+        self.attese.setdefault(sorgente, []).append((etichetta, lato))
+        if len(self.attese[sorgente]) > 1: return
+        r = self.rete.get(QNetworkRequest(QUrl(sorgente)))
+        def arrivata():
+            dati = bytes(r.readAll()); r.deleteLater()
+            if dati[:8] == b"\x89PNG\r\n\x1a\n":
+                try:
+                    os.makedirs(CACHE_ICONE, exist_ok=True); open(f, "wb").write(dati)
+                except OSError: pass
+            for et, l in self.attese.pop(sorgente, []):
+                try:
+                    if os.path.exists(f): et.setPixmap(QIcon(f).pixmap(QSize(l, l)))
+                except RuntimeError: pass   # scheda gia' chiusa
+        r.finished.connect(arrivata)
+
 # ---------------------------------------------------------------- interfaccia
 class Scheda(QFrame):
     def __init__(self, app, finestra):
         super().__init__(); self.app = app; self.f = finestra
         self.setObjectName("scheda"); self.setCursor(Qt.CursorShape.PointingHandCursor); self.setFixedHeight(92)
         h = QHBoxLayout(self); h.setContentsMargins(14, 12, 14, 12); h.setSpacing(12)
-        i = QLabel(); i.setPixmap(icona_da_nome(app.get("icona")).pixmap(QSize(52, 52))); i.setFixedSize(52, 52); h.addWidget(i)
+        i = QLabel(); i.setFixedSize(52, 52); finestra.icone.metti(i, app.get("icona"), 52); h.addWidget(i)
         v = QVBoxLayout(); v.setSpacing(2)
         n = QLabel(app["nome"]); n.setObjectName("nomeapp"); n.setWordWrap(True); v.addWidget(n)
         d = QLabel(app.get("descrizione", "")); d.setObjectName("descr"); d.setWordWrap(True); v.addWidget(d); v.addStretch()
@@ -230,7 +264,7 @@ class SoStore(QWidget):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("SoStore"); self.setWindowIcon(QIcon.fromTheme("sofios-store", QIcon(LOGO)))
         self.setStyleSheet(STILE); self.resize(1040, 700)
-        self.catalogo = carica_catalogo(); self.fonte = Catalogo(); self.in_corso = {}; self.schede = []
+        self.catalogo = carica_catalogo(); self.fonte = Catalogo(); self.in_corso = {}; self.schede = []; self.icone = Icone()
         icone = self.fonte.icone_per_pacchetto()
         for a in self.catalogo.get("vetrina", []):
             if a["pacchetto"] in icone and QIcon.fromTheme(a.get("icona", "")).isNull(): a["icona"] = icone[a["pacchetto"]]
@@ -320,7 +354,7 @@ class SoStore(QWidget):
         v = QVBoxLayout(self.p_dett); v.setContentsMargins(0, 0, 0, 0); v.setSpacing(12)
         ind = QPushButton("‹  Indietro"); ind.setObjectName("indietro"); ind.clicked.connect(lambda: self.pagine.setCurrentIndex(0)); v.addWidget(ind, 0, Qt.AlignmentFlag.AlignLeft)
         r = QHBoxLayout(); r.setSpacing(18)
-        i = QLabel(); i.setPixmap(icona_da_nome(app.get("icona")).pixmap(QSize(96, 96))); r.addWidget(i)
+        i = QLabel(); i.setFixedSize(96, 96); self.icone.metti(i, app.get("icona"), 96); r.addWidget(i, 0, Qt.AlignmentFlag.AlignTop)
         c = QVBoxLayout(); n = QLabel(app["nome"]); n.setObjectName("grande"); c.addWidget(n)
         d = QLabel(app.get("descrizione", "")); d.setObjectName("testo"); d.setWordWrap(True); c.addWidget(d)
         bb = QHBoxLayout(); self.d_azione = QPushButton(); self.d_azione.setObjectName("azione"); self.d_azione.setFixedWidth(120); bb.addWidget(self.d_azione)
@@ -423,7 +457,7 @@ def main():
                     scatta.attese = getattr(scatta, "attese", 0) + 1
                     if scatta.attese < 400: QTimer.singleShot(1500, salva); return
                 w.grab().save(foto.replace(".png", "-%s.png" % passi[i][0])); scatta(i + 1)
-            QTimer.singleShot(4000 if passi[i][0] == "installazione" else 1500, salva)
+            QTimer.singleShot(4000 if passi[i][0] == "installazione" else 5000, salva)
         QTimer.singleShot(1500, scatta)
     return app.exec()
 
