@@ -96,6 +96,11 @@ def apri_programma(desktop):
     except Exception:
         return False
 
+def pulisci(html):
+    t = " ".join(html.split()); t = re.sub(r"</p>|<br\s*/?>", "\n\n", t); t = re.sub(r"<li>", "\n• ", t); t = re.sub(r"<[^>]+>", "", t)
+    righe = [" ".join(r.split()) for r in t.split("\n")]
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(righe)).strip()
+
 def icona_da_nome(nome, grandezza=64):
     if not nome: return QIcon.fromTheme("application-x-executable")
     if os.path.isabs(nome) and os.path.exists(nome): return QIcon(nome)
@@ -129,6 +134,37 @@ class Catalogo:
             return [risultato.index_safe(i) for i in range(risultato.get_size())]
         return list(risultato)
 
+    def icona(self, c):
+        """file dell'icona: prima quelle grandi scaricate con il catalogo, poi quella del tema"""
+        migliore, nome_tema = None, ""
+        for ic in c.get_icons() or []:
+            k = ic.get_kind()
+            if k == self.AS.IconKind.STOCK: nome_tema = ic.get_name()
+            elif k in (self.AS.IconKind.CACHED, self.AS.IconKind.LOCAL):
+                f = ic.get_filename() or ""
+                if not f or not os.path.exists(f):
+                    nome = ic.get_name() or ""; w = ic.get_width() or 64
+                    for base in CARTELLE_ICONE:
+                        trovati = glob.glob(f"{base}/*/{w}x{w}/{nome}") or glob.glob(f"{base}/*/{w}x{w}@*/{nome}")
+                        if trovati: f = trovati[0]; break
+                if f and os.path.exists(f) and (migliore is None or (ic.get_width() or 0) > migliore[0]):
+                    migliore = (ic.get_width() or 0, f)
+        return migliore[1] if migliore else nome_tema
+
+    def icone_per_pacchetto(self):
+        """pacchetto -> icona, per la vetrina (una volta sola all'avvio)"""
+        out = {}
+        if not self.pool: return out
+        try:
+            for c in self._lista(self.pool.get_components()):
+                pk = c.get_pkgname()
+                if pk and pk not in out and c.get_kind() == self.AS.ComponentKind.DESKTOP_APP:
+                    i = self.icona(c)
+                    if i: out[pk] = i
+        except Exception as e:
+            print("SoStore: icone:", e, file=sys.stderr)
+        return out
+
     def cerca(self, testo, massimo=60):
         if not self.pool or not testo.strip(): return []
         out, visti = [], set()
@@ -141,13 +177,10 @@ class Catalogo:
                 desktop = None
                 l = c.get_launchable(self.AS.LaunchableKind.DESKTOP_ID)
                 if l and l.get_entries(): desktop = l.get_entries()[0]
-                icona = ""
-                for ic in c.get_icons() or []:
-                    if ic.get_kind() == self.AS.IconKind.STOCK: icona = ic.get_name(); break
-                    if ic.get_kind() == self.AS.IconKind.CACHED: icona = icona or ic.get_name()
+                icona = self.icona(c) or (desktop or "").replace(".desktop", "")
                 out.append({"pacchetto": pk, "nome": c.get_name() or pk, "descrizione": c.get_summary() or "",
-                            "lunga": re.sub(r"<[^>]+>", " ", c.get_description() or "").strip(),
-                            "icona": icona or (desktop or "").replace(".desktop", ""), "desktop": desktop})
+                            "lunga": pulisci(c.get_description() or ""),
+                            "icona": icona, "desktop": desktop})
             except Exception:
                 continue
             if len(out) >= massimo: break
@@ -168,8 +201,10 @@ class Scheda(QFrame):
         h = QHBoxLayout(self); h.setContentsMargins(14, 12, 14, 12); h.setSpacing(12)
         i = QLabel(); i.setPixmap(icona_da_nome(app.get("icona")).pixmap(QSize(52, 52))); i.setFixedSize(52, 52); h.addWidget(i)
         v = QVBoxLayout(); v.setSpacing(2)
-        n = QLabel(app["nome"]); n.setObjectName("nomeapp"); v.addWidget(n)
+        n = QLabel(app["nome"]); n.setObjectName("nomeapp"); n.setWordWrap(True); v.addWidget(n)
         d = QLabel(app.get("descrizione", "")); d.setObjectName("descr"); d.setWordWrap(True); v.addWidget(d); v.addStretch()
+        for x in (n, d): x.setMinimumWidth(10)
+        self.setMinimumWidth(10)
         h.addLayout(v, 1)
         self.b = QPushButton(); self.b.setObjectName("azione"); self.b.setFixedWidth(84); h.addWidget(self.b, 0, Qt.AlignmentFlag.AlignVCenter)
         self.b.clicked.connect(self.premi); self.aggiorna()
@@ -196,6 +231,9 @@ class SoStore(QWidget):
         self.setObjectName("finestra"); self.setWindowTitle("SoStore"); self.setWindowIcon(QIcon.fromTheme("sofios-store", QIcon(LOGO)))
         self.setStyleSheet(STILE); self.resize(1040, 700)
         self.catalogo = carica_catalogo(); self.fonte = Catalogo(); self.in_corso = {}; self.schede = []
+        icone = self.fonte.icone_per_pacchetto()
+        for a in self.catalogo.get("vetrina", []):
+            if a["pacchetto"] in icone and QIcon.fromTheme(a.get("icona", "")).isNull(): a["icona"] = icone[a["pacchetto"]]
         h = QHBoxLayout(self); h.setContentsMargins(0, 0, 0, 0); h.setSpacing(0)
         # lato
         lato = QWidget(); lato.setObjectName("lato"); lato.setFixedWidth(220)
@@ -220,7 +258,7 @@ class SoStore(QWidget):
         self.vai("vetrina")
 
     def _area(self):
-        s = QScrollArea(); s.setWidgetResizable(True)
+        s = QScrollArea(); s.setWidgetResizable(True); s.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         w = QWidget(); w.setObjectName("contenitore"); s.setWidget(w); s.viewport().setObjectName("vista")
         v = QVBoxLayout(w); v.setContentsMargins(0, 0, 8, 0); v.setSpacing(8)
         return s, v
@@ -291,8 +329,11 @@ class SoStore(QWidget):
         r.addLayout(c, 1); v.addLayout(r)
         lunga = app.get("lunga") or (self.fonte.dettagli(app["pacchetto"]) or {}).get("lunga", "")
         if lunga:
-            l = QLabel(lunga); l.setObjectName("testo"); l.setWordWrap(True); l.setAlignment(Qt.AlignmentFlag.AlignTop); v.addWidget(l)
-        v.addStretch()
+            sa = QScrollArea(); sa.setWidgetResizable(True); sa.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff); sa.viewport().setObjectName("vista")
+            l = QLabel(lunga); l.setObjectName("testo"); l.setWordWrap(True); l.setAlignment(Qt.AlignmentFlag.AlignTop)
+            l.setContentsMargins(4, 4, 12, 4); sa.setWidget(l); v.addWidget(sa, 1)
+        else:
+            v.addStretch()
         self.d_app = app
         self.d_azione.clicked.connect(lambda: self.apri(app) if installato(app["pacchetto"]) else self.installa(app))
         self.d_rimuovi.clicked.connect(lambda: self.rimuovi(app))

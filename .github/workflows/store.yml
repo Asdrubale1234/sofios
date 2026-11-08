@@ -35,7 +35,14 @@ jobs:
           python3 -c "
           import gi; gi.require_version('AppStream','1.0'); from gi.repository import AppStream as A
           p=A.Pool(); p.load(); r=p.search('foto'); print('risultati AppStream per foto:', r.get_size() if hasattr(r,'get_size') else len(r))"
-          SOFIOS_FOTO=/tmp/out/store.png SOFIOS_CERCA="foto" SOFIOS_DETTAGLIO=gimp SOFIOS_INSTALLA=kpat timeout 900 python3 $I/usr/local/bin/sofios-store 2>&1 | tail -30 || true
+          { ls -d /var/lib/swcatalog/icons/*/* /usr/share/swcatalog/icons/*/* /var/lib/app-info/icons/*/* 2>/dev/null | head -20
+            python3 -c "
+          import gi; gi.require_version('AppStream','1.0'); from gi.repository import AppStream as A
+          p=A.Pool(); p.load()
+          for c in p.search('gimp').as_array()[:3]:
+              print(c.get_id(), c.get_pkgname(), c.get_origin(), [(i.get_kind(), i.get_name(), i.get_filename(), i.get_width()) for i in c.get_icons()])"
+          } > /tmp/out/diagnosi.txt 2>&1
+          SOFIOS_FOTO=/tmp/out/store.png SOFIOS_CERCA="foto" SOFIOS_DETTAGLIO=gimp SOFIOS_INSTALLA=kpat timeout 900 python3 $I/usr/local/bin/sofios-store > /tmp/out/programma.txt 2>&1 || true
           ls -la /tmp/out; dpkg -l kpat 2>&1 | tail -1
       - name: Salva
         if: always()
