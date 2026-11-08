@@ -158,7 +158,7 @@ try:
         time.sleep(6); foto(f"pagina{pagina}")
         clic(1020, 690); time.sleep(6)      # "Avanti"
     time.sleep(6); foto("partizioni")
-    clic(335, 238)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
+    clic(420, 189)                       # "Cancella disco": mostra file system e opzioni, senza installare nulla
     time.sleep(5); foto("partizioni-cancella")
     clic(1020, 690); time.sleep(8); foto("utente")
 except Exception as e:

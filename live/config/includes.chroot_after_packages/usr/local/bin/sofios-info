@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # Informazioni su SofiOS: nome, versione, crediti e i dati del computer (processore, memoria, disco, grafica).
-import os, sys, shutil, socket, subprocess, platform
+import os, re, sys, shutil, socket, subprocess, platform
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import CREDITI, ANNO, VERSIONE, AZIENDA, CONTATTI
 from PyQt6.QtCore import Qt
@@ -78,12 +78,18 @@ class Info(QWidget):
         v.addSpacing(14)
         self.d = dati()
         sc = QWidget(); sc.setObjectName("scheda"); g = QGridLayout(sc); g.setContentsMargins(20, 16, 20, 16); g.setHorizontalSpacing(18); g.setVerticalSpacing(8)
+        valori = []
         for r, (k, val) in enumerate(self.d):
-            a = QLabel(k); a.setObjectName("chiave"); b = QLabel(val); b.setObjectName("valore"); b.setWordWrap(True)
+            a = QLabel(k); a.setObjectName("chiave")
+            corto = re.sub(r"\s*\([^)]*\)", "", val).strip() or val      # "QEMU Standard PC (Q35 + ICH9, 2009)" -> "QEMU Standard PC"
+            b = QLabel(); b.setObjectName("valore"); b.setToolTip(val)
+            b.setText(corto); valori.append((b, corto))
             b.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
             g.addWidget(a, r, 0, Qt.AlignmentFlag.AlignTop); g.addWidget(b, r, 1)
         g.setColumnStretch(1, 1)
         v.addWidget(sc)
+        for b, corto in valori:   # una riga sola: se e' troppo lungo finisce con "…" (testo intero passandoci sopra)
+            b.ensurePolished(); b.setText(b.fontMetrics().elidedText(corto, Qt.TextElideMode.ElideRight, 235))
         v.addSpacing(12)
         c = QLabel(CREDITI); c.setObjectName("crediti"); c.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(c)
         a = QLabel("© " + ANNO + " " + AZIENDA + " · Tutti i diritti riservati"); a.setObjectName("sotto"); a.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(a)

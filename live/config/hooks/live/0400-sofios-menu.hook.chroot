@@ -62,6 +62,11 @@ nascondi 'org.kde.plasma.firewall*.desktop'
 nascondi 'org.kde.kdeconnect.sms.desktop'
 nascondi 'org.kde.kdeconnect.nonplasma.desktop'
 nascondi 'org.kde.kdeconnect-settings.desktop'
+nascondi 'libreoffice-startcenter.desktop'
+nascondi 'org.kde.drkonqi.coredump.gui.desktop'
+nascondi 'system-config-printer.desktop'
+# tema "Debian" (dal pacchetto desktop-base) fuori dall'elenco dei temi
+rm -rf /usr/share/plasma/look-and-feel/org.debian.desktop
 printf '[Icons]\nTheme=SofiOS\n' >> /etc/xdg/kdeglobals
 gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
 update-desktop-database "$O" 2>/dev/null || true
