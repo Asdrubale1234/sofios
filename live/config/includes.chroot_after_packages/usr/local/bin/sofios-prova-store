@@ -1,0 +1,21 @@
+#!/bin/sh
+# SOLO PROVA (macchina virtuale): prove di SoStore con risultati sulla porta seriale. Da togliere nella ISO ufficiale.
+S() { sudo tee /dev/ttyS0 > /dev/null; }
+case "$1" in
+  kernel)
+    { echo "### kernel-android"; ls -l /dev/binder* /dev/binderfs 2>&1; uname -r
+      grep -i -E 'ANDROID_BINDER|BINDERFS' /boot/config-* 2>&1 | head; command -v waydroid; waydroid --version 2>&1; dpkg -l waydroid 2>&1 | tail -1; } 2>&1 | S ;;
+  windows)
+    SOFIOS_FOTO=/tmp/win.png SOFIOS_WINDOWS_FOTO=win-notepadplusplus sofios-store ;;
+  windows-log)
+    { echo "### windows-registro"; cat ~/.cache/sofios-store/windows/ultimo.log; ls ~/.wine/drive_c/Program* ~/.wine/drive_c/Program*/Notepad++ | head -30; } 2>&1 | S ;;
+  windows-apri)
+    wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" ;;
+  android-attiva)
+    sudo /usr/local/lib/sofios/android-attiva VANILLA 2>&1 | S ;;
+  android-stato)
+    { echo "### android-stato"; waydroid status; systemctl is-active waydroid-container; journalctl -u waydroid-container --no-pager | tail -20; } 2>&1 | S ;;
+  android-avvio)
+    waydroid session start & sleep 40; waydroid show-full-ui ;;
+  *) echo "uso: sofios-prova-store kernel|windows|windows-log|windows-apri|android-attiva|android-stato|android-avvio" ;;
+esac

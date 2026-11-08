@@ -135,6 +135,33 @@ try:
     schermata("utenti", "systemsettings kcm_users", 15)
     schermata("file", "File", 15)
     schermata("sostore", "SoStore", 25)
+    # --- prova vera di SoStore nella ISO: Programmi Windows (Wine) e Android (Waydroid); i risultati escono dalla porta seriale
+    def esegui(cmd):
+        tasti("alt-f2"); time.sleep(3); scrivi(cmd); time.sleep(2); tasti("ret")
+    def serie(nome):
+        esegui("sofios-prova-store " + nome); time.sleep(10)
+    try:
+        L("prova Windows: Notepad++ con Wine")
+        serie("kernel")
+        esegui("sofios-prova-store windows")
+        aspetta(780, "win-installazione", 30)
+        serie("windows-log")
+        esegui("sofios-prova-store windows-apri")
+        aspetta(60, "win-aperto", 15)
+        tasti("alt-f4"); time.sleep(3)
+        esegui("pkill -f notepad"); time.sleep(3)
+    except Exception as e:
+        L("errore prova Windows", repr(e))
+    try:
+        L("prova Android: attivazione e avvio")
+        esegui("sofios-prova-store android-attiva")
+        aspetta(600, "android-attivazione", 30)
+        serie("android-stato")
+        esegui("sofios-prova-store android-avvio")
+        aspetta(150, "android-avvio", 25)
+        serie("android-stato")
+    except Exception as e:
+        L("errore prova Android", repr(e))
     try:
         L("schermata: menu")
         tasti("meta_l"); time.sleep(4); foto("menu-applicazioni")

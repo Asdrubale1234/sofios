@@ -45,7 +45,7 @@ jobs:
 
       - name: Avvia la ISO e salva schermate vere
         continue-on-error: true
-        timeout-minutes: 55
+        timeout-minutes: 100
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq qemu-system-x86 qemu-utils ovmf imagemagick
@@ -53,7 +53,7 @@ jobs:
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
           ls -l /dev/kvm || echo "niente KVM: avvio lento"
           ISO=$(ls out/*.iso | head -n1)
-          python3 tools/foto-iso.py "$ISO" out/foto 40
+          python3 tools/foto-iso.py "$ISO" out/foto 75
 
       - name: Salva il registro nel ramo logs
         if: always()

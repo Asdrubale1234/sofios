@@ -8,7 +8,7 @@ permissions:
 jobs:
   foto:
     runs-on: ubuntu-latest
-    timeout-minutes: 80
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - name: Scarica l'ultima ISO
@@ -31,7 +31,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
           mkdir -p out
-          python3 tools/foto-iso.py sofios.iso out/foto 40
+          python3 tools/foto-iso.py sofios.iso out/foto 75
       - name: Salva le schermate nel ramo schermate
         if: always()
         env:
