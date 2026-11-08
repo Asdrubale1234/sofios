@@ -2,7 +2,7 @@
 """SoStore: il negozio di programmi di SofiOS.
 Vetrina scelta da noi (catalogo.json, aggiornato con gli aggiornamenti firmati) + ricerca in tutto il catalogo.
 Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il sistema."""
-import json, os, re, shlex, subprocess, sys, glob
+import json, os, re, shlex, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import bottone_informazioni
 from PyQt6.QtCore import Qt, QProcess, QSize, QTimer, QUrl
@@ -103,6 +103,24 @@ def pulisci(html):
     righe = [" ".join(r.split()) for r in t.split("\n")]
     return re.sub(r"\n{3,}", "\n\n", "\n".join(righe)).strip()
 
+_TAR = {}
+def icona_da_archivio(nome):
+    """icone del catalogo scaricate da apt come archivi (…icons-128x128.tar.gz): estrae solo quella che serve"""
+    if not nome or "/" in nome: return None
+    f = os.path.join(CACHE_ICONE, "archivio_" + nome)
+    if os.path.exists(f): return f
+    for arch in sorted(glob.glob("/var/lib/apt/lists/*icons-128x128*.tar.gz")) + sorted(glob.glob("/var/lib/apt/lists/*icons-64x64.tar.gz")):
+        try:
+            if arch not in _TAR:
+                t = tarfile.open(arch); _TAR[arch] = (t, set(t.getnames()))
+            t, nomi = _TAR[arch]
+            if nome in nomi:
+                dati = t.extractfile(nome).read()
+                os.makedirs(CACHE_ICONE, exist_ok=True); open(f, "wb").write(dati); return f
+        except Exception:
+            continue
+    return None
+
 def icona_da_nome(nome, grandezza=64):
     if not nome: return QIcon.fromTheme("application-x-executable")
     if os.path.isabs(nome) and os.path.exists(nome): return QIcon(nome)
@@ -142,6 +160,10 @@ class Catalogo:
         for ic in c.get_icons() or []:
             k = ic.get_kind()
             if k == self.AS.IconKind.STOCK: nome_tema = ic.get_name()
+            elif k in (self.AS.IconKind.REMOTE, self.AS.IconKind.CACHED) and icona_da_archivio(ic.get_name()):
+                f = icona_da_archivio(ic.get_name())
+                if migliore is None or (ic.get_width() or 0) >= migliore[0] or str(migliore[1]).startswith("http"):
+                    migliore = (ic.get_width() or 0, f)
             elif k == self.AS.IconKind.REMOTE and ic.get_url():
                 w = ic.get_width() or 0
                 if migliore is None or (w > migliore[0] and not str(migliore[1]).startswith("/")):

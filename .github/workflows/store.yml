@@ -16,10 +16,15 @@ jobs:
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates python3 python3-pyqt6 python3-gi gir1.2-appstream-1.0 appstream \
             packagekit packagekit-tools polkitd dbus locales fonts-inter breeze-icon-theme hicolor-icon-theme imagemagick >/dev/null
           sed -i 's/^# *it_IT.UTF-8/it_IT.UTF-8/' /etc/locale.gen && locale-gen >/dev/null
-          apt-get update -qq   # scarica anche il catalogo dei programmi (AppStream)
+          cp live/config/includes.chroot_after_packages/etc/apt/apt.conf.d/60sofios-icone-programmi /etc/apt/apt.conf.d/ 2>/dev/null || true
+          apt-get update -qq   # scarica anche il catalogo dei programmi (AppStream) e le icone
           appstreamcli refresh-cache --force | tail -2
           ls /var/lib/swcatalog/icons 2>/dev/null | head; ls /var/lib/swcatalog/yaml 2>/dev/null | head
       - uses: actions/checkout@v4
+      - name: Icone del catalogo
+        run: |
+          cp live/config/includes.chroot_after_packages/etc/apt/apt.conf.d/60sofios-icone-programmi /etc/apt/apt.conf.d/
+          apt-get update -qq; mkdir -p /tmp/out; { ls -la /var/lib/apt/lists | grep -i icons; ls -R /var/lib/swcatalog 2>&1 | head -10; for t in /var/lib/apt/lists/*icons*.tar.gz; do echo "$t"; tar tzf "$t" | head -3; done; } > /tmp/out/icone.txt 2>&1
       - name: Controllo pacchetti della vetrina
         run: |
           for p in $(python3 -c "import json;print(' '.join(a['pacchetto'] for a in json.load(open('live/config/includes.chroot_after_packages/usr/share/sofios/store/catalogo.json'))['vetrina']))"); do
