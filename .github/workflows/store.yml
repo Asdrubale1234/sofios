@@ -14,7 +14,7 @@ jobs:
         run: |
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates python3 python3-pyqt6 python3-gi gir1.2-appstream-1.0 appstream \
-            packagekit packagekit-tools polkitd dbus locales fonts-inter breeze-icon-theme hicolor-icon-theme imagemagick >/dev/null
+            packagekit packagekit-tools polkitd dbus locales gpg gpgv dirmngr fonts-inter breeze-icon-theme hicolor-icon-theme imagemagick >/dev/null
           sed -i 's/^# *it_IT.UTF-8/it_IT.UTF-8/' /etc/locale.gen && locale-gen >/dev/null
           cp live/config/includes.chroot_after_packages/etc/apt/apt.conf.d/60sofios-icone-programmi /etc/apt/apt.conf.d/ 2>/dev/null || true
           apt-get update -qq   # scarica anche il catalogo dei programmi (AppStream) e le icone
@@ -55,6 +55,28 @@ jobs:
           } > /tmp/out/diagnosi.txt 2>&1
           SOFIOS_FOTO=/tmp/out/store.png SOFIOS_CERCA="foto" SOFIOS_DETTAGLIO=gimp SOFIOS_INSTALLA=kpat timeout 900 python3 $I/usr/local/bin/sofios-store > /tmp/out/programma.txt 2>&1 || true
           ls -la /tmp/out; dpkg -l kpat 2>&1 | tail -1
+      - name: Android (catalogo F-Droid firmato)
+        run: |
+          I=live/config/includes.chroot_after_packages
+          export GNUPGHOME=/tmp/gpg; mkdir -p $GNUPGHOME; chmod 700 $GNUPGHOME
+          gpg --batch --keyserver hkps://keyserver.ubuntu.com --recv-keys 37D2C98789D8311948394E3E41E7044E1DBA2E89 > /tmp/out/chiave.txt 2>&1 || true
+          gpg --batch --fingerprint 37D2C98789D8311948394E3E41E7044E1DBA2E89 >> /tmp/out/chiave.txt 2>&1
+          gpg --batch --export 37D2C98789D8311948394E3E41E7044E1DBA2E89 > /tmp/out/fdroid.gpg
+          export LANG=it_IT.UTF-8 LC_ALL=it_IT.UTF-8 QT_QPA_PLATFORM=offscreen SOFIOS_LIB=$PWD/$I/usr/local/lib/sofios SOFIOS_LOGO=$PWD/$I/usr/share/sofios/logo.png \
+                 SOFIOS_CATALOGO=$PWD/$I/usr/share/sofios/store/catalogo.json SOFIOS_TEMA_ICONE=breeze-dark XDG_RUNTIME_DIR=/tmp/run SOFIOS_FDROID_CHIAVE=/tmp/out/fdroid.gpg
+          SOFIOS_FOTO=/tmp/out/and.png SOFIOS_ANDROID_FINTO=da_attivare SOFIOS_ANDROID_FOTO=1 timeout 120 python3 $I/usr/local/bin/sofios-store > /tmp/out/android1.txt 2>&1 || true
+          SOFIOS_FOTO=/tmp/out/andp.png SOFIOS_ANDROID_FINTO=pronto:GAPPS SOFIOS_ANDROID_FOTO=1 SOFIOS_CERCA_ANDROID=mappe timeout 600 python3 $I/usr/local/bin/sofios-store > /tmp/out/android2.txt 2>&1 || true
+          ls -la ~/.cache/sofios-store/android/ >> /tmp/out/android2.txt 2>&1
+          python3 - >> /tmp/out/android2.txt 2>&1 <<'PY'
+          import sys, os, urllib.request
+          sys.path.insert(0, os.environ["SOFIOS_LIB"]); import store_android as A
+          c = A.CatalogoAndroid(); print("caricato", c.carica(), "app compatibili", len(c.app))
+          a = [x for x in c.cerca("organic maps")][:1] or c.app[:1]
+          a = a[0]; print("prova", a["pacchetto"], a["apk"])
+          f = "/tmp/prova.apk"; urllib.request.urlretrieve(a["apk"], f)
+          print("sha256 corrisponde:", A.sha256_file(f) == a["sha256"], os.path.getsize(f))
+          open(f, "r+b").write(b"X"); print("file alterato riconosciuto:", A.sha256_file(f) != a["sha256"])
+          PY
       - name: Salva
         if: always()
         env:

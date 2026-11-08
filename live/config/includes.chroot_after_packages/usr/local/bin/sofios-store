@@ -5,6 +5,7 @@ Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il siste
 import json, os, re, shlex, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import bottone_informazioni
+import store_android as AND
 from PyQt6.QtCore import Qt, QProcess, QSize, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt6.QtGui import QIcon
@@ -164,6 +165,13 @@ class Catalogo:
             print("SoStore: catalogo completo non disponibile:", e, file=sys.stderr)
             self.pool = None
 
+    def numero(self):
+        if not self.pool: return 0
+        try:
+            b = self.pool.get_components()
+            return b.get_size() if hasattr(b, "get_size") else len(b)
+        except Exception: return 0
+
     def _lista(self, risultato):
         if risultato is None: return []
         if hasattr(risultato, "as_array"): return list(risultato.as_array())
@@ -286,14 +294,14 @@ class Scheda(QFrame):
     def aggiorna(self):
         if self.f.in_corso.get(self.app["pacchetto"]):
             self.b.setText("…"); self.b.setEnabled(False); self.b.setObjectName("azione")
-        elif installato(self.app["pacchetto"]):
+        elif self.f.e_installato(self.app):
             self.b.setText("Apri"); self.b.setEnabled(True); self.b.setObjectName("secondario")
         else:
             self.b.setText("Installa"); self.b.setEnabled(True); self.b.setObjectName("azione")
         self.b.style().unpolish(self.b); self.b.style().polish(self.b)
 
     def premi(self):
-        if installato(self.app["pacchetto"]): self.f.apri(self.app)
+        if self.f.e_installato(self.app): self.f.apri(self.app)
         else: self.f.installa(self.app)
 
     def mousePressEvent(self, e):
@@ -305,6 +313,7 @@ class SoStore(QWidget):
         self.setObjectName("finestra"); self.setWindowTitle("SoStore"); self.setWindowIcon(QIcon.fromTheme("sofios-store", QIcon(LOGO)))
         self.setStyleSheet(STILE); self.resize(1040, 700)
         self.catalogo = carica_catalogo(); self.fonte = Catalogo(); self.in_corso = {}; self.schede = []; self.icone = Icone()
+        self.android = AND.CatalogoAndroid(); self.android_installate = set(); self.pagina = "vetrina"
         icone = self.fonte.icone_per_pacchetto()
         for a in self.catalogo.get("vetrina", []):
             if a["pacchetto"] in icone and QIcon.fromTheme(a.get("icona", "")).isNull(): a["icona"] = icone[a["pacchetto"]]
@@ -315,7 +324,7 @@ class SoStore(QWidget):
         m = QHBoxLayout(); lg = QLabel(); lg.setPixmap(QIcon.fromTheme("sofios-store", QIcon(LOGO)).pixmap(QSize(34, 34))); m.addWidget(lg)
         t = QLabel("SoStore"); t.setObjectName("marchio"); m.addWidget(t); m.addStretch(); lv.addLayout(m); lv.addSpacing(12)
         self.voci = {}
-        for chiave, testo in (("vetrina", "In evidenza"), ("installati", "Installati")):
+        for chiave, testo in (("vetrina", "In evidenza"), ("android", "App Android"), ("installati", "Installati")):
             b = QPushButton(testo); b.setObjectName("voce"); b.setCheckable(True); b.clicked.connect(lambda _, k=chiave: self.vai(k))
             self.voci[chiave] = b; lv.addWidget(b)
         lv.addStretch(); lv.addWidget(bottone_informazioni(self, "SoStore", "Il negozio dei programmi di SofiOS."))
@@ -330,6 +339,21 @@ class SoStore(QWidget):
         self.p_lista = self._area(); self.pagine.addWidget(self.p_lista[0])
         self.p_dett = QWidget(); self.pagine.addWidget(self.p_dett)
         self.vai("vetrina")
+        if self.fonte.numero() < 100 and not os.environ.get("SOFIOS_FOTO"):
+            QTimer.singleShot(500, self.aggiorna_catalogo_programmi)
+
+    def aggiorna_catalogo_programmi(self):
+        """primo avvio senza catalogo: lo scarica (serve Internet, non serve la password)"""
+        self.stato.setText("Preparo il catalogo dei programmi…")
+        p = QProcess(self)
+        def fine(*_):
+            self.fonte = Catalogo(); icone = self.fonte.icone_per_pacchetto()
+            for a in self.catalogo.get("vetrina", []):
+                if a["pacchetto"] in icone and QIcon.fromTheme(a.get("icona", "")).isNull(): a["icona"] = icone[a["pacchetto"]]
+            self.stato.setText("" if self.fonte.numero() >= 100 else "Catalogo non disponibile: controlla la connessione a Internet.")
+            if self.pagina in ("vetrina", "installati"): self.vai(self.pagina)
+        p.finished.connect(fine); p.errorOccurred.connect(lambda _: fine())
+        p.start("pkcon", ["refresh", "-p"])
 
     def _area(self):
         s = QScrollArea(); s.setWidgetResizable(True); s.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -353,10 +377,14 @@ class SoStore(QWidget):
         v.addLayout(g)
 
     def vai(self, chiave):
+        self.pagina = chiave
         self.cerca.blockSignals(True); self.cerca.clear(); self.cerca.blockSignals(False)
+        self.cerca.setPlaceholderText("Cerca un'app Android…" if chiave == "android" else "Cerca un programma…")
         for k, b in self.voci.items(): b.setChecked(k == chiave)
         self.pagine.setCurrentIndex(0); v = self.p_lista[1]; self._svuota(v)
         apps = self.catalogo.get("vetrina", [])
+        if chiave == "android":
+            self.pagina_android(v); return
         if chiave == "vetrina":
             t = QLabel("In evidenza"); t.setObjectName("titolo"); v.addWidget(t)
             cat = []
@@ -377,6 +405,8 @@ class SoStore(QWidget):
 
     def esegui_ricerca(self):
         q = self.cerca.text().strip()
+        if self.pagina == "android":
+            v = self.p_lista[1]; self._svuota(v); self.pagina_android(v, q); return
         if not q: self.vai("vetrina"); return
         for b in self.voci.values(): b.setChecked(False)
         self.pagine.setCurrentIndex(0); v = self.p_lista[1]; self._svuota(v)
@@ -404,7 +434,7 @@ class SoStore(QWidget):
         self.d_rimuovi = QPushButton("Rimuovi"); self.d_rimuovi.setObjectName("secondario"); self.d_rimuovi.setFixedWidth(120); bb.addWidget(self.d_rimuovi); bb.addStretch()
         c.addLayout(bb); self.d_barra = QProgressBar(); self.d_barra.setRange(0, 100); self.d_barra.setFixedWidth(300); self.d_barra.hide(); c.addWidget(self.d_barra)
         r.addLayout(c, 1); v.addLayout(r)
-        lunga = app.get("lunga") or (self.fonte.dettagli(app["pacchetto"]) or {}).get("lunga", "")
+        lunga = app.get("lunga") or ("" if app.get("tipo") == "android" else (self.fonte.dettagli(app["pacchetto"]) or {}).get("lunga", ""))
         if lunga:
             sa = QScrollArea(); sa.setWidgetResizable(True); sa.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff); sa.viewport().setObjectName("vista")
             l = QLabel(lunga); l.setObjectName("testo"); l.setWordWrap(True); l.setAlignment(Qt.AlignmentFlag.AlignTop)
@@ -412,13 +442,13 @@ class SoStore(QWidget):
         else:
             v.addStretch()
         self.d_app = app
-        self.d_azione.clicked.connect(lambda: self.apri(app) if installato(app["pacchetto"]) else self.installa(app))
+        self.d_azione.clicked.connect(lambda: self.apri(app) if self.e_installato(app) else self.installa(app))
         self.d_rimuovi.clicked.connect(lambda: self.rimuovi(app))
         self.aggiorna_dettaglio(); self.pagine.setCurrentIndex(1)
 
     def aggiorna_dettaglio(self):
         if not hasattr(self, "d_app"): return
-        a = self.d_app; occ = self.in_corso.get(a["pacchetto"]); ins = installato(a["pacchetto"])
+        a = self.d_app; occ = self.in_corso.get(a["pacchetto"]); ins = self.e_installato(a)
         try:
             self.d_azione.setText("…" if occ else ("Apri" if ins else "Installa")); self.d_azione.setEnabled(not occ)
             self.d_rimuovi.setVisible(ins and not occ); self.d_barra.setVisible(bool(occ))
@@ -431,7 +461,13 @@ class SoStore(QWidget):
         self.aggiorna_dettaglio()
 
     # --- azioni
+    def e_installato(self, app):
+        if app.get("tipo") == "android": return app["pacchetto"] in self.android_installate
+        return installato(app["pacchetto"])
+
     def apri(self, app):
+        if app.get("tipo") == "android":
+            QProcess.startDetached("waydroid", ["app", "launch", app["pacchetto"]]); return
         d = file_desktop(app["pacchetto"], app.get("desktop"))
         if not d or not apri_programma(d):
             QMessageBox.information(self, "SoStore", "«%s» è installato: lo trovi nel menu dei programmi." % app["nome"])
@@ -463,6 +499,7 @@ class SoStore(QWidget):
         p.start("pkcon", argomenti)
 
     def installa(self, app):
+        if app.get("tipo") == "android": self.installa_android(app); return
         def ok():
             if installato(app["pacchetto"]): segna_mio(app, True); return True
             return False
@@ -470,10 +507,177 @@ class SoStore(QWidget):
 
     def rimuovi(self, app):
         if QMessageBox.question(self, "SoStore", "Vuoi rimuovere «%s»?" % app["nome"]) != QMessageBox.StandardButton.Yes: return
+        if app.get("tipo") == "android":
+            p = QProcess(self); p.finished.connect(lambda *_: (self.leggi_android_installate(), self.aggiorna_tutto()))
+            p.start("waydroid", ["app", "remove", app["pacchetto"]]); return
         def ok():
             if not installato(app["pacchetto"]): segna_mio(app, False); return True
             return False
         self._esegui(app, ["remove", "-y", "-p", app["pacchetto"]], "Rimuovo", ok)
+
+    # ------------------------------------------------------------ Android
+    def stato_android(self):
+        finto = os.environ.get("SOFIOS_ANDROID_FINTO")      # solo per le prove (schermate senza Android vero)
+        if finto: return tuple(finto.split(":")) if ":" in finto else (finto, "")
+        return AND.stato_waydroid()
+
+    def leggi_android_installate(self):
+        self.android_installate = set()
+        try:
+            r = subprocess.run(["waydroid", "app", "list"], capture_output=True, text=True, timeout=20)
+            self.android_installate = set(re.findall(r"packageName:\s*(\S+)", r.stdout))
+        except Exception: pass
+
+    def _riquadro(self, v, titolo, testo, bottone=None, azione=None, secondario=False):
+        f = QFrame(); f.setObjectName("scheda"); f.setCursor(Qt.CursorShape.ArrowCursor)
+        h = QVBoxLayout(f); h.setContentsMargins(18, 14, 18, 14); h.setSpacing(6)
+        n = QLabel(titolo); n.setObjectName("nomeapp"); h.addWidget(n)
+        d = QLabel(testo); d.setObjectName("descr"); d.setWordWrap(True); h.addWidget(d)
+        if bottone:
+            b = QPushButton(bottone); b.setObjectName("secondario" if secondario else "azione"); b.clicked.connect(azione)
+            h.addWidget(b, 0, Qt.AlignmentFlag.AlignLeft)
+        v.addWidget(f); return f
+
+    def pagina_android(self, v, q=""):
+        t = QLabel("App Android"); t.setObjectName("titolo"); v.addWidget(t)
+        stato, tipo = self.stato_android()
+        if stato == "assente":
+            self._riquadro(v, "Android non è ancora su questo computer",
+                           "Con Android puoi usare le app del telefono sul computer. Serve circa 1 GB di spazio.",
+                           "Installa Android", lambda: self.installa({"pacchetto": "waydroid", "nome": "Android"}))
+            v.addStretch(); return
+        if stato == "da_attivare":
+            i = QLabel("Scegli come vuoi Android. Potrai cambiare idea più avanti."); i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
+            self._riquadro(v, "Android senza Google",
+                           "App libere e gratuite dal catalogo F-Droid. Niente account Google, più riservatezza. "
+                           "Non ci sono WhatsApp, Instagram e le app delle banche.",
+                           "Attiva senza Google", lambda: self.attiva_android("VANILLA"))
+            self._riquadro(v, "Android con Google Play",
+                           "Anche le app del Play Store, come WhatsApp. Serve un account Google e registrare una volta questo computer "
+                           "su una pagina di Google (ti guidiamo noi). Le app delle banche e dei pagamenti spesso non funzionano.",
+                           "Attiva con Google Play", lambda: self.attiva_android("GAPPS"))
+            n = QLabel("L'attivazione scarica Android da Internet (circa 1 GB): può richiedere un po' di tempo."); n.setObjectName("descr"); n.setWordWrap(True); v.addWidget(n)
+            v.addStretch(); return
+        # pronto
+        r = QHBoxLayout()
+        b = QPushButton("Apri Android"); b.setObjectName("secondario"); b.clicked.connect(lambda: QProcess.startDetached("waydroid", ["show-full-ui"])); r.addWidget(b)
+        if tipo == "GAPPS":
+            g = QPushButton("Apri Google Play"); g.setObjectName("azione"); g.clicked.connect(lambda: QProcess.startDetached("waydroid", ["app", "launch", "com.android.vending"])); r.addWidget(g)
+            c = QPushButton("Registra il computer su Google"); c.setObjectName("secondario"); c.clicked.connect(self.registra_google); r.addWidget(c)
+        altro = "VANILLA" if tipo == "GAPPS" else "GAPPS"
+        cb = QPushButton("Passa a Android senza Google" if altro == "VANILLA" else "Passa a Android con Google Play"); cb.setObjectName("indietro")
+        cb.clicked.connect(lambda: QMessageBox.question(self, "SoStore", "Android verrà preparato di nuovo: le app Android installate andranno reinstallate. Continuo?")
+                           == QMessageBox.StandardButton.Yes and self.attiva_android(altro))
+        r.addStretch(); r.addWidget(cb); v.addLayout(r)
+        if not self.android.app:
+            if self.android.da_aggiornare(ore=24 * 30) or not self.android.carica():
+                self.aggiorna_catalogo_android(); e = QLabel("Scarico il catalogo delle app Android…"); e.setObjectName("vuoto"); v.addWidget(e); v.addStretch(); return
+        elif self.android.da_aggiornare():
+            self.aggiorna_catalogo_android(silenzioso=True)
+        if not hasattr(self, "_letto_android"): self.leggi_android_installate(); self._letto_android = True
+        s = QLabel(("Risultati per «%s»" % q) if q else "App libere (F-Droid)"); s.setObjectName("sezione"); v.addWidget(s)
+        apps = self.android.cerca(q, 40)
+        if apps: self._griglia(v, apps)
+        else:
+            e = QLabel("Nessuna app trovata."); e.setObjectName("vuoto"); v.addWidget(e)
+        v.addStretch()
+
+    def attiva_android(self, tipo):
+        if self.in_corso: QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
+        p = QProcess(self); p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
+        self.in_corso["android"] = p; self.uscita = ""; self.stato.setText("Attivo Android: scarico (circa 1 GB)…")
+        def leggi():
+            self.uscita += bytes(p.readAllStandardOutput()).decode("utf-8", "replace")
+            righe = [x.strip() for x in re.split(r"[\r\n]", self.uscita) if x.strip()]
+            m = re.findall(r"(\d+(?:\.\d+)?)\s*/\s*(\d+(?:\.\d+)?)\s*MB", self.uscita)
+            if m: self.stato.setText("Attivo Android: scaricati %s di %s MB…" % (int(float(m[-1][0])), int(float(m[-1][1]))))
+            elif righe: self.stato.setText("Attivo Android… " + righe[-1][-80:])
+        def fine(codice, _):
+            self.in_corso.pop("android", None)
+            if codice == 0: self.stato.setText("Android è attivo.")
+            elif codice in (126, 127): self.stato.setText("Operazione annullata.")
+            else:
+                self.stato.setText("Android non si è attivato. Controlla la connessione a Internet e riprova."); print(self.uscita[-3000:], file=sys.stderr)
+            self.vai("android")
+        p.readyReadStandardOutput.connect(leggi); p.finished.connect(fine); p.errorOccurred.connect(lambda _: fine(1, None))
+        p.start("pkexec", ["/usr/local/lib/sofios/android-attiva", tipo])
+
+    def aggiorna_catalogo_android(self, silenzioso=False):
+        if getattr(self, "_scarico_catalogo", False): return
+        self._scarico_catalogo = True
+        os.makedirs(AND.CACHE, exist_ok=True)
+        tmp = {"json": os.path.join(AND.CACHE, "index-v2.json.nuovo"), "asc": os.path.join(AND.CACHE, "index-v2.json.asc.nuovo")}
+        presi = {}
+        def finito():
+            self._scarico_catalogo = False
+            if len(presi) < 2: 
+                if not silenzioso: self.stato.setText("Non riesco a scaricare il catalogo Android: controlla la connessione.")
+                return
+            if not AND.firma_valida(tmp["json"], tmp["asc"]):
+                self.stato.setText("Catalogo Android scartato: la firma di F-Droid non è valida."); return
+            os.replace(tmp["json"], self.android.file_catalogo()); os.replace(tmp["asc"], self.android.file_catalogo() + ".asc")
+            self.android.carica()
+            if not silenzioso: self.stato.setText("Catalogo Android aggiornato: %d app." % len(self.android.app))
+            if self.pagina == "android": self.vai("android")
+        def scarica(chiave, url):
+            r = self.icone.rete.get(QNetworkRequest(QUrl(url)))
+            def fatto():
+                if r.error() == r.NetworkError.NoError:
+                    with open(tmp[chiave], "wb") as f: f.write(bytes(r.readAll()))
+                    presi[chiave] = True
+                r.deleteLater(); attesi.discard(chiave)
+                if not attesi: finito()
+            r.finished.connect(fatto)
+        attesi = {"json", "asc"}
+        scarica("json", AND.REPO + "/index-v2.json"); scarica("asc", AND.REPO + "/index-v2.json.asc")
+
+    def installa_android(self, app):
+        if self.in_corso: QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
+        self.in_corso[app["pacchetto"]] = True; self.stato.setText("Scarico «%s»…" % app["nome"]); self.aggiorna_tutto()
+        cartella = os.path.join(AND.CACHE, "apk"); os.makedirs(cartella, exist_ok=True)
+        f = os.path.join(cartella, app["pacchetto"] + ".apk")
+        r = self.icone.rete.get(QNetworkRequest(QUrl(app["apk"])))
+        def errore(msg):
+            self.in_corso.pop(app["pacchetto"], None); self.stato.setText(msg); self.aggiorna_tutto()
+        def scaricata():
+            ok = r.error() == r.NetworkError.NoError
+            if ok:
+                with open(f, "wb") as h: h.write(bytes(r.readAll()))
+            r.deleteLater()
+            if not ok: errore("Non riesco a scaricare «%s»." % app["nome"]); return
+            if AND.sha256_file(f) != app["sha256"]:
+                os.remove(f); errore("«%s» scartata: il file non corrisponde al catalogo." % app["nome"]); return
+            self.stato.setText("Installo «%s» in Android…" % app["nome"])
+            if not AND.sessione_attiva():
+                QProcess.startDetached("waydroid", ["session", "start"])
+            self._attesa = 0
+            def prova():
+                if not AND.sessione_attiva() and self._attesa < 60:
+                    self._attesa += 1; QTimer.singleShot(1000, prova); return
+                p = QProcess(self); p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
+                def fine(codice, _):
+                    self.in_corso.pop(app["pacchetto"], None); self.leggi_android_installate()
+                    self.stato.setText(("Fatto: «%s»." if app["pacchetto"] in self.android_installate else "«%s» non si è installata.") % app["nome"])
+                    self.aggiorna_tutto()
+                p.finished.connect(fine); p.start("waydroid", ["app", "install", f])
+            prova()
+        r.downloadProgress.connect(lambda a, b: self.stato.setText("Scarico «%s»… %d%%" % (app["nome"], a * 100 // b)) if b > 0 else None)
+        r.finished.connect(scaricata)
+
+    def registra_google(self):
+        try:
+            r = subprocess.run(["pkexec", "/usr/local/lib/sofios/android-attiva", "id-google"], capture_output=True, text=True, timeout=120)
+            codice = (re.findall(r"\b\d{10,}\b", r.stdout) or [""])[-1]
+        except Exception:
+            codice = ""
+        if not codice:
+            QMessageBox.information(self, "SoStore", "Apri prima Google Play una volta e accedi con il tuo account, poi riprova."); return
+        QApplication.clipboard().setText(codice)
+        QMessageBox.information(self, "Registra il computer su Google",
+            "Il codice di questo computer è:\n\n%s\n\nL'ho già copiato. Ora si apre la pagina di Google: accedi, incolla il codice e premi «Registra». "
+            "Dopo qualche minuto riavvia Android e Google Play funzionerà." % codice)
+        QProcess.startDetached("xdg-open", ["https://www.google.com/android/uncertified"])
+
 
 def main():
     app = QApplication(sys.argv); app.setApplicationName("SoStore"); app.setDesktopFileName("sofios-store")
@@ -490,6 +694,11 @@ def main():
                 a = next((x for x in w.catalogo["vetrina"] if x["pacchetto"] == d), None) or w.fonte.dettagli(d) or {"pacchetto": d, "nome": d}
                 w.mostra_dettaglio(a)
             passi.append(("dettaglio", dett))
+        if os.environ.get("SOFIOS_ANDROID_FOTO"):
+            passi.append(("android", lambda: w.vai("android")))
+            passi.append(("android-catalogo", lambda: None))
+            qa = os.environ.get("SOFIOS_CERCA_ANDROID")
+            if qa: passi.append(("android-cerca", lambda: (w.cerca.setText(qa), w.esegui_ricerca())))
         ins = os.environ.get("SOFIOS_INSTALLA")
         if ins:
             def installa_e_aspetta():
@@ -502,6 +711,11 @@ def main():
             if i >= len(passi): app.quit(); return
             passi[i][1]()
             def salva():
+                if passi[i][0] == "android-catalogo" and getattr(w, "_scarico_catalogo", False):
+                    scatta.attese = getattr(scatta, "attese", 0) + 1
+                    if scatta.attese < 200: QTimer.singleShot(1500, salva); return
+                if passi[i][0] == "android-catalogo" and not getattr(scatta, "ridisegnato", False):
+                    scatta.ridisegnato = True; w.vai("android"); QTimer.singleShot(6000, salva); return
                 if passi[i][0] == "installato" and w.in_corso:   # aspetta la fine dell'installazione (max 10 minuti)
                     scatta.attese = getattr(scatta, "attese", 0) + 1
                     if scatta.attese < 400: QTimer.singleShot(1500, salva); return

@@ -1,0 +1,22 @@
+#!/bin/sh
+# SoStore: operazioni su Android che richiedono i permessi di amministratore (chiamato con pkexec)
+#   android-attiva VANILLA|GAPPS   scarica e prepara Android (senza Google / con Google Play)
+#   android-attiva id-google       stampa il codice del computer per la registrazione su Google
+set -e
+case "$1" in
+  VANILLA|GAPPS)
+    echo "Preparo Android ($1)…"
+    if [ -f /var/lib/waydroid/waydroid.cfg ]; then
+      systemctl stop waydroid-container.service 2>/dev/null || true
+      waydroid init -f -s "$1"
+    else
+      waydroid init -s "$1"
+    fi
+    systemctl enable --now waydroid-container.service
+    echo "Android pronto."
+    ;;
+  id-google)
+    waydroid shell -- sh -c "sqlite3 /data/data/com.google.android.gsf/databases/gservices.db \"select value from main where name = 'android_id';\""
+    ;;
+  *) echo "uso: android-attiva VANILLA|GAPPS|id-google" >&2; exit 2 ;;
+esac
