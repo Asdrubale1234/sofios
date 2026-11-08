@@ -84,12 +84,13 @@ jobs:
           export LANG=it_IT.UTF-8 LC_ALL=it_IT.UTF-8 SOFIOS_LIB=$PWD/$I/usr/local/lib/sofios SOFIOS_LOGO=$PWD/$I/usr/share/sofios/logo.png \
                  SOFIOS_CATALOGO=$PWD/$I/usr/share/sofios/store/catalogo.json SOFIOS_TEMA_ICONE=breeze-dark XDG_RUNTIME_DIR=/tmp/run
           Xvfb :7 -screen 0 1280x800x24 & sleep 2; export DISPLAY=:7
+          export WINEPREFIX=/tmp/wp; mkdir -p /tmp/wp
           { wine --version; } > /tmp/out/windows.txt 2>&1
           SOFIOS_FOTO=/tmp/out/win.png SOFIOS_WINDOWS_FOTO=win-notepadplusplus QT_QPA_PLATFORM=offscreen timeout 900 python3 $I/usr/local/bin/sofios-store >> /tmp/out/windows.txt 2>&1 || true
-          { echo ---LOG; cat ~/.cache/sofios-store/windows/ultimo.log; ls -la ~/.cache/sofios-store/windows/; echo ---C; ls "$HOME/.wine/drive_c" "$HOME/.wine/drive_c/Program Files"; } >> /tmp/out/windows.txt 2>&1 || true
-          ls -la "$HOME/.wine/drive_c/Program Files/Notepad++/" >> /tmp/out/windows.txt 2>&1
+          { echo ---LOG; cat ~/.cache/sofios-store/windows/ultimo.log; ls -la ~/.cache/sofios-store/windows/; echo ---C; ls "/tmp/wp/drive_c" "/tmp/wp/drive_c/Program Files"; } >> /tmp/out/windows.txt 2>&1 || true
+          ls -la "/tmp/wp/drive_c/Program Files/Notepad++/" >> /tmp/out/windows.txt 2>&1
           # il programma Windows aperto davvero
-          WINEDEBUG=-all wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" >/dev/null 2>&1 & sleep 25
+          WINEDEBUG=-all wine "/tmp/wp/drive_c/Program Files/Notepad++/notepad++.exe" >/dev/null 2>&1 & sleep 25
           import -window root /tmp/out/win-aperto.png 2>>/tmp/out/windows.txt || true
       - name: Salva
         if: always()
