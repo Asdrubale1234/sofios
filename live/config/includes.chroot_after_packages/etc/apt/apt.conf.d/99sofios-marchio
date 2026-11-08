@@ -1,0 +1,2 @@
+// SofiOS: dopo ogni aggiornamento rimette i nomi SofiOS nei programmi (non blocca mai l'aggiornamento)
+DPkg::Post-Invoke { "if [ -x /usr/local/lib/sofios/marchio-dopo-aggiornamento ]; then /usr/local/lib/sofios/marchio-dopo-aggiornamento || true; fi"; };

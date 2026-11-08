@@ -85,7 +85,8 @@ def clic(x, y, w=1280, h=800):
 def tasti(*k):
     for t in k:
         cmdmon(f"sendkey {t}"); time.sleep(0.3)
-SPECIALI = {"-": "minus", "/": "slash", ".": "dot", "_": "shift-minus", ":": "shift-semicolon", "=": "equal"}
+# tastiera ITALIANA nella macchina di prova: i tasti hanno nomi della tastiera americana
+SPECIALI = {"-": "slash", "_": "shift-slash", ".": "dot", ":": "shift-dot", "/": "shift-7", "=": "shift-0", "'": "minus", ",": "comma"}
 def scrivi(testo):
     for c in testo:
         if c == " ": tasti("spc")
@@ -117,6 +118,8 @@ try:
         tasti("alt-f2"); time.sleep(3); scrivi(app_nome); time.sleep(4); tasti("ret")
         aspetta(40 if app_nome in ("Mail", "Browser") else 15, "app-" + app_nome.lower(), 8)
         tasti("alt-f4"); time.sleep(4)
+        if app_nome in ("Mail", "Browser"):   # hanno finestre in piu' (benvenuto di Mail): chiusura sicura
+            tasti("alt-f2"); time.sleep(3); scrivi("pkill -f " + ("thunderbird" if app_nome == "Mail" else "firefox")); time.sleep(2); tasti("ret"); time.sleep(4)
     # altre schermate del sistema: ognuna provata da sola (se una fallisce si va avanti)
     def schermata(nome, comando, attesa, chiudi="alt-f4"):
         try:
@@ -144,7 +147,10 @@ try:
         scrivi("live"); tasti("ret"); time.sleep(6); foto("dopo-blocco")
     except Exception as e:
         L("errore nel blocco", repr(e))
-    tasti("alt-f2"); time.sleep(3); scrivi("Installa"); time.sleep(4); foto("krunner")
+    # chiude cio' che fosse rimasto aperto, poi apre l'installer con il nome completo
+    for prog in ("plasma-discover", "firefox", "systemsettings", "dolphin"):
+        tasti("alt-f2"); time.sleep(3); scrivi("pkill -f " + prog); time.sleep(2); tasti("ret"); time.sleep(3)
+    tasti("alt-f2"); time.sleep(3); scrivi("Installa SofiOS"); time.sleep(4); foto("krunner")
     tasti("ret")
     aspetta(150, "installer", 15)
     # pagine dell'installer: si clicca "Avanti" (Alt+A e' condiviso con "Annulla"); non si preme mai "Installa"

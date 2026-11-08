@@ -1,0 +1,5 @@
+#!/bin/sh
+# Nomi SofiOS dentro i programmi (Discover -> SoStore, Dolphin -> File, ...) tramite le traduzioni italiane
+echo "== SOFIOS: traduzioni =="
+python3 /usr/local/lib/sofios/traduzioni.py || echo "ATTENZIONE: traduzioni non applicate"
+exit 0

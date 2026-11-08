@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # Benvenuto di SofiOS: la prima finestra che si vede. Testi e grafica sono nostri.
 import os, sys, subprocess
-from PyQt6.QtCore import Qt, QSize, QRectF
-from PyQt6.QtGui import QPixmap, QPainter, QPainterPath, QFont, QIcon
+from PyQt6.QtCore import Qt, QRectF, QProcess
+from PyQt6.QtGui import QPixmap, QPainter, QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QVBoxLayout,
                              QHBoxLayout, QFrame, QCheckBox)
 sys.path.insert(0, "/usr/local/lib/sofios")
@@ -123,25 +123,30 @@ class Benvenuto(QWidget):
             pass
 
     def attiva_aggiornamenti(self):
+        # senza bloccare la finestra mentre si chiede la password
         self.btn_agg.setEnabled(False); self.btn_agg.setText("Attivo…")
-        QApplication.processEvents()
-        try:
-            r = subprocess.run(["pkexec", "systemctl", "enable", "--now", "sofios-aggiorna.timer"], timeout=120)
-            ok = r.returncode == 0
-        except Exception:
-            ok = False
-        if ok:
+        self.proc = QProcess(self)
+        self.proc.finished.connect(self.fine_attivazione)
+        self.proc.errorOccurred.connect(lambda _: self.fine_attivazione(1, None))
+        self.proc.start("pkexec", ["systemctl", "enable", "--now", "sofios-aggiorna.timer"])
+
+    def fine_attivazione(self, codice, _stato):
+        if codice == 0:
             self.btn_agg.setText("Aggiornamenti automatici attivi ✓")
         else:
             self.btn_agg.setText("Non è stato attivato: riprova"); self.btn_agg.setEnabled(True)
 
     def chiudi(self):
+        self.close()
+
+    def closeEvent(self, e):
+        # chiusa con «Inizia» o con la X: non si mostra piu', a meno che la casella sia spuntata
         if not self.ancora.isChecked():
             try:
                 os.makedirs(os.path.dirname(FLAG), exist_ok=True); open(FLAG, "w").close()
             except OSError:
                 pass
-        self.close()
+        e.accept()
 
 def main():
     if "--solo-prima-volta" in sys.argv and os.path.exists(FLAG) and not LIVE:

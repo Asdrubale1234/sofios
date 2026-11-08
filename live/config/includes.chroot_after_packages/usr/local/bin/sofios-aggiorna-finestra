@@ -1,0 +1,68 @@
+#!/usr/bin/python3
+# Aggiorna SofiOS: finestra semplice (senza terminale) che controlla e installa gli aggiornamenti firmati.
+import os, sys
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+from sofios_info import bottone_informazioni
+from PyQt6.QtCore import Qt, QProcess
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+PROGRAMMA = os.environ.get("SOFIOS_AGGIORNA", "/usr/local/bin/sofios-aggiorna")
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel { color: #e6f1ff; font-size: 13px; }
+QLabel#titolo { color: #ffffff; font-size: 20px; font-weight: 700; }
+QLabel#stato { color: #d4e6f8; font-size: 14px; }
+QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 700; }
+QPushButton:hover { background: #ffe19e; }
+QPushButton:disabled { background: #2a4d6e; color: #9fc2e4; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; font-weight: 600; }
+"""
+
+class Aggiorna(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("Aggiorna SofiOS"); self.setWindowIcon(QIcon(LOGO))
+        self.setStyleSheet(STILE); self.setFixedWidth(440)
+        v = QVBoxLayout(self); v.setContentsMargins(28, 24, 28, 20); v.setSpacing(10)
+        i = QLabel(); i.setPixmap(QPixmap(LOGO).scaled(64, 64, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+        i.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(i)
+        t = QLabel("Aggiorna SofiOS"); t.setObjectName("titolo"); t.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(t)
+        self.stato = QLabel("Controlla se ci sono novità per il tuo computer."); self.stato.setObjectName("stato")
+        self.stato.setWordWrap(True); self.stato.setAlignment(Qt.AlignmentFlag.AlignCenter); self.stato.setMinimumHeight(48); v.addWidget(self.stato)
+        r = QHBoxLayout(); r.addWidget(bottone_informazioni(self, "Aggiorna SofiOS", "Installa gli aggiornamenti di SofiOS, solo se firmati da noi.")); r.addStretch()
+        self.chiudi = QPushButton("Chiudi"); self.chiudi.setObjectName("secondario"); self.chiudi.clicked.connect(self.close); r.addWidget(self.chiudi)
+        self.vai = QPushButton("Controlla aggiornamenti"); self.vai.clicked.connect(self.avvia); r.addWidget(self.vai)
+        v.addLayout(r)
+        self.uscita = ""
+
+    def avvia(self):
+        self.vai.setEnabled(False); self.chiudi.setEnabled(False); self.stato.setText("Controllo in corso…"); self.uscita = ""
+        self.p = QProcess(self); self.p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
+        self.p.readyReadStandardOutput.connect(self.leggi); self.p.finished.connect(self.fine)
+        self.p.errorOccurred.connect(lambda _: self.fine(1, None))
+        self.p.start(PROGRAMMA, [])
+
+    def leggi(self):
+        self.uscita += bytes(self.p.readAllStandardOutput()).decode("utf-8", "replace")
+        righe = [x for x in self.uscita.splitlines() if x.strip()]
+        if righe: self.stato.setText(righe[-1])
+
+    def fine(self, codice, _):
+        righe = [x for x in self.uscita.splitlines() if x.strip()]
+        if codice in (126, 127) or (codice != 0 and not righe):
+            self.stato.setText("Aggiornamento annullato.")
+        elif righe:
+            self.stato.setText(righe[-1])
+        self.vai.setText("Controlla di nuovo"); self.vai.setEnabled(True); self.chiudi.setEnabled(True)
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("Aggiorna SofiOS"); app.setDesktopFileName("sofios-aggiorna")
+    w = Aggiorna()
+    if os.environ.get("SOFIOS_FOTO"):
+        if os.environ.get("SOFIOS_AVVIA"):
+            w.avvia(); w.p.waitForFinished(20000); app.processEvents()
+        w.show(); app.processEvents(); w.grab().save(os.environ["SOFIOS_FOTO"]); return 0
+    w.show(); return app.exec()
+if __name__ == "__main__": sys.exit(main())

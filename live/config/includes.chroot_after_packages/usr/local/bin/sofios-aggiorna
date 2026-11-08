@@ -11,6 +11,10 @@ if [ "$(id -u)" -ne 0 ] && [ -z "${SOFIOS_PROVA:-}" ]; then
 fi
 
 T=$(mktemp -d); trap 'rm -rf "$T"' EXIT
+# un solo aggiornamento alla volta (quello automatico e quello avviato a mano non si sovrappongono)
+LOCK="${SOFIOS_LOCK:-/run/sofios-aggiorna.lock}"
+exec 9>"$LOCK"
+flock -n 9 || { echo "Un aggiornamento è già in corso. Riprova tra poco."; exit 0; }
 dica(){ echo "$*"; }
 cur=$(tr -dc 0-9 < "$VERF" 2>/dev/null || true); cur=${cur:-0}
 

@@ -106,6 +106,8 @@ Rectangle {
         }
         Text { anchors.horizontalCenter: parent.horizontalCenter; height: 20; color: "#ffd479"; font.family: radice.fam; font.pixelSize: 14
             text: radice.errore ? "Password sbagliata. Riprova." : "" }
+        Text { anchors.horizontalCenter: parent.horizontalCenter; height: 18; color: "#cfe3f7"; font.family: radice.fam; font.pixelSize: 13
+            text: (typeof keyboard !== "undefined" && keyboard.capsLock) ? "Attenzione: il tasto Bloc Maiusc è attivo" : "" }
     }
 
     // cambio utente (solo se ce ne sono piu' di uno)

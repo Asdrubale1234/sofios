@@ -25,10 +25,21 @@ echo "sofios" > /etc/hostname
 mkdir -p /etc/xdg
 kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.sofios.desktop 2>/dev/null || \
  printf '[KDE]\nLookAndFeelPackage=org.sofios.desktop\n' >> /etc/xdg/kdeglobals
+# "Impostazioni rapide" propone due temi (chiaro e scuro): entrambi SofiOS, cosi' un clic non riporta l'aspetto di KDE
+for k in DefaultLightLookAndFeel DefaultDarkLookAndFeel; do
+  kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key "$k" org.sofios.desktop 2>/dev/null || \
+   printf '[KDE]\n%s=org.sofios.desktop\n' "$k" >> /etc/xdg/kdeglobals
+done
+
+# Menu Aiuto di tutti i programmi: niente "Informazioni su KDE", segnala bug, donazioni, manuali KDE
+printf '\n[KDE Action Restrictions]\naction/help_about_kde=false\naction/help_about_app=false\naction/help_report_bug=false\naction/help_donate=false\naction/help_contents=false\naction/switch_application_language=false\n' >> /etc/xdg/kdeglobals
 
 # "Informazioni su questo sistema" di KDE (mostra Plasma/Qt): tolto da Impostazioni; c'e' "Informazioni su SofiOS" (nostra)
 kwriteconfig6 --file /etc/xdg/kdeglobals --group "KDE Control Module Restrictions" --key kcm_about-distro false 2>/dev/null || \
  printf '\n[KDE Control Module Restrictions]\nkcm_about-distro=false\n' >> /etc/xdg/kdeglobals
+# "KDE Connect" nelle Impostazioni: il telefono si collega dall'app "Collega telefono"
+kwriteconfig6 --file /etc/xdg/kdeglobals --group "KDE Control Module Restrictions" --key kcm_kdeconnect false 2>/dev/null || \
+ printf 'kcm_kdeconnect=false\n' >> /etc/xdg/kdeglobals
 echo "SOFIOS: kdeglobals:"; cat /etc/xdg/kdeglobals
 
 # Niente portafogli KDE per tutti gli utenti

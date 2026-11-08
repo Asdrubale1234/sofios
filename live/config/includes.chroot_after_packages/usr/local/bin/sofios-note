@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # Note di SofiOS: un file di testo per nota nella cartella "Note" della tua casa. Salvataggio automatico.
-import os, sys, time, re
+import os, sys, time
 sys.path.insert(0, "/usr/local/lib/sofios")
 from sofios_info import bottone_informazioni
 from PyQt6.QtCore import Qt, QTimer
@@ -32,7 +32,7 @@ class Note(QWidget):
         self.setObjectName("finestra"); self.setWindowTitle("Note"); self.setWindowIcon(QIcon(LOGO))
         self.setStyleSheet(STILE); self.resize(860, 560)
         os.makedirs(CARTELLA, exist_ok=True)
-        self.corrente = None
+        self.corrente = None; self.salvato = None
         radice = QHBoxLayout(self); radice.setContentsMargins(20, 18, 20, 18); radice.setSpacing(16)
         sx = QVBoxLayout(); sx.setSpacing(10)
         t = QLabel("Note"); t.setObjectName("titolo"); sx.addWidget(t)
@@ -70,22 +70,43 @@ class Note(QWidget):
         if it is None: return
         self.salva()
         self.corrente = it.data(Qt.ItemDataRole.UserRole)
-        self.testo.blockSignals(True)
-        try: self.testo.setPlainText(open(self.corrente, encoding="utf-8").read())
-        except OSError: self.testo.setPlainText("")
-        self.testo.blockSignals(False)
+        try: self.salvato = open(self.corrente, encoding="utf-8").read()
+        except OSError: self.salvato = ""
+        self.testo.blockSignals(True); self.testo.setPlainText(self.salvato); self.testo.blockSignals(False)
+
+    def voce_di(self, percorso):
+        for i in range(self.elenco.count()):
+            if self.elenco.item(i).data(Qt.ItemDataRole.UserRole) == percorso: return self.elenco.item(i)
+        return None
 
     def salva(self):
+        """Salva solo se il testo e' cambiato (cosi' l'ordine delle note non cambia solo guardandole).
+        Scrive prima in un file temporaneo e poi lo sostituisce: se il computer si spegne a meta', la nota resta intera."""
+        self.salva_t.stop()
         if not self.corrente: return
-        try: open(self.corrente, "w", encoding="utf-8").write(self.testo.toPlainText())
-        except OSError: return
-        it = self.elenco.currentItem()
-        if it: it.setText(titolo_di(self.testo.toPlainText(), self.corrente))
+        testo = self.testo.toPlainText()
+        if testo == getattr(self, "salvato", None): return
+        tmp = self.corrente + ".tmp"
+        try:
+            with open(tmp, "w", encoding="utf-8") as f: f.write(testo); f.flush(); os.fsync(f.fileno())
+            os.replace(tmp, self.corrente)
+        except OSError:
+            QMessageBox.warning(self, "Note", "Non riesco a salvare la nota. Controlla che il disco non sia pieno."); return
+        self.salvato = testo
+        it = self.voce_di(self.corrente)
+        if it: it.setText(titolo_di(testo, self.corrente))
 
     def nuova(self):
         self.salva()
-        p = os.path.join(CARTELLA, time.strftime("nota-%Y%m%d-%H%M%S.txt"))
-        open(p, "w", encoding="utf-8").close()
+        if self.corrente and not self.testo.toPlainText().strip():   # c'e' gia' una nota vuota: si usa quella
+            self.testo.setFocus(); return
+        base = time.strftime("nota-%Y%m%d-%H%M%S"); n = 1; p = None
+        while p is None:   # nome sempre nuovo: due note nello stesso secondo non si sovrascrivono
+            prova = os.path.join(CARTELLA, base + ("" if n == 1 else "-%d" % n) + ".txt")
+            try: open(prova, "x", encoding="utf-8").close(); p = prova
+            except FileExistsError: n += 1
+            except OSError:
+                QMessageBox.warning(self, "Note", "Non riesco a creare la nota."); return
         self.carica(scegli=p); self.testo.setFocus()
 
     def elimina(self):
@@ -93,7 +114,7 @@ class Note(QWidget):
         if QMessageBox.question(self, "Elimina nota", "Vuoi eliminare questa nota?") == QMessageBox.StandardButton.Yes:
             try: os.remove(self.corrente)
             except OSError: pass
-            self.corrente = None; self.carica()
+            self.corrente = None; self.salvato = None; self.carica()
             if self.elenco.count() == 0: self.nuova()
 
     def closeEvent(self, e):

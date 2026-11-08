@@ -12,3 +12,7 @@ Image=SofiOS
 
 [kdeglobals][Icons]
 Theme=SofiOS
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__SofiOS

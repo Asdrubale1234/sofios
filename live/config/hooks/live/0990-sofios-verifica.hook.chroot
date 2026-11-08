@@ -14,6 +14,13 @@ if [ -f /etc/grub.d/10_linux ]; then
   sed -i 's|OS="${GRUB_DISTRIBUTOR} GNU/Linux"|OS="${GRUB_DISTRIBUTOR}"|' /etc/grub.d/10_linux || true
   echo "SOFIOS: 10_linux, riga OS=:"; grep -n '^ *OS=' /etc/grub.d/10_linux | head -5
 fi
+# Mail (Thunderbird): niente barra "Conosci i tuoi diritti", niente pagina iniziale con le donazioni
+for d in /etc/thunderbird/pref /usr/lib/thunderbird/defaults/pref; do
+  if [ -d "$d" ]; then
+    printf '// SofiOS\npref("mail.rights.override", true);\npref("app.donation.eoy.version.viewed", 999);\npref("mailnews.start_page.enabled", false);\n' > "$d/sofios.js"
+    echo "SOFIOS: preferenze Mail scritte in $d (e' un collegamento? $(readlink -f "$d"))"
+  fi
+done
 echo "== SOFIOS: controllo marchi =="
 echo "-- os-release / issue / lsb --"; cat /etc/os-release 2>&1 | head -12; cat /etc/issue /etc/issue.net 2>&1; ls -l /etc/lsb-release /etc/debian_version 2>&1; cat /etc/debian_version 2>&1
 echo "-- grub: file e impostazioni --"; cat /etc/default/grub 2>&1 | grep -v '^#' | grep -v '^$' | head -20; ls /etc/default/grub.d 2>&1; cat /etc/default/grub.d/*.cfg 2>&1
@@ -29,5 +36,32 @@ echo "-- Utenti (cambio avatar) --"; find /usr -name "kcm_users*" 2>/dev/null | 
 echo "-- Informazioni sul sistema (KDE) --"; ls /usr/share/kservices6 2>/dev/null | grep -i about; find /usr/share -name 'kcm_about*' 2>/dev/null | head
 echo "-- Plymouth --"; plymouth-set-default-theme 2>&1; ls /usr/share/plymouth/themes
 echo "-- Locale / tastiera di base --"; cat /etc/default/locale /etc/default/keyboard /etc/timezone 2>&1
+echo "-- Installatore: moduli (sequenza, avvio, utenti, fine) --"
+for c in settings bootloader users displaymanager finished welcome packages; do
+  for d in /etc/calamares /etc/calamares/modules /usr/share/calamares/modules; do
+    [ -f "$d/$c.conf" ] && { echo ">> $d/$c.conf"; grep -v -E '^\s*(#|$)' "$d/$c.conf" | head -40; }
+  done
+done
+echo "-- Traduzioni con nomi KDE (Discover, Dolphin) --"; ls -la /usr/share/locale/it/LC_MESSAGES/ 2>/dev/null | grep -i -E 'discover|dolphin|systemsettings|kdeconnect' | head
+echo "-- Menu: tutte le voci VISIBILI (nome mostrato | categorie | file) --"
+python3 - <<'PYEOF' 2>&1 | head -200
+import os, glob, configparser
+voci = {}
+for d in ("/usr/share/applications", "/usr/local/share/applications"):   # /usr/local vince
+    for f in glob.glob(d + "/**/*.desktop", recursive=True):
+        voci[os.path.relpath(f, d)] = f
+for rel, f in sorted(voci.items()):
+    c = configparser.RawConfigParser(strict=False, interpolation=None); c.optionxform = str
+    try: c.read(f, encoding="utf-8")
+    except Exception as e: print("ILLEGGIBILE", f, e); continue
+    if not c.has_section("Desktop Entry"): continue
+    e = c["Desktop Entry"]
+    if e.get("NoDisplay", "").lower() == "true" or e.get("Hidden", "").lower() == "true": continue
+    if e.get("Type", "Application") != "Application": continue
+    osi = e.get("OnlyShowIn", "")
+    if osi and "KDE" not in osi: continue
+    if "KDE" in e.get("NotShowIn", ""): continue
+    print(e.get("Name[it]", e.get("Name", "?")), "|", e.get("Categories", ""), "|", f)
+PYEOF
 echo "== SOFIOS: fine controllo marchi =="
 exit 0
