@@ -65,3 +65,9 @@ for rel, f in sorted(voci.items()):
 PYEOF
 echo "== SOFIOS: fine controllo marchi =="
 exit 0
+echo "-- SoStore e Android --"
+ls -la /usr/local/bin/sofios-store /usr/local/lib/sofios/android-attiva /usr/share/polkit-1/actions/org.sofios.android.policy /usr/share/sofios/store/ 2>&1 | head -20 || true
+command -v waydroid pkcon pkexec appstreamcli 2>&1 || true
+dpkg -l waydroid 2>/dev/null | tail -1 || true
+python3 -c "import gi; gi.require_version('AppStream','1.0'); from gi.repository import AppStream; print('AppStream ok')" 2>&1 || true
+ls /etc/xdg/autostart | grep -i discover || echo "avviso aggiornamenti Discover: tolto"

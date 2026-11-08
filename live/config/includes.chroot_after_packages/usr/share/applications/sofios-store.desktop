@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=SoStore
+Comment=Programmi, app Android e programmi Windows
+Exec=/usr/local/bin/sofios-store
+Icon=sofios-store
+Categories=System;
+Keywords=programmi;installa;app;android;windows;

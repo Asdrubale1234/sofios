@@ -81,3 +81,12 @@ python3-pykeepass
 btrfs-progs
 snapper
 systemd-zram-generator
+# --- SoStore: catalogo programmi, installazione, Android ---
+packagekit
+packagekit-tools
+polkitd
+pkexec
+appstream
+gir1.2-appstream-1.0
+python3-gi
+gpgv

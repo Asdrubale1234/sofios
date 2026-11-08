@@ -34,6 +34,6 @@ tasks.writeConfig("launchers", [
   "applications:firefox-esr.desktop",
   "applications:org.kde.dolphin.desktop",
   "applications:libreoffice-writer.desktop",
-  "applications:org.kde.discover.desktop",
+  "applications:sofios-store.desktop",
   "applications:systemsettings.desktop"
 ]);

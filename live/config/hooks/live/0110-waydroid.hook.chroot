@@ -1,0 +1,8 @@
+#!/bin/sh
+# Android sul computer (Waydroid): in Debian 13 arriva dai "backports" ufficiali; la sorgente resta per gli aggiornamenti
+# (priorita' bassa: dai backports si prende solo cio' che si chiede esplicitamente)
+set -e
+echo "deb http://deb.debian.org/debian trixie-backports main" > /etc/apt/sources.list.d/sofios-backports.list
+apt-get update
+apt-get install -y -t trixie-backports waydroid || echo "ATTENZIONE: waydroid non installato"
+command -v waydroid >/dev/null && waydroid --version || true
