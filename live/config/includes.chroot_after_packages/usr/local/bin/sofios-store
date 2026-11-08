@@ -572,11 +572,22 @@ class SoStore(QWidget):
         if not self.android.app:
             if self.android.da_aggiornare(ore=24 * 30) or not self.android.carica():
                 self.aggiorna_catalogo_android(); e = QLabel("Scarico il catalogo delle app Android…"); e.setObjectName("vuoto"); v.addWidget(e); v.addStretch(); return
-        elif self.android.da_aggiornare():
+        elif self.android.da_aggiornare(ore=24 * 7):   # il catalogo pesa ~70 MB: una volta alla settimana
             self.aggiorna_catalogo_android(silenzioso=True)
         if not hasattr(self, "_letto_android"): self.leggi_android_installate(); self._letto_android = True
-        s = QLabel(("Risultati per «%s»" % q) if q else "App libere (F-Droid)"); s.setObjectName("sezione"); v.addWidget(s)
-        apps = self.android.cerca(q, 40)
+        if not q:   # prima le app scelte da noi, con il nome e la descrizione in italiano
+            indice = {a["pacchetto"]: a for a in self.android.app}
+            scelte = []
+            for x in self.catalogo.get("android", []):
+                a = indice.get(x["pacchetto"])
+                if a: scelte.append(dict(a, nome=x.get("nome", a["nome"]), descrizione=x.get("descrizione", a["descrizione"])))
+            if scelte:
+                s = QLabel("In evidenza"); s.setObjectName("sezione"); v.addWidget(s); self._griglia(v, scelte)
+            s = QLabel("Aggiornate di recente"); s.setObjectName("sezione"); v.addWidget(s)
+            apps = [a for a in self.android.cerca("", 40) if a["pacchetto"] not in {x["pacchetto"] for x in scelte}][:20]
+        else:
+            s = QLabel("Risultati per «%s»" % q); s.setObjectName("sezione"); v.addWidget(s)
+            apps = self.android.cerca(q, 40)
         if apps: self._griglia(v, apps)
         else:
             e = QLabel("Nessuna app trovata."); e.setObjectName("vuoto"); v.addWidget(e)
