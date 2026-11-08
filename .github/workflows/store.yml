@@ -77,6 +77,19 @@ jobs:
           print("sha256 corrisponde:", A.sha256_file(f) == a["sha256"], os.path.getsize(f))
           open(f, "r+b").write(b"X"); print("file alterato riconosciuto:", A.sha256_file(f) != a["sha256"])
           PY
+      - name: Windows (Wine)
+        run: |
+          dpkg --add-architecture i386 && apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq wine wine64 wine32:i386 xvfb xauth imagemagick x11-utils >/dev/null 2>&1 || true
+          I=live/config/includes.chroot_after_packages
+          export LANG=it_IT.UTF-8 LC_ALL=it_IT.UTF-8 SOFIOS_LIB=$PWD/$I/usr/local/lib/sofios SOFIOS_LOGO=$PWD/$I/usr/share/sofios/logo.png \
+                 SOFIOS_CATALOGO=$PWD/$I/usr/share/sofios/store/catalogo.json SOFIOS_TEMA_ICONE=breeze-dark XDG_RUNTIME_DIR=/tmp/run
+          Xvfb :7 -screen 0 1280x800x24 & sleep 2; export DISPLAY=:7
+          { wine --version; } > /tmp/out/windows.txt 2>&1
+          SOFIOS_FOTO=/tmp/out/win.png SOFIOS_WINDOWS_FOTO=win-notepadplusplus QT_QPA_PLATFORM=offscreen timeout 900 python3 $I/usr/local/bin/sofios-store >> /tmp/out/windows.txt 2>&1 || true
+          ls -la "$HOME/.wine/drive_c/Program Files/Notepad++/" >> /tmp/out/windows.txt 2>&1
+          # il programma Windows aperto davvero
+          WINEDEBUG=-all wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" >/dev/null 2>&1 & sleep 25
+          import -window root /tmp/out/win-aperto.png 2>>/tmp/out/windows.txt || true
       - name: Salva
         if: always()
         env:

@@ -269,5 +269,45 @@
       "nome": "Markor",
       "descrizione": "Appunti e liste, semplici e veloci."
     }
+  ],
+  "windows": [
+    {
+      "tipo": "windows",
+      "pacchetto": "win-notepadplusplus",
+      "nome": "Notepad++",
+      "descrizione": "Editor di testo per Windows, molto usato per scrivere codice.",
+      "github": "notepad-plus-plus/notepad-plus-plus",
+      "file": "npp\\.[0-9.]+\\.Installer\\.x64\\.exe",
+      "argomenti": [
+        "/S"
+      ],
+      "eseguibile": [
+        "C:\\Program Files\\Notepad++\\notepad++.exe"
+      ],
+      "disinstalla": [
+        "C:\\Program Files\\Notepad++\\uninstall.exe",
+        "/S"
+      ],
+      "icona": "accessories-text-editor"
+    },
+    {
+      "tipo": "windows",
+      "pacchetto": "win-7zip",
+      "nome": "7-Zip",
+      "descrizione": "Apre e crea archivi compressi (zip, 7z, rar) con la versione Windows.",
+      "github": "ip7z/7zip",
+      "file": "7z[0-9]+-x64\\.exe",
+      "argomenti": [
+        "/S"
+      ],
+      "eseguibile": [
+        "C:\\Program Files\\7-Zip\\7zFM.exe"
+      ],
+      "disinstalla": [
+        "C:\\Program Files\\7-Zip\\Uninstall.exe",
+        "/S"
+      ],
+      "icona": "package-x-generic"
+    }
   ]
 }

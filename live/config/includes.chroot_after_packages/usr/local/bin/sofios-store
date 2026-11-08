@@ -6,6 +6,7 @@ import json, os, re, shlex, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import bottone_informazioni
 import store_android as AND
+import store_windows as WIN
 from PyQt6.QtCore import Qt, QProcess, QSize, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt6.QtGui import QIcon
@@ -324,7 +325,7 @@ class SoStore(QWidget):
         m = QHBoxLayout(); lg = QLabel(); lg.setPixmap(QIcon.fromTheme("sofios-store", QIcon(LOGO)).pixmap(QSize(34, 34))); m.addWidget(lg)
         t = QLabel("SoStore"); t.setObjectName("marchio"); m.addWidget(t); m.addStretch(); lv.addLayout(m); lv.addSpacing(12)
         self.voci = {}
-        for chiave, testo in (("vetrina", "In evidenza"), ("android", "App Android"), ("installati", "Installati")):
+        for chiave, testo in (("vetrina", "In evidenza"), ("android", "App Android"), ("windows", "Programmi Windows"), ("installati", "Installati")):
             b = QPushButton(testo); b.setObjectName("voce"); b.setCheckable(True); b.clicked.connect(lambda _, k=chiave: self.vai(k))
             self.voci[chiave] = b; lv.addWidget(b)
         lv.addStretch(); lv.addWidget(bottone_informazioni(self, "SoStore", "Il negozio dei programmi di SofiOS."))
@@ -385,6 +386,8 @@ class SoStore(QWidget):
         apps = self.catalogo.get("vetrina", [])
         if chiave == "android":
             self.pagina_android(v); return
+        if chiave == "windows":
+            self.pagina_windows(v); return
         if chiave == "vetrina":
             t = QLabel("In evidenza"); t.setObjectName("titolo"); v.addWidget(t)
             cat = []
@@ -463,11 +466,20 @@ class SoStore(QWidget):
     # --- azioni
     def e_installato(self, app):
         if app.get("tipo") == "android": return app["pacchetto"] in self.android_installate
+        if app.get("tipo") == "windows": return WIN.installato(app)
         return installato(app["pacchetto"])
 
     def apri(self, app):
         if app.get("tipo") == "android":
             QProcess.startDetached("waydroid", ["app", "launch", app["pacchetto"]]); return
+        if app.get("tipo") == "windows":
+            e = WIN.eseguibile(app)
+            if e:
+                from PyQt6.QtCore import QProcessEnvironment
+                p = QProcess(self); amb = QProcessEnvironment.systemEnvironment()
+                for k, x in WIN.AMBIENTE.items(): amb.insert(k, x)
+                p.setProcessEnvironment(amb); p.setProgram("wine"); p.setArguments([e]); p.startDetached()
+            return
         d = file_desktop(app["pacchetto"], app.get("desktop"))
         if not d or not apri_programma(d):
             QMessageBox.information(self, "SoStore", "«%s» è installato: lo trovi nel menu dei programmi." % app["nome"])
@@ -500,6 +512,7 @@ class SoStore(QWidget):
 
     def installa(self, app):
         if app.get("tipo") == "android": self.installa_android(app); return
+        if app.get("tipo") == "windows": self.installa_windows(app); return
         def ok():
             if installato(app["pacchetto"]): segna_mio(app, True); return True
             return False
@@ -507,6 +520,10 @@ class SoStore(QWidget):
 
     def rimuovi(self, app):
         if QMessageBox.question(self, "SoStore", "Vuoi rimuovere «%s»?" % app["nome"]) != QMessageBox.StandardButton.Yes: return
+        if app.get("tipo") == "windows":
+            d = app.get("disinstalla") or []
+            if d: self._wine(app, [d[0]] + d[1:], "Rimuovo", lambda: not WIN.installato(app))
+            return
         if app.get("tipo") == "android":
             p = QProcess(self); p.finished.connect(lambda *_: (self.leggi_android_installate(), self.aggiorna_tutto()))
             p.start("waydroid", ["app", "remove", app["pacchetto"]]); return
@@ -557,6 +574,9 @@ class SoStore(QWidget):
                            "su una pagina di Google (ti guidiamo noi). Le app delle banche e dei pagamenti spesso non funzionano.",
                            "Attiva con Google Play", lambda: self.attiva_android("GAPPS"))
             n = QLabel("L'attivazione scarica Android da Internet (circa 1 GB): può richiedere un po' di tempo."); n.setObjectName("descr"); n.setWordWrap(True); v.addWidget(n)
+            b = QLabel("Banca e pagamenti: le loro app di solito non funzionano su un computer. Usa il sito della tua banca nel Browser; "
+                       "per pagare nei negozi online vanno bene carta, PayPal, Google Pay e Apple Pay (con il codice da inquadrare con l'iPhone).")
+            b.setObjectName("descr"); b.setWordWrap(True); v.addWidget(b)
             v.addStretch(); return
         # pronto
         r = QHBoxLayout()
@@ -690,6 +710,62 @@ class SoStore(QWidget):
         QProcess.startDetached("xdg-open", ["https://www.google.com/android/uncertified"])
 
 
+    # ------------------------------------------------------------ Windows
+    def pagina_windows(self, v):
+        t = QLabel("Programmi Windows"); t.setObjectName("titolo"); v.addWidget(t)
+        i = QLabel("Programmi per Windows che abbiamo provato su SofiOS. Si scaricano dal sito ufficiale di chi li fa e funzionano come gli altri. "
+                   "Puoi aprire anche altri programmi Windows (.exe) con un doppio clic: molti funzionano, ma non tutti.")
+        i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
+        apps = self.catalogo.get("windows", [])
+        if apps: self._griglia(v, apps)
+        v.addStretch()
+
+    def _wine(self, app, argomenti, verbo, fatto):
+        if self.in_corso: QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
+        from PyQt6.QtCore import QProcessEnvironment
+        p = QProcess(self); amb = QProcessEnvironment.systemEnvironment()
+        for k, x in WIN.AMBIENTE.items(): amb.insert(k, x)
+        p.setProcessEnvironment(amb); p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
+        self.in_corso[app["pacchetto"]] = p; self.stato.setText("%s «%s»…" % (verbo, app["nome"])); self.aggiorna_tutto()
+        def fine(codice, _):
+            # alcuni programmi di installazione finiscono "in sottofondo": prima aspetta che Wine abbia chiuso tutto
+            w = QProcess(self); w.setProcessEnvironment(amb)
+            w.finished.connect(lambda *_: concludi()); w.errorOccurred.connect(lambda _: concludi())
+            w.start("wineserver", ["-w"])
+        def concludi():
+            if app["pacchetto"] not in self.in_corso: return
+            self.in_corso.pop(app["pacchetto"], None)
+            self.stato.setText(("Fatto: «%s»." if fatto() else "Non è riuscito: «%s».") % app["nome"])
+            if fatto() and verbo == "Installo": segna_mio(app, True)
+            if verbo == "Rimuovo" and fatto(): segna_mio(app, False)
+            self.aggiorna_tutto()
+        p.finished.connect(fine); p.errorOccurred.connect(lambda _: fine(1, None))
+        p.start("wine", argomenti)
+
+    def installa_windows(self, app):
+        if self.in_corso: QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
+        try:
+            url, impronta = WIN.risolvi(app)
+        except Exception:
+            self.stato.setText("Non riesco a trovare «%s» sul sito ufficiale. Controlla la connessione." % app["nome"]); return
+        if not url.startswith("https://"): self.stato.setText("Indirizzo non sicuro: scartato."); return
+        os.makedirs(WIN.CACHE, exist_ok=True)
+        f = os.path.join(WIN.CACHE, os.path.basename(url.split("?")[0]))
+        self.in_corso[app["pacchetto"]] = True; self.stato.setText("Scarico «%s»…" % app["nome"]); self.aggiorna_tutto()
+        r = self.icone.rete.get(QNetworkRequest(QUrl(url)))
+        r.downloadProgress.connect(lambda a, b: self.stato.setText("Scarico «%s»… %d%%" % (app["nome"], a * 100 // b)) if b > 0 else None)
+        def scaricato():
+            ok = r.error() == r.NetworkError.NoError
+            if ok:
+                with open(f, "wb") as h: h.write(bytes(r.readAll()))
+            r.deleteLater(); self.in_corso.pop(app["pacchetto"], None)
+            if not ok: self.stato.setText("Non riesco a scaricare «%s»." % app["nome"]); self.aggiorna_tutto(); return
+            if impronta and AND.sha256_file(f) != impronta:
+                os.remove(f); self.stato.setText("«%s» scartato: il file non corrisponde a quello ufficiale." % app["nome"]); self.aggiorna_tutto(); return
+            self._wine(app, [f] + app.get("argomenti", []), "Installo", lambda: WIN.installato(app))
+        r.finished.connect(scaricato)
+
+
 def main():
     app = QApplication(sys.argv); app.setApplicationName("SoStore"); app.setDesktopFileName("sofios-store")
     if os.environ.get("SOFIOS_TEMA_ICONE"): QIcon.setThemeName(os.environ["SOFIOS_TEMA_ICONE"])   # solo per le prove
@@ -710,6 +786,14 @@ def main():
             passi.append(("android-catalogo", lambda: None))
             qa = os.environ.get("SOFIOS_CERCA_ANDROID")
             if qa: passi.append(("android-cerca", lambda: (w.cerca.setText(qa), w.esegui_ricerca())))
+        iw = os.environ.get("SOFIOS_WINDOWS_FOTO")
+        if iw:
+            passi.append(("windows", lambda: w.vai("windows")))
+            def inst_win():
+                a = next(x for x in w.catalogo["windows"] if x["pacchetto"] == iw); w.mostra_dettaglio(a); w.installa(a)
+            passi.append(("windows-installazione", inst_win))
+            passi.append(("windows-installato", lambda: None))
+            passi.append(("windows-fine", lambda: w.vai("windows")))
         ins = os.environ.get("SOFIOS_INSTALLA")
         if ins:
             def installa_e_aspetta():
@@ -727,11 +811,11 @@ def main():
                     if scatta.attese < 200: QTimer.singleShot(1500, salva); return
                 if passi[i][0] == "android-catalogo" and not getattr(scatta, "ridisegnato", False):
                     scatta.ridisegnato = True; w.vai("android"); QTimer.singleShot(6000, salva); return
-                if passi[i][0] == "installato" and w.in_corso:   # aspetta la fine dell'installazione (max 10 minuti)
+                if passi[i][0] in ("installato", "windows-installato") and w.in_corso:   # aspetta la fine dell'installazione (max 10 minuti)
                     scatta.attese = getattr(scatta, "attese", 0) + 1
                     if scatta.attese < 400: QTimer.singleShot(1500, salva); return
                 w.grab().save(foto.replace(".png", "-%s.png" % passi[i][0])); scatta(i + 1)
-            QTimer.singleShot(4000 if passi[i][0] == "installazione" else 5000, salva)
+            QTimer.singleShot(4000 if passi[i][0] in ("installazione", "windows-installazione") else 5000, salva)
         QTimer.singleShot(1500, scatta)
     return app.exec()
 
