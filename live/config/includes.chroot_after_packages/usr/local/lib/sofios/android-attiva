@@ -6,6 +6,10 @@ set -e
 case "$1" in
   VANILLA|GAPPS)
     echo "Preparo Android ($1)…"
+    # supporto di Android nel kernel (modulo "binder"), caricato ora e a ogni avvio
+    echo "binder_linux" > /etc/modules-load.d/sofios-android.conf
+    echo "options binder_linux devices=binder,hwbinder,vndbinder" > /etc/modprobe.d/sofios-android.conf
+    modprobe binder_linux devices=binder,hwbinder,vndbinder 2>&1 || echo "binder non caricato"
     if [ -f /var/lib/waydroid/waydroid.cfg ]; then
       systemctl stop waydroid-container.service 2>/dev/null || true
       waydroid init -f -s "$1"

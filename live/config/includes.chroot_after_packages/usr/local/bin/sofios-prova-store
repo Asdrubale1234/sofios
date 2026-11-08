@@ -6,15 +6,17 @@ case "$1" in
     { echo "### kernel-android"; ls -l /dev/binder* /dev/binderfs 2>&1; uname -r
       grep -i -E 'ANDROID_BINDER|BINDERFS' /boot/config-* 2>&1 | head; command -v waydroid; waydroid --version 2>&1; dpkg -l waydroid 2>&1 | tail -1; } 2>&1 | S ;;
   windows)
-    SOFIOS_FOTO=/tmp/win.png SOFIOS_WINDOWS_FOTO=win-notepadplusplus sofios-store ;;
+    echo "### windows-store" | S; SOFIOS_FOTO=/tmp/win.png SOFIOS_WINDOWS_FOTO=win-notepadplusplus sofios-store 2>&1 | S ;;
   windows-log)
     { echo "### windows-registro"; cat ~/.cache/sofios-store/windows/ultimo.log; ls ~/.wine/drive_c/Program* ~/.wine/drive_c/Program*/Notepad++ | head -30; } 2>&1 | S ;;
   windows-apri)
     wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" ;;
   android-attiva)
+    # nella prova la memoria e' poca: Android va sul disco virtuale
+    { sudo mkfs.ext4 -q -F /dev/vda && sudo mkdir -p /var/lib/waydroid && sudo mount /dev/vda /var/lib/waydroid && df -h /var/lib/waydroid; } 2>&1 | S
     sudo /usr/local/lib/sofios/android-attiva VANILLA 2>&1 | S ;;
   android-stato)
-    { echo "### android-stato"; waydroid status; systemctl is-active waydroid-container; journalctl -u waydroid-container --no-pager | tail -20; } 2>&1 | S ;;
+    { echo "### android-stato"; waydroid status; systemctl is-active waydroid-container; journalctl -u waydroid-container --no-pager | tail -20; lsmod | grep -i binder; ls -l /dev/binder* /dev/binderfs 2>&1; dmesg 2>&1 | grep -i -E "binder|waydroid|lxc" | tail -10; } 2>&1 | S ;;
   android-avvio)
     waydroid session start & sleep 40; waydroid show-full-ui ;;
   *) echo "uso: sofios-prova-store kernel|windows|windows-log|windows-apri|android-attiva|android-stato|android-avvio" ;;
