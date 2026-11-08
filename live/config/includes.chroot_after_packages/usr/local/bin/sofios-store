@@ -9,10 +9,11 @@ from PyQt6.QtCore import Qt, QProcess, QSize, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit,
-                             QStackedWidget, QScrollArea, QGridLayout, QProgressBar, QFrame, QMessageBox)
+                             QStackedWidget, QScrollArea, QGridLayout, QProgressBar, QFrame, QMessageBox, QSizePolicy)
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 CATALOGI = [os.environ.get("SOFIOS_CATALOGO", ""), "/var/lib/sofios/store/catalogo.json", "/usr/share/sofios/store/catalogo.json"]
+ELENCO_MIEI = os.path.join(os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share")), "sofios-store", "installati.json")
 CACHE_ICONE = os.path.join(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache")), "sofios-store", "icone")
 CARTELLE_ICONE = ["/var/lib/swcatalog/icons", "/usr/share/swcatalog/icons", "/var/lib/app-info/icons", "/usr/share/app-info/icons"]
 
@@ -59,6 +60,22 @@ def carica_catalogo():
                 with open(p, encoding="utf-8") as f: return json.load(f)
             except Exception: pass
     return {"vetrina": []}
+
+def leggi_miei():
+    try:
+        with open(ELENCO_MIEI, encoding="utf-8") as f: return json.load(f)
+    except Exception: return {}
+
+def segna_mio(app, si):
+    """ricorda i programmi installati da SoStore (anche quelli fuori vetrina) per la pagina Installati"""
+    d = leggi_miei()
+    if si: d[app["pacchetto"]] = {k: app.get(k) for k in ("pacchetto", "nome", "descrizione", "icona", "desktop") if app.get(k)}
+    else: d.pop(app["pacchetto"], None)
+    try:
+        os.makedirs(os.path.dirname(ELENCO_MIEI), exist_ok=True)
+        with open(ELENCO_MIEI + ".tmp", "w", encoding="utf-8") as f: json.dump(d, f, ensure_ascii=False, indent=1)
+        os.replace(ELENCO_MIEI + ".tmp", ELENCO_MIEI)
+    except OSError: pass
 
 def installato(pacchetto):
     try:
@@ -254,7 +271,7 @@ class Icone:
 class Scheda(QFrame):
     def __init__(self, app, finestra):
         super().__init__(); self.app = app; self.f = finestra
-        self.setObjectName("scheda"); self.setCursor(Qt.CursorShape.PointingHandCursor); self.setMinimumHeight(92)
+        self.setObjectName("scheda"); self.setCursor(Qt.CursorShape.PointingHandCursor); self.setMinimumHeight(92); self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         h = QHBoxLayout(self); h.setContentsMargins(14, 12, 14, 12); h.setSpacing(12)
         i = QLabel(); i.setFixedSize(52, 52); finestra.icone.metti(i, app.get("icona"), 52); h.addWidget(i)
         v = QVBoxLayout(); v.setSpacing(2)
@@ -336,6 +353,7 @@ class SoStore(QWidget):
         v.addLayout(g)
 
     def vai(self, chiave):
+        self.cerca.blockSignals(True); self.cerca.clear(); self.cerca.blockSignals(False)
         for k, b in self.voci.items(): b.setChecked(k == chiave)
         self.pagine.setCurrentIndex(0); v = self.p_lista[1]; self._svuota(v)
         apps = self.catalogo.get("vetrina", [])
@@ -350,6 +368,8 @@ class SoStore(QWidget):
         else:
             t = QLabel("Installati"); t.setObjectName("titolo"); v.addWidget(t)
             ins = [a for a in apps if installato(a["pacchetto"])]
+            visti = {a["pacchetto"] for a in ins}
+            ins += [a for p, a in sorted(leggi_miei().items(), key=lambda x: (x[1].get("nome") or "").lower()) if p not in visti and installato(p)]
             if ins: self._griglia(v, ins)
             else:
                 e = QLabel("Non hai ancora installato programmi da SoStore."); e.setObjectName("vuoto"); v.addWidget(e)
@@ -443,11 +463,17 @@ class SoStore(QWidget):
         p.start("pkcon", argomenti)
 
     def installa(self, app):
-        self._esegui(app, ["install", "-y", "-p", app["pacchetto"]], "Installo", lambda: installato(app["pacchetto"]))
+        def ok():
+            if installato(app["pacchetto"]): segna_mio(app, True); return True
+            return False
+        self._esegui(app, ["install", "-y", "-p", app["pacchetto"]], "Installo", ok)
 
     def rimuovi(self, app):
         if QMessageBox.question(self, "SoStore", "Vuoi rimuovere «%s»?" % app["nome"]) != QMessageBox.StandardButton.Yes: return
-        self._esegui(app, ["remove", "-y", "-p", app["pacchetto"]], "Rimuovo", lambda: not installato(app["pacchetto"]))
+        def ok():
+            if not installato(app["pacchetto"]): segna_mio(app, False); return True
+            return False
+        self._esegui(app, ["remove", "-y", "-p", app["pacchetto"]], "Rimuovo", ok)
 
 def main():
     app = QApplication(sys.argv); app.setApplicationName("SoStore"); app.setDesktopFileName("sofios-store")
