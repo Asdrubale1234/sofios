@@ -1,0 +1,48 @@
+name: Prova SoStore
+on:
+  push:
+    branches: [store-prova]
+permissions:
+  contents: write
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 40
+    steps:
+      - name: Pacchetti
+        run: |
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates python3 python3-pyqt6 python3-gi gir1.2-appstream-1.0 appstream \
+            packagekit packagekit-tools polkitd dbus locales fonts-inter breeze-icon-theme hicolor-icon-theme imagemagick >/dev/null
+          sed -i 's/^# *it_IT.UTF-8/it_IT.UTF-8/' /etc/locale.gen && locale-gen >/dev/null
+          apt-get update -qq   # scarica anche il catalogo dei programmi (AppStream)
+          appstreamcli refresh-cache --force | tail -2
+          ls /var/lib/swcatalog/icons 2>/dev/null | head; ls /var/lib/swcatalog/yaml 2>/dev/null | head
+      - uses: actions/checkout@v4
+      - name: Controllo pacchetti della vetrina
+        run: |
+          for p in $(python3 -c "import json;print(' '.join(a['pacchetto'] for a in json.load(open('live/config/includes.chroot_after_packages/usr/share/sofios/store/catalogo.json'))['vetrina']))"); do
+            c=$(apt-cache policy "$p" | awk '/Candidate/{print $2}'); echo "$p -> ${c:-MANCA}"
+          done
+      - name: Schermate
+        run: |
+          mkdir -p /run/dbus /tmp/out; dbus-daemon --system --fork; sleep 1
+          I=live/config/includes.chroot_after_packages
+          export LANG=it_IT.UTF-8 LC_ALL=it_IT.UTF-8 QT_QPA_PLATFORM=offscreen SOFIOS_LIB=$PWD/$I/usr/local/lib/sofios SOFIOS_LOGO=$PWD/$I/usr/share/sofios/logo.png \
+                 SOFIOS_CATALOGO=$PWD/$I/usr/share/sofios/store/catalogo.json SOFIOS_TEMA_ICONE=breeze-dark XDG_RUNTIME_DIR=/tmp/run
+          mkdir -p /tmp/run; chmod 700 /tmp/run
+          python3 -c "
+          import gi; gi.require_version('AppStream','1.0'); from gi.repository import AppStream as A
+          p=A.Pool(); p.load(); r=p.search('foto'); print('risultati AppStream per foto:', r.get_size() if hasattr(r,'get_size') else len(r))"
+          SOFIOS_FOTO=/tmp/out/store.png SOFIOS_CERCA="foto" SOFIOS_DETTAGLIO=gimp SOFIOS_INSTALLA=kpat timeout 900 python3 $I/usr/local/bin/sofios-store 2>&1 | tail -30 || true
+          ls -la /tmp/out; dpkg -l kpat 2>&1 | tail -1
+      - name: Salva
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/sc && cd /tmp/sc && cp -r /tmp/out ./foto 2>/dev/null || true
+          git init -q && git checkout -q -b store-foto && git config user.name sofios-build && git config user.email build@sofios.local
+          git add . && git commit -q -m "SoStore ${GITHUB_RUN_ID}" && git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" store-foto

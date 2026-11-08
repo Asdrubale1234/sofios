@@ -1,0 +1,389 @@
+#!/usr/bin/python3
+"""SoStore: il negozio di programmi di SofiOS.
+Vetrina scelta da noi (catalogo.json, aggiornato con gli aggiornamenti firmati) + ricerca in tutto il catalogo.
+Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il sistema."""
+import json, os, re, shlex, subprocess, sys, glob
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+from sofios_info import bottone_informazioni
+from PyQt6.QtCore import Qt, QProcess, QSize, QTimer
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit,
+                             QStackedWidget, QScrollArea, QGridLayout, QProgressBar, QFrame, QMessageBox)
+
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+CATALOGI = [os.environ.get("SOFIOS_CATALOGO", ""), "/var/lib/sofios/store/catalogo.json", "/usr/share/sofios/store/catalogo.json"]
+CARTELLE_ICONE = ["/var/lib/swcatalog/icons", "/usr/share/swcatalog/icons", "/var/lib/app-info/icons", "/usr/share/app-info/icons"]
+
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QWidget#lato { background: #08203a; }
+QLabel { color: #e6f1ff; font-size: 13px; }
+QLabel#marchio { color: #ffffff; font-size: 18px; font-weight: 700; }
+QLabel#titolo { color: #ffffff; font-size: 22px; font-weight: 700; }
+QLabel#sezione { color: #ffd479; font-size: 15px; font-weight: 700; padding-top: 10px; }
+QLabel#nomeapp { color: #ffffff; font-size: 14px; font-weight: 700; }
+QLabel#descr { color: #b9d3ec; font-size: 12px; }
+QLabel#grande { color: #ffffff; font-size: 26px; font-weight: 700; }
+QLabel#testo { color: #d4e6f8; font-size: 14px; }
+QLabel#vuoto { color: #8fb3d4; font-size: 14px; }
+QFrame#scheda { background: #12365a; border-radius: 14px; }
+QFrame#scheda:hover { background: #17426b; }
+QLineEdit { background: #12365a; color: #ffffff; border: 1px solid #1e4f7c; border-radius: 10px; padding: 8px 12px; font-size: 14px; }
+QLineEdit:focus { border: 2px solid #ffd479; }
+QPushButton#voce { background: transparent; color: #d4e6f8; border: none; border-radius: 10px; padding: 9px 14px; text-align: left; font-size: 14px; font-weight: 600; }
+QPushButton#voce:hover { background: #12365a; }
+QPushButton#voce:checked { background: #ffd479; color: #0b2740; }
+QPushButton#azione { background: #ffd479; color: #0b2740; border: none; border-radius: 9px; padding: 6px 14px; font-size: 12px; font-weight: 700; }
+QPushButton#azione:hover { background: #ffe19e; }
+QPushButton#azione:disabled { background: #2a4d6e; color: #9fc2e4; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; border: none; border-radius: 9px; padding: 6px 14px; font-size: 12px; font-weight: 700; }
+QPushButton#secondario:hover { background: #2a82c2; }
+QPushButton#indietro { background: transparent; color: #8fb3d4; border: none; font-size: 13px; font-weight: 600; padding: 4px 0; text-align: left; }
+QPushButton#indietro:hover { color: #ffd479; }
+QProgressBar { background: #12365a; border: none; border-radius: 6px; height: 12px; color: transparent; }
+QProgressBar::chunk { background: #ffd479; border-radius: 6px; }
+QScrollArea { border: none; background: transparent; }
+QWidget#vista, QWidget#contenitore { background: transparent; }
+QScrollBar:vertical { background: transparent; width: 10px; }
+QScrollBar::handle:vertical { background: #1e4f7c; border-radius: 5px; min-height: 30px; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+"""
+
+# ---------------------------------------------------------------- dati
+def carica_catalogo():
+    for p in CATALOGI:
+        if p and os.path.exists(p):
+            try:
+                with open(p, encoding="utf-8") as f: return json.load(f)
+            except Exception: pass
+    return {"vetrina": []}
+
+def installato(pacchetto):
+    try:
+        r = subprocess.run(["dpkg-query", "-W", "-f=${db:Status-Status}", pacchetto], capture_output=True, text=True, timeout=10)
+        return r.stdout.strip() == "installed"
+    except Exception:
+        return False
+
+def file_desktop(pacchetto, desktop_id=None):
+    """il lanciatore (.desktop) del programma: dal nome indicato o dai file del pacchetto"""
+    cand = []
+    if desktop_id:
+        cand += ["/usr/local/share/applications/" + desktop_id, "/usr/share/applications/" + desktop_id]
+    try:
+        r = subprocess.run(["dpkg-query", "-L", pacchetto], capture_output=True, text=True, timeout=10)
+        for l in r.stdout.splitlines():
+            if l.startswith("/usr/share/applications/") and l.endswith(".desktop"):
+                cand += ["/usr/local/share/applications/" + os.path.basename(l), l]
+    except Exception: pass
+    for c in cand:
+        if os.path.exists(c):
+            try:
+                t = open(c, encoding="utf-8").read()
+                if re.search(r"(?m)^NoDisplay\s*=\s*true", t) and c == cand[-1]: continue
+                return c
+            except OSError: pass
+    return None
+
+def apri_programma(desktop):
+    try:
+        t = open(desktop, encoding="utf-8").read()
+        m = re.search(r"(?m)^Exec\s*=\s*(.+)$", t)
+        if not m: return False
+        cmd = re.sub(r"%[a-zA-Z]", "", m.group(1)).strip()
+        args = shlex.split(cmd)
+        return QProcess.startDetached(args[0], args[1:])[0]
+    except Exception:
+        return False
+
+def icona_da_nome(nome, grandezza=64):
+    if not nome: return QIcon.fromTheme("application-x-executable")
+    if os.path.isabs(nome) and os.path.exists(nome): return QIcon(nome)
+    i = QIcon.fromTheme(nome)
+    if not i.isNull(): return i
+    for base in CARTELLE_ICONE:   # icone del catalogo (scaricate con le liste dei pacchetti)
+        for g in ("128x128", "64x64", "48x48"):
+            for f in glob.glob(f"{base}/*/{g}/{nome}*.png") + glob.glob(f"{base}/*/{g}/*_{nome}.png"):
+                return QIcon(f)
+    return QIcon.fromTheme("application-x-executable")
+
+class Catalogo:
+    """ricerca in tutto il catalogo dei programmi (AppStream); se non c'e', solo la vetrina"""
+    def __init__(self):
+        self.pool = None
+        try:
+            import gi
+            gi.require_version("AppStream", "1.0")
+            from gi.repository import AppStream
+            self.AS = AppStream
+            self.pool = AppStream.Pool()
+            self.pool.load()
+        except Exception as e:
+            print("SoStore: catalogo completo non disponibile:", e, file=sys.stderr)
+            self.pool = None
+
+    def _lista(self, risultato):
+        if risultato is None: return []
+        if hasattr(risultato, "as_array"): return list(risultato.as_array())
+        if hasattr(risultato, "get_size"):
+            return [risultato.index_safe(i) for i in range(risultato.get_size())]
+        return list(risultato)
+
+    def cerca(self, testo, massimo=60):
+        if not self.pool or not testo.strip(): return []
+        out, visti = [], set()
+        for c in self._lista(self.pool.search(testo.strip())):
+            try:
+                if c.get_kind() != self.AS.ComponentKind.DESKTOP_APP: continue
+                pk = c.get_pkgname() or ""
+                if not pk or pk in visti: continue
+                visti.add(pk)
+                desktop = None
+                l = c.get_launchable(self.AS.LaunchableKind.DESKTOP_ID)
+                if l and l.get_entries(): desktop = l.get_entries()[0]
+                icona = ""
+                for ic in c.get_icons() or []:
+                    if ic.get_kind() == self.AS.IconKind.STOCK: icona = ic.get_name(); break
+                    if ic.get_kind() == self.AS.IconKind.CACHED: icona = icona or ic.get_name()
+                out.append({"pacchetto": pk, "nome": c.get_name() or pk, "descrizione": c.get_summary() or "",
+                            "lunga": re.sub(r"<[^>]+>", " ", c.get_description() or "").strip(),
+                            "icona": icona or (desktop or "").replace(".desktop", ""), "desktop": desktop})
+            except Exception:
+                continue
+            if len(out) >= massimo: break
+        return out
+
+    def dettagli(self, pacchetto):
+        if not self.pool: return None
+        r = self.cerca(pacchetto, 200)
+        for x in r:
+            if x["pacchetto"] == pacchetto: return x
+        return None
+
+# ---------------------------------------------------------------- interfaccia
+class Scheda(QFrame):
+    def __init__(self, app, finestra):
+        super().__init__(); self.app = app; self.f = finestra
+        self.setObjectName("scheda"); self.setCursor(Qt.CursorShape.PointingHandCursor); self.setFixedHeight(92)
+        h = QHBoxLayout(self); h.setContentsMargins(14, 12, 14, 12); h.setSpacing(12)
+        i = QLabel(); i.setPixmap(icona_da_nome(app.get("icona")).pixmap(QSize(52, 52))); i.setFixedSize(52, 52); h.addWidget(i)
+        v = QVBoxLayout(); v.setSpacing(2)
+        n = QLabel(app["nome"]); n.setObjectName("nomeapp"); v.addWidget(n)
+        d = QLabel(app.get("descrizione", "")); d.setObjectName("descr"); d.setWordWrap(True); v.addWidget(d); v.addStretch()
+        h.addLayout(v, 1)
+        self.b = QPushButton(); self.b.setObjectName("azione"); self.b.setFixedWidth(84); h.addWidget(self.b, 0, Qt.AlignmentFlag.AlignVCenter)
+        self.b.clicked.connect(self.premi); self.aggiorna()
+
+    def aggiorna(self):
+        if self.f.in_corso.get(self.app["pacchetto"]):
+            self.b.setText("…"); self.b.setEnabled(False); self.b.setObjectName("azione")
+        elif installato(self.app["pacchetto"]):
+            self.b.setText("Apri"); self.b.setEnabled(True); self.b.setObjectName("secondario")
+        else:
+            self.b.setText("Installa"); self.b.setEnabled(True); self.b.setObjectName("azione")
+        self.b.style().unpolish(self.b); self.b.style().polish(self.b)
+
+    def premi(self):
+        if installato(self.app["pacchetto"]): self.f.apri(self.app)
+        else: self.f.installa(self.app)
+
+    def mousePressEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton: self.f.mostra_dettaglio(self.app)
+
+class SoStore(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("SoStore"); self.setWindowIcon(QIcon.fromTheme("sofios-store", QIcon(LOGO)))
+        self.setStyleSheet(STILE); self.resize(1040, 700)
+        self.catalogo = carica_catalogo(); self.fonte = Catalogo(); self.in_corso = {}; self.schede = []
+        h = QHBoxLayout(self); h.setContentsMargins(0, 0, 0, 0); h.setSpacing(0)
+        # lato
+        lato = QWidget(); lato.setObjectName("lato"); lato.setFixedWidth(220)
+        lv = QVBoxLayout(lato); lv.setContentsMargins(14, 18, 14, 14); lv.setSpacing(6)
+        m = QHBoxLayout(); lg = QLabel(); lg.setPixmap(QIcon.fromTheme("sofios-store", QIcon(LOGO)).pixmap(QSize(34, 34))); m.addWidget(lg)
+        t = QLabel("SoStore"); t.setObjectName("marchio"); m.addWidget(t); m.addStretch(); lv.addLayout(m); lv.addSpacing(12)
+        self.voci = {}
+        for chiave, testo in (("vetrina", "In evidenza"), ("installati", "Installati")):
+            b = QPushButton(testo); b.setObjectName("voce"); b.setCheckable(True); b.clicked.connect(lambda _, k=chiave: self.vai(k))
+            self.voci[chiave] = b; lv.addWidget(b)
+        lv.addStretch(); lv.addWidget(bottone_informazioni(self, "SoStore", "Il negozio dei programmi di SofiOS."))
+        h.addWidget(lato)
+        # contenuto
+        dx = QWidget(); dv = QVBoxLayout(dx); dv.setContentsMargins(24, 18, 24, 12); dv.setSpacing(10)
+        self.cerca = QLineEdit(); self.cerca.setPlaceholderText("Cerca un programma…"); self.cerca.setClearButtonEnabled(True)
+        self.cerca.returnPressed.connect(self.esegui_ricerca); dv.addWidget(self.cerca)
+        self.pagine = QStackedWidget(); dv.addWidget(self.pagine, 1)
+        self.stato = QLabel(""); self.stato.setObjectName("descr"); dv.addWidget(self.stato)
+        h.addWidget(dx, 1)
+        self.p_lista = self._area(); self.pagine.addWidget(self.p_lista[0])
+        self.p_dett = QWidget(); self.pagine.addWidget(self.p_dett)
+        self.vai("vetrina")
+
+    def _area(self):
+        s = QScrollArea(); s.setWidgetResizable(True)
+        w = QWidget(); w.setObjectName("contenitore"); s.setWidget(w); s.viewport().setObjectName("vista")
+        v = QVBoxLayout(w); v.setContentsMargins(0, 0, 8, 0); v.setSpacing(8)
+        return s, v
+
+    def _svuota(self, v):
+        while v.count():
+            it = v.takeAt(0); w = it.widget()
+            if w: w.deleteLater()
+            elif it.layout():
+                self._svuota(it.layout())
+        self.schede = []
+
+    def _griglia(self, v, apps):
+        g = QGridLayout(); g.setSpacing(10)
+        for n, a in enumerate(apps):
+            s = Scheda(a, self); self.schede.append(s); g.addWidget(s, n // 2, n % 2)
+        g.setColumnStretch(0, 1); g.setColumnStretch(1, 1)
+        v.addLayout(g)
+
+    def vai(self, chiave):
+        for k, b in self.voci.items(): b.setChecked(k == chiave)
+        self.pagine.setCurrentIndex(0); v = self.p_lista[1]; self._svuota(v)
+        apps = self.catalogo.get("vetrina", [])
+        if chiave == "vetrina":
+            t = QLabel("In evidenza"); t.setObjectName("titolo"); v.addWidget(t)
+            cat = []
+            for a in apps:
+                if a.get("categoria") not in cat: cat.append(a.get("categoria"))
+            for c in cat:
+                s = QLabel(c); s.setObjectName("sezione"); v.addWidget(s)
+                self._griglia(v, [a for a in apps if a.get("categoria") == c])
+        else:
+            t = QLabel("Installati"); t.setObjectName("titolo"); v.addWidget(t)
+            ins = [a for a in apps if installato(a["pacchetto"])]
+            if ins: self._griglia(v, ins)
+            else:
+                e = QLabel("Non hai ancora installato programmi da SoStore."); e.setObjectName("vuoto"); v.addWidget(e)
+        v.addStretch()
+
+    def esegui_ricerca(self):
+        q = self.cerca.text().strip()
+        if not q: self.vai("vetrina"); return
+        for b in self.voci.values(): b.setChecked(False)
+        self.pagine.setCurrentIndex(0); v = self.p_lista[1]; self._svuota(v)
+        t = QLabel("Risultati per «%s»" % q); t.setObjectName("titolo"); v.addWidget(t)
+        ql = q.lower()
+        nostri = [a for a in self.catalogo.get("vetrina", []) if ql in a["nome"].lower() or ql in a.get("descrizione", "").lower() or ql in a["pacchetto"]]
+        altri = [r for r in self.fonte.cerca(q) if r["pacchetto"] not in {a["pacchetto"] for a in nostri}]
+        if not nostri and not altri:
+            e = QLabel("Nessun programma trovato. Prova con un'altra parola."); e.setObjectName("vuoto"); v.addWidget(e)
+        if nostri:
+            s = QLabel("In evidenza"); s.setObjectName("sezione"); v.addWidget(s); self._griglia(v, nostri)
+        if altri:
+            s = QLabel("Tutto il catalogo"); s.setObjectName("sezione"); v.addWidget(s); self._griglia(v, altri)
+        v.addStretch()
+
+    def mostra_dettaglio(self, app):
+        vecchio = self.p_dett; self.p_dett = QWidget(); self.pagine.insertWidget(1, self.p_dett); self.pagine.removeWidget(vecchio); vecchio.deleteLater()
+        v = QVBoxLayout(self.p_dett); v.setContentsMargins(0, 0, 0, 0); v.setSpacing(12)
+        ind = QPushButton("‹  Indietro"); ind.setObjectName("indietro"); ind.clicked.connect(lambda: self.pagine.setCurrentIndex(0)); v.addWidget(ind, 0, Qt.AlignmentFlag.AlignLeft)
+        r = QHBoxLayout(); r.setSpacing(18)
+        i = QLabel(); i.setPixmap(icona_da_nome(app.get("icona")).pixmap(QSize(96, 96))); r.addWidget(i)
+        c = QVBoxLayout(); n = QLabel(app["nome"]); n.setObjectName("grande"); c.addWidget(n)
+        d = QLabel(app.get("descrizione", "")); d.setObjectName("testo"); d.setWordWrap(True); c.addWidget(d)
+        bb = QHBoxLayout(); self.d_azione = QPushButton(); self.d_azione.setObjectName("azione"); self.d_azione.setFixedWidth(120); bb.addWidget(self.d_azione)
+        self.d_rimuovi = QPushButton("Rimuovi"); self.d_rimuovi.setObjectName("secondario"); self.d_rimuovi.setFixedWidth(120); bb.addWidget(self.d_rimuovi); bb.addStretch()
+        c.addLayout(bb); self.d_barra = QProgressBar(); self.d_barra.setRange(0, 100); self.d_barra.setFixedWidth(300); self.d_barra.hide(); c.addWidget(self.d_barra)
+        r.addLayout(c, 1); v.addLayout(r)
+        lunga = app.get("lunga") or (self.fonte.dettagli(app["pacchetto"]) or {}).get("lunga", "")
+        if lunga:
+            l = QLabel(lunga); l.setObjectName("testo"); l.setWordWrap(True); l.setAlignment(Qt.AlignmentFlag.AlignTop); v.addWidget(l)
+        v.addStretch()
+        self.d_app = app
+        self.d_azione.clicked.connect(lambda: self.apri(app) if installato(app["pacchetto"]) else self.installa(app))
+        self.d_rimuovi.clicked.connect(lambda: self.rimuovi(app))
+        self.aggiorna_dettaglio(); self.pagine.setCurrentIndex(1)
+
+    def aggiorna_dettaglio(self):
+        if not hasattr(self, "d_app"): return
+        a = self.d_app; occ = self.in_corso.get(a["pacchetto"]); ins = installato(a["pacchetto"])
+        try:
+            self.d_azione.setText("…" if occ else ("Apri" if ins else "Installa")); self.d_azione.setEnabled(not occ)
+            self.d_rimuovi.setVisible(ins and not occ); self.d_barra.setVisible(bool(occ))
+        except RuntimeError: pass
+
+    def aggiorna_tutto(self):
+        for s in list(self.schede):
+            try: s.aggiorna()
+            except RuntimeError: pass
+        self.aggiorna_dettaglio()
+
+    # --- azioni
+    def apri(self, app):
+        d = file_desktop(app["pacchetto"], app.get("desktop"))
+        if not d or not apri_programma(d):
+            QMessageBox.information(self, "SoStore", "«%s» è installato: lo trovi nel menu dei programmi." % app["nome"])
+
+    def _esegui(self, app, argomenti, verbo, fatto):
+        if self.in_corso:
+            QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
+        p = QProcess(self); p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
+        self.in_corso[app["pacchetto"]] = p; self.uscita = ""
+        self.stato.setText("%s «%s»…" % (verbo, app["nome"])); self.aggiorna_tutto()
+        def leggi():
+            self.uscita += bytes(p.readAllStandardOutput()).decode("utf-8", "replace")
+            m = re.findall(r"Percentage:\s*(\d+)", self.uscita)
+            if m:
+                try: self.d_barra.setValue(int(m[-1]))
+                except RuntimeError: pass
+                self.stato.setText("%s «%s»… %s%%" % (verbo, app["nome"], m[-1]))
+        def fine(codice, _):
+            self.in_corso.pop(app["pacchetto"], None)
+            if codice == 0 and fatto(): self.stato.setText("Fatto: «%s»." % app["nome"])
+            elif "Not authorized" in self.uscita or "authoriz" in self.uscita.lower() or codice in (126, 127):
+                self.stato.setText("Operazione annullata.")
+            else:
+                self.stato.setText("Non è riuscito. Controlla la connessione a Internet e riprova.")
+                print(self.uscita[-2000:], file=sys.stderr)
+            self.aggiorna_tutto()
+        p.readyReadStandardOutput.connect(leggi); p.finished.connect(fine)
+        p.errorOccurred.connect(lambda _: fine(1, None))
+        p.start("pkcon", argomenti)
+
+    def installa(self, app):
+        self._esegui(app, ["install", "-y", "-p", app["pacchetto"]], "Installo", lambda: installato(app["pacchetto"]))
+
+    def rimuovi(self, app):
+        if QMessageBox.question(self, "SoStore", "Vuoi rimuovere «%s»?" % app["nome"]) != QMessageBox.StandardButton.Yes: return
+        self._esegui(app, ["remove", "-y", "-p", app["pacchetto"]], "Rimuovo", lambda: not installato(app["pacchetto"]))
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("SoStore"); app.setDesktopFileName("sofios-store")
+    if os.environ.get("SOFIOS_TEMA_ICONE"): QIcon.setThemeName(os.environ["SOFIOS_TEMA_ICONE"])   # solo per le prove
+    w = SoStore(); w.show()
+    foto = os.environ.get("SOFIOS_FOTO")   # per le prove: schermate vere
+    if foto:
+        passi = [("vetrina", lambda: w.vai("vetrina"))]
+        q = os.environ.get("SOFIOS_CERCA")
+        if q: passi.append(("cerca", lambda: (w.cerca.setText(q), w.esegui_ricerca())))
+        d = os.environ.get("SOFIOS_DETTAGLIO")
+        if d:
+            def dett():
+                a = next((x for x in w.catalogo["vetrina"] if x["pacchetto"] == d), None) or w.fonte.dettagli(d) or {"pacchetto": d, "nome": d}
+                w.mostra_dettaglio(a)
+            passi.append(("dettaglio", dett))
+        ins = os.environ.get("SOFIOS_INSTALLA")
+        if ins:
+            def installa_e_aspetta():
+                a = next((x for x in w.catalogo["vetrina"] if x["pacchetto"] == ins), {"pacchetto": ins, "nome": ins})
+                w.mostra_dettaglio(a); w.installa(a)
+            passi.append(("installazione", installa_e_aspetta))
+            passi.append(("installato", lambda: None))
+            passi.append(("installati", lambda: w.vai("installati")))
+        def scatta(i=0):
+            if i >= len(passi): app.quit(); return
+            passi[i][1]()
+            def salva():
+                if passi[i][0] == "installato" and w.in_corso:   # aspetta la fine dell'installazione (max 10 minuti)
+                    scatta.attese = getattr(scatta, "attese", 0) + 1
+                    if scatta.attese < 400: QTimer.singleShot(1500, salva); return
+                w.grab().save(foto.replace(".png", "-%s.png" % passi[i][0])); scatta(i + 1)
+            QTimer.singleShot(4000 if passi[i][0] == "installazione" else 1500, salva)
+        QTimer.singleShot(1500, scatta)
+    return app.exec()
+
+if __name__ == "__main__": sys.exit(main())
