@@ -41,6 +41,10 @@ jobs:
           p=A.Pool(); p.load()
           for c in p.search('gimp').as_array()[:3]:
               print(c.get_id(), c.get_pkgname(), c.get_origin(), [(i.get_kind(), i.get_name(), i.get_filename(), i.get_url(), i.get_width()) for i in c.get_icons()])"
+            python3 -c "from PyQt6.QtNetwork import QSslSocket; print('ssl', QSslSocket.supportsSsl(), QSslSocket.sslLibraryVersionString())"
+            python3 -c "
+          import gi; gi.require_version('AppStream','1.0'); from gi.repository import AppStream as A
+          p=A.Pool(); p.load(); b=p.get_components(); print('componenti', b.get_size() if hasattr(b,'get_size') else len(b))"
           } > /tmp/out/diagnosi.txt 2>&1
           SOFIOS_FOTO=/tmp/out/store.png SOFIOS_CERCA="foto" SOFIOS_DETTAGLIO=gimp SOFIOS_INSTALLA=kpat timeout 900 python3 $I/usr/local/bin/sofios-store > /tmp/out/programma.txt 2>&1 || true
           ls -la /tmp/out; dpkg -l kpat 2>&1 | tail -1

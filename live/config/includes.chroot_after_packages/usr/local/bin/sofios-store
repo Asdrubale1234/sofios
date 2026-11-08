@@ -26,7 +26,7 @@ QLabel#sezione { color: #ffd479; font-size: 15px; font-weight: 700; padding-top:
 QLabel#nomeapp { color: #ffffff; font-size: 14px; font-weight: 700; }
 QLabel#descr { color: #b9d3ec; font-size: 12px; }
 QLabel#grande { color: #ffffff; font-size: 26px; font-weight: 700; }
-QLabel#testo { color: #d4e6f8; font-size: 14px; }
+QLabel#testo { color: #d4e6f8; font-size: 14px; background: transparent; }
 QLabel#vuoto { color: #8fb3d4; font-size: 14px; }
 QFrame#scheda { background: #12365a; border-radius: 14px; }
 QFrame#scheda:hover { background: #17426b; }
@@ -217,6 +217,7 @@ class Icone:
         r = self.rete.get(QNetworkRequest(QUrl(sorgente)))
         def arrivata():
             dati = bytes(r.readAll()); r.deleteLater()
+            if r.error() != r.NetworkError.NoError: print("SoStore: icona non scaricata:", sorgente, r.errorString(), file=sys.stderr)
             if dati[:8] == b"\x89PNG\r\n\x1a\n":
                 try:
                     os.makedirs(CACHE_ICONE, exist_ok=True); open(f, "wb").write(dati)
@@ -231,7 +232,7 @@ class Icone:
 class Scheda(QFrame):
     def __init__(self, app, finestra):
         super().__init__(); self.app = app; self.f = finestra
-        self.setObjectName("scheda"); self.setCursor(Qt.CursorShape.PointingHandCursor); self.setFixedHeight(92)
+        self.setObjectName("scheda"); self.setCursor(Qt.CursorShape.PointingHandCursor); self.setMinimumHeight(92)
         h = QHBoxLayout(self); h.setContentsMargins(14, 12, 14, 12); h.setSpacing(12)
         i = QLabel(); i.setFixedSize(52, 52); finestra.icone.metti(i, app.get("icona"), 52); h.addWidget(i)
         v = QVBoxLayout(); v.setSpacing(2)
