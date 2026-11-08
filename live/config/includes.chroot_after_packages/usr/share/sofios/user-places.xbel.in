@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xbel>
 <xbel xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks" xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info" xmlns:kdepriv="http://www.kde.org/kdepriv">
- <bookmark href="file:///home/__U__">
+ <bookmark href="file://__H__">
   <title>Home</title>
   <info>
    <metadata owner="http://freedesktop.org">
@@ -13,7 +13,7 @@
    </metadata>
   </info>
  </bookmark>
- <bookmark href="file:///home/__U__/Scrivania">
+ <bookmark href="file://__H__/Scrivania">
   <title>Scrivania</title>
   <info>
    <metadata owner="http://freedesktop.org">
@@ -25,7 +25,7 @@
    </metadata>
   </info>
  </bookmark>
- <bookmark href="file:///home/__U__/Documenti">
+ <bookmark href="file://__H__/Documenti">
   <title>Documenti</title>
   <info>
    <metadata owner="http://freedesktop.org">
@@ -37,7 +37,7 @@
    </metadata>
   </info>
  </bookmark>
- <bookmark href="file:///home/__U__/Scaricati">
+ <bookmark href="file://__H__/Scaricati">
   <title>Scaricati</title>
   <info>
    <metadata owner="http://freedesktop.org">
@@ -49,7 +49,7 @@
    </metadata>
   </info>
  </bookmark>
- <bookmark href="file:///home/__U__/Musica">
+ <bookmark href="file://__H__/Musica">
   <title>Musica</title>
   <info>
    <metadata owner="http://freedesktop.org">
@@ -61,7 +61,7 @@
    </metadata>
   </info>
  </bookmark>
- <bookmark href="file:///home/__U__/Immagini">
+ <bookmark href="file://__H__/Immagini">
   <title>Immagini</title>
   <info>
    <metadata owner="http://freedesktop.org">
@@ -73,7 +73,7 @@
    </metadata>
   </info>
  </bookmark>
- <bookmark href="file:///home/__U__/Video">
+ <bookmark href="file://__H__/Video">
   <title>Video</title>
   <info>
    <metadata owner="http://freedesktop.org">
