@@ -47,6 +47,9 @@ rinomina 'org.kde.plasma-systemmonitor.desktop' 'Monitor di sistema' sofios-moni
 nascondi 'org.kde.plasma-welcome.desktop'
 # Discover (KDE) sostituito dal nostro SoStore: nascosto, e il suo avviso aggiornamenti non parte
 nascondi 'org.kde.discover*.desktop'
+# Android si apre solo da SoStore: i collegamenti di Waydroid non compaiono nel menu
+nascondi 'Waydroid.desktop'
+nascondi 'waydroid*.desktop'
 mkdir -p /usr/share/sofios/nascosti
 if [ -f /etc/xdg/autostart/org.kde.discover.notifier.desktop ]; then
   dpkg-divert --local --rename --divert /usr/share/sofios/nascosti/org.kde.discover.notifier.autostart --add /etc/xdg/autostart/org.kde.discover.notifier.desktop || true
