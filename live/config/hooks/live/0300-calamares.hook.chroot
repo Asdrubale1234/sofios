@@ -7,6 +7,23 @@ if [ -f "$S" ]; then
 else
   echo "ATTENZIONE: $S non trovato"
 fi
+# Livelli di installazione (Essenziale / Completo / Completo + Android): pagina di scelta dopo la tastiera, applicati dopo la copia dei file
+if [ -f "$S" ]; then
+  python3 - "$S" <<'PY'
+import sys
+p = sys.argv[1]; r = open(p).read().split("\n"); out = []; vista = False; exec_ = False; tast = False
+for riga in r:
+    out.append(riga)
+    if riga.strip() == "- keyboard" and not tast and not exec_:
+        out.append(riga.replace("- keyboard", "- packagechooser@livelli")); tast = True
+    if riga.strip() == "- exec:": exec_ = True
+    if exec_ and riga.strip() == "- packages" and not vista:
+        out.append(riga.replace("- packages", "- contextualprocess")); vista = True
+t = "\n".join(out).rstrip("\n") + "\ninstances:\n- id: livelli\n  module: packagechooser\n  config: livelli.conf\n"
+open(p, "w").write(t)
+PY
+  echo "SOFIOS: sequenza installatore:"; sed -n '/^sequence/,$p' "$S" | head -60
+fi
 W=/etc/calamares/modules/welcome.conf
 if [ -f "$W" ]; then
   sed -i '/^ *- *internet *$/d' "$W"

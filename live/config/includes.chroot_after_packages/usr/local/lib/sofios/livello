@@ -1,0 +1,21 @@
+#!/bin/sh
+# Livello di installazione scelto dall'utente: toglie dal sistema appena installato quello che non ha scelto.
+# Si usa solo dentro l'installatore. Non deve mai far fallire l'installazione.
+#   livello essenziale | completo | completo-android
+export DEBIAN_FRONTEND=noninteractive
+LOG=/var/log/sofios-livello.log
+echo "livello: $1" >> "$LOG"
+togli() {
+  L=$(dpkg-query -W -f='${db:Status-Abbrev} ${Package}\n' 2>/dev/null | awk '$1=="ii"{print $2}' | grep -E "$1")
+  [ -n "$L" ] || return 0
+  echo "tolgo: $L" >> "$LOG"
+  apt-get -y purge $L >> "$LOG" 2>&1 || echo "non riuscito: $L" >> "$LOG"
+}
+case "$1" in
+  essenziale)       togli '^(wine|wine32|wine64|libwine|libwine:i386|fonts-wine)$'; togli '^waydroid$' ;;
+  completo)         togli '^waydroid$' ;;
+  completo-android) : ;;
+  *) echo "livello sconosciuto: $1" >> "$LOG" ;;
+esac
+apt-get -y autoremove --purge >> "$LOG" 2>&1 || true
+exit 0

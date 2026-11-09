@@ -1,0 +1,38 @@
+#!/usr/bin/python3
+# Cassaforte Password: collegamento tra Firefox e il programma (protocollo "native messaging": messaggi JSON con lunghezza a 4 byte).
+import json, os, socket, struct, subprocess, sys, time
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+from cassaforte_ponte import SOCKET
+
+def leggi():
+    n = sys.stdin.buffer.read(4)
+    if len(n) < 4: return None
+    return json.loads(sys.stdin.buffer.read(struct.unpack("=I", n)[0]).decode("utf-8"))
+
+def scrivi(o):
+    b = json.dumps(o).encode("utf-8"); sys.stdout.buffer.write(struct.pack("=I", len(b)) + b); sys.stdout.buffer.flush()
+
+def chiedi(r):
+    try:
+        s = socket.socket(socket.AF_UNIX); s.settimeout(120); s.connect(SOCKET)
+        s.sendall(json.dumps(r).encode("utf-8") + b"\n"); dati = b""
+        while not dati.endswith(b"\n"):
+            x = s.recv(65536)
+            if not x: break
+            dati += x
+        return json.loads(dati.decode("utf-8"))
+    except (OSError, ValueError):
+        return None
+
+def main():
+    r = leggi()
+    if r is None: return
+    ris = chiedi(r)
+    if ris is None and r.get("op") == "apri":     # il programma non e' acceso: lo accendo e riprovo
+        subprocess.Popen([os.environ.get("SOFIOS_PASSWORD", "/usr/local/bin/sofios-password")], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        for _ in range(40):
+            time.sleep(0.5); ris = chiedi(r)
+            if ris is not None: break
+    scrivi(ris if ris is not None else {"ok": False, "errore": "non_aperta"})
+
+if __name__ == "__main__": main()

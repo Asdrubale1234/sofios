@@ -1,0 +1,7 @@
+{
+  "name": "org.sofios.cassaforte",
+  "description": "Cassaforte Password",
+  "path": "/usr/local/lib/sofios/cassaforte-host",
+  "type": "stdio",
+  "allowed_extensions": ["cassaforte@sofios"]
+}
