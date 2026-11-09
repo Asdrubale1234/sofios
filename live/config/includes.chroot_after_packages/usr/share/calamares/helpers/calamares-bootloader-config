@@ -1,0 +1,14 @@
+#!/bin/bash
+# SofiOS: versione senza internet. Il programma di avvio (GRUB) e' gia' dentro l'immagine e quindi gia' copiato nel
+# sistema installato: qui non si scarica e non si installa nulla (l'originale usava apt-get e senza rete falliva).
+CHROOT=$(mount | grep proc | grep calamares | awk '{print $3}' | sed -e "s#/proc##g")
+
+echo "Running bootloader-config (SofiOS, offline)..."
+if [ ! -x "$CHROOT/usr/sbin/update-grub" ]; then
+    echo "ERRORE: GRUB non e' presente nel sistema installato" >&2
+    exit 1
+fi
+# Cifratura del disco non usata: nessun pacchetto da aggiungere.
+# Riattiva os-prober (serve per il doppio avvio con Windows):
+sed -i "s/#GRUB_DISABLE_OS_PROBER=false/# OS_PROBER re-enabled by SofiOS installation:\nGRUB_DISABLE_OS_PROBER=false/g" $CHROOT/etc/default/grub
+chroot $CHROOT /usr/sbin/update-grub

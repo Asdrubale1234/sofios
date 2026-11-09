@@ -91,3 +91,11 @@ gir1.2-appstream-1.0
 python3-gi
 gpgv
 unattended-upgrades
+grub-efi-amd64
+grub-efi-amd64-bin
+grub-efi-amd64-signed
+shim-signed
+efibootmgr
+grub-pc-bin
+grub-common
+os-prober
