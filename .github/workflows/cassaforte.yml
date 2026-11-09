@@ -1,0 +1,74 @@
+name: Prova Cassaforte con Firefox
+on:
+  push:
+    branches: [completo]
+    paths: ['.github/workflows/cassaforte.yml', 'tools/prova_cassaforte.py', 'tools/pagine-prova/**', 'live/config/includes.chroot_after_packages/usr/share/sofios/estensione-password/**',
+            'live/config/includes.chroot_after_packages/usr/local/lib/sofios/cassaforte*', 'live/config/includes.chroot_after_packages/usr/local/bin/sofios-password']
+permissions:
+  contents: write
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepara
+        run: |
+          mkdir -p /tmp/out
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates curl python3 python3-pip python3-pyqt6 python3-pykeepass firefox-esr xvfb fonts-inter fonts-noto-core >/dev/null 2>&1
+          pip install --break-system-packages -q selenium 2>&1 | tail -1
+          curl -fsSL -o /tmp/g.tgz https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-linux64.tar.gz && tar -xzf /tmp/g.tgz -C /usr/local/bin
+          I=live/config/includes.chroot_after_packages
+          mkdir -p /usr/local/lib/sofios /usr/local/bin /usr/share/sofios /usr/lib/mozilla/native-messaging-hosts
+          cp $I/usr/local/lib/sofios/* /usr/local/lib/sofios/; cp $I/usr/local/bin/sofios-password /usr/local/bin/; cp $I/usr/share/sofios/logo.png /usr/share/sofios/
+          cp $I/usr/lib/mozilla/native-messaging-hosts/*.json /usr/lib/mozilla/native-messaging-hosts/
+          python3 tools/costruisci-estensione.py $I/usr/share/sofios/estensione-password /tmp/cassaforte.xpi
+          # cassaforte di prova
+          mkdir -p /root/Password /root/.config/sofios
+          python3 -c "
+          from pykeepass import create_database
+          kp = create_database('/root/Password/cassaforte.kdbx', password='prova-password-1')
+          kp.add_entry(kp.root_group, 'Sito di prova', 'mario', 'segreta123', url='http://localhost:8765/login.html')
+          kp.save()"
+          echo si > /root/.config/sofios/cassaforte-browser
+          mkdir -p /tmp/xdg && chmod 700 /tmp/xdg
+          (cd tools/pagine-prova && nohup python3 -m http.server 8765 >/dev/null 2>&1 &)
+          sleep 1
+      - name: Prova
+        env:
+          XDG_RUNTIME_DIR: /tmp/xdg
+          MOZ_DISABLE_CONTENT_SANDBOX: "1"
+          MOZ_HEADLESS: "1"
+          HOME: /root
+        run: |
+          Xvfb :99 -screen 0 1280x800x24 & sleep 2; export DISPLAY=:99
+          python3 tools/prova_cassaforte.py > /tmp/out/risultato.txt 2>&1; echo "uscita $?" >> /tmp/out/risultato.txt; cat /tmp/out/risultato.txt
+      - name: Estensione per criteri (installazione automatica)
+        if: always()
+        env:
+          XDG_RUNTIME_DIR: /tmp/xdg
+          MOZ_DISABLE_CONTENT_SANDBOX: "1"
+          HOME: /root
+        run: |
+          I=live/config/includes.chroot_after_packages
+          cp $I/usr/lib/firefox-esr/distribution/policies.json /usr/lib/firefox-esr/distribution/policies.json
+          sed -i 's#file:///usr/share/sofios/cassaforte-password.xpi#file:///tmp/cassaforte.xpi#' /usr/lib/firefox-esr/distribution/policies.json
+          mkdir -p /usr/lib/firefox-esr/defaults/pref && echo 'pref("xpinstall.signatures.required", false);' > /usr/lib/firefox-esr/defaults/pref/sofios-estensioni.js
+          mkdir -p /tmp/p2; export DISPLAY=:99; MOZ_HEADLESS=1 timeout 60 firefox-esr --profile /tmp/p2 about:blank >/tmp/out/ff2.txt 2>&1 || true
+          { echo "=== estensioni nel profilo (criteri)"; python3 -c "
+          import json
+          d = json.load(open('/tmp/p2/extensions.json'))
+          for a in d['addons']: print(a['id'], 'attiva' if a.get('active') else 'NON attiva', a.get('signedState'), a.get('location'))
+          " ; } >> /tmp/out/risultato.txt 2>&1 || true
+          cat /tmp/out/risultato.txt | tail -8
+      - name: Salva
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/sc && cd /tmp/sc && cp -r /tmp/out ./i 2>/dev/null || true
+          git init -q && git checkout -q -b cassaforte-foto && git config user.name ci && git config user.email ci@x
+          git add . && git commit -q -m "cassaforte ${GITHUB_RUN_ID}" && git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" cassaforte-foto
