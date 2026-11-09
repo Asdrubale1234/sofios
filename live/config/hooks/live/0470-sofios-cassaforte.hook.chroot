@@ -9,6 +9,4 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         if os.path.isfile(os.path.join(src, n)): z.write(os.path.join(src, n), n)
 print("SOFIOS: estensione creata", out)
 PY
-mkdir -p /usr/lib/firefox-esr/defaults/pref
-echo 'pref("xpinstall.signatures.required", false);' > /usr/lib/firefox-esr/defaults/pref/sofios-estensioni.js
 ls -la /usr/share/sofios/cassaforte-password.xpi /usr/lib/mozilla/native-messaging-hosts/ || true
