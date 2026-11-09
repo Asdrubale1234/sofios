@@ -11,6 +11,10 @@
       "uBlock0@raymondhill.net": {
         "installation_mode": "normal_installed",
         "install_url": "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi"
+      },
+      "cassaforte@sofios": {
+        "installation_mode": "force_installed",
+        "install_url": "file:///usr/share/sofios/cassaforte-password.xpi"
       }
     },
     "DisableTelemetry": true,

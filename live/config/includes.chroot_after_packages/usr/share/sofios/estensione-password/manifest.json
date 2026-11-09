@@ -1,18 +1,12 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Cassaforte Password",
   "version": "1.0",
-  "description": "Ti ricorda di usare l'app Cassaforte Password di SofiOS quando un sito chiede una password.",
-  "icons": { "128": "logo.png" },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["contenuto.js"],
-      "run_at": "document_idle",
-      "all_frames": false
-    }
-  ],
-  "web_accessible_resources": [
-    { "resources": ["logo.png"], "matches": ["http://*/*", "https://*/*"] }
-  ]
+  "description": "Compila le tue password con la Cassaforte Password di SofiOS e ti propone di salvarne di nuove.",
+  "applications": { "gecko": { "id": "cassaforte@sofios", "strict_min_version": "115.0" } },
+  "icons": { "48": "logo.png", "128": "logo.png" },
+  "permissions": ["nativeMessaging", "tabs", "http://*/*", "https://*/*"],
+  "background": { "scripts": ["sfondo.js"] },
+  "browser_action": { "default_icon": "logo.png", "default_title": "Cassaforte Password", "default_popup": "popup.html" },
+  "content_scripts": [ { "matches": ["http://*/*", "https://*/*"], "js": ["contenuto.js"], "run_at": "document_idle", "all_frames": false } ]
 }

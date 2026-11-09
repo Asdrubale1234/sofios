@@ -1,0 +1,14 @@
+#!/bin/sh
+# Estensione Firefox "Cassaforte Password": pacchetto, installazione automatica, firma non richiesta (Firefox ESR lo consente per le estensioni di sistema)
+set -e
+python3 - <<'PY'
+import os, zipfile
+src = "/usr/share/sofios/estensione-password"; out = "/usr/share/sofios/cassaforte-password.xpi"
+with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    for n in sorted(os.listdir(src)):
+        if os.path.isfile(os.path.join(src, n)): z.write(os.path.join(src, n), n)
+print("SOFIOS: estensione creata", out)
+PY
+mkdir -p /usr/lib/firefox-esr/defaults/pref
+echo 'pref("xpinstall.signatures.required", false);' > /usr/lib/firefox-esr/defaults/pref/sofios-estensioni.js
+ls -la /usr/share/sofios/cassaforte-password.xpi /usr/lib/mozilla/native-messaging-hosts/ || true
