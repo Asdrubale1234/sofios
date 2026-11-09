@@ -13,7 +13,9 @@ jobs:
     steps:
       - name: Informazioni
         run: |
-          apt-get update -qq && apt-get install -y -qq calamares calamares-settings-debian git >/dev/null 2>&1
+          mkdir -p /tmp/out
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates calamares calamares-settings-debian > /tmp/out/apt.txt 2>&1 || true
           { dpkg -l calamares | tail -1; ls /usr/lib/x86_64-linux-gnu/calamares/modules/ /usr/lib/calamares/modules/ 2>&1
             echo ---SETTINGS; cat /etc/calamares/settings.conf
             echo ---MODULI; ls /etc/calamares/modules/ /usr/share/calamares/modules/ 2>&1
@@ -21,7 +23,13 @@ jobs:
             echo ---CHOOSER; cat /usr/share/calamares/modules/packagechooser.conf 2>&1
             echo ---PACKAGES; cat /etc/calamares/modules/packages.conf 2>&1 | grep -v "^#" | grep -v "^$"
             echo ---UNPACKFS; cat /etc/calamares/modules/unpackfs.conf 2>&1 | grep -v "^#" | grep -v "^$"
-            echo ---SHELLPROCESS; cat /usr/share/calamares/modules/shellprocess.conf 2>&1 | grep -v "^$" | head -40
-            echo ---REMOVE; cat /etc/calamares/modules/removeuser.conf 2>&1; } > /tmp/info.txt 2>&1
-          cd /tmp && git clone -q --depth 1 https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} r && cd r
-          git config user.email a@b; git config user.name ci; git checkout -q --orphan informazioni; git rm -rfq . ; mkdir i; cp /tmp/info.txt i/; git add i; git commit -qm "info"; git push -qf origin informazioni
+            echo ---SHELLPROCESS; cat /usr/share/calamares/modules/shellprocess.conf 2>&1 | grep -v "^$" | head -40; } > /tmp/out/info.txt 2>&1 || true
+      - name: Salva
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/sc && cd /tmp/sc && cp -r /tmp/out ./i 2>/dev/null || true
+          git init -q && git checkout -q -b informazioni && git config user.name ci && git config user.email ci@x
+          git add . && git commit -q -m "info ${GITHUB_RUN_ID}" && git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" informazioni

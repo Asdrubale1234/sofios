@@ -1,0 +1,5 @@
+// SofiOS: gli aggiornamenti di SICUREZZA di Debian si installano da soli (solo quelli, mai riavvio automatico)
+Unattended-Upgrade::Origins-Pattern { "origin=Debian,codename=${distro_codename}-security,label=Debian-Security"; };
+Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
+Unattended-Upgrade::Mail "";

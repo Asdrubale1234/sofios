@@ -1,0 +1,2 @@
+// Prima di ogni installazione o aggiornamento si fa un'istantanea del disco (se il disco e' btrfs): si puo' tornare indietro
+DPkg::Pre-Invoke { "if [ -x /usr/local/lib/sofios/istantanea ]; then /usr/local/lib/sofios/istantanea || true; fi"; };

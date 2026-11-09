@@ -1,0 +1,9 @@
+#!/bin/sh
+# SoStore/Aggiorna: accende o spegne l'installazione automatica degli aggiornamenti di sicurezza (chiamato con pkexec)
+F=/etc/apt/apt.conf.d/21sofios-sicurezza-scelta
+case "$1" in
+  on)  rm -f "$F" ;;
+  off) echo 'APT::Periodic::Unattended-Upgrade "0";' > "$F" ;;
+  stato) if [ -f "$F" ]; then echo off; else echo on; fi ;;
+  *) echo "uso: sicurezza-auto on|off|stato" >&2; exit 2 ;;
+esac

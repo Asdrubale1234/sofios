@@ -90,3 +90,4 @@ appstream
 gir1.2-appstream-1.0
 python3-gi
 gpgv
+unattended-upgrades

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Istantanea prima di un aggiornamento (solo se il sistema e' su btrfs). Non blocca mai l'aggiornamento.
+command -v snapper >/dev/null 2>&1 || exit 0
+[ "$(stat -f -c %T / 2>/dev/null)" = "btrfs" ] || exit 0
+# una sola istantanea ogni 10 minuti, anche se apt chiama piu' volte
+S=/run/sofios-istantanea; if [ -f "$S" ] && [ $(( $(date +%s) - $(stat -c %Y "$S") )) -lt 600 ]; then exit 0; fi
+if ! snapper list-configs 2>/dev/null | grep -q '^root'; then
+  snapper -c root create-config / >/dev/null 2>&1 || exit 0
+  snapper -c root set-config NUMBER_CLEANUP=yes NUMBER_LIMIT=8 NUMBER_LIMIT_IMPORTANT=4 TIMELINE_CREATE=no >/dev/null 2>&1 || true
+fi
+snapper -c root create --type pre --cleanup-algorithm number --description "Prima di un aggiornamento" >/dev/null 2>&1 && touch "$S"
+exit 0
