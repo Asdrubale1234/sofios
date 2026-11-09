@@ -16,14 +16,10 @@ jobs:
           mkdir -p /tmp/out
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates calamares calamares-settings-debian > /tmp/out/apt.txt 2>&1 || true
-          { dpkg -l calamares | tail -1; ls /usr/lib/x86_64-linux-gnu/calamares/modules/ /usr/lib/calamares/modules/ 2>&1
-            echo ---SETTINGS; cat /etc/calamares/settings.conf
-            echo ---MODULI; ls /etc/calamares/modules/ /usr/share/calamares/modules/ 2>&1
-            echo ---CONTEXTUAL; cat /usr/share/calamares/modules/contextualprocess.conf 2>&1
-            echo ---CHOOSER; cat /usr/share/calamares/modules/packagechooser.conf 2>&1
-            echo ---PACKAGES; cat /etc/calamares/modules/packages.conf 2>&1 | grep -v "^#" | grep -v "^$"
-            echo ---UNPACKFS; cat /etc/calamares/modules/unpackfs.conf 2>&1 | grep -v "^#" | grep -v "^$"
-            echo ---SHELLPROCESS; cat /usr/share/calamares/modules/shellprocess.conf 2>&1 | grep -v "^$" | head -40; } > /tmp/out/info.txt 2>&1 || true
+          { dpkg -L calamares | grep -i -E "packagechooser|contextualprocess|shellprocess|usersq|users/|welcome" | head -60
+            for f in $(dpkg -L calamares | grep -E "(packagechooser|contextualprocess|shellprocess)\.conf$"); do echo "=== $f"; cat $f; done
+            echo "=== users.conf"; cat /etc/calamares/modules/users.conf | grep -v "^ *#" | grep -v "^$"
+            echo "=== finished"; cat /etc/calamares/modules/finished.conf; } > /tmp/out/info.txt 2>&1 || true
       - name: Salva
         if: always()
         env:
