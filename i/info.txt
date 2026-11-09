@@ -1,0 +1,53 @@
+/usr/lib/x86_64-linux-gnu/calamares/modules/contextualprocess
+/usr/lib/x86_64-linux-gnu/calamares/modules/contextualprocess/libcalamares_job_contextualprocess.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/contextualprocess/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/packagechooser
+/usr/lib/x86_64-linux-gnu/calamares/modules/packagechooser/libcalamares_viewmodule_packagechooser.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/packagechooser/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/packagechooserq
+/usr/lib/x86_64-linux-gnu/calamares/modules/packagechooserq/libcalamares_viewmodule_packagechooserq.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/packagechooserq/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/shellprocess
+/usr/lib/x86_64-linux-gnu/calamares/modules/shellprocess/libcalamares_job_shellprocess.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/shellprocess/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/users/libcalamares_viewmodule_users.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/users/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/usersq
+/usr/lib/x86_64-linux-gnu/calamares/modules/usersq/libcalamares_viewmodule_usersq.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/usersq/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/welcome
+/usr/lib/x86_64-linux-gnu/calamares/modules/welcome/libcalamares_viewmodule_welcome.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/welcome/module.desc
+/usr/lib/x86_64-linux-gnu/calamares/modules/welcomeq
+/usr/lib/x86_64-linux-gnu/calamares/modules/welcomeq/libcalamares_viewmodule_welcomeq.so
+/usr/lib/x86_64-linux-gnu/calamares/modules/welcomeq/module.desc
+=== users.conf
+---
+userGroup:       users
+defaultGroups:
+    - cdrom
+    - floppy
+    - sudo
+    - audio
+    - dip
+    - video
+    - plugdev
+    - netdev
+    - lpadmin
+    - scanner
+    - bluetooth
+autologinGroup:  autologin
+sudoersGroup:    sudo
+setRootPassword: false
+passwordRequirements:
+    nonempty: true
+    minLength: -1  # Password at least this many characters
+    maxLength: -1  # Password at most this many characters
+    libpwquality:
+        - minlen=0
+        - minclass=0
+=== finished
+---
+restartNowEnabled: true
+restartNowChecked: true
+restartNowCommand: "systemctl -i reboot"
