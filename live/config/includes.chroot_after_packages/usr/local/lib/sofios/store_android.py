@@ -26,6 +26,17 @@ def firma_valida(json_path, asc_path, chiave=CHIAVE):
     except Exception:
         return False
 
+def pulisci(t):
+    """toglie i marcatori HTML (<b>, <br>, <li>...) dai testi del catalogo F-Droid, lasciando testo semplice"""
+    import re, html
+    if not t: return t
+    t = re.sub(r"(?i)<br\s*/?>|</p>|</li>|</ul>|</ol>", "\n", t)
+    t = re.sub(r"(?i)<li[^>]*>", "• ", t)
+    t = re.sub(r"<[^>]+>", "", t)
+    t = html.unescape(t)
+    return re.sub(r"\n{3,}", "\n\n", t).strip()
+
+
 class CatalogoAndroid:
     def __init__(self):
         self.app = []      # elenco pronto per la ricerca
@@ -55,7 +66,7 @@ class CatalogoAndroid:
             icona = testo(m.get("icon") or {})
             out.append({
                 "tipo": "android", "pacchetto": pid, "nome": testo(m.get("name")) or pid,
-                "descrizione": testo(m.get("summary")), "lunga": testo(m.get("description")),
+                "descrizione": pulisci(testo(m.get("summary"))), "lunga": pulisci(testo(m.get("description"))),
                 "icona": (REPO + icona["name"]) if isinstance(icona, dict) and icona.get("name") else "",
                 "apk": REPO + scelta["file"]["name"], "sha256": scelta["file"]["sha256"],
                 "versione": (scelta.get("manifest") or {}).get("versionName", ""),

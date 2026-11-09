@@ -162,7 +162,7 @@ try:
         aspetta(150, "android-avvio", 25)
         serie("android-stato")
         esegui("sofios-prova-store android-app")
-        aspetta(420, "android-app", 30)
+        aspetta(900, "android-app", 45)
         serie("android-lista")
         esegui("sofios-prova-store android-apri")
         aspetta(60, "android-app-aperta", 20)
