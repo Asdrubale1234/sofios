@@ -45,7 +45,7 @@ jobs:
         run: |
           Xvfb :99 -screen 0 1280x800x24 & sleep 2; export DISPLAY=:99
           python3 tools/prova_cassaforte.py > /tmp/out/risultato.txt 2>&1; echo "uscita $?" >> /tmp/out/risultato.txt; cat /tmp/out/risultato.txt
-      - name: Estensione per criteri (installazione automatica)
+      - name: Estensione installata da sola (varianti)
         if: always()
         env:
           XDG_RUNTIME_DIR: /tmp/xdg
@@ -53,16 +53,36 @@ jobs:
           HOME: /root
         run: |
           I=live/config/includes.chroot_after_packages
-          cp $I/usr/lib/firefox-esr/distribution/policies.json /usr/lib/firefox-esr/distribution/policies.json
-          sed -i 's#file:///usr/share/sofios/cassaforte-password.xpi#file:///tmp/cassaforte.xpi#' /usr/lib/firefox-esr/distribution/policies.json
-          mkdir -p /usr/lib/firefox-esr/defaults/pref && echo 'pref("xpinstall.signatures.required", false);' > /usr/lib/firefox-esr/defaults/pref/sofios-estensioni.js
-          mkdir -p /tmp/p2; printf 'user_pref("browser.policies.loglevel", "debug");\nuser_pref("devtools.console.stdout.chrome", true);\n' > /tmp/p2/user.js; export DISPLAY=:99; MOZ_HEADLESS=1 timeout 60 firefox-esr --profile /tmp/p2 about:blank >/tmp/out/ff2.txt 2>&1 || true
-          { echo "=== estensioni nel profilo (criteri)"; python3 -c "
+          export DISPLAY=:99
+          { echo "=== cartelle di Firefox"; ls -R /usr/lib/firefox-esr/defaults 2>&1 | head -20; ls /etc/firefox-esr /usr/lib/firefox-esr/distribution 2>&1; } >> /tmp/out/risultato.txt
+          prova() {  # nome  profilo
+            echo "=== variante $1" >> /tmp/out/risultato.txt
+            MOZ_HEADLESS=1 timeout 50 firefox-esr --profile $2 about:blank >/tmp/out/ff-$1.txt 2>&1 || true
+            python3 -c "
           import json
-          d = json.load(open('/tmp/p2/extensions.json'))
-          for a in d['addons']: print(a['id'], 'attiva' if a.get('active') else 'NON attiva', a.get('signedState'), a.get('location'))
-          " ; } >> /tmp/out/risultato.txt 2>&1 || true
-          grep -i -E 'cassaforte|policies|sign|xpi' /tmp/out/ff2.txt | head -30 >> /tmp/out/risultato.txt; cat /tmp/out/risultato.txt | tail -40
+          d = json.load(open('$2/extensions.json'))
+          for a in d['addons']:
+              if 'cassaforte' in a['id']: print(a['id'], 'attiva' if a.get('active') else 'NON attiva', a.get('signedState'), a.get('location'))
+          " >> /tmp/out/risultato.txt 2>&1 || echo "nessun elenco" >> /tmp/out/risultato.txt
+            grep -i -E "cassaforte|signature|not signed|corrupt|policies" /tmp/out/ff-$1.txt | head -5 >> /tmp/out/risultato.txt
+          }
+          D=/usr/lib/firefox-esr/distribution
+          # A: criteri + preferenza in defaults/pref (come nella ISO)
+          cp $I/usr/lib/firefox-esr/distribution/policies.json $D/policies.json; sed -i 's#file:///usr/share/sofios/cassaforte-password.xpi#file:///tmp/cassaforte.xpi#' $D/policies.json
+          mkdir -p /usr/lib/firefox-esr/defaults/pref && echo 'pref("xpinstall.signatures.required", false);' > /usr/lib/firefox-esr/defaults/pref/sofios-estensioni.js
+          mkdir -p /tmp/pA; prova A /tmp/pA
+          # B: come A ma preferenza anche in /etc/firefox-esr
+          echo 'pref("xpinstall.signatures.required", false);' > /etc/firefox-esr/sofios-estensioni.js
+          mkdir -p /tmp/pB; prova B /tmp/pB
+          # C: preferenza nel profilo (user.js)
+          mkdir -p /tmp/pC; echo 'user_pref("xpinstall.signatures.required", false);' > /tmp/pC/user.js; prova C /tmp/pC
+          # D: cartella "distribution/extensions"
+          rm -f $D/policies.json; cp $I/usr/lib/firefox-esr/distribution/policies.json /tmp/pol.json
+          python3 -c "
+          import json; d=json.load(open('/tmp/pol.json')); d['policies']['ExtensionSettings'].pop('cassaforte@sofios'); json.dump(d, open('$D/policies.json','w'))"
+          mkdir -p $D/extensions && cp /tmp/cassaforte.xpi $D/extensions/cassaforte@sofios.xpi
+          mkdir -p /tmp/pD; prova D /tmp/pD
+          tail -40 /tmp/out/risultato.txt
       - name: Salva
         if: always()
         env:
