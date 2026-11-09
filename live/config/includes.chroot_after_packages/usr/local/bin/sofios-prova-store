@@ -19,5 +19,14 @@ case "$1" in
     { echo "### android-stato"; waydroid status; systemctl is-active waydroid-container; journalctl -u waydroid-container --no-pager | tail -20; lsmod | grep -i binder; ls -l /dev/binder* /dev/binderfs 2>&1; dmesg 2>&1 | grep -i -E "binder|waydroid|lxc" | tail -10; } 2>&1 | S ;;
   android-avvio)
     waydroid session start & sleep 40; waydroid show-full-ui ;;
+  android-app)
+    echo "### android-app" | S; SOFIOS_FOTO=/tmp/and.png SOFIOS_ANDROID_FOTO=1 SOFIOS_ANDROID_INSTALLA=app.organicmaps sofios-store 2>&1 | S ;;
+  android-lista)
+    { echo "### android-lista"; waydroid app list; ls ~/.cache/sofios-store/android/apk 2>&1; } 2>&1 | S ;;
+  android-apri)
+    waydroid app launch app.organicmaps ;;
+  android-lingua)
+    { echo "### android-lingua"; waydroid prop set persist.sys.language it; waydroid prop set persist.sys.country IT; waydroid prop set persist.sys.locale it-IT
+      waydroid session stop; sleep 5; waydroid session start & sleep 40; waydroid show-full-ui; } 2>&1 | S ;;
   *) echo "uso: sofios-prova-store kernel|windows|windows-log|windows-apri|android-attiva|android-stato|android-avvio" ;;
 esac

@@ -160,6 +160,13 @@ try:
         esegui("sofios-prova-store android-avvio")
         aspetta(150, "android-avvio", 25)
         serie("android-stato")
+        esegui("sofios-prova-store android-app")
+        aspetta(420, "android-app", 30)
+        serie("android-lista")
+        esegui("sofios-prova-store android-apri")
+        aspetta(60, "android-app-aperta", 20)
+        esegui("sofios-prova-store android-lingua")
+        aspetta(150, "android-lingua", 25)
     except Exception as e:
         L("errore prova Android", repr(e))
     try:

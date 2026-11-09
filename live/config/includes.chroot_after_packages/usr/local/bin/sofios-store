@@ -775,6 +775,8 @@ def main():
     app = QApplication(sys.argv); app.setApplicationName("SoStore"); app.setDesktopFileName("sofios-store")
     if os.environ.get("SOFIOS_TEMA_ICONE"): QIcon.setThemeName(os.environ["SOFIOS_TEMA_ICONE"])   # solo per le prove
     w = SoStore(); w.show()
+    if os.environ.get("SOFIOS_FOTO"):
+        QTimer.singleShot(3000, lambda: print("finestra: visibile=%s %s schermo=%s" % (w.isVisible(), w.geometry(), QApplication.primaryScreen().geometry()), file=sys.stderr))
     foto = os.environ.get("SOFIOS_FOTO")   # per le prove: schermate vere
     if foto:
         passi = [("vetrina", lambda: w.vai("vetrina"))]
@@ -799,6 +801,13 @@ def main():
             passi.append(("windows-installazione", inst_win))
             passi.append(("windows-installato", lambda: None))
             passi.append(("windows-fine", lambda: w.vai("windows")))
+        ia = os.environ.get("SOFIOS_ANDROID_INSTALLA")
+        if ia:
+            def inst_and():
+                a = next(x for x in w.android.app if x["pacchetto"] == ia); w.mostra_dettaglio(a); w.installa(a)
+            passi.append(("android-installazione", inst_and))
+            passi.append(("android-installato", lambda: None))
+            passi.append(("android-installati", lambda: w.vai("installati")))
         ins = os.environ.get("SOFIOS_INSTALLA")
         if ins:
             def installa_e_aspetta():
@@ -816,11 +825,11 @@ def main():
                     if scatta.attese < 200: QTimer.singleShot(1500, salva); return
                 if passi[i][0] == "android-catalogo" and not getattr(scatta, "ridisegnato", False):
                     scatta.ridisegnato = True; w.vai("android"); QTimer.singleShot(6000, salva); return
-                if passi[i][0] in ("installato", "windows-installato") and w.in_corso:   # aspetta la fine dell'installazione (max 10 minuti)
+                if passi[i][0] in ("installato", "windows-installato", "android-installato") and w.in_corso:   # aspetta la fine dell'installazione (max 10 minuti)
                     scatta.attese = getattr(scatta, "attese", 0) + 1
                     if scatta.attese < 400: QTimer.singleShot(1500, salva); return
                 w.grab().save(foto.replace(".png", "-%s.png" % passi[i][0])); scatta(i + 1)
-            QTimer.singleShot(4000 if passi[i][0] in ("installazione", "windows-installazione") else 5000, salva)
+            QTimer.singleShot(4000 if passi[i][0] in ("installazione", "windows-installazione", "android-installazione") else 5000, salva)
         QTimer.singleShot(1500, scatta)
     return app.exec()
 
