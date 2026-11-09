@@ -17,8 +17,8 @@ jobs:
         run: |
           mkdir -p /tmp/out
           apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates curl python3 python3-pip python3-pyqt6 python3-pykeepass firefox-esr xvfb fonts-inter fonts-noto-core >/dev/null 2>&1
-          pip install --break-system-packages -q selenium 2>&1 | tail -1
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq git ca-certificates curl python3 python3-pip python3-pyqt6 python3-pykeepass python3-selenium firefox-esr xvfb fonts-inter fonts-noto-core > /tmp/out/apt.txt 2>&1 || tail -5 /tmp/out/apt.txt
+          python3 -c 'import selenium; print("selenium", selenium.__version__)'
           curl -fsSL -o /tmp/g.tgz https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-linux64.tar.gz && tar -xzf /tmp/g.tgz -C /usr/local/bin
           I=live/config/includes.chroot_after_packages
           mkdir -p /usr/local/lib/sofios /usr/local/bin /usr/share/sofios /usr/lib/mozilla/native-messaging-hosts
@@ -56,13 +56,13 @@ jobs:
           cp $I/usr/lib/firefox-esr/distribution/policies.json /usr/lib/firefox-esr/distribution/policies.json
           sed -i 's#file:///usr/share/sofios/cassaforte-password.xpi#file:///tmp/cassaforte.xpi#' /usr/lib/firefox-esr/distribution/policies.json
           mkdir -p /usr/lib/firefox-esr/defaults/pref && echo 'pref("xpinstall.signatures.required", false);' > /usr/lib/firefox-esr/defaults/pref/sofios-estensioni.js
-          mkdir -p /tmp/p2; export DISPLAY=:99; MOZ_HEADLESS=1 timeout 60 firefox-esr --profile /tmp/p2 about:blank >/tmp/out/ff2.txt 2>&1 || true
+          mkdir -p /tmp/p2; printf 'user_pref("browser.policies.loglevel", "debug");\nuser_pref("devtools.console.stdout.chrome", true);\n' > /tmp/p2/user.js; export DISPLAY=:99; MOZ_HEADLESS=1 timeout 60 firefox-esr --profile /tmp/p2 about:blank >/tmp/out/ff2.txt 2>&1 || true
           { echo "=== estensioni nel profilo (criteri)"; python3 -c "
           import json
           d = json.load(open('/tmp/p2/extensions.json'))
           for a in d['addons']: print(a['id'], 'attiva' if a.get('active') else 'NON attiva', a.get('signedState'), a.get('location'))
           " ; } >> /tmp/out/risultato.txt 2>&1 || true
-          cat /tmp/out/risultato.txt | tail -8
+          grep -i -E 'cassaforte|policies|sign|xpi' /tmp/out/ff2.txt | head -30 >> /tmp/out/risultato.txt; cat /tmp/out/risultato.txt | tail -40
       - name: Salva
         if: always()
         env:
