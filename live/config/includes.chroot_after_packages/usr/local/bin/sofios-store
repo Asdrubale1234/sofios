@@ -2,7 +2,7 @@
 """SoStore: il negozio di programmi di SofiOS.
 Vetrina scelta da noi (catalogo.json, aggiornato con gli aggiornamenti firmati) + ricerca in tutto il catalogo.
 Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il sistema."""
-import json, os, re, shlex, subprocess, sys, glob, tarfile
+import json, os, re, shlex, shutil, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import bottone_informazioni
 import store_android as AND
@@ -716,6 +716,12 @@ class SoStore(QWidget):
         i = QLabel("Programmi per Windows che abbiamo provato su SofiOS. Si scaricano dal sito ufficiale di chi li fa e funzionano come gli altri. "
                    "Puoi aprire anche altri programmi Windows (.exe) con un doppio clic: molti funzionano, ma non tutti.")
         i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
+        if not shutil.which("wine"):
+            q = QLabel("Su questo computer non c'è ancora il supporto ai programmi Windows. Si aggiunge in pochi minuti (serve Internet)."); q.setObjectName("testo"); q.setWordWrap(True); v.addWidget(q)
+            b = QPushButton("Aggiungi il supporto ai programmi Windows"); b.setObjectName("azione")
+            sup = {"pacchetto": "wine", "nome": "Supporto ai programmi Windows"}
+            b.clicked.connect(lambda: self._esegui(sup, ["install", "-y", "-p", "wine", "-p", "wine64", "-p", "fonts-wine"], "Installo", lambda: shutil.which("wine") is not None and (self.vai("windows") or True)))
+            v.addWidget(b, alignment=Qt.AlignmentFlag.AlignLeft); v.addStretch(); return
         apps = self.catalogo.get("windows", [])
         if apps: self._griglia(v, apps)
         v.addStretch()

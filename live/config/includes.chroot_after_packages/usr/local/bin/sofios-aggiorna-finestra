@@ -3,12 +3,14 @@
 import os, sys
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 from sofios_info import bottone_informazioni
+import subprocess
 from PyQt6.QtCore import Qt, QProcess
 from PyQt6.QtGui import QIcon, QPixmap
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QCheckBox
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 PROGRAMMA = os.environ.get("SOFIOS_AGGIORNA", "/usr/local/bin/sofios-aggiorna")
+SICUREZZA = os.environ.get("SOFIOS_SICUREZZA", "/usr/local/lib/sofios/sicurezza-auto")
 STILE = """
 QWidget#finestra { background: #0b2740; }
 QLabel { color: #e6f1ff; font-size: 13px; }
@@ -17,6 +19,7 @@ QLabel#stato { color: #d4e6f8; font-size: 14px; }
 QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 700; }
 QPushButton:hover { background: #ffe19e; }
 QPushButton:disabled { background: #2a4d6e; color: #9fc2e4; }
+QCheckBox { color: #d4e6f8; font-size: 13px; spacing: 8px; }
 QPushButton#secondario { background: #1e6fa8; color: #ffffff; font-weight: 600; }
 """
 
@@ -31,11 +34,28 @@ class Aggiorna(QWidget):
         t = QLabel("Aggiorna SofiOS"); t.setObjectName("titolo"); t.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(t)
         self.stato = QLabel("Controlla se ci sono novità per il tuo computer."); self.stato.setObjectName("stato")
         self.stato.setWordWrap(True); self.stato.setAlignment(Qt.AlignmentFlag.AlignCenter); self.stato.setMinimumHeight(48); v.addWidget(self.stato)
+        self.sic = QCheckBox("Installa da solo gli aggiornamenti di sicurezza"); self.sic.setToolTip("Solo le correzioni di sicurezza, in silenzio. Prima di ognuna SofiOS salva una copia per poter tornare indietro.")
+        self.sic.setChecked(self.sicurezza_attiva()); self.sic.toggled.connect(self.cambia_sicurezza); v.addWidget(self.sic)
         r = QHBoxLayout(); r.addWidget(bottone_informazioni(self, "Aggiorna SofiOS", "Installa gli aggiornamenti di SofiOS, solo se firmati da noi.")); r.addStretch()
         self.chiudi = QPushButton("Chiudi"); self.chiudi.setObjectName("secondario"); self.chiudi.clicked.connect(self.close); r.addWidget(self.chiudi)
         self.vai = QPushButton("Controlla aggiornamenti"); self.vai.clicked.connect(self.avvia); r.addWidget(self.vai)
         v.addLayout(r)
         self.uscita = ""
+
+    def sicurezza_attiva(self):
+        try:
+            return subprocess.run([SICUREZZA, "stato"], capture_output=True, text=True, timeout=10).stdout.strip() != "off"
+        except Exception:
+            return True
+
+    def cambia_sicurezza(self, acceso):
+        try:
+            r = subprocess.run(["pkexec", SICUREZZA, "on" if acceso else "off"], capture_output=True, timeout=120)
+            ok = r.returncode == 0
+        except Exception:
+            ok = False
+        if not ok:   # annullato: la casella torna com'era
+            self.sic.blockSignals(True); self.sic.setChecked(not acceso); self.sic.blockSignals(False)
 
     def avvia(self):
         self.vai.setEnabled(False); self.chiudi.setEnabled(False); self.stato.setText("Controllo in corso…"); self.uscita = ""
