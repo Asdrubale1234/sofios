@@ -13,7 +13,7 @@ case "$1" in
     wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" ;;
   android-attiva)
     # nella prova la memoria e' poca: Android va sul disco virtuale
-    { sudo mkfs.ext4 -q -F /dev/vda && sudo mkdir -p /var/lib/waydroid && sudo mount /dev/vda /var/lib/waydroid && df -h /var/lib/waydroid; } 2>&1 | S
+    { sudo mkfs.ext4 -q -F /dev/vdb && sudo mkdir -p /var/lib/waydroid && sudo mount /dev/vdb /var/lib/waydroid && df -h /var/lib/waydroid; } 2>&1 | S
     sudo /usr/local/lib/sofios/android-attiva VANILLA 2>&1 | S ;;
   android-stato)
     { echo "### android-stato"; waydroid status; systemctl is-active waydroid-container; journalctl -u waydroid-container --no-pager | tail -20; lsmod | grep -i binder; ls -l /dev/binder* /dev/binderfs 2>&1; dmesg 2>&1 | grep -i -E "binder|waydroid|lxc" | tail -10; } 2>&1 | S ;;

@@ -17,9 +17,10 @@ codice = next((p for p in ["/usr/share/OVMF/OVMF_CODE_4M.fd", "/usr/share/OVMF/O
 vars_src = next((p for p in ["/usr/share/OVMF/OVMF_VARS_4M.fd", "/usr/share/OVMF/OVMF_VARS.fd"] if os.path.exists(p)), None)
 L("OVMF:", codice, vars_src, "kvm:", os.path.exists("/dev/kvm"))
 subprocess.run(["qemu-img", "create", "-f", "qcow2", "/tmp/disco.qcow2", "30G"], check=True, capture_output=True)
+subprocess.run(["qemu-img", "create", "-f", "qcow2", "/tmp/disco2.qcow2", "20G"], check=True, capture_output=True)   # secondo disco: solo per le prove di Android
 cmd = ["qemu-system-x86_64", "-machine", "q35,accel=kvm:tcg", "-cpu", "max", "-smp", "2", "-m", "4096",
        "-cdrom", iso, "-boot", "d", "-vga", "std", "-display", "none", "-no-reboot",
-       "-drive", "file=/tmp/disco.qcow2,if=virtio,format=qcow2",
+       "-drive", "file=/tmp/disco.qcow2,if=virtio,format=qcow2", "-drive", "file=/tmp/disco2.qcow2,if=virtio,format=qcow2",
        "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
        "-netdev", "user,id=n0", "-device", "virtio-net-pci,netdev=n0",
        "-monitor", "unix:/tmp/qmon,server,nowait", "-qmp", "unix:/tmp/qmp,server,nowait",
