@@ -1,0 +1,24 @@
+1794208738587	geckodriver	INFO	Listening on 127.0.0.1:59733
+1794208738590	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" "/usr/bin/firefox-esr"  ... ss" "--remote-debugging-port" "56019" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofiletAcCHs"
+[10294] Sandbox: CanCreateUserNamespace() clone() failure: EPERM
+*** You are running in headless mode.
+1794208738960	Marionette	INFO	Marionette enabled
+1794208739240	Marionette	INFO	Listening on port 41955
+WebDriver BiDi listening on ws://127.0.0.1:56019
+Read port: 41955
+1794208739388	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: RSLoader: Recipe new-tab-159120261002163917-to-release-157 not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.
+console.warn: RSLoader: Recipe new-tab-160020261011195215-to-release-158 not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.
+console.warn: RSLoader: Recipe new-tab-160220261016183914-to-release-158 not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.
+console.warn: RSLoader: Recipe new-tab-train-hop-160420261021190336-to-release-159 not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.
+console.warn: RSLoader: Recipe new-tab-train-hop-161020261102193311-to-release-15901 not returned from collection nimbus-secure-experiments because it does not contain at least one required feature ID.
+[Parent 10294, Main Thread] WARNING: OnProxyReady error: Failed to execute child process “dbus-launch” (No such file or directory): 'glib warning', file toolkit/xre/nsSigHandlers.cpp:200
+
+** (firefox-esr:10294): WARNING **: 07:19:04.493: OnProxyReady error: Failed to execute child process “dbus-launch” (No such file or directory)
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8765."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8765."
+console.warn: BackupService: "There was an error while trying to get the Document's directory" [Exception... "Component returned failure code: 0x80004005 (NS_ERROR_FAILURE) [nsIProperties.get]"  nsresult: "0x80004005 (NS_ERROR_FAILURE)"  location: "JS frame :: resource:///modules/backup/BackupService.sys.mjs :: get docsDirFolderPath :: line 1299"  data: no]
+JavaScript error: resource:///modules/backup/BackupService.sys.mjs, line 4408: NotAllowedError: PathUtils.join: PathUtils does not support empty paths
+1794208765097	Marionette	INFO	Stopped listening on port 41955
+JavaScript error: resource://gre/modules/PrivateBrowsingUtils.sys.mjs, line 50: TypeError: can't access property "QueryInterface", aWindow.docShell is null

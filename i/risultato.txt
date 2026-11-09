@@ -1,0 +1,27 @@
+OK     il menu mostra la voce del sito 'Cassaforte Password\nSito di prova — mario'
+OK     utente e password compilati mario/**********
+OK     su un sito diverso non offre password 'Cassaforte Password\nNessuna password salvata per questo sito.'
+OK     propone di salvare la nuova password 
+OK     la nuova password e' nella cassaforte 
+OK     non richiede una password gia' salvata 
+OK     con la cassaforte chiusa lo dice e offre di aprirla 'Cassaforte Password\nLa Cassaforte è chiusa. Aprila e inserisci la password principale.\nApri Cassaforte'
+RIEPILOGO: 7 su 7
+uscita 0
+=== cartelle di Firefox
+/usr/lib/firefox-esr/defaults:
+pref
+
+/usr/lib/firefox-esr/defaults/pref:
+channel-prefs.js
+/etc/firefox-esr:
+firefox-esr.js
+
+/usr/lib/firefox-esr/distribution:
+searchplugins
+=== variante A
+=== variante B
+cassaforte@sofios attiva 0 app-profile
+=== variante C
+cassaforte@sofios attiva 0 app-profile
+=== variante D
+cassaforte@sofios attiva 0 app-profile
