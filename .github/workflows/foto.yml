@@ -1,5 +1,6 @@
 name: Schermate della ISO
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ['tools/foto-iso.py', '.github/workflows/foto.yml']
