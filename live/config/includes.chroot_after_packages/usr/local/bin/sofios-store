@@ -687,6 +687,11 @@ class SoStore(QWidget):
                     self._attesa += 1; QTimer.singleShot(1000, prova); return
                 p = QProcess(self); p.setProcessChannelMode(QProcess.ProcessChannelMode.MergedChannels)
                 def fine(codice, _):
+                    try:
+                        os.makedirs(AND.CACHE, exist_ok=True)
+                        with open(os.path.join(AND.CACHE, "ultimo.log"), "w", encoding="utf-8") as h:
+                            h.write("codice %s\n" % codice); h.write(bytes(p.readAll()).decode("utf-8", "replace"))
+                    except Exception: pass
                     self.in_corso.pop(app["pacchetto"], None); self.leggi_android_installate()
                     self.stato.setText(("Fatto: «%s»." if app["pacchetto"] in self.android_installate else "«%s» non si è installata.") % app["nome"])
                     self.aggiorna_tutto()
@@ -782,6 +787,7 @@ def main():
     if os.environ.get("SOFIOS_TEMA_ICONE"): QIcon.setThemeName(os.environ["SOFIOS_TEMA_ICONE"])   # solo per le prove
     w = SoStore(); w.show()
     if os.environ.get("SOFIOS_FOTO"):
+        w.stato.textChanged.connect(lambda t: print("stato:", t, file=sys.stderr, flush=True))
         QTimer.singleShot(3000, lambda: print("finestra: visibile=%s %s schermo=%s" % (w.isVisible(), w.geometry(), QApplication.primaryScreen().geometry()), file=sys.stderr))
     foto = os.environ.get("SOFIOS_FOTO")   # per le prove: schermate vere
     if foto:
