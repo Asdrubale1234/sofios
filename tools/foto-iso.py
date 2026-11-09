@@ -190,7 +190,7 @@ try:
     tasti("ret")
     aspetta(150, "installer", 15)
     # pagine dell'installer: si clicca "Avanti" (Alt+A e' condiviso con "Annulla"); non si preme mai "Installa"
-    for pagina in range(1, 4):
+    for pagina in range(1, 5):   # benvenuto, lingua, tastiera, livello di installazione
         time.sleep(6); foto(f"pagina{pagina}")
         clic(1020, 690); time.sleep(6)      # "Avanti"
     time.sleep(6); foto("partizioni")
