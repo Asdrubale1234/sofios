@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       livello:
-        description: essenziale | completo | completo-android
-        default: essenziale
+        description: base | android | windows | completo
+        default: base
 permissions:
   contents: write
 jobs:

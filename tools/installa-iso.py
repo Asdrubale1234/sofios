@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Installa la ISO su un disco virtuale (QEMU/UEFI) scegliendo un livello, con schermate vere.
-Uso: installa-iso.py ISO CARTELLA MINUTI LIVELLO(essenziale|completo|completo-android)
+Uso: installa-iso.py ISO CARTELLA MINUTI LIVELLO(base|android|windows|completo)
 Non e' un test: se qualcosa non va, salva comunque quello che ha visto e un file registro.txt."""
 import os, sys, time, socket, subprocess, hashlib, glob, shutil
 
@@ -93,12 +93,12 @@ def scrivi(testo):
         elif c.isupper(): tasti("shift-" + c.lower())
         elif c in SPECIALI: tasti(SPECIALI[c])
         else: tasti(c)
-livello = sys.argv[4] if len(sys.argv) > 4 else "essenziale"
+livello = sys.argv[4] if len(sys.argv) > 4 else "base"
 def aspetta(sec, nome, ogni=15):
     fine = time.time() + sec
     while time.time() < fine and proc.poll() is None:
         foto(nome); time.sleep(ogni)
-LIV = {"essenziale": (365, 134), "completo": (363, 149), "completo-android": (390, 164)}
+LIV = {"base": (365, 134), "android": (365, 149), "windows": (365, 164), "completo": (365, 179)}
 try:
     aspetta(30, "avvio", 10); tasti("ret")
     aspetta(60, "caricamento", 10)

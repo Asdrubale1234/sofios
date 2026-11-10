@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Installa la ISO su un disco virtuale (QEMU/UEFI) scegliendo un livello, con schermate vere.
-Uso: installa-iso.py ISO CARTELLA MINUTI LIVELLO(essenziale|completo|completo-android)
+Uso: installa-iso.py ISO CARTELLA MINUTI LIVELLO(base|android|windows|completo)
 Non e' un test: se qualcosa non va, salva comunque quello che ha visto e un file registro.txt."""
 import os, sys, time, socket, subprocess, hashlib, glob, shutil
 
