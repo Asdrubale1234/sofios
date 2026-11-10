@@ -29,4 +29,5 @@ for k, (t, s, si, no) in L.items():
     for x in no:
         d.text((30, y), "✗", font=ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16), fill=(150, 170, 195))
         d.text((56, y), x.split(" (")[0] + " (non incluso)", font=f("Regular", 16), fill=(150, 170, 195)); y += 29
+    if no: d.text((28, 440), "Quello che manca lo potrai aggiungere in seguito da SoStore.", font=f("Regular", 14), fill=(190, 215, 240))
     im.save(f"{D}/{k}.png")
