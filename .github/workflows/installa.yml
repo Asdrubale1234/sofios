@@ -101,7 +101,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/out/aggiunta.txt" . 2>/dev/null || true
           cp -r "$GITHUB_WORKSPACE/out/avvio" ./avvio 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/tag.txt" . 2>/dev/null || true
-          git init -q && git checkout -q -b installazione
+          git init -q && git checkout -q -b "installazione-${{ inputs.livello }}"
           git config user.name sofios-build && git config user.email build@sofios.local
           git add . && git commit -q -m "Installazione ${GITHUB_RUN_ID}"
-          git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" installazione
+          git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" "installazione-${{ inputs.livello }}"
