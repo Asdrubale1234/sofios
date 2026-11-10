@@ -29,7 +29,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
           mkdir -p out
-          python3 tools/installa-iso.py sofios.iso out/foto 50 "${{ inputs.livello }}"
+          python3 tools/installa-iso.py sofios.iso out/foto 55 "${{ inputs.livello }}"
       - name: Guarda dentro il sistema installato
         if: always()
         run: |
@@ -58,6 +58,12 @@ jobs:
             echo "--- log"; sudo ls $m/@log | head -30; sudo ls $R/boot $R/boot/efi 2>&1 | head -20
           done
           } > out/dentro.txt 2>&1 || true
+      - name: Avvia il sistema installato
+        if: always()
+        run: |
+          sudo umount /mnt/p* 2>/dev/null || true; sudo losetup -D || true
+          mkdir -p out/avvio
+          [ -f /tmp/disco.qcow2 ] && python3 tools/avvia-disco.py none out/avvio 10 || true
       - name: Salva
         if: always()
         env:
@@ -67,6 +73,7 @@ jobs:
           mkdir -p /tmp/sc && cd /tmp/sc
           cp -r "$GITHUB_WORKSPACE/out/foto" ./foto 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/out/dentro.txt" . 2>/dev/null || true
+          cp -r "$GITHUB_WORKSPACE/out/avvio" ./avvio 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/tag.txt" . 2>/dev/null || true
           git init -q && git checkout -q -b installazione
           git config user.name sofios-build && git config user.email build@sofios.local
