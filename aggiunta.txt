@@ -1,0 +1,38 @@
+loop /dev/loop0
+--- sorgenti apt
+deb http://deb.debian.org/debian trixie main non-free-firmware
+deb-src http://deb.debian.org/debian trixie main non-free-firmware
+
+deb http://deb.debian.org/debian trixie-updates main non-free-firmware
+deb-src http://deb.debian.org/debian trixie-updates main non-free-firmware
+
+deb http://security.debian.org/debian-security/ trixie-security main non-free-firmware
+deb-src http://security.debian.org/debian-security/ trixie-security main non-free-firmware
+
+deb http://deb.debian.org/debian trixie-backports main non-free-firmware
+deb-src http://deb.debian.org/debian trixie-backports main non-free-firmware
+deb http://deb.debian.org/debian trixie-backports main
+prima: wine: installed
+prima: waydroid: installed
+W: Target DEP-11 (main/dep11/Components-all.yml) is configured multiple times in /etc/apt/sources.list:12 and /etc/apt/sources.list.d/sofios-backports.list:1
+W: Target DEP-11-icons-small (main/dep11/icons-48x48.tar) is configured multiple times in /etc/apt/sources.list:12 and /etc/apt/sources.list.d/sofios-backports.list:1
+W: Target DEP-11-icons (main/dep11/icons-64x64.tar) is configured multiple times in /etc/apt/sources.list:12 and /etc/apt/sources.list.d/sofios-backports.list:1
+W: Target DEP-11-icons-hidpi (main/dep11/icons-64x64@2.tar) is configured multiple times in /etc/apt/sources.list:12 and /etc/apt/sources.list.d/sofios-backports.list:1
+W: Target DEP-11-icons-large (main/dep11/icons-128x128.tar) is configured multiple times in /etc/apt/sources.list:12 and /etc/apt/sources.list.d/sofios-backports.list:1
+--- installo wine (come SoStore)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+wine is already the newest version (10.0~repack-6).
+wine64 is already the newest version (10.0~repack-6).
+fonts-wine is already the newest version (10.0~repack-6).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+--- installo waydroid (come SoStore)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+waydroid is already the newest version (1.6.3+ds-2~bpo13+1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+dopo: wine: installed 10.0~repack-6
+dopo: wine64: installed 10.0~repack-6
+dopo: waydroid: installed 1.6.3+ds-2~bpo13+1
