@@ -559,9 +559,9 @@ class SoStore(QWidget):
         t = QLabel("App Android"); t.setObjectName("titolo"); v.addWidget(t)
         stato, tipo = self.stato_android()
         if stato == "assente":
-            self._riquadro(v, "Android non è ancora su questo computer",
-                           "Con Android puoi usare le app del telefono sul computer. Serve circa 1 GB di spazio.",
-                           "Installa Android", lambda: self.installa({"pacchetto": "waydroid", "nome": "Android"}))
+            self._riquadro(v, "Il supporto alle app Android non è ancora su questo computer",
+                           "Con le app Android puoi usare le app del telefono sul computer. Serve Internet e circa 1 GB di spazio.",
+                           "Aggiungi il supporto alle app Android", lambda: self.installa({"pacchetto": "waydroid", "nome": "Supporto alle app Android"}))
             v.addStretch(); return
         if stato == "da_attivare":
             i = QLabel("Scegli come vuoi Android. Potrai cambiare idea più avanti."); i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
