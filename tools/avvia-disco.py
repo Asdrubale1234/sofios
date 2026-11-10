@@ -24,7 +24,7 @@ cmd = ["qemu-system-x86_64", "-machine", "q35,accel=kvm:tcg", "-cpu", "max", "-s
        "-monitor", "unix:/tmp/qmon,server,nowait", "-qmp", "unix:/tmp/qmp,server,nowait",
        "-serial", "file:" + os.path.join(out, "seriale.txt")]
 if codice and vars_src:
-    shutil.copy(vars_src, "/tmp/OVMF_VARS.fd")
+    pass   # si riusa /tmp/OVMF_VARS.fd della fase di installazione: come su un computer vero, la voce di avvio resta in memoria
     cmd += ["-drive", f"if=pflash,format=raw,readonly=on,file={codice}", "-drive", "if=pflash,format=raw,file=/tmp/OVMF_VARS.fd"]
 elif codice:
     cmd += ["-bios", codice]
