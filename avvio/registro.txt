@@ -1,0 +1,14 @@
+20:03:05 OVMF: /usr/share/OVMF/OVMF_CODE_4M.fd /usr/share/OVMF/OVMF_VARS_4M.fd kvm: True
+20:03:06 QMP collegato (mouse assoluto)
+20:03:07 foto 001-0000s-avvio.png
+20:03:18 foto 002-0010s-avvio.png
+20:03:28 foto 003-0021s-avvio.png
+20:03:39 foto 004-0031s-avvio.png
+20:04:10 foto 005-0063s-avvio.png
+20:05:12 foto 006-0125s-accesso.png
+20:07:18 foto 007-0251s-dopo-invio.png
+20:07:29 foto 008-0262s-desktop.png
+20:07:44 foto 009-0277s-desktop.png
+20:08:15 foto 010-0308s-desktop.png
+20:09:17 foto 011-0370s-desktop.png
+20:10:03 fine
