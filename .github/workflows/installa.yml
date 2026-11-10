@@ -63,6 +63,26 @@ jobs:
             echo "--- log"; sudo ls $m/@log | head -30; sudo ls $R/boot $R/boot/efi 2>&1 | head -20
           done
           } > out/dentro.txt 2>&1 || true
+      - name: Aggiunta in seguito di Windows e Android (come da SoStore)
+        if: always()
+        run: |
+          {
+          M=/mnt/agg; sudo mkdir -p $M
+          sudo umount /mnt/p* 2>/dev/null || true
+          L=$(sudo losetup -j /tmp/disco.raw | cut -d: -f1 | head -1); echo "loop $L"
+          sudo mount -o rw,subvol=@ ${L}p2 $M 2>&1 || { echo "non montabile"; exit 0; }
+          sudo mount -o rw ${L}p1 $M/boot/efi 2>/dev/null || true
+          for d in dev proc sys; do sudo mount --bind /$d $M/$d; done
+          sudo cp /etc/resolv.conf $M/etc/resolv.conf
+          echo "--- sorgenti apt"; sudo cat $M/etc/apt/sources.list $M/etc/apt/sources.list.d/* 2>&1 | grep -v "^#" | head -30
+          for p in wine waydroid; do echo "prima: $p: $(sudo chroot $M dpkg-query -W -f='${db:Status-Status}' $p 2>&1)"; done
+          sudo chroot $M apt-get update 2>&1 | tail -5
+          echo "--- installo wine (come SoStore)"; sudo chroot $M apt-get install -y wine wine64 fonts-wine 2>&1 | tail -15
+          echo "--- installo waydroid (come SoStore)"; sudo chroot $M apt-get install -y waydroid 2>&1 | tail -15
+          for p in wine wine64 waydroid; do echo "dopo: $p: $(sudo chroot $M dpkg-query -W -f='${db:Status-Status} ${Version}' $p 2>&1)"; done
+          for d in dev proc sys; do sudo umount $M/$d; done
+          sudo umount $M/boot/efi 2>/dev/null; sudo umount $M
+          } > out/aggiunta.txt 2>&1 || true
       - name: Avvia il sistema installato
         if: always()
         run: |
@@ -78,6 +98,7 @@ jobs:
           mkdir -p /tmp/sc && cd /tmp/sc
           cp -r "$GITHUB_WORKSPACE/out/foto" ./foto 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/out/dentro.txt" . 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE/out/aggiunta.txt" . 2>/dev/null || true
           cp -r "$GITHUB_WORKSPACE/out/avvio" ./avvio 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/tag.txt" . 2>/dev/null || true
           git init -q && git checkout -q -b installazione
