@@ -53,6 +53,11 @@ jobs:
             echo "--- subvolumi"; sudo btrfs subvolume list $m 2>&1 | head
             echo "--- script bootloader"; sudo cat $R/usr/share/calamares/helpers/calamares-bootloader-config 2>&1 | head -120
             echo "--- pacchetti live rimasti"; sudo grep -A8 -E "^Package: (live-|calamares)" $R/var/lib/dpkg/status | grep -E "^Package|^Status" | paste - - | head -20
+            echo "--- GRUB: ESP (p1) tutta"; sudo find /mnt/p1 | head -40
+            for f in $(sudo find /mnt/p1 -name grub.cfg 2>/dev/null); do echo "--- $f"; sudo cat $f; done
+            echo "--- @/boot/grub"; sudo ls -la $R/boot/grub | head -20
+            echo "--- grub.cfg (primo pezzo)"; sudo head -40 $R/boot/grub/grub.cfg 2>&1
+            echo "--- default grub"; sudo cat $R/etc/default/grub | grep -v "^#" | grep -v "^$"
             echo "--- apt history"; sudo tail -30 $m/@log/apt/history.log 2>&1
             echo "--- apt term.log (fine)"; sudo tail -60 $m/@log/apt/term.log 2>&1
             echo "--- log"; sudo ls $m/@log | head -30; sudo ls $R/boot $R/boot/efi 2>&1 | head -20
