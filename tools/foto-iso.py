@@ -99,6 +99,16 @@ def aspetta(sec, nome, ogni=15):
     while time.time() < fine and proc.poll() is None:
         foto(nome); time.sleep(ogni)
 
+def aspetta_serie(testo, sec, nome, ogni=120):
+    """aspetta che nella porta seriale compaia `testo` (es. fine dello scaricamento di Android)"""
+    fine = time.time() + sec
+    while time.time() < fine and proc.poll() is None:
+        try:
+            if testo in open(os.path.join(out, "seriale.txt"), errors="ignore").read(): return True
+        except OSError: pass
+        foto(nome); time.sleep(ogni)
+    return False
+
 try:
     L("attendo il menu di avvio")
     aspetta(30, "avvio", 10)
@@ -156,7 +166,7 @@ try:
     try:
         L("prova Android: attivazione e avvio")
         esegui("sofios-prova-store android-attiva")
-        aspetta(600, "android-attivazione", 30)
+        L("Android pronto: %s" % aspetta_serie("Android pronto.", 4200, "android-attivazione", 150))
         serie("android-stato")
         esegui("sofios-prova-store android-avvio")
         aspetta(150, "android-avvio", 25)
