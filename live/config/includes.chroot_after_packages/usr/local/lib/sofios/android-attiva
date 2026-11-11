@@ -37,15 +37,15 @@ case "$1" in
       i=$((i+1)); sleep 3
     done
     echo "avvio atteso: $i giri" >> "$LOG"
-    TENERE=" com.android.settings com.android.vending com.google.android.gms com.google.android.gsf com.android.documentsui com.android.launcher3 org.lineageos.trebuchet com.android.packageinstaller com.google.android.packageinstaller com.android.permissioncontroller com.android.webview com.google.android.webview com.android.inputmethod.latin com.android.providers.media com.android.providers.downloads com.android.systemui com.android.shell com.android.certinstaller "
-    SIST=$(waydroid shell -- pm list packages -s 2>/dev/null | tr -d '\r' | sed 's/^package://')
-    LANC=$(waydroid shell -- cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER 2>/dev/null | tr -d '\r' | grep -E '^[A-Za-z0-9_.]+/' | cut -d/ -f1 | sort -u)
-    echo "con icona: $LANC" >> "$LOG"
-    for p in $LANC; do
-      echo "$SIST" | grep -qx "$p" || continue
-      case "$TENERE" in *" $p "*) continue ;; esac
+    # app che Android porta con se' (verificate sull'immagine di Waydroid): tutte tolte.
+    # restano solo impostazioni, selettore file e tastiera, che servono al funzionamento.
+    TOGLIERE="com.android.contacts org.lineageos.recorder com.android.gallery3d org.lineageos.jelly org.lineageos.eleven org.lineageos.etar org.lineageos.aperture com.android.calculator2 com.android.deskclock com.android.messaging com.android.dialer com.android.music org.lineageos.updater org.lineageos.backgrounds"
+    for p in $TOGLIERE; do
+      waydroid shell -- pm path "$p" 2>/dev/null | grep -q package || continue
       echo "tolgo $p: $(waydroid shell -- pm uninstall -k --user 0 "$p" 2>&1 | tr -d '\r')" >> "$LOG"
+      for H in /home/*; do rm -f "$H/.local/share/applications/waydroid.$p.desktop" 2>/dev/null; done
     done
+    waydroid shell -- pm list packages -s 2>/dev/null | tr -d '\r' | grep -E "contacts|gallery|jelly|eleven|etar|aperture|calculator|deskclock|recorder" >> "$LOG" || echo "rimaste: nessuna delle app tolte" >> "$LOG"
     cat "$LOG"
     ;;
   id-google)

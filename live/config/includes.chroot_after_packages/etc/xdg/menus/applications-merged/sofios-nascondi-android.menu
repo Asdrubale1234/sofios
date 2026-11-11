@@ -1,0 +1,11 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN" "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <!-- Le parti di servizio di Android (impostazioni, file, tastiera) non compaiono nel menu di SofiOS:
+       si apre solo "Android" da SoStore, e le app installate dall'utente compaiono come le altre -->
+  <Exclude>
+    <Filename>waydroid.com.android.settings.desktop</Filename>
+    <Filename>waydroid.com.android.documentsui.desktop</Filename>
+    <Filename>waydroid.com.android.inputmethod.latin.desktop</Filename>
+  </Exclude>
+</Menu>
