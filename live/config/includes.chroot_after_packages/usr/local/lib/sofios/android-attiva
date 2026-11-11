@@ -3,6 +3,13 @@
 #   android-attiva VANILLA|GAPPS   scarica e prepara Android (senza Google / con Google Play)
 #   android-attiva id-google       stampa il codice del computer per la registrazione su Google
 set -e
+avvia_sessione() {
+  U="${PKEXEC_UID:-$SUDO_UID}"
+  [ -n "$U" ] && [ "$U" != "0" ] || return 0
+  N=$(id -nu "$U")
+  runuser -u "$N" -- env XDG_RUNTIME_DIR="/run/user/$U" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$U/bus" WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
+    sh -c 'waydroid session start >/dev/null 2>&1 &' || true
+}
 case "$1" in
   VANILLA|GAPPS)
     echo "Preparo Android ($1)…"
@@ -18,13 +25,9 @@ case "$1" in
     fi
     systemctl enable --now waydroid-container.service
     # la sessione di Android parte come utente che ha chiesto l'operazione, poi togliamo le app gia' presenti
-    U="${PKEXEC_UID:-$SUDO_UID}"
-    if [ -n "$U" ] && [ "$U" != "0" ]; then
-      N=$(id -nu "$U")
-      runuser -u "$N" -- env XDG_RUNTIME_DIR="/run/user/$U" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$U/bus" WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
-        sh -c 'waydroid session start >/dev/null 2>&1 &' || true
-      "$0" pulisci || echo "pulizia non riuscita"
-    fi
+    # la sessione di Android parte come utente che ha chiesto l'operazione, poi si pulisce e si configura
+    avvia_sessione
+    "$0" pulisci || echo "pulizia non riuscita"
     echo "Android pronto."
     ;;
   pulisci)
@@ -46,6 +49,16 @@ case "$1" in
       for H in /home/*; do rm -f "$H/.local/share/applications/waydroid.$p.desktop" 2>/dev/null; done
     done
     waydroid shell -- pm list packages -s 2>/dev/null | tr -d '\r' | grep -E "contacts|gallery|jelly|eleven|etar|aperture|calculator|deskclock|recorder" >> "$LOG" || echo "rimaste: nessuna delle app tolte" >> "$LOG"
+    # le app di Android si aprono come finestre normali del desktop (come un programma Linux),
+    # in italiano, e con la tastiera del computer (niente tastiera a schermo di Android)
+    waydroid prop set persist.waydroid.multi_windows true >> "$LOG" 2>&1
+    waydroid prop set persist.sys.language it >> "$LOG" 2>&1; waydroid prop set persist.sys.country IT >> "$LOG" 2>&1; waydroid prop set persist.sys.locale it-IT >> "$LOG" 2>&1
+    waydroid shell -- settings put secure show_ime_with_hard_keyboard 0 >> "$LOG" 2>&1
+    echo "tastiera a schermo: $(waydroid shell -- settings get secure show_ime_with_hard_keyboard 2>&1 | tr -d '\r')" >> "$LOG"
+    # riavvio della sessione perche' le impostazioni valgano subito
+    waydroid session stop >> "$LOG" 2>&1 || true
+    sleep 5
+    avvia_sessione
     cat "$LOG"
     ;;
   id-google)
