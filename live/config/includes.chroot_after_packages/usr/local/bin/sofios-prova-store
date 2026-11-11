@@ -22,7 +22,7 @@ case "$1" in
   android-app)
     echo "### android-app" | S; SOFIOS_FOTO=/tmp/and.png SOFIOS_ANDROID_FOTO=1 SOFIOS_ANDROID_INSTALLA=app.organicmaps sofios-store 2>&1 | S ;;
   android-lista)
-    { echo "### android-lista"; waydroid app list; ls -la ~/.cache/sofios-store/android/apk 2>&1; echo "--- registro installazione:"; cat ~/.cache/sofios-store/android/ultimo.log 2>&1; } 2>&1 | S ;;
+    { echo "### android-lista"; waydroid app list; echo "--- pulizia:"; cat /var/log/sofios-android-pulizia.log 2>&1; echo "--- windows menu:"; ls -R ~/.local/share/applications 2>&1 | head -40; ls -la ~/.cache/sofios-store/android/apk 2>&1; echo "--- registro installazione:"; cat ~/.cache/sofios-store/android/ultimo.log 2>&1; } 2>&1 | S ;;
   android-apri)
     waydroid app launch app.organicmaps ;;
   android-lingua)

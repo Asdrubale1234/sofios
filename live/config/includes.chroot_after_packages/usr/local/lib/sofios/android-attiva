@@ -17,10 +17,39 @@ case "$1" in
       waydroid init -s "$1"
     fi
     systemctl enable --now waydroid-container.service
+    # la sessione di Android parte come utente che ha chiesto l'operazione, poi togliamo le app gia' presenti
+    U="${PKEXEC_UID:-$SUDO_UID}"
+    if [ -n "$U" ] && [ "$U" != "0" ]; then
+      N=$(id -nu "$U")
+      runuser -u "$N" -- env XDG_RUNTIME_DIR="/run/user/$U" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$U/bus" WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" \
+        sh -c 'waydroid session start >/dev/null 2>&1 &' || true
+      "$0" pulisci || echo "pulizia non riuscita"
+    fi
     echo "Android pronto."
+    ;;
+  pulisci)
+    # toglie le app che Android porta con se' (messaggi, calendario, galleria, musica, fotocamera...):
+    # restano solo quelle che servono (impostazioni, Google Play se scelto, selettore file)
+    LOG=/var/log/sofios-android-pulizia.log; : > "$LOG"
+    i=0
+    while [ $i -lt 90 ]; do
+      [ "$(waydroid shell -- getprop sys.boot_completed 2>/dev/null | tr -d '\r\n ')" = "1" ] && break
+      i=$((i+1)); sleep 3
+    done
+    echo "avvio atteso: $i giri" >> "$LOG"
+    TENERE=" com.android.settings com.android.vending com.google.android.gms com.google.android.gsf com.android.documentsui com.android.launcher3 org.lineageos.trebuchet com.android.packageinstaller com.google.android.packageinstaller com.android.permissioncontroller com.android.webview com.google.android.webview com.android.inputmethod.latin com.android.providers.media com.android.providers.downloads com.android.systemui com.android.shell com.android.certinstaller "
+    SIST=$(waydroid shell -- pm list packages -s 2>/dev/null | tr -d '\r' | sed 's/^package://')
+    LANC=$(waydroid shell -- cmd package query-activities --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER 2>/dev/null | tr -d '\r' | grep -E '^[A-Za-z0-9_.]+/' | cut -d/ -f1 | sort -u)
+    echo "con icona: $LANC" >> "$LOG"
+    for p in $LANC; do
+      echo "$SIST" | grep -qx "$p" || continue
+      case "$TENERE" in *" $p "*) continue ;; esac
+      echo "tolgo $p: $(waydroid shell -- pm uninstall -k --user 0 "$p" 2>&1 | tr -d '\r')" >> "$LOG"
+    done
+    cat "$LOG"
     ;;
   id-google)
     waydroid shell -- sh -c "sqlite3 /data/data/com.google.android.gsf/databases/gservices.db \"select value from main where name = 'android_id';\""
     ;;
-  *) echo "uso: android-attiva VANILLA|GAPPS|id-google" >&2; exit 2 ;;
+  *) echo "uso: android-attiva VANILLA|GAPPS|id-google|pulisci" >&2; exit 2 ;;
 esac
