@@ -150,6 +150,7 @@ try:
         L("collaudo automatico nel sistema acceso")
         esegui_c = lambda c: (tasti("alt-f2"), time.sleep(3), scrivi(c), time.sleep(2), tasti("ret"))
         esegui_c("sofios-prova-store collaudo"); aspetta_serie("### collaudo-fine", 400, "collaudo", 60)
+        esegui_c("sofios-prova-store collaudo-duro"); aspetta_serie("### collaudo-duro-fine", 700, "collaudo-duro", 60)
     except Exception as e:
         L("errore collaudo", repr(e))
     # --- prova vera di SoStore nella ISO: Programmi Windows (Wine) e Android (Waydroid); i risultati escono dalla porta seriale

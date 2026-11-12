@@ -53,5 +53,29 @@ case "$1" in
       b=$(grep -m1 -oE 'branding: *\w+' /etc/calamares/settings.conf | awk '{print $2}'); grep -qiE 'debian|kde' /etc/calamares/branding/$b/branding.desc && F "marchio nel tema dell'installer ($b)"
       journalctl -b -p 3 --no-pager 2>/dev/null | grep -vE 'binder|vdb|ttyS0|drm|firmware|evolution-source-registry' | tail -15 | while read r; do echo "COLLAUDO-LOG-ERRORE: $r"; done
       echo "### collaudo-fine"; } 2>&1 | S ;;
+  collaudo-duro)
+    { echo "### collaudo-duro-inizio"
+      F() { echo "COLLAUDO-FALLITO: $*"; }
+      dpkg --audit 2>&1 | head -5 | while read r; do F "pacchetti a metà: $r"; done
+      sudo apt-get check 2>&1 | grep -qiE 'unmet|broken|E:' && F "dipendenze rotte (apt-get check)"
+      for u in /etc/systemd/system/sofios*.service /usr/lib/systemd/system/sofios*.service; do [ -f "$u" ] && systemd-analyze verify "$u" 2>&1 | grep -v '^$' | head -2 | while read r; do F "unità systemd: $r"; done; done
+      echo "NOTA avvio: $(systemd-analyze 2>&1 | head -1)"
+      for b in sofios-info sofios-note sofios-password sofios-benvenuto sofios-store; do
+        mx=0
+        for i in 1 2 3 4 5 6 7 8; do
+          QT_QPA_PLATFORM=offscreen $b >/dev/null 2>/tmp/e.$$ & pid=$!; sleep 4
+          if kill -0 $pid 2>/dev/null; then r=$(awk '/VmRSS/{print $2}' /proc/$pid/status 2>/dev/null); [ "${r:-0}" -gt "$mx" ] && mx=${r:-0}; kill $pid 2>/dev/null
+          else wait $pid; rc=$?; F "$b: al tentativo $i si è chiuso da solo (codice $rc) $(tail -1 /tmp/e.$$)"; fi
+          wait $pid 2>/dev/null
+        done
+        echo "NOTA memoria $b: ${mx} kB"; [ "$mx" -gt 600000 ] && F "$b usa troppa memoria (${mx} kB)"
+      done
+      # SoStore con cartelle di cache mancanti / rete assente / lingua diversa
+      QT_QPA_PLATFORM=offscreen HOME=/tmp/vuoto timeout 10 sofios-store 2>&1 | grep -E 'Traceback|Error' | head -2 | while read r; do F "SoStore con profilo vuoto: $r"; done
+      QT_QPA_PLATFORM=offscreen LANG=en_US.UTF-8 timeout 10 sofios-info 2>&1 | grep -E 'Traceback|Error' | head -2 | while read r; do F "sofios-info con altra lingua: $r"; done
+      coredumpctl list --no-pager 2>/dev/null | tail -5 | while read r; do echo "$r" | grep -q 'No coredumps' || F "programma andato in crash: $r"; done
+      dmesg 2>/dev/null | grep -iE 'out of memory|oom-kill|segfault|general protection|call trace' | head -5 | while read r; do F "kernel: $r"; done
+      df -h / 2>/dev/null | tail -1 | awk '{gsub("%","",$5); if ($5+0>90) print "COLLAUDO-FALLITO: disco quasi pieno: "$5"%"}'
+      echo "### collaudo-duro-fine"; } 2>&1 | S ;;
   *) echo "uso: sofios-prova-store kernel|windows|windows-log|windows-apri|android-attiva|android-stato|android-avvio" ;;
 esac
