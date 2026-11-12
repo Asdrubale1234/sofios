@@ -692,9 +692,15 @@ class SoStore(QWidget):
                         with open(os.path.join(AND.CACHE, "ultimo.log"), "w", encoding="utf-8") as h:
                             h.write("codice %s\n" % codice); h.write(bytes(p.readAll()).decode("utf-8", "replace"))
                     except Exception: pass
-                    self.in_corso.pop(app["pacchetto"], None); self.leggi_android_installate()
-                    self.stato.setText(("Fatto: «%s»." if app["pacchetto"] in self.android_installate else "«%s» non si è installata.") % app["nome"])
-                    self.aggiorna_tutto()
+                    self.in_corso.pop(app["pacchetto"], None)
+                    self._verifiche = 0
+                    def verifica():
+                        self.leggi_android_installate()
+                        if app["pacchetto"] in self.android_installate or codice != 0 or self._verifiche >= 12:
+                            self.stato.setText(("Fatto: «%s»." if app["pacchetto"] in self.android_installate else "«%s» non si è installata.") % app["nome"])
+                            self.aggiorna_tutto(); return
+                        self._verifiche += 1; QTimer.singleShot(2500, verifica)   # Android impiega qualche secondo a registrare l'app
+                    verifica()
                 p.finished.connect(fine); p.start("waydroid", ["app", "install", f])
             prova()
         r.downloadProgress.connect(lambda a, b: self.stato.setText("Scarico «%s»… %d%%" % (app["nome"], a * 100 // b)) if b > 0 else None)
