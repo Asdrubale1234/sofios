@@ -7,5 +7,15 @@
     <Filename>waydroid.com.android.settings.desktop</Filename>
     <Filename>waydroid.com.android.documentsui.desktop</Filename>
     <Filename>waydroid.com.android.inputmethod.latin.desktop</Filename>
+    <Filename>waydroid.com.android.contacts.desktop</Filename>
+    <Filename>waydroid.org.lineageos.recorder.desktop</Filename>
+    <Filename>waydroid.com.android.gallery3d.desktop</Filename>
+    <Filename>waydroid.org.lineageos.jelly.desktop</Filename>
+    <Filename>waydroid.org.lineageos.eleven.desktop</Filename>
+    <Filename>waydroid.org.lineageos.etar.desktop</Filename>
+    <Filename>waydroid.org.lineageos.aperture.desktop</Filename>
+    <Filename>waydroid.com.android.calculator2.desktop</Filename>
+    <Filename>waydroid.com.android.deskclock.desktop</Filename>
+    <Filename>waydroid.org.lineageos.backgrounds.desktop</Filename>
   </Exclude>
 </Menu>
