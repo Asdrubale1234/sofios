@@ -1,0 +1,20 @@
+name: Collaudo automatico
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * *"
+jobs:
+  collaudo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get install -y shellcheck python3-yaml >/dev/null
+      - run: python3 tools/collaudo.py rapporto.md || true
+      - name: Pubblica il rapporto
+        run: |
+          mkdir /tmp/r && cp rapporto.md /tmp/r/ && cd /tmp/r && git init -q -b collaudo && git add . 
+          git -c user.name=collaudo -c user.email=c@c commit -qm "rapporto $(date -u +%F)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" collaudo

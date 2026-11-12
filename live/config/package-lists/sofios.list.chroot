@@ -72,7 +72,6 @@ firmware-misc-nonfree
 intel-microcode
 amd64-microcode
 os-prober
-ntfs-3g
 openssh-client
 curl
 fonts-inter
@@ -98,4 +97,3 @@ shim-signed
 efibootmgr
 grub-pc-bin
 grub-common
-os-prober
