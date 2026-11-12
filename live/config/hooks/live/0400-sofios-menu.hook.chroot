@@ -34,6 +34,7 @@ rinomina 'org.kde.kdeconnect*.desktop' 'Collega telefono' sofios-telefono
 rinomina 'org.kde.partitionmanager.desktop' 'Dischi' sofios-dischi
 rinomina 'systemsettings.desktop' 'Impostazioni' sofios-impostazioni
 rinomina 'org.kde.systemsettings.desktop' 'Impostazioni' sofios-impostazioni
+nascondi 'kdesystemsettings.desktop'
 rinomina 'firefox-esr.desktop' 'Browser' sofios-browser
 rinomina 'libreoffice-writer.desktop' 'Scrittura' sofios-scrittura
 rinomina 'libreoffice-calc.desktop' 'Fogli' sofios-fogli
