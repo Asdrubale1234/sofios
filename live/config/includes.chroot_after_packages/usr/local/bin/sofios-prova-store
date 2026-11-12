@@ -28,5 +28,29 @@ case "$1" in
   android-lingua)
     { echo "### android-lingua"; waydroid prop set persist.sys.language it; waydroid prop set persist.sys.country IT; waydroid prop set persist.sys.locale it-IT
       waydroid session stop; sleep 5; waydroid session start & sleep 40; waydroid show-full-ui; } 2>&1 | S ;;
+  collaudo)
+    { echo "### collaudo-inizio"
+      F() { echo "COLLAUDO-FALLITO: $*"; }
+      for u in $(systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}'); do F "servizio in errore: $u"; done
+      for d in /usr/share/applications/*.desktop; do
+        grep -q '^NoDisplay=true' "$d" && continue
+        n=$(grep -m1 '^Name=' "$d" | cut -d= -f2-); e=$(grep -m1 '^Exec=' "$d" | cut -d= -f2- | awk '{print $1}')
+        [ -n "$e" ] && ! command -v "$e" >/dev/null 2>&1 && [ ! -x "$e" ] && F "voce di menu '$n' ($(basename $d)): il comando '$e' non esiste"
+        echo "$n" | grep -qiE 'debian|kde|plasma|wine|waydroid|calamares|kubuntu' && F "marchio visibile nel menu: '$n' ($(basename $d))"
+      done
+      for b in sofios-info sofios-note sofios-password sofios-benvenuto sofios-aggiorna-finestra sofios-store; do
+        out=$(QT_QPA_PLATFORM=offscreen timeout 12 $b 2>&1 >/dev/null); rc=$?
+        echo "$out" | grep -qE 'Traceback|Error|ModuleNotFound' && F "$b: errore all'avvio: $(echo "$out" | grep -E 'Error|Traceback' | head -2 | tr '\n' ' ')"
+        [ $rc -ne 0 ] && [ $rc -ne 124 ] && F "$b: si è chiuso da solo con codice $rc"
+      done
+      fc-list | grep -qi 'Inter' || F "font Inter non installato"
+      locale 2>/dev/null | grep -q 'LANG=it' || F "lingua di sistema non italiana: $(locale | head -1)"
+      [ "$(cat /etc/hostname)" = "sofios" ] || echo "NOTA hostname: $(cat /etc/hostname)"
+      grep -qi debian /etc/os-release && grep -iE '^(NAME|PRETTY_NAME)=.*debian' /etc/os-release | while read r; do F "os-release mostra Debian: $r"; done
+      command -v snapper >/dev/null || F "snapper non presente"
+      command -v ufw >/dev/null && { ufw status 2>/dev/null | grep -q active || echo "NOTA firewall non attivo nella prova"; }
+      for c in /etc/calamares/branding/*/branding.desc; do grep -qiE 'debian|kde' "$c" && F "marchio in $c"; done
+      journalctl -b -p 3 --no-pager 2>/dev/null | grep -vE 'binder|vdb|ttyS0|drm|firmware' | tail -15 | while read r; do echo "COLLAUDO-LOG-ERRORE: $r"; done
+      echo "### collaudo-fine"; } 2>&1 | S ;;
   *) echo "uso: sofios-prova-store kernel|windows|windows-log|windows-apri|android-attiva|android-stato|android-avvio" ;;
 esac
