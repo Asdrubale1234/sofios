@@ -33,7 +33,8 @@ case "$1" in
       F() { echo "COLLAUDO-FALLITO: $*"; }
       for u in $(systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}'); do F "servizio in errore: $u"; done
       for d in /usr/share/applications/*.desktop; do
-        grep -q '^NoDisplay=true' "$d" && continue
+        [ -f /usr/local/share/applications/$(basename $d) ] && d=/usr/local/share/applications/$(basename $d)
+        grep -qE '^(NoDisplay|Hidden)=true' "$d" && continue
         n=$(grep -m1 '^Name=' "$d" | cut -d= -f2-); e=$(grep -m1 '^Exec=' "$d" | cut -d= -f2- | awk '{print $1}')
         [ -n "$e" ] && ! command -v "$e" >/dev/null 2>&1 && [ ! -x "$e" ] && F "voce di menu '$n' ($(basename $d)): il comando '$e' non esiste"
         echo "$n" | grep -qiE 'debian|kde|plasma|wine|waydroid|calamares|kubuntu' && F "marchio visibile nel menu: '$n' ($(basename $d))"
@@ -49,8 +50,8 @@ case "$1" in
       grep -qi debian /etc/os-release && grep -iE '^(NAME|PRETTY_NAME)=.*debian' /etc/os-release | while read r; do F "os-release mostra Debian: $r"; done
       command -v snapper >/dev/null || F "snapper non presente"
       command -v ufw >/dev/null && { ufw status 2>/dev/null | grep -q active || echo "NOTA firewall non attivo nella prova"; }
-      for c in /etc/calamares/branding/*/branding.desc; do grep -qiE 'debian|kde' "$c" && F "marchio in $c"; done
-      journalctl -b -p 3 --no-pager 2>/dev/null | grep -vE 'binder|vdb|ttyS0|drm|firmware' | tail -15 | while read r; do echo "COLLAUDO-LOG-ERRORE: $r"; done
+      b=$(grep -m1 -oE 'branding: *\w+' /etc/calamares/settings.conf | awk '{print $2}'); grep -qiE 'debian|kde' /etc/calamares/branding/$b/branding.desc && F "marchio nel tema dell'installer ($b)"
+      journalctl -b -p 3 --no-pager 2>/dev/null | grep -vE 'binder|vdb|ttyS0|drm|firmware|evolution-source-registry' | tail -15 | while read r; do echo "COLLAUDO-LOG-ERRORE: $r"; done
       echo "### collaudo-fine"; } 2>&1 | S ;;
   *) echo "uso: sofios-prova-store kernel|windows|windows-log|windows-apri|android-attiva|android-stato|android-avvio" ;;
 esac
