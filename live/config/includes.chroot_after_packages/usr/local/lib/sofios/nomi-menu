@@ -18,6 +18,7 @@ import xml.etree.ElementTree as ET
 ANDROID = "sofios-android.directory"
 WINDOWS = "sofios-windows.directory"
 NOSTRO = "zz-sofios-nomi.menu"
+AVVIO_WAYDROID = ("Waydroid.desktop", "waydroid.desktop", "id.waydro.waydroid.desktop", "waydroid.waydroid.desktop")
 DIRECTORY_SOFIOS = "/usr/share/desktop-directories"
 DIRECTORY_LOCALI = "/usr/local/share/desktop-directories"
 INTESTAZIONE = ('<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"\n'
@@ -63,9 +64,11 @@ def scrivi_se_cambia(f, testo):
 def menu_nomi(android, programmi_windows):
     righe = [INTESTAZIONE, "<Menu>\n  <Name>Applications</Name>\n"]
     for n in android:
-        if os.path.exists(os.path.join(DIRECTORY_LOCALI, n[1] or "-")): continue   # rinominata dal file in /usr/local
         n = n[0]
-        righe.append("  <Menu>\n    <Name>%s</Name>\n    <Directory>%s</Directory>\n  </Menu>\n" % (esc(n), ANDROID))
+        # dentro la cartella stessa: un <Exclude> nel menu principale non vale per le sottocartelle
+        righe.append("  <Menu>\n    <Name>%s</Name>\n    <Directory>%s</Directory>\n" % (esc(n), ANDROID)
+                     + "    <Exclude>\n" + "".join("      <Filename>%s</Filename>\n" % x for x in AVVIO_WAYDROID)
+                     + "    </Exclude>\n  </Menu>\n")
     if programmi_windows:
         righe.append("  <Menu>\n    <Name>wine-wine</Name>\n    <Directory>%s</Directory>\n    <Include>\n" % WINDOWS)
         for p in programmi_windows:
@@ -108,7 +111,8 @@ def nascondi_avvio_waydroid():
             continue
         exe = " ".join(r[5:] for r in righe if r.startswith("Exec=")).lower()
         if "waydroid" not in exe or "app launch" in exe: continue
-        if not any(k in exe for k in ("first-launch", "show-full-ui", "session start")): continue
+        nome = [r[5:].strip() for r in righe if r.startswith("Name=")]
+        if not (any(k in exe for k in ("first-launch", "show-full-ui", "session start")) or nome[:1] == ["Waydroid"]): continue
         if any(r.strip() == "NoDisplay=true" for r in righe): continue
         nuove, fatto = [], False
         for r in righe:

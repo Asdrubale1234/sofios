@@ -190,6 +190,7 @@ try:
         L("errore prova Android", repr(e))
     try:
         L("schermata: menu")
+        serie("menu-diag")
         tasti("meta_l"); time.sleep(4); foto("menu-applicazioni")
         clic(60, 203); time.sleep(3); foto("menu-aiuto")          # categoria "Aiuto": cosa contiene?
         tasti("esc"); time.sleep(2)
