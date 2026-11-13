@@ -95,10 +95,39 @@ def sistema():
         os.remove(f)
 
 
+def nascondi_avvio_waydroid():
+    """Waydroid scrive da se' (anche piu' tardi, quando parte la sessione) una voce "Waydroid" che apre lo
+    schermo intero di Android: in SofiOS Android si apre da SoStore, quindi la voce resta ma non si vede.
+    Si riconosce dal comando, non dal nome del file (cambia tra le versioni di Waydroid). True se ha cambiato."""
+    dati = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+    cambiato = False
+    for f in glob.glob(os.path.join(dati, "applications", "*.desktop")):
+        try:
+            righe = open(f, encoding="utf-8").read().splitlines()
+        except OSError:
+            continue
+        exe = " ".join(r[5:] for r in righe if r.startswith("Exec=")).lower()
+        if "waydroid" not in exe or "app launch" in exe: continue
+        if not any(k in exe for k in ("first-launch", "show-full-ui", "session start")): continue
+        if any(r.strip() == "NoDisplay=true" for r in righe): continue
+        nuove, fatto = [], False
+        for r in righe:
+            if r.startswith("NoDisplay="): continue
+            nuove.append(r)
+            if r.strip() == "[Desktop Entry]" and not fatto:
+                nuove.append("NoDisplay=true"); fatto = True
+        if fatto:
+            cambiato = scrivi_se_cambia(f, "\n".join(nuove) + "\n") or cambiato
+    return cambiato
+
+
 def utente():
     cfg = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
     cartella = os.path.join(cfg, "menus", "applications-merged")
-    if not os.path.isdir(cartella): return
+    nascosta = nascondi_avvio_waydroid()
+    if not os.path.isdir(cartella):
+        if nascosta: aggiorna_menu()
+        return
     # Wine: ogni programma ha il suo file wine-*.menu con la struttura Wine > Programs > ...
     # Si raccolgono tutti i programmi e si rifanno i file di Wine con una sola cartella piatta.
     programmi = []
@@ -123,12 +152,16 @@ def utente():
     android = cartelle_android(cartella)
     testo = menu_nomi(android, programmi)
     cambiato = scrivi_se_cambia(f, testo) if "<Directory>" in testo else False
-    if cambiato:
-        for c in ("kbuildsycoca6", "kbuildsycoca5"):
-            try:
-                subprocess.run([c], capture_output=True, timeout=60); break
-            except Exception:
-                continue
+    if cambiato or nascosta:
+        aggiorna_menu()
+
+
+def aggiorna_menu():
+    for c in ("kbuildsycoca6", "kbuildsycoca5"):
+        try:
+            subprocess.run([c], capture_output=True, timeout=60); break
+        except Exception:
+            continue
 
 
 def programma_esiste(id_voce):

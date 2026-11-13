@@ -4,6 +4,7 @@ Description=SofiOS: segue i cambiamenti del menu fatti da Wine e Waydroid
 [Path]
 PathChanged=%h/.config/menus/applications-merged
 PathChanged=%h/.local/share/applications/wine/Programs
+PathChanged=%h/.local/share/applications
 Unit=sofios-nomi-menu.service
 
 [Install]
