@@ -15,6 +15,9 @@ alto.hiding = "none";
 var menu = alto.addWidget("org.kde.plasma.kickoff");
 menu.currentConfigGroup = ["General"];
 menu.writeConfig("icon", "sofios-logo");
+// Preferiti del menu: i programmi di SofiOS (quelli predefiniti di KDE includevano Discover e Kontact)
+menu.writeConfig("favorites", ["preferred://browser", "org.kde.dolphin.desktop", "libreoffice-writer.desktop", "sofios-store.desktop", "sofios-note.desktop", "systemsettings.desktop"]);
+menu.writeConfig("favoritesPortedToKAstats", false);
 alto.addWidget("org.kde.plasma.panelspacer");
 alto.addWidget("org.kde.plasma.systemtray");
 alto.addWidget("org.kde.plasma.digitalclock");

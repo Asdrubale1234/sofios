@@ -1,0 +1,6 @@
+[Unit]
+Description=SofiOS: nomi del menu per le app Android e i programmi Windows
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/sofios/nomi-menu utente

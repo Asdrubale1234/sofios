@@ -13,21 +13,25 @@ case "$1" in
     wine "$HOME/.wine/drive_c/Program Files/Notepad++/notepad++.exe" ;;
   android-attiva)
     # nella prova la memoria e' poca: Android va sul disco virtuale
-    { sudo mkfs.ext4 -q -F /dev/vdb && sudo mkdir -p /var/lib/waydroid && sudo mount /dev/vdb /var/lib/waydroid && df -h /var/lib/waydroid; } 2>&1 | S
+    # sia la parte di sistema (/var/lib/waydroid) sia i dati di Android dell'utente (~/.local/share/waydroid: app installate)
+    { sudo mkfs.ext4 -q -F /dev/vdb && sudo mkdir -p /mnt/prova && sudo mount /dev/vdb /mnt/prova \
+        && sudo mkdir -p /mnt/prova/sistema /mnt/prova/utente /var/lib/waydroid ~/.local/share/waydroid && sudo chown "$(id -u):$(id -g)" /mnt/prova/utente \
+        && sudo mount --bind /mnt/prova/sistema /var/lib/waydroid && sudo mount --bind /mnt/prova/utente ~/.local/share/waydroid \
+        && df -h /var/lib/waydroid ~/.local/share/waydroid; } 2>&1 | S
     sudo /usr/local/lib/sofios/android-attiva VANILLA 2>&1 | S ;;
   android-stato)
     { echo "### android-stato"; waydroid status; systemctl is-active waydroid-container; journalctl -u waydroid-container --no-pager | tail -20; lsmod | grep -i binder; ls -l /dev/binder* /dev/binderfs 2>&1; dmesg 2>&1 | grep -i -E "binder|waydroid|lxc" | tail -10; } 2>&1 | S ;;
   android-avvio)
-    waydroid session start & sleep 40; waydroid show-full-ui ;;
+    waydroid session start & sleep 40; waydroid app launch com.android.settings ;;
   android-app)
     echo "### android-app" | S; SOFIOS_FOTO=/tmp/and.png SOFIOS_ANDROID_FOTO=1 SOFIOS_ANDROID_INSTALLA=app.organicmaps sofios-store 2>&1 | S ;;
   android-lista)
-    { echo "### android-lista"; waydroid app list; echo "--- pulizia:"; cat /var/log/sofios-android-pulizia.log 2>&1; echo "--- cartelle di menu:"; ls -R ~/.config/menus ~/.local/share/desktop-directories 2>&1 | head -30; cat ~/.config/menus/applications-merged/*.menu 2>/dev/null | head -30; grep -H -E "^(Name|Categories|Exec)=" ~/.local/share/applications/*.desktop ~/.local/share/applications/wine/Programs/*.desktop 2>/dev/null | head -20; echo "--- windows menu:"; ls -R ~/.local/share/applications 2>&1 | head -40; ls -la ~/.cache/sofios-store/android/apk 2>&1; echo "--- registro installazione:"; cat ~/.cache/sofios-store/android/ultimo.log 2>&1; echo "--- pacchetti android:"; sudo waydroid shell -- pm list packages 2>&1 | grep -i -E "organic|vending" ; echo "--- spazio android:"; sudo waydroid shell -- df -h /data 2>&1 | tail -3; echo "--- installa a mano:"; waydroid app install ~/.cache/sofios-store/android/apk/app.organicmaps.apk 2>&1 | tail -5; sleep 10; sudo waydroid shell -- pm list packages 2>&1 | grep -i organic; echo "--- logcat:"; sudo waydroid shell -- logcat -d 2>&1 | grep -i -E "PackageInstaller|INSTALL_FAILED|insufficient|DeviceStorage|app.organicmaps" | tail -15; echo "--- app list ora:"; waydroid app list 2>&1 | grep -i -E "Name|packageName" | head -8; } 2>&1 | S ;;
+    { echo "### android-lista"; waydroid app list; echo "--- pulizia:"; cat /var/log/sofios-android-pulizia.log 2>&1; echo "--- cartelle di menu:"; ls -R ~/.config/menus ~/.local/share/desktop-directories 2>&1 | head -30; cat ~/.config/menus/applications-merged/*.menu 2>/dev/null | head -30; grep -H -E "^(Name|Categories|Exec)=" ~/.local/share/applications/*.desktop ~/.local/share/applications/wine/Programs/*.desktop 2>/dev/null | head -20; echo "--- windows menu:"; ls -R ~/.local/share/applications 2>&1 | head -40; ls -la ~/.cache/sofios-store/android/apk 2>&1; echo "--- registro installazione:"; cat ~/.cache/sofios-store/android/ultimo.log 2>&1; echo "--- pacchetti android:"; sudo waydroid shell -- pm list packages 2>&1 | grep -i -E "organic|vending" ; echo "--- spazio android:"; sudo waydroid shell -- df -h /data 2>&1 | tail -3; echo "--- menu uniti:"; ls /etc/xdg/menus/applications-merged/ ~/.config/menus/applications-merged/ /usr/local/share/desktop-directories/ 2>&1; cat /etc/xdg/menus/applications-merged/zz-sofios-nomi.menu ~/.config/menus/applications-merged/zz-sofios-nomi.menu 2>&1; systemctl --user status sofios-nomi-menu.path --no-pager 2>&1 | head -4; echo "--- installa a mano:"; waydroid app install ~/.cache/sofios-store/android/apk/app.organicmaps.apk 2>&1 | tail -5; sleep 10; sudo waydroid shell -- pm list packages 2>&1 | grep -i organic; echo "--- logcat:"; sudo waydroid shell -- logcat -d 2>&1 | grep -i -E "PackageInstaller|INSTALL_FAILED|insufficient|DeviceStorage|app.organicmaps" | tail -15; echo "--- app list ora:"; waydroid app list 2>&1 | grep -i -E "Name|packageName" | head -8; } 2>&1 | S ;;
   android-apri)
     waydroid app launch app.organicmaps ;;
   android-lingua)
     { echo "### android-lingua"; waydroid prop set persist.sys.language it; waydroid prop set persist.sys.country IT; waydroid prop set persist.sys.locale it-IT
-      waydroid session stop; sleep 5; waydroid session start & sleep 40; waydroid show-full-ui; } 2>&1 | S ;;
+      waydroid session stop; sleep 5; waydroid session start & sleep 40; waydroid app launch com.android.settings; } 2>&1 | S ;;
   collaudo)
     { echo "### collaudo-inizio"
       F() { echo "COLLAUDO-FALLITO: $*"; }

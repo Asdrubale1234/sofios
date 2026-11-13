@@ -185,6 +185,7 @@ try:
         aspetta(60, "android-app-aperta", 20)
         esegui("sofios-prova-store android-lingua")
         aspetta(150, "android-lingua", 25)
+        tasti("alt-f4"); time.sleep(3)        # chiude la finestra delle impostazioni di Android
     except Exception as e:
         L("errore prova Android", repr(e))
     try:

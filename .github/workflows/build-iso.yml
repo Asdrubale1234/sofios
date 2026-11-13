@@ -39,7 +39,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="iso-$(date +%Y%m%d-%H%M)"
-          gh release create "$TAG" out/sofios.iso.part* out/sha256.txt \
+          gh release create "$TAG" out/sofios.iso.part* out/sha256.txt --target "$GITHUB_SHA" \
             --title "SofiOS ISO $TAG" \
             --notes "Per riunire le parti: su Mac/Linux  cat sofios.iso.part* > sofios.iso   |   su Windows (Prompt dei comandi)  copy /b sofios.iso.part00+sofios.iso.part01+sofios.iso.part02 sofios.iso  (aggiungi le parti che vedi). Poi controlla il codice con sha256.txt."
 

@@ -1,0 +1,149 @@
+#!/usr/bin/python3
+"""SofiOS: nel menu le cartelle tecniche "Waydroid" e "Wine" diventano "App Android" e "Programmi Windows".
+
+Waydroid e Wine creano da soli le loro cartelle del menu (file .menu "uniti" al menu principale):
+  - Waydroid: una cartella di sistema per le app Android (categoria X-WayDroid-App)
+  - Wine: per ogni programma, una cartella "Wine" con dentro "Programs" e poi il programma
+Questo script non tocca i loro file di sistema: scrive un file in piu' (zz-sofios-nomi.menu) che da'
+alle stesse cartelle il nome e l'icona di SofiOS (nel menu vale l'ultima <Directory> letta), e per Wine
+rende piatta la cartella: tutti i programmi Windows stanno direttamente in "Programmi Windows".
+
+  nomi-menu sistema   (root)    dopo l'installazione o l'aggiornamento dei pacchetti
+  nomi-menu utente    (utente)  quando Wine o Waydroid cambiano il menu dell'utente
+Non deve mai fallire in modo visibile: in caso di problemi esce senza fare nulla.
+"""
+import glob, os, subprocess, sys
+import xml.etree.ElementTree as ET
+
+ANDROID = "sofios-android.directory"
+WINDOWS = "sofios-windows.directory"
+NOSTRO = "zz-sofios-nomi.menu"
+DIRECTORY_SOFIOS = "/usr/share/desktop-directories"
+DIRECTORY_LOCALI = "/usr/local/share/desktop-directories"
+INTESTAZIONE = ('<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"\n'
+                ' "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">\n')
+
+
+def leggi(f):
+    try:
+        return ET.parse(f).getroot()
+    except Exception:
+        return None
+
+
+def cartelle_android(cartella):
+    """Cartelle di menu che raccolgono le app Android (categoria X-WayDroid-App): [(nome, file .directory)]"""
+    nomi = set()
+    for f in sorted(glob.glob(os.path.join(cartella, "*.menu"))):
+        if os.path.basename(f) == NOSTRO: continue
+        r = leggi(f)
+        if r is None: continue
+        for m in r.iter("Menu"):
+            n = m.find("Name")
+            if n is None or not n.text or n.text == "Applications": continue
+            cat = [c.text or "" for c in m.iter("Category")]
+            if any("waydroid" in c.lower() for c in cat) or "waydroid" in n.text.lower():
+                d = m.find("Directory")
+                nomi.add((n.text.strip(), (d.text or "").strip() if d is not None else ""))
+    return sorted(nomi)
+
+
+def scrivi_se_cambia(f, testo):
+    try:
+        if open(f, encoding="utf-8").read() == testo: return False
+    except OSError:
+        pass
+    os.makedirs(os.path.dirname(f), exist_ok=True)
+    tmp = f + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as h: h.write(testo)
+    os.replace(tmp, f)
+    return True
+
+
+def menu_nomi(android, programmi_windows):
+    righe = [INTESTAZIONE, "<Menu>\n  <Name>Applications</Name>\n"]
+    for n in android:
+        if os.path.exists(os.path.join(DIRECTORY_LOCALI, n[1] or "-")): continue   # rinominata dal file in /usr/local
+        n = n[0]
+        righe.append("  <Menu>\n    <Name>%s</Name>\n    <Directory>%s</Directory>\n  </Menu>\n" % (esc(n), ANDROID))
+    if programmi_windows:
+        righe.append("  <Menu>\n    <Name>wine-wine</Name>\n    <Directory>%s</Directory>\n    <Include>\n" % WINDOWS)
+        for p in programmi_windows:
+            righe.append("      <Filename>%s</Filename>\n" % esc(p))
+        righe.append("    </Include>\n  </Menu>\n")
+    righe.append("</Menu>\n")
+    return "".join(righe)
+
+
+def esc(t):
+    return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def sistema():
+    cartella = "/etc/xdg/menus/applications-merged"
+    android = cartelle_android(cartella)
+    # se la cartella di Waydroid usa un suo file .directory, se ne mette uno con lo stesso nome in /usr/local/share
+    # (viene letto prima di /usr/share): il nome cambia senza toccare i file del pacchetto
+    for _, d in android:
+        if d and d != ANDROID:
+            scrivi_se_cambia(os.path.join(DIRECTORY_LOCALI, d), open(os.path.join(DIRECTORY_SOFIOS, ANDROID), encoding="utf-8").read())
+    f = os.path.join(cartella, NOSTRO)
+    testo = menu_nomi(android, [])
+    if "<Directory>" in testo:
+        scrivi_se_cambia(f, testo)
+    elif os.path.exists(f):
+        os.remove(f)
+
+
+def utente():
+    cfg = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+    cartella = os.path.join(cfg, "menus", "applications-merged")
+    if not os.path.isdir(cartella): return
+    # Wine: ogni programma ha il suo file wine-*.menu con la struttura Wine > Programs > ...
+    # Si raccolgono tutti i programmi e si rifanno i file di Wine con una sola cartella piatta.
+    programmi = []
+    for f in sorted(glob.glob(os.path.join(cartella, "wine-*.menu"))):
+        r = leggi(f)
+        if r is None: continue
+        for fn in r.iter("Filename"):
+            t = (fn.text or "").strip()
+            if not t: continue
+            if "uninstall" in t.lower() or "disinstalla" in t.lower(): continue
+            if t not in programmi: programmi.append(t)
+        # il file di Wine resta, ma senza sottocartelle: il contenuto lo mette il nostro file
+        if r.find("Menu") is not None:
+            scrivi_se_cambia(f, INTESTAZIONE + "<Menu>\n  <Name>Applications</Name>\n</Menu>\n")
+    # i programmi gia' raccolti in passato restano (Wine riscrive solo il file del programma appena installato)
+    f = os.path.join(cartella, NOSTRO)
+    r = leggi(f) if os.path.exists(f) else None
+    if r is not None:
+        for fn in r.iter("Filename"):
+            t = (fn.text or "").strip()
+            if t and t not in programmi and programma_esiste(t): programmi.append(t)
+    android = cartelle_android(cartella)
+    testo = menu_nomi(android, programmi)
+    cambiato = scrivi_se_cambia(f, testo) if "<Directory>" in testo else False
+    if cambiato:
+        for c in ("kbuildsycoca6", "kbuildsycoca5"):
+            try:
+                subprocess.run([c], capture_output=True, timeout=60); break
+            except Exception:
+                continue
+
+
+def programma_esiste(id_voce):
+    """Il programma c'e' ancora? L'id di una voce e' il suo percorso dentro applications con "-" al posto di "/"
+    (wine/Programs/Notepad++.desktop -> wine-Programs-Notepad++.desktop)."""
+    dati = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+    base = os.path.join(dati, "applications")
+    for f in glob.glob(os.path.join(base, "wine", "**", "*.desktop"), recursive=True):
+        if os.path.relpath(f, base).replace(os.sep, "-") == id_voce: return True
+    return False
+
+
+if __name__ == "__main__":
+    try:
+        (sistema if (sys.argv[1:] or ["utente"])[0] == "sistema" else utente)()
+    except Exception as e:
+        print("nomi-menu:", e, file=sys.stderr)
+    sys.exit(0)

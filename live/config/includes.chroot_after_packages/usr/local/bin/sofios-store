@@ -580,7 +580,9 @@ class SoStore(QWidget):
             v.addStretch(); return
         # pronto
         r = QHBoxLayout()
-        b = QPushButton("Apri Android"); b.setObjectName("secondario"); b.clicked.connect(lambda: QProcess.startDetached("waydroid", ["show-full-ui"])); r.addWidget(b)
+        # le app Android si aprono come finestre normali: "Apri Android" porta alle impostazioni di Android
+        # (lo schermo intero di Android resterebbe vuoto, senza icone, sopra il desktop)
+        b = QPushButton("Impostazioni di Android"); b.setObjectName("secondario"); b.clicked.connect(lambda: QProcess.startDetached("waydroid", ["app", "launch", "com.android.settings"])); r.addWidget(b)
         if tipo == "GAPPS":
             g = QPushButton("Apri Google Play"); g.setObjectName("azione"); g.clicked.connect(lambda: QProcess.startDetached("waydroid", ["app", "launch", "com.android.vending"])); r.addWidget(g)
             c = QPushButton("Registra il computer su Google"); c.setObjectName("secondario"); c.clicked.connect(self.registra_google); r.addWidget(c)
@@ -678,6 +680,9 @@ class SoStore(QWidget):
             if not ok: errore("Non riesco a scaricare «%s»." % app["nome"]); return
             if AND.sha256_file(f) != app["sha256"]:
                 os.remove(f); errore("«%s» scartata: il file non corrisponde al catalogo." % app["nome"]); return
+            ok, libero, serve = AND.spazio_per_app(os.path.getsize(f))
+            if not ok:
+                errore(self.testo_spazio(app["nome"], libero, serve)); return
             self.stato.setText("Installo «%s» in Android…" % app["nome"])
             if not AND.sessione_attiva():
                 QProcess.startDetached("waydroid", ["session", "start"])
@@ -697,7 +702,11 @@ class SoStore(QWidget):
                     def verifica():
                         self.leggi_android_installate()
                         if app["pacchetto"] in self.android_installate or codice != 0 or self._verifiche >= 12:
-                            self.stato.setText(("Fatto: «%s»." if app["pacchetto"] in self.android_installate else "«%s» non si è installata.") % app["nome"])
+                            if app["pacchetto"] in self.android_installate: msg = "Fatto: «%s»." % app["nome"]
+                            else:
+                                ok, libero, serve = AND.spazio_per_app(os.path.getsize(f) if os.path.exists(f) else 0)
+                                msg = self.testo_spazio(app["nome"], libero, serve) if not ok else "«%s» non si è installata." % app["nome"]
+                            self.stato.setText(msg)
                             self.aggiorna_tutto(); return
                         self._verifiche += 1; QTimer.singleShot(2500, verifica)   # Android impiega qualche secondo a registrare l'app
                     verifica()
@@ -705,6 +714,12 @@ class SoStore(QWidget):
             prova()
         r.downloadProgress.connect(lambda a, b: self.stato.setText("Scarico «%s»… %d%%" % (app["nome"], a * 100 // b)) if b > 0 else None)
         r.finished.connect(scaricata)
+
+    def testo_spazio(self, nome, libero, serve):
+        t = "Non c'è abbastanza spazio in Android per «%s»: servono %d MB liberi, ce ne sono %d." % (nome, serve, libero)
+        if AND.in_prova():
+            t += " Stai provando SofiOS dalla chiavetta, dove lo spazio è poco: installa SofiOS per usare le app Android."
+        return t
 
     def registra_google(self):
         try:

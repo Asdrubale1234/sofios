@@ -2,6 +2,7 @@
 # Dopo ogni installazione/aggiornamento di pacchetti: rimette i nomi SofiOS che un aggiornamento puo' aver riportato
 # all'originale (traduzioni dei programmi, voci del menu di avvio). Non deve MAI far fallire apt.
 python3 /usr/local/lib/sofios/traduzioni.py >/dev/null 2>&1 || true
+/usr/local/lib/sofios/nomi-menu sistema >/dev/null 2>&1 || true
 rm -rf /usr/share/plasma/look-and-feel/org.debian.desktop 2>/dev/null || true
 if [ -f /etc/grub.d/10_linux ] && grep -q 'OS="${GRUB_DISTRIBUTOR} GNU/Linux"' /etc/grub.d/10_linux 2>/dev/null; then
   sed -i 's|OS="${GRUB_DISTRIBUTOR} GNU/Linux"|OS="${GRUB_DISTRIBUTOR}"|' /etc/grub.d/10_linux 2>/dev/null || true

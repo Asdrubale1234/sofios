@@ -81,6 +81,10 @@ nascondi 'system-config-printer.desktop'
 # tema "Debian" (dal pacchetto desktop-base) fuori dall'elenco dei temi
 rm -rf /usr/share/plasma/look-and-feel/org.debian.desktop
 printf '[Icons]\nTheme=SofiOS\n' >> /etc/xdg/kdeglobals
+# cartelle del menu create da Waydroid e Wine: "App Android" e "Programmi Windows"
+echo "menu uniti di sistema:"; ls -la /etc/xdg/menus/applications-merged/ 2>&1; grep -l -i waydroid /etc/xdg/menus/applications-merged/*.menu 2>/dev/null | xargs -r cat
+/usr/local/lib/sofios/nomi-menu sistema || true
+ls -la /usr/local/share/desktop-directories/ 2>/dev/null; cat /etc/xdg/menus/applications-merged/zz-sofios-nomi.menu 2>/dev/null
 gtk-update-icon-cache -f /usr/share/icons/hicolor 2>/dev/null || true
 update-desktop-database "$O" 2>/dev/null || true
 exit 0

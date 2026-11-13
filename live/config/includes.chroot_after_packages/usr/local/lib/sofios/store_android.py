@@ -112,3 +112,26 @@ def sessione_attiva():
         return "RUNNING" in r.stdout.upper()
     except Exception:
         return False
+
+def cartella_dati():
+    """Dove Android tiene app e dati (la sua /data): ~/.local/share/waydroid/data"""
+    d = os.path.join(os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share"), "waydroid", "data")
+    while not os.path.isdir(d) and d != "/": d = os.path.dirname(d)
+    return d
+
+def in_prova():
+    """SofiOS avviato dalla chiavetta senza installarlo (tutto sta in memoria: lo spazio e' poco)"""
+    try: return "boot=live" in open("/proc/cmdline").read()
+    except OSError: return False
+
+def spazio_per_app(dimensione_apk):
+    """(c'e' spazio?, MB liberi, MB necessari). Android rifiuta l'installazione se dopo l'app restano meno
+    del 5% del suo spazio (al massimo 500 MB); l'app occupa circa il doppio del file scaricato."""
+    try:
+        st = os.statvfs(cartella_dati())
+    except OSError:
+        return True, 0, 0
+    libero = st.f_bavail * st.f_frsize; totale = st.f_blocks * st.f_frsize
+    serve = 2 * dimensione_apk + min(totale * 5 // 100, 500 << 20) + (50 << 20)
+    return libero >= serve, libero >> 20, serve >> 20
+
