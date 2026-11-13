@@ -53,6 +53,7 @@ case "$1" in
     # in italiano, e con la tastiera del computer (niente tastiera a schermo di Android)
     waydroid prop set persist.waydroid.multi_windows true >> "$LOG" 2>&1
     waydroid prop set persist.sys.language it >> "$LOG" 2>&1; waydroid prop set persist.sys.country IT >> "$LOG" 2>&1; waydroid prop set persist.sys.locale it-IT >> "$LOG" 2>&1
+    waydroid shell -- settings put system system_locales it-IT >> "$LOG" 2>&1
     waydroid shell -- settings put secure show_ime_with_hard_keyboard 0 >> "$LOG" 2>&1
     echo "tastiera a schermo: $(waydroid shell -- settings get secure show_ime_with_hard_keyboard 2>&1 | tr -d '\r')" >> "$LOG"
     # riavvio della sessione perche' le impostazioni valgano subito
