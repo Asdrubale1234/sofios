@@ -165,7 +165,7 @@ try:
         aspetta(780, "win-installazione", 30)
         serie("windows-log")
         esegui("sofios-prova-store windows-apri")
-        aspetta(60, "win-aperto", 15)
+        aspetta(150, "win-aperto", 30)
         tasti("alt-f4"); time.sleep(3)
         esegui("pkill -f notepad"); time.sleep(3)
     except Exception as e:
