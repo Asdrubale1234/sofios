@@ -57,6 +57,10 @@ for f in $(grep -l -E '^Exec=.*waydroid +(first-launch|show-full-ui|session star
   echo "nascondo l'avvio di Waydroid: $f"; nascondi "$(basename "$f")"
 done
 mkdir -p /usr/share/sofios/nascosti
+# la voce "Waydroid" (schermo intero di Android) restava nel menu anche nascosta ed esclusa: messa da parte del tutto
+for f in /usr/share/applications/Waydroid.desktop /usr/share/applications/waydroid.desktop; do
+  [ -f "$f" ] && dpkg-divert --local --rename --divert "/usr/share/sofios/nascosti/$(basename "$f")" --add "$f" || true
+done
 # il menu di KDE lo metteva comunque tra i Preferiti (il file nascosto non basta): messo da parte del tutto
 for f in /usr/share/applications/org.kde.discover.desktop; do
   [ -f "$f" ] && dpkg-divert --local --rename --divert /usr/share/sofios/nascosti/org.kde.discover.desktop --add "$f" || true
