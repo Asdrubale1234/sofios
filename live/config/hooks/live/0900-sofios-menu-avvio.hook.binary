@@ -2,10 +2,12 @@
 # Menu di avvio della chiavetta: SofiOS al posto di Debian (gira nella cartella di costruzione).
 # Lo sfondo (logo) e il tema di GRUB arrivano da config/bootloaders; qui si sistemano i testi.
 # Ogni file toccato e il contenuto finale delle voci finiscono nel registro di costruzione.
-[ -d binary ] || exit 0
+# live-build esegue gli hook "binary" dentro la cartella binary: si lavora da li' (o da sopra, se si parte da li')
+if [ -d binary/boot ] || [ -d binary/isolinux ]; then cd binary; fi
+pwd; ls
 echo "== SofiOS menu avvio: file nel menu =="
-find binary/boot binary/isolinux binary/EFI -type f 2>/dev/null | sort
-find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*.txt' \) 2>/dev/null | while read -r f; do
+find boot isolinux EFI -type f 2>/dev/null | sort
+find boot isolinux EFI -type f \( -name '*.cfg' -o -name '*.txt' \) 2>/dev/null | while read -r f; do
   cp "$f" "$f.sofios-orig"
   sed -i \
     -e 's/Debian GNU\/Linux [0-9.]* ([a-z]*) amd64/SofiOS/g' \
@@ -13,6 +15,7 @@ find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*
     -e 's/menuentry "Live system ([^"]*fail-safe[^"]*)"/menuentry "Prova SofiOS (modalità sicura)"/' \
     -e 's/menuentry "Live system[^"]*"/menuentry "Prova SofiOS"/' \
     -e "s/submenu 'Utilities\.\.\.'/submenu 'Strumenti...'/" \
+    -e 's/menuentry "Memory Diagnostic Tool[^"]*"/menuentry "Controllo della memoria"/' \
     -e 's/menuentry "UEFI Firmware Settings"/menuentry "Impostazioni del firmware (UEFI)"/' \
     -e 's/menu label \^\?Live (\([^)]*\) failsafe)/menu label Prova SofiOS (avvio sicuro)/' \
     -e 's/menu label \^\?Live (\([^)]*\))/menu label ^Prova SofiOS/' \
@@ -24,5 +27,5 @@ find binary/boot binary/isolinux binary/EFI -type f \( -name '*.cfg' -o -name '*
   rm -f "$f.sofios-orig"
 done
 echo "== SofiOS menu avvio: voci finali =="
-grep -rhn -E 'menuentry|menu label|menu title|title-text' binary/boot/grub binary/isolinux 2>/dev/null | head -40
+grep -rhn -E 'menuentry|menu label|menu title|title-text' boot/grub isolinux 2>/dev/null | head -40
 exit 0
