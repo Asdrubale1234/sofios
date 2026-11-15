@@ -1,13 +1,20 @@
 #!/bin/sh
 # SoStore: concede a un'app Android i permessi che l'utente ha approvato nella schermata di SoStore (chiamato con pkexec)
-#   android-permessi PACCHETTO PERMESSO...
+#   android-permessi PACCHETTO [PERMESSO...] [--nega PERMESSO...]
+#   i permessi dopo --nega vengono tolti e Android non li richiede piu' (scelta dell'utente)
 # Si accettano solo nomi di pacchetto validi e permessi dell'elenco qui sotto, e solo dentro Android.
 PKG="$1"; shift
 case "$PKG" in ""|*[!A-Za-z0-9_.]*) echo "pacchetto non valido"; exit 1;; esac
+NEGA=0
 for P in "$@"; do
+  if [ "$P" = "--nega" ]; then NEGA=1; continue; fi
   case "$P" in
     android.permission.ACCESS_FINE_LOCATION|android.permission.ACCESS_COARSE_LOCATION|android.permission.ACCESS_BACKGROUND_LOCATION|android.permission.CAMERA|android.permission.RECORD_AUDIO|android.permission.READ_CONTACTS|android.permission.WRITE_CONTACTS|android.permission.READ_CALENDAR|android.permission.WRITE_CALENDAR|android.permission.READ_EXTERNAL_STORAGE|android.permission.WRITE_EXTERNAL_STORAGE|android.permission.READ_MEDIA_IMAGES|android.permission.READ_MEDIA_VIDEO|android.permission.READ_MEDIA_AUDIO|android.permission.POST_NOTIFICATIONS|android.permission.BLUETOOTH_CONNECT|android.permission.BLUETOOTH_SCAN|android.permission.NEARBY_WIFI_DEVICES)
-      echo "$P: $(waydroid shell -- pm grant "$PKG" "$P" 2>&1 | tr -d '\r')" ;;
+      if [ "$NEGA" = 1 ]; then
+        echo "nego $P: $(waydroid shell -- pm revoke "$PKG" "$P" 2>&1 | tr -d '\r') $(waydroid shell -- pm set-permission-flags "$PKG" "$P" user-fixed 2>&1 | tr -d '\r')"
+      else
+        echo "$P: $(waydroid shell -- pm grant "$PKG" "$P" 2>&1 | tr -d '\r')"
+      fi ;;
     *) echo "ignorato: $P" ;;
   esac
 done

@@ -47,6 +47,13 @@ def dati_computer():
     r.append("Avvio: " + ("dalla chiavetta (prova)" if "boot=live" in leggi("/proc/cmdline") else "installato"))
     return "\n".join(r)
 
+def posta_configurata():
+    """Mail ha almeno un account con un indirizzo? (si legge solo se c'e', non il contenuto)"""
+    import glob, re
+    for f in glob.glob(os.path.expanduser("~/.thunderbird/*/prefs.js")):
+        if re.search(r'mail\.identity\.\w+\.useremail",\s*"[^"\s]+@[^"\s]+"', leggi(f)): return True
+    return False
+
 class Finestra(QWidget):
     def __init__(self):
         super().__init__()
@@ -100,6 +107,21 @@ class Finestra(QWidget):
         # formato "compose" di Mail: valori con caratteri speciali codificati
         arg = "to=%s,subject=%s,body=%s" % (INDIRIZZO, quote("Assistenza SofiOS", safe=""), quote(self.corpo(), safe=""))
         if self.allegati: arg += ",attachment=" + ",".join(QUrl.fromLocalFile(f).toString() for f in self.allegati)
+        if not os.environ.get("SOFIOS_FOTO") and not posta_configurata():
+            m = QMessageBox(self); m.setWindowTitle("Assistenza"); m.setIcon(QMessageBox.Icon.Information)
+            m.setText("Prima configura la posta")
+            m.setInformativeText("Per spedire la mail serve un account di posta: si fa una volta sola, ti bastano il tuo indirizzo e la password.\n\n"
+                                 "Intanto il testo è pronto: lo copio, così lo incolli in una mail a %s." % INDIRIZZO)
+            m.setDetailedText(self.corpo())
+            conf = m.addButton("Configura la posta", QMessageBox.ButtonRole.AcceptRole)
+            cop = m.addButton("Solo copia il testo", QMessageBox.ButtonRole.ActionRole); m.addButton("Annulla", QMessageBox.ButtonRole.RejectRole)
+            m.exec()
+            if m.clickedButton() in (conf, cop):
+                QGuiApplication.clipboard().setText(self.corpo())
+                if m.clickedButton() is conf:
+                    for prog in ("thunderbird", "sofios-mail"):
+                        if shutil.which(prog): subprocess.Popen([prog], start_new_session=True); break
+            return
         for prog in ("thunderbird", "sofios-mail"):
             if shutil.which(prog):
                 subprocess.Popen([prog, "-compose", arg], start_new_session=True); self.close(); return

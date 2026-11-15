@@ -11,7 +11,7 @@ from PyQt6.QtCore import Qt, QProcess, QSize, QTimer, QUrl
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit,
-                             QStackedWidget, QScrollArea, QGridLayout, QProgressBar, QFrame, QMessageBox, QSizePolicy)
+                             QStackedWidget, QScrollArea, QGridLayout, QProgressBar, QFrame, QMessageBox, QSizePolicy, QDialog, QCheckBox)
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 CATALOGI = [os.environ.get("SOFIOS_CATALOGO", ""), "/var/lib/sofios/store/catalogo.json", "/usr/share/sofios/store/catalogo.json"]
@@ -38,6 +38,8 @@ QLineEdit:focus { border: 2px solid #ffd479; }
 QPushButton#voce { background: transparent; color: #d4e6f8; border: none; border-radius: 10px; padding: 9px 14px; text-align: left; font-size: 14px; font-weight: 600; }
 QPushButton#voce:hover { background: #12365a; }
 QPushButton#voce:checked { background: #ffd479; color: #0b2740; }
+QDialog { background: #0b2740; }
+QCheckBox { color: #e6f1ff; font-size: 13px; padding: 3px 0; }
 QPushButton#azione { background: #ffd479; color: #0b2740; border: none; border-radius: 9px; padding: 6px 14px; font-size: 12px; font-weight: 700; }
 QPushButton#azione:hover { background: #ffe19e; }
 QPushButton#azione:disabled { background: #2a4d6e; color: #9fc2e4; }
@@ -665,22 +667,32 @@ class SoStore(QWidget):
         scarica("json", AND.REPO + "/index-v2.json"); scarica("asc", AND.REPO + "/index-v2.json.asc")
 
     def chiedi_permessi(self, app):
-        """schermata di SoStore con i permessi che l'app chiede (solo quelli che Android chiederebbe all'utente).
-        Ritorna la lista dei permessi da concedere dopo l'installazione, oppure None se l'utente rinuncia."""
-        voci, grezzi = AND.permessi_app(app)
-        if not voci: return []
-        if os.environ.get("SOFIOS_FOTO"): return grezzi   # prova automatica: nessuno e' davanti allo schermo
-        m = QMessageBox(self); m.setWindowTitle("SoStore"); m.setIcon(QMessageBox.Icon.Question)
-        m.setText("«%s» chiede di poter usare:" % app["nome"])
-        m.setInformativeText("\n".join("•  %s: %s" % (n, d) for n, d in voci) + "\n\nSe consenti, l'app potrà usarli senza chiederti altro. Se non sei d'accordo, non installarla.")
-        si = m.addButton("Consenti e installa", QMessageBox.ButtonRole.AcceptRole); m.addButton("Annulla", QMessageBox.ButtonRole.RejectRole)
-        m.exec()
-        return grezzi if m.clickedButton() is si else None
+        """schermata di SoStore: l'utente sceglie, uno per uno, i permessi che l'app chiede (solo quelli che Android
+        chiederebbe). Ritorna (da concedere, da negare) oppure None se rinuncia a installare."""
+        gruppi = AND.permessi_app(app)
+        if not gruppi: return [], []
+        if os.environ.get("SOFIOS_FOTO"): return [p for _, _, ps in gruppi for p in ps], []   # prova automatica
+        d = QDialog(self); d.setWindowTitle("SoStore"); d.setMinimumWidth(460)
+        v = QVBoxLayout(d); v.setContentsMargins(22, 18, 22, 16); v.setSpacing(10)
+        t = QLabel("«%s» chiede dei permessi" % app["nome"]); t.setObjectName("titolo"); t.setWordWrap(True); v.addWidget(t)
+        i = QLabel("Scegli cosa permettere. Quello che lasci spento l'app non potrà usarlo."); i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
+        caselle = []
+        for nome, uso, ps in gruppi:
+            c = QCheckBox("%s: %s" % (nome, uso)); c.setChecked(True); caselle.append((c, ps)); v.addWidget(c)
+        r = QHBoxLayout(); r.addStretch()
+        no = QPushButton("Annulla"); no.setObjectName("indietro"); no.clicked.connect(d.reject); r.addWidget(no)
+        si = QPushButton("Installa"); si.setObjectName("azione"); si.clicked.connect(d.accept); si.setDefault(True); r.addWidget(si)
+        v.addLayout(r)
+        if d.exec() != QDialog.DialogCode.Accepted: return None
+        da, nega = [], []
+        for c, ps in caselle: (da if c.isChecked() else nega).extend(ps)
+        return da, nega
 
     def installa_android(self, app):
         if self.in_corso: QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
-        da_concedere = self.chiedi_permessi(app)
-        if da_concedere is None: return
+        scelta = self.chiedi_permessi(app)
+        if scelta is None: return
+        da_concedere, da_negare = scelta
         self.in_corso[app["pacchetto"]] = True; self.stato.setText("Scarico «%s»…" % app["nome"]); self.aggiorna_tutto()
         cartella = os.path.join(AND.CACHE, "apk"); os.makedirs(cartella, exist_ok=True)
         f = os.path.join(cartella, app["pacchetto"] + ".apk")
@@ -719,8 +731,9 @@ class SoStore(QWidget):
                         if app["pacchetto"] in self.android_installate or codice != 0 or self._verifiche >= 12:
                             if app["pacchetto"] in self.android_installate:
                                 msg = "Fatto: «%s»." % app["nome"]
-                                if da_concedere:   # i permessi approvati nella schermata di SoStore
-                                    QProcess.startDetached("pkexec", ["/usr/local/lib/sofios/android-permessi", app["pacchetto"]] + da_concedere)
+                                if da_concedere or da_negare:   # i permessi scelti nella schermata di SoStore
+                                    QProcess.startDetached("pkexec", ["/usr/local/lib/sofios/android-permessi", app["pacchetto"]] + da_concedere
+                                                           + (["--nega"] + da_negare if da_negare else []))
                             else:
                                 ok, libero, serve = AND.spazio_per_app(os.path.getsize(f) if os.path.exists(f) else 0)
                                 msg = self.testo_spazio(app["nome"], libero, serve) if not ok else "«%s» non si è installata." % app["nome"]

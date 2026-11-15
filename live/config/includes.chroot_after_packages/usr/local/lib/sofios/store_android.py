@@ -163,12 +163,12 @@ PERMESSI = {
 
 
 def permessi_app(app):
-    """([(nome in italiano, a cosa serve)], [permessi Android da concedere]) per i soli permessi che Android chiederebbe"""
-    visti, voci, grezzi = set(), [], []
+    """[(nome in italiano, a cosa serve, [permessi Android])] per i soli permessi che Android chiederebbe all'utente"""
+    gruppi, ordine = {}, []
     for nome in app.get("permessi") or []:
         k = nome.rsplit(".", 1)[-1] if nome.startswith("android.permission.") else ""
         if k in PERMESSI:
-            grezzi.append(nome)
-            if PERMESSI[k][0] not in visti:
-                visti.add(PERMESSI[k][0]); voci.append(PERMESSI[k])
-    return voci, grezzi
+            g = PERMESSI[k][0]
+            if g not in gruppi: gruppi[g] = (PERMESSI[k][1], []); ordine.append(g)
+            gruppi[g][1].append(nome)
+    return [(g, gruppi[g][0], gruppi[g][1]) for g in ordine]
