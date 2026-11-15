@@ -1,0 +1,14 @@
+#!/bin/sh
+# SoStore: concede a un'app Android i permessi che l'utente ha approvato nella schermata di SoStore (chiamato con pkexec)
+#   android-permessi PACCHETTO PERMESSO...
+# Si accettano solo nomi di pacchetto validi e permessi dell'elenco qui sotto, e solo dentro Android.
+PKG="$1"; shift
+case "$PKG" in ""|*[!A-Za-z0-9_.]*) echo "pacchetto non valido"; exit 1;; esac
+for P in "$@"; do
+  case "$P" in
+    android.permission.ACCESS_FINE_LOCATION|android.permission.ACCESS_COARSE_LOCATION|android.permission.ACCESS_BACKGROUND_LOCATION|android.permission.CAMERA|android.permission.RECORD_AUDIO|android.permission.READ_CONTACTS|android.permission.WRITE_CONTACTS|android.permission.READ_CALENDAR|android.permission.WRITE_CALENDAR|android.permission.READ_EXTERNAL_STORAGE|android.permission.WRITE_EXTERNAL_STORAGE|android.permission.READ_MEDIA_IMAGES|android.permission.READ_MEDIA_VIDEO|android.permission.READ_MEDIA_AUDIO|android.permission.POST_NOTIFICATIONS|android.permission.BLUETOOTH_CONNECT|android.permission.BLUETOOTH_SCAN|android.permission.NEARBY_WIFI_DEVICES)
+      echo "$P: $(waydroid shell -- pm grant "$PKG" "$P" 2>&1 | tr -d '\r')" ;;
+    *) echo "ignorato: $P" ;;
+  esac
+done
+exit 0

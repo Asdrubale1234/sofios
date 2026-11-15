@@ -664,8 +664,23 @@ class SoStore(QWidget):
         attesi = {"json", "asc"}
         scarica("json", AND.REPO + "/index-v2.json"); scarica("asc", AND.REPO + "/index-v2.json.asc")
 
+    def chiedi_permessi(self, app):
+        """schermata di SoStore con i permessi che l'app chiede (solo quelli che Android chiederebbe all'utente).
+        Ritorna la lista dei permessi da concedere dopo l'installazione, oppure None se l'utente rinuncia."""
+        voci, grezzi = AND.permessi_app(app)
+        if not voci: return []
+        if os.environ.get("SOFIOS_FOTO"): return grezzi   # prova automatica: nessuno e' davanti allo schermo
+        m = QMessageBox(self); m.setWindowTitle("SoStore"); m.setIcon(QMessageBox.Icon.Question)
+        m.setText("«%s» chiede di poter usare:" % app["nome"])
+        m.setInformativeText("\n".join("•  %s: %s" % (n, d) for n, d in voci) + "\n\nSe consenti, l'app potrà usarli senza chiederti altro. Se non sei d'accordo, non installarla.")
+        si = m.addButton("Consenti e installa", QMessageBox.ButtonRole.AcceptRole); m.addButton("Annulla", QMessageBox.ButtonRole.RejectRole)
+        m.exec()
+        return grezzi if m.clickedButton() is si else None
+
     def installa_android(self, app):
         if self.in_corso: QMessageBox.information(self, "SoStore", "Aspetta che finisca l'operazione in corso."); return
+        da_concedere = self.chiedi_permessi(app)
+        if da_concedere is None: return
         self.in_corso[app["pacchetto"]] = True; self.stato.setText("Scarico «%s»…" % app["nome"]); self.aggiorna_tutto()
         cartella = os.path.join(AND.CACHE, "apk"); os.makedirs(cartella, exist_ok=True)
         f = os.path.join(cartella, app["pacchetto"] + ".apk")
@@ -702,7 +717,10 @@ class SoStore(QWidget):
                     def verifica():
                         self.leggi_android_installate()
                         if app["pacchetto"] in self.android_installate or codice != 0 or self._verifiche >= 12:
-                            if app["pacchetto"] in self.android_installate: msg = "Fatto: «%s»." % app["nome"]
+                            if app["pacchetto"] in self.android_installate:
+                                msg = "Fatto: «%s»." % app["nome"]
+                                if da_concedere:   # i permessi approvati nella schermata di SoStore
+                                    QProcess.startDetached("pkexec", ["/usr/local/lib/sofios/android-permessi", app["pacchetto"]] + da_concedere)
                             else:
                                 ok, libero, serve = AND.spazio_per_app(os.path.getsize(f) if os.path.exists(f) else 0)
                                 msg = self.testo_spazio(app["nome"], libero, serve) if not ok else "«%s» non si è installata." % app["nome"]

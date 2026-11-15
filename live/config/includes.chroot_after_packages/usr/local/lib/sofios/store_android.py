@@ -71,6 +71,7 @@ class CatalogoAndroid:
                 "apk": REPO + scelta["file"]["name"], "sha256": scelta["file"]["sha256"],
                 "versione": (scelta.get("manifest") or {}).get("versionName", ""),
                 "aggiornata": m.get("lastUpdated", 0),
+                "permessi": [x.get("name", "") for x in ((scelta.get("manifest") or {}).get("usesPermission") or []) if isinstance(x, dict)],
             })
         out.sort(key=lambda a: -a["aggiornata"])
         self.app = out
@@ -135,3 +136,39 @@ def spazio_per_app(dimensione_apk):
     serve = 2 * dimensione_apk + min(totale * 5 // 100, 500 << 20) + (50 << 20)
     return libero >= serve, libero >> 20, serve >> 20
 
+
+
+# Permessi che Android chiede all'utente (gli altri si concedono da soli all'installazione).
+# SoStore li mostra prima di installare e li concede lui: Android non fa domande "da telefono".
+PERMESSI = {
+    "ACCESS_FINE_LOCATION": ("Posizione", "sapere dove ti trovi"),
+    "ACCESS_COARSE_LOCATION": ("Posizione", "sapere dove ti trovi"),
+    "ACCESS_BACKGROUND_LOCATION": ("Posizione", "sapere dove ti trovi"),
+    "CAMERA": ("Fotocamera", "scattare foto e registrare video"),
+    "RECORD_AUDIO": ("Microfono", "registrare l'audio"),
+    "READ_CONTACTS": ("Contatti", "leggere e modificare i tuoi contatti"),
+    "WRITE_CONTACTS": ("Contatti", "leggere e modificare i tuoi contatti"),
+    "READ_CALENDAR": ("Calendario", "leggere e modificare i tuoi appuntamenti"),
+    "WRITE_CALENDAR": ("Calendario", "leggere e modificare i tuoi appuntamenti"),
+    "READ_EXTERNAL_STORAGE": ("File, foto e musica", "leggere e salvare i tuoi file"),
+    "WRITE_EXTERNAL_STORAGE": ("File, foto e musica", "leggere e salvare i tuoi file"),
+    "READ_MEDIA_IMAGES": ("File, foto e musica", "leggere e salvare i tuoi file"),
+    "READ_MEDIA_VIDEO": ("File, foto e musica", "leggere e salvare i tuoi file"),
+    "READ_MEDIA_AUDIO": ("File, foto e musica", "leggere e salvare i tuoi file"),
+    "POST_NOTIFICATIONS": ("Notifiche", "mostrarti avvisi"),
+    "BLUETOOTH_CONNECT": ("Bluetooth", "collegarsi a dispositivi Bluetooth"),
+    "BLUETOOTH_SCAN": ("Bluetooth", "collegarsi a dispositivi Bluetooth"),
+    "NEARBY_WIFI_DEVICES": ("Dispositivi vicini", "trovare dispositivi nelle vicinanze"),
+}
+
+
+def permessi_app(app):
+    """([(nome in italiano, a cosa serve)], [permessi Android da concedere]) per i soli permessi che Android chiederebbe"""
+    visti, voci, grezzi = set(), [], []
+    for nome in app.get("permessi") or []:
+        k = nome.rsplit(".", 1)[-1] if nome.startswith("android.permission.") else ""
+        if k in PERMESSI:
+            grezzi.append(nome)
+            if PERMESSI[k][0] not in visti:
+                visti.add(PERMESSI[k][0]); voci.append(PERMESSI[k])
+    return voci, grezzi
