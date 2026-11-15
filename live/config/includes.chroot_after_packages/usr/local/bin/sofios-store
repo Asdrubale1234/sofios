@@ -580,9 +580,7 @@ class SoStore(QWidget):
             v.addStretch(); return
         # pronto
         r = QHBoxLayout()
-        # le app Android si aprono come finestre normali: "Apri Android" porta alle impostazioni di Android
-        # (lo schermo intero di Android resterebbe vuoto, senza icone, sopra il desktop)
-        b = QPushButton("Impostazioni di Android"); b.setObjectName("secondario"); b.clicked.connect(lambda: QProcess.startDetached("waydroid", ["app", "launch", "com.android.settings"])); r.addWidget(b)
+        # le app Android si aprono come finestre normali, dal menu: niente impostazioni di Android per l'utente
         if tipo == "GAPPS":
             g = QPushButton("Apri Google Play"); g.setObjectName("azione"); g.clicked.connect(lambda: QProcess.startDetached("waydroid", ["app", "launch", "com.android.vending"])); r.addWidget(g)
             c = QPushButton("Registra il computer su Google"); c.setObjectName("secondario"); c.clicked.connect(self.registra_google); r.addWidget(c)
