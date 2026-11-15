@@ -189,6 +189,13 @@ try:
     except Exception as e:
         L("errore prova Android", repr(e))
     try:
+        L("prova tema chiaro")
+        esegui("sofios-prova-store tema-chiaro"); time.sleep(12); aspetta(20, "tema-chiaro", 10)
+        tasti("meta_l"); time.sleep(4); foto("tema-chiaro-menu"); tasti("esc"); time.sleep(2)
+        esegui("sofios-prova-store tema-scuro"); time.sleep(12)
+    except Exception as e:
+        L("errore prova tema", repr(e))
+    try:
         L("prova assistenza")
         esegui("sofios-prova-store assistenza"); aspetta(25, "assistenza", 12)
         tasti("alt-f4"); time.sleep(2)

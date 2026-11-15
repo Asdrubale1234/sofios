@@ -30,8 +30,9 @@ kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage or
  printf '[KDE]\nLookAndFeelPackage=org.sofios.desktop\n' >> /etc/xdg/kdeglobals
 # "Impostazioni rapide" propone due temi (chiaro e scuro): entrambi SofiOS, cosi' un clic non riporta l'aspetto di KDE
 for k in DefaultLightLookAndFeel DefaultDarkLookAndFeel; do
-  kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key "$k" org.sofios.desktop 2>/dev/null || \
-   printf '[KDE]\n%s=org.sofios.desktop\n' "$k" >> /etc/xdg/kdeglobals
+  v=org.sofios.desktop; [ "$k" = DefaultLightLookAndFeel ] && v=org.sofios.light
+  kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key "$k" "$v" 2>/dev/null || \
+   printf "[KDE]\n%s=%s\n" "$k" "$v" >> /etc/xdg/kdeglobals
 done
 
 # Menu Aiuto di tutti i programmi: niente "Informazioni su KDE", segnala bug, donazioni, manuali KDE
