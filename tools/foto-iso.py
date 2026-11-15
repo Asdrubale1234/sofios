@@ -192,6 +192,7 @@ try:
         L("prova tema chiaro")
         esegui("sofios-prova-store tema-chiaro"); time.sleep(12); aspetta(20, "tema-chiaro", 10)
         tasti("meta_l"); time.sleep(4); foto("tema-chiaro-menu"); tasti("esc"); time.sleep(2)
+        esegui("sofios-prova-store tema-chiaro-verifica"); time.sleep(5)
         esegui("sofios-prova-store tema-scuro"); time.sleep(12)
     except Exception as e:
         L("errore prova tema", repr(e))
@@ -199,9 +200,15 @@ try:
         L("pagine dei temi e del comportamento")
         for cmd, nome in (("kcmshell6 kcm_lookandfeel", "tema-globale"), ("kcmshell6 kcm_colors", "colori"),
                           ("kcmshell6 kcm_workspace", "comportamento-generale"), ("kcmshell6 kcm_icons", "icone")):
-            esegui(cmd); aspetta(14, nome, 7); tasti("alt-f4"); time.sleep(2)
+            esegui(cmd); time.sleep(20); aspetta(40, nome, 10); tasti("alt-f4"); time.sleep(3)
     except Exception as e:
         L("errore pagine impostazioni", repr(e))
+    try:
+        L("SoStore: assistenti online")
+        esegui("sofios-prova-store store-assistenti"); time.sleep(25); aspetta(30, "sostore-assistenti", 10)
+        tasti("alt-f4"); time.sleep(3)
+    except Exception as e:
+        L("errore SoStore assistenti", repr(e))
     try:
         L("prova assistenza")
         esegui("sofios-prova-store assistenza"); aspetta(25, "assistenza", 12)

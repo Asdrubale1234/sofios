@@ -877,6 +877,7 @@ def main():
     app = QApplication(sys.argv); app.setApplicationName("SoStore"); app.setDesktopFileName("sofios-store")
     if os.environ.get("SOFIOS_TEMA_ICONE"): QIcon.setThemeName(os.environ["SOFIOS_TEMA_ICONE"])   # solo per le prove
     w = SoStore(); w.show()
+    if os.environ.get("SOFIOS_PAGINA"): QTimer.singleShot(1500, lambda: w.vai(os.environ["SOFIOS_PAGINA"]))   # solo per le prove
     if os.environ.get("SOFIOS_FOTO"):
         _u = [""]
         def _sp():
