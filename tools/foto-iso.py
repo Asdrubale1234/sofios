@@ -189,6 +189,14 @@ try:
     except Exception as e:
         L("errore prova Android", repr(e))
     try:
+        L("prova assistenza")
+        esegui("sofios-prova-store assistenza"); aspetta(25, "assistenza", 12)
+        tasti("alt-f4"); time.sleep(2)
+        esegui("sofios-prova-store assistenza-mail"); aspetta(60, "assistenza-mail", 20)
+        esegui("pkill -f thunderbird"); time.sleep(3)
+    except Exception as e:
+        L("errore prova assistenza", repr(e))
+    try:
         L("schermata: menu")
         serie("menu-diag")
         tasti("meta_l"); time.sleep(4); foto("menu-applicazioni")

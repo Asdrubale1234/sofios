@@ -1,0 +1,113 @@
+#!/usr/bin/python3
+# Assistenza SofiOS: descrivi il problema, vedi cosa verra' inviato, poi si apre la mail gia' pronta nel programma Mail.
+# Non parte nulla da solo: e' l'utente a premere "Invia" in Mail.
+import os, sys, subprocess, shutil, tempfile, time, platform
+from urllib.parse import quote
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+from sofios_info import VERSIONE
+from PyQt6.QtCore import Qt, QTimer, QUrl
+from PyQt6.QtGui import QIcon, QGuiApplication
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QFileDialog, QMessageBox, QListWidget)
+
+INDIRIZZO = "assistenza@sofilabs.it"
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel { color: #e6f1ff; font-size: 13px; }
+QLabel#titolo { color: #ffffff; font-size: 22px; font-weight: 700; }
+QLabel#nota { color: #8fb3d4; font-size: 12px; }
+QPlainTextEdit, QListWidget { background: #12365a; color: #e6f1ff; border: 1px solid #25507c; border-radius: 8px; padding: 6px; font-size: 13px; }
+QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 700; }
+QPushButton:hover { background: #ffe19e; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; font-weight: 600; }
+QPushButton#secondario:hover { background: #2a82c2; }
+"""
+
+def leggi(p):
+    try:
+        with open(p) as f: return f.read()
+    except Exception: return ""
+
+def dati_computer():
+    """solo dati tecnici del computer: niente file, nomi o password"""
+    r = []
+    try:
+        for riga in leggi("/etc/os-release").splitlines():
+            if riga.startswith("PRETTY_NAME="): r.append("Sistema: " + riga.split("=", 1)[1].strip('"'))
+    except Exception: pass
+    r.append("Versione di SofiOS: " + VERSIONE)
+    r.append("Kernel: " + platform.release())
+    for riga in leggi("/proc/cpuinfo").splitlines():
+        if riga.startswith("model name"): r.append("Processore: " + " ".join(riga.split(":", 1)[1].split())); break
+    for riga in leggi("/proc/meminfo").splitlines():
+        if riga.startswith("MemTotal"): r.append("Memoria: %.1f GB" % (int(riga.split()[1]) / 1048576)); break
+    try:
+        u = shutil.disk_usage("/"); r.append("Disco: %.1f GB liberi su %.1f GB" % (u.free / 1e9, u.total / 1e9))
+    except Exception: pass
+    r.append("Avvio: " + ("dalla chiavetta (prova)" if "boot=live" in leggi("/proc/cmdline") else "installato"))
+    return "\n".join(r)
+
+class Finestra(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("Assistenza"); self.setWindowIcon(QIcon.fromTheme("sofios-logo", QIcon(LOGO)))
+        self.setStyleSheet(STILE); self.resize(640, 640); self.allegati = []
+        v = QVBoxLayout(self); v.setContentsMargins(26, 22, 26, 20); v.setSpacing(10)
+        t = QLabel("Chiedi assistenza"); t.setObjectName("titolo"); v.addWidget(t)
+        n = QLabel("Racconta cosa non funziona. Si aprirà una mail già scritta, indirizzata a %s: la leggi e, se va bene, premi «Invia»." % INDIRIZZO)
+        n.setWordWrap(True); n.setObjectName("nota"); v.addWidget(n)
+        v.addWidget(QLabel("Cosa è successo? Se vedi un messaggio di errore, scrivilo qui così com'è."))
+        self.testo = QPlainTextEdit(); self.testo.setMinimumHeight(110); v.addWidget(self.testo)
+        r = QHBoxLayout(); v.addWidget(QLabel("Foto o immagini da allegare (facoltativo)"))
+        b1 = QPushButton("Scegli un'immagine…"); b1.setObjectName("secondario"); b1.clicked.connect(self.scegli); r.addWidget(b1)
+        b2 = QPushButton("Cattura lo schermo ora"); b2.setObjectName("secondario"); b2.clicked.connect(self.cattura); r.addWidget(b2); r.addStretch(); v.addLayout(r)
+        self.elenco = QListWidget(); self.elenco.setMaximumHeight(72); v.addWidget(self.elenco)
+        b3 = QPushButton("Togli l'allegato selezionato"); b3.setObjectName("secondario"); b3.clicked.connect(self.togli); v.addWidget(b3, alignment=Qt.AlignmentFlag.AlignLeft)
+        v.addWidget(QLabel("Insieme alla tua descrizione verranno inviati questi dati del computer, e nient'altro:"))
+        self.dati = QPlainTextEdit(dati_computer()); self.dati.setReadOnly(True); self.dati.setMaximumHeight(130); v.addWidget(self.dati)
+        r2 = QHBoxLayout(); r2.addStretch()
+        c = QPushButton("Chiudi"); c.setObjectName("secondario"); c.clicked.connect(self.close); r2.addWidget(c)
+        self.invia = QPushButton("Prepara la mail"); self.invia.clicked.connect(self.prepara); r2.addWidget(self.invia); v.addLayout(r2)
+
+    def aggiungi(self, f):
+        if f and f not in self.allegati: self.allegati.append(f); self.elenco.addItem(os.path.basename(f))
+
+    def scegli(self):
+        fs, _ = QFileDialog.getOpenFileNames(self, "Scegli le immagini", os.path.expanduser("~"), "Immagini (*.png *.jpg *.jpeg *.webp)")
+        for f in fs: self.aggiungi(f)
+
+    def cattura(self):
+        cartella = tempfile.mkdtemp(prefix="sofios-assistenza-"); f = os.path.join(cartella, "schermo-%d.png" % int(time.time()))
+        self.hide()
+        def fai():
+            try: subprocess.run(["spectacle", "-b", "-n", "-f", "-o", f], timeout=30, capture_output=True)
+            except Exception: pass
+            self.show()
+            if os.path.exists(f): self.aggiungi(f)
+            else: QMessageBox.information(self, "Assistenza", "Non sono riuscito a catturare lo schermo. Puoi allegare una foto con «Scegli un'immagine».")
+        QTimer.singleShot(1200, fai)
+
+    def togli(self):
+        i = self.elenco.currentRow()
+        if i >= 0: self.elenco.takeItem(i); self.allegati.pop(i)
+
+    def corpo(self):
+        return "%s\n\n--- Dati del computer ---\n%s\n" % (self.testo.toPlainText().strip(), self.dati.toPlainText())
+
+    def prepara(self):
+        if not self.testo.toPlainText().strip():
+            QMessageBox.information(self, "Assistenza", "Scrivi prima cosa non funziona."); return
+        # formato "compose" di Mail: valori con caratteri speciali codificati
+        arg = "to=%s,subject=%s,body=%s" % (INDIRIZZO, quote("Assistenza SofiOS", safe=""), quote(self.corpo(), safe=""))
+        if self.allegati: arg += ",attachment=" + ",".join(QUrl.fromLocalFile(f).toString() for f in self.allegati)
+        for prog in ("thunderbird", "sofios-mail"):
+            if shutil.which(prog):
+                subprocess.Popen([prog, "-compose", arg], start_new_session=True); self.close(); return
+        QGuiApplication.clipboard().setText(self.corpo())
+        QMessageBox.information(self, "Assistenza", "Non trovo il programma Mail. Ho copiato il testo: incollalo in una mail a %s." % INDIRIZZO)
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("Assistenza"); app.setDesktopFileName("sofios-assistenza")
+    w = Finestra(); w.show(); return app.exec()
+
+if __name__ == "__main__": sys.exit(main())

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Assistenza
+Comment=Racconta un problema: si prepara una mail all'assistenza di SofiOS
+Exec=/usr/local/bin/sofios-assistenza
+Icon=sofios-logo
+Categories=System;
+Keywords=assistenza;aiuto;problema;errore;supporto;

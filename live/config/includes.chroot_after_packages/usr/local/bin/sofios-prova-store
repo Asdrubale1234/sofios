@@ -30,6 +30,10 @@ case "$1" in
   menu-diag)
     { echo "### menu-diag"; for d in ~/.local/share/applications /usr/local/share/applications /usr/share/applications; do grep -l -r -i -s "containerized\|Name=Way[d]roid" "$d" 2>/dev/null; done | while read f; do echo "== $f"; grep -E "^(Name|Exec|Categories|NoDisplay|Hidden)=" "$f"; done
       echo "--- unita':"; systemctl --user status sofios-nomi-menu.path sofios-nomi-menu.service --no-pager 2>&1 | head -14; ls ~/.config/menus/applications-merged/; } 2>&1 | S ;;
+  assistenza)
+    DISPLAY="${DISPLAY:-:0}" sofios-assistenza >/dev/null 2>&1 & ;;
+  assistenza-mail)
+    thunderbird -compose "to=assistenza@sofilabs.it,subject=Assistenza%20SofiOS,body=Prova%20di%20invio%0A%0A---%20Dati%20del%20computer%20---%0AMemoria%3A%204.0%20GB" >/dev/null 2>&1 & ;;
   android-apri)
     waydroid app launch app.organicmaps ;;
   android-lingua)
