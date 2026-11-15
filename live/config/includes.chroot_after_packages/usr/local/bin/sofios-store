@@ -325,7 +325,7 @@ class SoStore(QWidget):
         m = QHBoxLayout(); lg = QLabel(); lg.setPixmap(QIcon.fromTheme("sofios-store", QIcon(LOGO)).pixmap(QSize(34, 34))); m.addWidget(lg)
         t = QLabel("SoStore"); t.setObjectName("marchio"); m.addWidget(t); m.addStretch(); lv.addLayout(m); lv.addSpacing(12)
         self.voci = {}
-        for chiave, testo in (("vetrina", "In evidenza"), ("android", "App Android"), ("windows", "Programmi Windows"), ("installati", "Installati")):
+        for chiave, testo in (("vetrina", "In evidenza"), ("android", "App Android"), ("windows", "Programmi Windows"), ("assistenti", "Assistenti online"), ("installati", "Installati")):
             b = QPushButton(testo); b.setObjectName("voce"); b.setCheckable(True); b.clicked.connect(lambda _, k=chiave: self.vai(k))
             self.voci[chiave] = b; lv.addWidget(b)
         lv.addStretch(); lv.addWidget(bottone_informazioni(self, "SoStore", "Il negozio dei programmi di SofiOS."))
@@ -388,6 +388,8 @@ class SoStore(QWidget):
             self.pagina_android(v); return
         if chiave == "windows":
             self.pagina_windows(v); return
+        if chiave == "assistenti":
+            self.pagina_assistenti(v); return
         if chiave == "vetrina":
             t = QLabel("In evidenza"); t.setObjectName("titolo"); v.addWidget(t)
             cat = []
@@ -735,6 +737,45 @@ class SoStore(QWidget):
 
 
     # ------------------------------------------------------------ Windows
+    ASSISTENTI = [
+        ("claude", "Claude", "https://claude.ai", "Scrive, riassume e spiega; aiuta con documenti e programmi. Si entra con un account, gratuito o a pagamento."),
+        ("chatgpt", "ChatGPT", "https://chatgpt.com", "Risponde alle domande, scrive testi e traduce. Si entra con un account, gratuito o a pagamento."),
+        ("gemini", "Gemini", "https://gemini.google.com", "L'assistente di Google. Include la creazione e la modifica di immagini (Nano Banana). Si entra con l'account Google."),
+    ]
+
+    def voce_assistente(self, chiave):
+        dati = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
+        return os.path.join(dati, "applications", "sofios-web-%s.desktop" % chiave)
+
+    def aggiungi_assistente(self, chiave, nome, url):
+        """collegamento nel menu: apre il sito in una finestra del Browser (nessuna chiave, nessun costo per SofiOS)"""
+        f = self.voce_assistente(chiave)
+        try:
+            os.makedirs(os.path.dirname(f), exist_ok=True)
+            with open(f, "w", encoding="utf-8") as h:
+                h.write("[Desktop Entry]\nType=Application\nName=%s\nComment=Assistente online nel Browser\nExec=firefox-esr --new-window %s\n"
+                        "Icon=sofios-assistente\nCategories=Network;\nStartupNotify=true\n" % (nome, url))
+        except OSError as e:
+            self.stato.setText("Non riesco ad aggiungere «%s»: %s" % (nome, e)); return
+        self.stato.setText("«%s» è nel menu, nella sezione Internet." % nome); self.vai("assistenti")
+
+    def pagina_assistenti(self, v):
+        t = QLabel("Assistenti online"); t.setObjectName("titolo"); v.addWidget(t)
+        i = QLabel("Assistenti con intelligenza artificiale che funzionano in Internet. Si aprono in una finestra del Browser, ognuno con il proprio account. "
+                   "Quello che scrivi viene inviato al servizio che scegli: leggi le sue regole prima di usarlo.")
+        i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
+        for chiave, nome, url, descr in self.ASSISTENTI:
+            r = QHBoxLayout(); l = QVBoxLayout()
+            a = QLabel(nome); a.setObjectName("sezione"); l.addWidget(a)
+            d = QLabel(descr); d.setObjectName("descr"); d.setWordWrap(True); l.addWidget(d)
+            r.addLayout(l, 1)
+            if os.path.exists(self.voce_assistente(chiave)):
+                b = QPushButton("Apri"); b.setObjectName("azione"); b.clicked.connect(lambda _, u=url: QProcess.startDetached("firefox-esr", ["--new-window", u]))
+            else:
+                b = QPushButton("Aggiungi al menu"); b.setObjectName("azione"); b.clicked.connect(lambda _, k=chiave, n=nome, u=url: self.aggiungi_assistente(k, n, u))
+            r.addWidget(b, alignment=Qt.AlignmentFlag.AlignTop); v.addLayout(r)
+        v.addStretch()
+
     def pagina_windows(self, v):
         t = QLabel("Programmi Windows"); t.setObjectName("titolo"); v.addWidget(t)
         i = QLabel("Programmi per Windows che abbiamo provato su SofiOS. Si scaricano dal sito ufficiale di chi li fa e funzionano come gli altri. "
