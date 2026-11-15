@@ -196,6 +196,13 @@ try:
     except Exception as e:
         L("errore prova tema", repr(e))
     try:
+        L("pagine dei temi e del comportamento")
+        for cmd, nome in (("kcmshell6 kcm_lookandfeel", "tema-globale"), ("kcmshell6 kcm_colors", "colori"),
+                          ("kcmshell6 kcm_workspace", "comportamento-generale"), ("kcmshell6 kcm_icons", "icone")):
+            esegui(cmd); aspetta(14, nome, 7); tasti("alt-f4"); time.sleep(2)
+    except Exception as e:
+        L("errore pagine impostazioni", repr(e))
+    try:
         L("prova assistenza")
         esegui("sofios-prova-store assistenza"); aspetta(25, "assistenza", 12)
         tasti("alt-f4"); time.sleep(2)
