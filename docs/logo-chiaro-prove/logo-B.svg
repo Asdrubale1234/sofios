@@ -24,6 +24,7 @@
 <path d="M0 770 C 200 730 330 800 512 770 S 840 730 1024 770 V1024 H0Z" fill="#cfe3fa"/>
 <path d="M0 830 C 180 795 360 860 540 828 S 860 795 1024 835 V1024 H0Z" fill="#a5ccf4"/>
 <path d="M0 895 C 220 860 340 925 540 895 S 840 865 1024 900 V1024 H0Z" fill="#6fa6ea"/>
-<path d="M618 742 C 500 695 408 772 498 818 C 594 866 552 940 424 926" fill="none" stroke="#ffffff" stroke-width="64" stroke-linecap="round" opacity="0.95"/>
-<path d="M618 742 C 500 695 408 772 498 818 C 594 866 552 940 424 926" fill="none" stroke="#9fdcff" stroke-width="16" stroke-linecap="round" opacity="0.8"/>
-</g></svg>
+<path d="M596 770 C 536 730 452 764 462 822 C 472 876 572 862 574 910 C 576 956 488 964 440 930" fill="none" stroke="#ffffff" stroke-width="58" stroke-linecap="round" opacity="0.95"/>
+<path d="M596 770 C 536 730 452 764 462 822 C 472 876 572 862 574 910 C 576 956 488 964 440 930" fill="none" stroke="#9fdcff" stroke-width="16" stroke-linecap="round" opacity="0.8"/>
+<path d="M210 812 C 330 812 410 742 520 738" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" opacity="0.85"/>
+<circle cx="628" cy="760" r="8" fill="#ffffff"/><circle cx="646" cy="782" r="5" fill="#ffffff"/><circle cx="616" cy="736" r="5" fill="#ffffff"/></g></svg>
