@@ -1,0 +1,9 @@
+[Unit]
+Description=SofiOS: segue il cambio di tema chiaro/scuro
+
+[Path]
+PathChanged=%h/.config/kdeglobals
+Unit=sofios-tema-sync.service
+
+[Install]
+WantedBy=default.target

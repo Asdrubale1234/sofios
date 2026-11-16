@@ -1,0 +1,13 @@
+#!/bin/sh
+# SofiOS: quando si cambia tema (chiaro/scuro) cambia anche lo sfondo, così cambia tutto insieme.
+tema=$(kreadconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage 2>/dev/null)
+[ -n "$tema" ] || exit 0
+stato="${XDG_CACHE_HOME:-$HOME/.cache}/sofios-tema"
+[ "$(cat "$stato" 2>/dev/null)" = "$tema" ] && exit 0
+case "$tema" in
+  org.sofios.light) img=/usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png ;;
+  org.sofios.desktop) img=/usr/share/wallpapers/SofiOS/contents/images/1920x1080.png ;;
+  *) exit 0 ;;
+esac
+plasma-apply-wallpaperimage "$img" >/dev/null 2>&1 && { mkdir -p "$(dirname "$stato")"; echo "$tema" > "$stato"; }
+exit 0

@@ -769,9 +769,13 @@ class SoStore(QWidget):
 
     # ------------------------------------------------------------ Windows
     ASSISTENTI = [
-        ("claude", "Claude", "https://claude.ai", "Scrive, riassume e spiega; aiuta con documenti e programmi. Si entra con un account, gratuito o a pagamento."),
-        ("chatgpt", "ChatGPT", "https://chatgpt.com", "Risponde alle domande, scrive testi e traduce. Si entra con un account, gratuito o a pagamento."),
-        ("gemini", "Gemini", "https://gemini.google.com", "L'assistente di Google. Include la creazione e la modifica di immagini (Nano Banana). Si entra con l'account Google."),
+        ("claude", "Claude", "https://claude.ai", "Scrive, riassume e spiega; aiuta con documenti e programmi. Si entra con un account: c'è una parte gratuita, il resto è a pagamento."),
+        ("chatgpt", "ChatGPT", "https://chatgpt.com", "Risponde alle domande, scrive testi e traduce. Si entra con un account: c'è una parte gratuita, il resto è a pagamento."),
+        ("gemini", "Gemini", "https://gemini.google.com", "L'assistente di Google. Include la creazione e la modifica di immagini (Nano Banana). Si entra con l'account Google; c'è una parte gratuita."),
+        ("copilot", "Copilot", "https://copilot.microsoft.com", "L'assistente di Microsoft. Gratuito, si può provare anche senza account."),
+        ("deepseek", "DeepSeek", "https://chat.deepseek.com", "Gratuito, con un account. Attenzione: è un servizio con sede in Cina, quello che scrivi viene trattato lì."),
+        ("mistral", "Le Chat (Mistral)", "https://chat.mistral.ai", "Assistente europeo (Francia). Ha una parte gratuita, con un account."),
+        ("perplexity", "Perplexity", "https://www.perplexity.ai", "Cerca sul web e risponde indicando le fonti. Ha una parte gratuita, anche senza account."),
     ]
 
     def voce_assistente(self, chiave):
@@ -785,7 +789,7 @@ class SoStore(QWidget):
             os.makedirs(os.path.dirname(f), exist_ok=True)
             with open(f, "w", encoding="utf-8") as h:
                 h.write("[Desktop Entry]\nType=Application\nName=%s\nComment=Assistente online nel Browser\nExec=firefox-esr --new-window %s\n"
-                        "Icon=sofios-assistente\nCategories=Network;\nStartupNotify=true\n" % (nome, url))
+                        "Icon=sofios-assistente-%s\nCategories=Network;\nStartupNotify=true\n" % (nome, url, chiave))
         except OSError as e:
             self.stato.setText("Non riesco ad aggiungere «%s»: %s" % (nome, e)); return
         self.stato.setText("«%s» è nel menu, nella sezione Internet." % nome); self.vai("assistenti")

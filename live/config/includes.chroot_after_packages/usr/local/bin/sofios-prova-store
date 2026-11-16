@@ -34,6 +34,17 @@ case "$1" in
     { echo "### tema-chiaro"; echo "--- temi globali:"; plasma-apply-lookandfeel --list 2>&1; echo "--- schemi di colori:"; ls /usr/share/color-schemes; echo "--- stili di Plasma:"; ls /usr/share/plasma/desktoptheme; echo "--- icone:"; ls /usr/share/icons; echo "--- decorazioni finestre:"; ls /usr/share/aurorae/themes 2>&1; echo "--- stili delle finestre:"; ls /usr/lib/x86_64-linux-gnu/qt6/plugins/styles 2>&1; echo "--- fine elenco"; plasma-apply-lookandfeel -a org.sofios.light 2>&1; sleep 3; (dolphin >/dev/null 2>&1 &); } 2>&1 | S ;;
   tema-scuro)
     { echo "### tema-scuro"; pkill dolphin; plasma-apply-lookandfeel -a org.sofios.desktop 2>&1; } 2>&1 | S ;;
+  icone-diag)
+    { echo "### icone-diag"
+      N() { [ -e /usr/share/icons/SofiOS/scalable/apps/$1.svg ] || [ -e /usr/share/icons/SofiOS/scalable/azioni/$1.svg ]; }
+      for f in /usr/share/applications/*.desktop /usr/local/share/applications/*.desktop; do
+        [ -f "$f" ] || continue
+        case "$(basename $f)" in kcm_*) tag=IMPOSTAZIONE ;; *) grep -qE '^(NoDisplay|Hidden)=true' "$f" && continue; tag=APP ;; esac
+        ic=$(grep -m1 '^Icon=' "$f" | cut -d= -f2-); [ -n "$ic" ] || continue
+        case "$ic" in /*) continue ;; esac
+        N "$ic" || echo "ICONA-NON-NOSTRA [$tag]: $ic ($(basename $f))"
+      done | sort -u
+      echo "### icone-diag-fine"; } 2>&1 | S ;;
   store-assistenti)
     SOFIOS_PAGINA=assistenti sofios-store >/dev/null 2>&1 & ;;
   tema-chiaro-verifica)

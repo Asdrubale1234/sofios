@@ -192,6 +192,8 @@ try:
         L("prova tema chiaro")
         esegui("sofios-prova-store tema-chiaro"); time.sleep(12); aspetta(20, "tema-chiaro", 10)
         tasti("meta_l"); time.sleep(4); foto("tema-chiaro-menu"); tasti("esc"); time.sleep(2)
+        esegui("systemsettings"); time.sleep(20); aspetta(30, "tema-chiaro-impostazioni", 10); tasti("alt-f4"); time.sleep(3)
+        esegui("sofios-prova-store store-assistenti"); time.sleep(25); aspetta(30, "tema-chiaro-sostore", 10); tasti("alt-f4"); time.sleep(3)
         esegui("sofios-prova-store tema-chiaro-verifica"); time.sleep(5)
         esegui("sofios-prova-store tema-scuro"); time.sleep(12)
     except Exception as e:
@@ -203,6 +205,11 @@ try:
             esegui(cmd); time.sleep(20); aspetta(40, nome, 10); tasti("alt-f4"); time.sleep(3)
     except Exception as e:
         L("errore pagine impostazioni", repr(e))
+    try:
+        L("icone non nostre")
+        serie("icone-diag")
+    except Exception as e:
+        L("errore diagnosi icone", repr(e))
     try:
         L("SoStore: assistenti online")
         esegui("sofios-prova-store store-assistenti"); time.sleep(25); aspetta(30, "sostore-assistenti", 10)

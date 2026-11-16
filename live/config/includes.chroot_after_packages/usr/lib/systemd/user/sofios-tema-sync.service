@@ -1,0 +1,6 @@
+[Unit]
+Description=SofiOS: sfondo del tema scelto
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/sofios/tema-sync

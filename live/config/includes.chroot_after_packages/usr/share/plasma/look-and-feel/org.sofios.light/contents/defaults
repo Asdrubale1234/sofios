@@ -5,14 +5,14 @@ ColorScheme=SofiOSChiaro
 widgetStyle=Breeze
 
 [plasmarc][Theme]
-name=breeze-dark
+name=sofios-chiaro
 
 [Wallpaper]
-Image=SofiOS
+Image=SofiOSChiaro
 
 [kdeglobals][Icons]
 Theme=SofiOS
 
 [kwinrc][org.kde.kdecoration2]
 library=org.kde.kwin.aurorae
-theme=__aurorae__svg__SofiOS
+theme=__aurorae__svg__SofiOSChiaro
