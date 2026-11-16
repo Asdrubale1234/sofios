@@ -5,6 +5,7 @@ python3 /usr/local/lib/sofios/traduzioni.py >/dev/null 2>&1 || true
 /usr/local/lib/sofios/nomi-menu sistema >/dev/null 2>&1 || true
 rm -rf /usr/share/plasma/look-and-feel/org.debian.desktop 2>/dev/null || true
 rm -rf /usr/share/plasma/look-and-feel/org.kde.breeze.desktop /usr/share/plasma/look-and-feel/org.kde.breezedark.desktop /usr/share/plasma/look-and-feel/org.kde.breezetwilight.desktop 2>/dev/null || true
+/usr/local/lib/sofios/nascondi-icone-kde || true
 rm -f /usr/share/color-schemes/BreezeLight.colors /usr/share/color-schemes/BreezeDark.colors /usr/share/color-schemes/BreezeClassic.colors 2>/dev/null || true
 if [ -f /etc/grub.d/10_linux ] && grep -q 'OS="${GRUB_DISTRIBUTOR} GNU/Linux"' /etc/grub.d/10_linux 2>/dev/null; then
   sed -i 's|OS="${GRUB_DISTRIBUTOR} GNU/Linux"|OS="${GRUB_DISTRIBUTOR}"|' /etc/grub.d/10_linux 2>/dev/null || true
