@@ -162,7 +162,7 @@ def semplice(simbolo):
     t = tracciati(simbolo)
     if t is None: return None
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">'
-      '<style type="text/css" id="current-color-scheme">.ColorScheme-Text{color:#e6edf3;}</style>'
+      '<style type="text/css" id="current-color-scheme">.ColorScheme-Text{color:#6e7a88;}</style>'
       '<g class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % t
 
 def scrivi(cartella, nomi, svg):
