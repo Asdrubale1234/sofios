@@ -32,7 +32,7 @@ alpha = (np.asarray(im).astype(float) / 255.0)[..., None]
 out = out * (1 - alpha) + a * alpha
 res = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
 os.makedirs(P("usr/share/wallpapers/SofiOSChiaro/contents/images"), exist_ok=True)
-res.save(P("usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png"), optimize=True)
+# (lo sfondo chiaro con il logo si fa con sfondo_logo.py)
 open(P("usr/share/wallpapers/SofiOSChiaro/metadata.json"), "w").write('{"KPlugin": {"Id": "SofiOSChiaro", "Name": "SofiOS chiaro", "Authors": [{"Name": "SofiOS"}], "License": "CC-BY-SA-4.0"}}\n')
 res.resize((400, 225)).save("/tmp/anteprima-sfondo-chiaro.png")
 
