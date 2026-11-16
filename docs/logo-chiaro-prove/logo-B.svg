@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs>
+<clipPath id="q"><rect width="1024" height="1024" rx="230"/></clipPath>
+<linearGradient id="fascio" x1="0" x2="1"><stop offset="0" stop-color="#ffe9a8" stop-opacity="0"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0.85"/></linearGradient>
+<linearGradient id="fascio2" x1="1" x2="0"><stop offset="0" stop-color="#ffe9a8" stop-opacity="0"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0.85"/></linearGradient>
+<linearGradient id="t" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe8f3"/></linearGradient>
+<radialGradient id="luce"><stop offset="0" stop-color="#fff6cf"/><stop offset="1" stop-color="#ffd479" stop-opacity="0"/></radialGradient>
+
+</defs>
+<g clip-path="url(#q)">
+<rect width="1024" height="1024" fill="#ffffff"/><rect x="0" y="0" width="1024" height="1024" fill="#f2f6fc"/>
+
+<polygon points="462,262 120,190 120,350" fill="url(#fascio)"/>
+<polygon points="562,262 904,190 904,350" fill="url(#fascio2)"/>
+<circle cx="512" cy="265" r="150" fill="url(#luce)"/>
+<polygon points="452,330 572,330 614,800 410,800" fill="url(#t)"/>
+<polygon points="443,430 581,430 589,520 435,520" fill="#d6453a"/>
+<polygon points="431,600 593,600 598,640 426,640" fill="#d6453a" opacity="0.0"/>
+<rect x="428" y="306" width="168" height="26" rx="10" fill="#12355f"/>
+<rect x="462" y="232" width="100" height="76" rx="16" fill="#ffd479"/>
+<rect x="482" y="246" width="60" height="48" rx="10" fill="#fff3c4"/>
+<path d="M448 236 Q512 160 576 236Z" fill="#d6453a"/>
+<circle cx="512" cy="164" r="11" fill="#12355f"/>
+<path d="M0 770 C 200 730 330 800 512 770 S 840 730 1024 770 V1024 H0Z" fill="#cfe3fa"/>
+<path d="M0 830 C 180 795 360 860 540 828 S 860 795 1024 835 V1024 H0Z" fill="#a5ccf4"/>
+<path d="M0 895 C 220 860 340 925 540 895 S 840 865 1024 900 V1024 H0Z" fill="#6fa6ea"/>
+<path d="M618 742 C 500 695 408 772 498 818 C 594 866 552 940 424 926" fill="none" stroke="#ffffff" stroke-width="64" stroke-linecap="round" opacity="0.95"/>
+<path d="M618 742 C 500 695 408 772 498 818 C 594 866 552 940 424 926" fill="none" stroke="#9fdcff" stroke-width="16" stroke-linecap="round" opacity="0.8"/>
+</g></svg>
