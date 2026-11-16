@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+<defs>
+<clipPath id="q"><rect width="1024" height="1024" rx="230"/></clipPath>
+<linearGradient id="fascio" x1="0" x2="1"><stop offset="0" stop-color="#ffe9a8" stop-opacity="0"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0.85"/></linearGradient>
+<linearGradient id="fascio2" x1="1" x2="0"><stop offset="0" stop-color="#ffe9a8" stop-opacity="0"/><stop offset="1" stop-color="#ffe9a8" stop-opacity="0.85"/></linearGradient>
+<linearGradient id="t" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe8f3"/></linearGradient>
+<radialGradient id="luce"><stop offset="0" stop-color="#fff6cf"/><stop offset="1" stop-color="#ffd479" stop-opacity="0"/></radialGradient>
+<linearGradient id="c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd9fa"/><stop offset="1" stop-color="#f3f9ff"/></linearGradient>
+</defs>
+<g clip-path="url(#q)">
+<rect width="1024" height="1024" fill="url(#c)"/>
+
+<polygon points="462,262 120,190 120,350" fill="url(#fascio)"/>
+<polygon points="562,262 904,190 904,350" fill="url(#fascio2)"/>
+<circle cx="512" cy="265" r="150" fill="url(#luce)"/>
+<polygon points="452,330 572,330 614,800 410,800" fill="url(#t)"/>
+<polygon points="443,430 581,430 589,520 435,520" fill="#d6453a"/>
+<polygon points="431,600 593,600 598,640 426,640" fill="#d6453a" opacity="0.0"/>
+<rect x="428" y="306" width="168" height="26" rx="10" fill="#1b3b66"/>
+<rect x="462" y="232" width="100" height="76" rx="16" fill="#ffd479"/>
+<rect x="482" y="246" width="60" height="48" rx="10" fill="#fff3c4"/>
+<path d="M448 236 Q512 160 576 236Z" fill="#d6453a"/>
+<circle cx="512" cy="164" r="11" fill="#1b3b66"/>
+<path d="M0 770 C 200 730 330 800 512 770 S 840 730 1024 770 V1024 H0Z" fill="#8fd3f4"/>
+<path d="M0 830 C 180 795 360 860 540 828 S 860 795 1024 835 V1024 H0Z" fill="#55aee6"/>
+<path d="M0 895 C 220 860 340 925 540 895 S 840 865 1024 900 V1024 H0Z" fill="#2f78d8"/>
+<defs><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#bfeaff"/><stop offset="1" stop-color="#5cc3ee"/></linearGradient></defs><path d="M553 771 A50 50 0 1 0 512 850 A50 50 0 1 1 471 929" fill="none" stroke="#1b6fb8" stroke-opacity=".35" stroke-width="48" stroke-linecap="round" transform="translate(0 8)"/><path d="M553 771 A50 50 0 1 0 512 850 A50 50 0 1 1 471 929" fill="none" stroke="url(#gl)" stroke-width="40" stroke-linecap="round"/><path d="M553 771 A50 50 0 1 0 512 850 A50 50 0 1 1 471 929" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-opacity=".9" transform="translate(-12 -8)"/></g></svg>
