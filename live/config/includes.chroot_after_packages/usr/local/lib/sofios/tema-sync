@@ -5,7 +5,7 @@ tema=$(kreadconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage 2>/de
 stato="${XDG_CACHE_HOME:-$HOME/.cache}/sofios-tema"
 [ "$(cat "$stato" 2>/dev/null)" = "$tema" ] && exit 0
 case "$tema" in
-  org.sofios.light) img=/usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png; barre=sofios-chiaro ;;
+  org.sofios.light) img=/usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png; barre=breeze-light ;;
   org.sofios.desktop) img=/usr/share/wallpapers/SofiOS/contents/images/1920x1080.png; barre=breeze-dark ;;
   *) exit 0 ;;
 esac
