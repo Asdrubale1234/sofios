@@ -6,6 +6,7 @@ from sofios_info import CREDITI, ANNO, VERSIONE, AZIENDA, CONTATTI
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QPixmap, QGuiApplication
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGridLayout)
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios")); import tema_app
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 STILE = """
@@ -68,7 +69,7 @@ class Info(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("Informazioni su SofiOS"); self.setWindowIcon(QIcon(LOGO))
-        self.setStyleSheet(STILE); self.setFixedWidth(500)
+        self.setStyleSheet(tema_app.adatta(STILE)); self.setFixedWidth(500)
         v = QVBoxLayout(self); v.setContentsMargins(30, 28, 30, 24); v.setSpacing(6)
         i = QLabel(); i.setAlignment(Qt.AlignmentFlag.AlignCenter)
         i.setPixmap(QPixmap(LOGO).scaled(96, 96, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))

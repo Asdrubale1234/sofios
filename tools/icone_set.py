@@ -55,6 +55,17 @@ COLORATE = {
  "sofios-assistente-claude": ("sparkles", "arancio"), "sofios-assistente-chatgpt": ("message-circle", "verde"), "sofios-assistente-gemini": ("gem", "viola"),
  "sofios-assistente-copilot": ("bot", "blu"), "sofios-assistente-deepseek": ("telescope", "azzurro"), "sofios-assistente-mistral": ("wind", "rosso"),
  "sofios-assistente-perplexity": ("search", "petrolio"),
+ # emersi dalla diagnosi sulla ISO
+ "gvim": ("file-code", "verde"), "libreoffice-startcenter": ("layout-grid", "blu"), "preferences-desktop-emoticons": ("smile", "arancio"),
+ "tools-report-bug": ("bug", "rosso"), "battery": ("battery-charging", "verde"), "emblem-music-symbolic": ("music", "viola"),
+ "input-keyboard-virtual": ("keyboard", "grigio"), "krunner plasma-search": ("search", "blu"), "ktip": ("lightbulb", "arancio"),
+ "preferences-desktop-baloo": ("file-search", "blu"), "preferences-desktop-display-randr": ("monitor", "blu"), "preferences-desktop-feedback": ("message-square", "azzurro"),
+ "preferences-desktop-font-installer": ("a-large-small", "arancio"), "preferences-desktop-gaming": ("gamepad-2", "verde"), "preferences-desktop-notification-bell": ("bell", "arancio"),
+ "preferences-desktop-plasma-theme": ("palette", "viola"), "preferences-desktop-touchpad": ("square-mouse-pointer", "grigio"), "preferences-desktop-touchscreen": ("hand", "grigio"),
+ "preferences-desktop-virtual": ("layout-grid", "blu"), "preferences-kde-connect": ("smartphone", "verde"), "preferences-security-firewall": ("brick-wall", "rosso"),
+ "preferences-smart-status": ("hard-drive", "verde"), "preferences-system-network-connection": ("wifi", "azzurro"), "preferences-system-network-proxy": ("network", "azzurro"),
+ "preferences-system-splash": ("rocket", "arancio"), "preferences-system-tabbox": ("layout-panel-left", "blu"), "preferences-system-windows-actions": ("app-window", "blu"),
+ "preferences-web-browser-shortcuts": ("globe", "azzurro"), "redshift-status-on": ("moon-star", "arancio"), "xorg": ("monitor", "grigio"),
  # cartelle e luoghi
  "folder-documents": ("file-text", "arancio"), "folder-download": ("download", "arancio"), "folder-music": ("music", "arancio"),
  "folder-pictures": ("image", "arancio"), "folder-videos": ("film", "arancio"), "folder-templates": ("layout-template", "arancio"),

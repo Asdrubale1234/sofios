@@ -8,6 +8,7 @@ from sofios_info import VERSIONE
 from PyQt6.QtCore import Qt, QTimer, QUrl
 from PyQt6.QtGui import QIcon, QGuiApplication
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QPlainTextEdit, QFileDialog, QMessageBox, QListWidget)
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios")); import tema_app
 
 INDIRIZZO = "assistenza@sofilabs.it"
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
@@ -58,7 +59,7 @@ class Finestra(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("Assistenza"); self.setWindowIcon(QIcon.fromTheme("sofios-logo", QIcon(LOGO)))
-        self.setStyleSheet(STILE); self.resize(640, 640); self.allegati = []
+        self.setStyleSheet(tema_app.adatta(STILE)); self.resize(640, 640); self.allegati = []
         v = QVBoxLayout(self); v.setContentsMargins(26, 22, 26, 20); v.setSpacing(10)
         t = QLabel("Chiedi assistenza"); t.setObjectName("titolo"); v.addWidget(t)
         n = QLabel("Racconta cosa non funziona. Si aprirà una mail già scritta, indirizzata a %s: la leggi e, se va bene, premi «Invia»." % INDIRIZZO)

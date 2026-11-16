@@ -7,6 +7,7 @@ import subprocess
 from PyQt6.QtCore import Qt, QProcess
 from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QCheckBox
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios")); import tema_app
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 PROGRAMMA = os.environ.get("SOFIOS_AGGIORNA", "/usr/local/bin/sofios-aggiorna")
@@ -27,7 +28,7 @@ class Aggiorna(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("Aggiorna SofiOS"); self.setWindowIcon(QIcon(LOGO))
-        self.setStyleSheet(STILE); self.setFixedWidth(440)
+        self.setStyleSheet(tema_app.adatta(STILE)); self.setFixedWidth(440)
         v = QVBoxLayout(self); v.setContentsMargins(28, 24, 28, 20); v.setSpacing(10)
         i = QLabel(); i.setPixmap(QPixmap(LOGO).scaled(64, 64, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         i.setAlignment(Qt.AlignmentFlag.AlignCenter); v.addWidget(i)

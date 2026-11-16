@@ -48,7 +48,7 @@ case "$1" in
   store-assistenti)
     SOFIOS_PAGINA=assistenti sofios-store >/dev/null 2>&1 & ;;
   tema-chiaro-verifica)
-    { echo "### tema-chiaro-verifica"; grep -E 'LookAndFeelPackage|ColorScheme' ~/.config/kdeglobals 2>&1; } 2>&1 | S ;;
+    { echo "### tema-chiaro-verifica"; grep -E 'LookAndFeelPackage|ColorScheme' ~/.config/kdeglobals 2>&1; grep -A2 '^\[Theme\]' ~/.config/plasmarc 2>&1; ls /usr/share/plasma/desktoptheme 2>&1; } 2>&1 | S ;;
   assistenza)
     DISPLAY="${DISPLAY:-:0}" sofios-assistenza >/dev/null 2>&1 & ;;
   assistenza-mail)

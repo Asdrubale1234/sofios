@@ -2,6 +2,7 @@
 # Note di SofiOS: un file di testo per nota nella cartella "Note" della tua casa. Salvataggio automatico.
 import os, sys, time
 sys.path.insert(0, "/usr/local/lib/sofios")
+import tema_app
 from sofios_info import bottone_informazioni
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QIcon
@@ -30,7 +31,7 @@ class Note(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("Note"); self.setWindowIcon(QIcon(LOGO))
-        self.setStyleSheet(STILE); self.resize(860, 560)
+        self.setStyleSheet(tema_app.adatta(STILE)); self.resize(860, 560)
         os.makedirs(CARTELLA, exist_ok=True)
         self.corrente = None; self.salvato = None
         radice = QHBoxLayout(self); radice.setContentsMargins(20, 18, 20, 18); radice.setSpacing(16)

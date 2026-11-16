@@ -4,6 +4,7 @@ Vetrina scelta da noi (catalogo.json, aggiornato con gli aggiornamenti firmati) 
 Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il sistema."""
 import json, os, re, shlex, shutil, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+import tema_app
 from sofios_info import bottone_informazioni
 import store_android as AND
 import store_windows as WIN
@@ -314,7 +315,7 @@ class SoStore(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("SoStore"); self.setWindowIcon(QIcon.fromTheme("sofios-store", QIcon(LOGO)))
-        self.setStyleSheet(STILE); self.resize(1040, 700)
+        self.setStyleSheet(tema_app.adatta(STILE)); self.resize(1040, 700)
         self.catalogo = carica_catalogo(); self.fonte = Catalogo(); self.in_corso = {}; self.schede = []; self.icone = Icone()
         self.android = AND.CatalogoAndroid(); self.android_installate = set(); self.pagina = "vetrina"
         icone = self.fonte.icone_per_pacchetto()
