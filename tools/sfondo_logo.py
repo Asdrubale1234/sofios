@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 inc = sys.argv[1]
 W, H = 1920, 1080
-logo = Image.open("docs/logo-sofios.png").convert("RGBA")
+logo = Image.open("docs/logo-sofios-chiaro.png").convert("RGBA")
 y = np.linspace(0, 1, H)[:, None, None]
 fondo = np.array([252, 253, 255.]) * (1 - y) + np.array([232, 241, 252.]) * y
 fondo = np.broadcast_to(fondo, (H, W, 3)).copy()
