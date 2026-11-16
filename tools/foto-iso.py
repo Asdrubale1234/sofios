@@ -109,6 +109,8 @@ def aspetta_serie(testo, sec, nome, ogni=120):
         foto(nome); time.sleep(ogni)
     return False
 
+SOLO = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "SOLO_TEMA"))   # prova corta: salta collaudo, Windows e Android
+if SOLO: L("PROVA CORTA: solo schermate e tema")
 try:
     L("attendo il menu di avvio")
     aspetta(30, "avvio", 10)
@@ -148,6 +150,7 @@ try:
     schermata("sostore", "SoStore", 25)
     try:
         L("collaudo automatico nel sistema acceso")
+        if SOLO: raise RuntimeError("saltato (prova corta)")
         esegui_c = lambda c: (tasti("alt-f2"), time.sleep(3), scrivi(c), time.sleep(2), tasti("ret"))
         esegui_c("sofios-prova-store collaudo"); aspetta_serie("### collaudo-fine", 400, "collaudo", 60)
         esegui_c("sofios-prova-store collaudo-duro"); aspetta_serie("### collaudo-duro-fine", 700, "collaudo-duro", 60)
@@ -160,6 +163,7 @@ try:
         esegui("sofios-prova-store " + nome); time.sleep(10)
     try:
         L("prova Windows: Notepad++ con Wine")
+        if SOLO: raise RuntimeError("saltato (prova corta)")
         serie("kernel")
         esegui("sofios-prova-store windows")
         aspetta(780, "win-installazione", 30)
@@ -172,6 +176,7 @@ try:
         L("errore prova Windows", repr(e))
     try:
         L("prova Android: attivazione e avvio")
+        if SOLO: raise RuntimeError("saltato (prova corta)")
         esegui("sofios-prova-store android-attiva")
         L("Android pronto: %s" % aspetta_serie("Android pronto.", 4200, "android-attivazione", 150))
         serie("android-stato")
