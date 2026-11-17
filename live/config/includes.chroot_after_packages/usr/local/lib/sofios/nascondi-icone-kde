@@ -1,10 +1,23 @@
 #!/bin/sh
-# SofiOS: i temi di icone originali restano come riserva (per le icone che mancano) ma non si possono scegliere dalle Impostazioni.
-for t in breeze breeze-dark Breeze_Light Adwaita; do
+# SofiOS: i temi di icone originali servono solo da riserva (per le icone che mancano) e non devono comparire tra quelli da scegliere.
+# La cartella "breeze" viene spostata in "base-riserva" (con il nome "Icone di base", nascosta) e i temi che la usano vengono aggiornati.
+cd /usr/share/icons 2>/dev/null || exit 0
+if [ -d breeze ]; then
+  rm -rf base-riserva
+  mv breeze base-riserva
+fi
+for t in base-riserva breeze-dark Breeze_Light Adwaita; do
   f=/usr/share/icons/$t/index.theme
   [ -f "$f" ] || continue
   grep -q '^Hidden=' "$f" && sed -i 's/^Hidden=.*/Hidden=true/' "$f" || sed -i '0,/^\[Icon Theme\]/s//[Icon Theme]\nHidden=true/' "$f"
-  # anche se la voce restasse visibile nelle Impostazioni, non porta il nome originale
   sed -i '/^Name\[[^]]*\]=/d; s/^Name=.*/Name=Icone di base/' "$f"
+done
+# chi usava "breeze" come riserva ora usa "base-riserva"
+for t in base-riserva breeze-dark Breeze_Light SofiOS SofiOS-chiaro; do
+  f=/usr/share/icons/$t/index.theme
+  [ -f "$f" ] && sed -i '/^Inherits=/s/\(^\|[=,]\)breeze\(,\|$\)/\1base-riserva\2/' "$f"
+done
+for t in SofiOS SofiOS-chiaro base-riserva; do
+  [ -d "/usr/share/icons/$t" ] && command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -f -q "/usr/share/icons/$t" 2>/dev/null
 done
 exit 0
