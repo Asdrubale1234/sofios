@@ -158,12 +158,12 @@ def squircle(simbolo, colore):
       '<rect x="0.5" y="0.5" width="23" height="23" rx="6" fill="url(#g)"/>'
       '<g transform="translate(4.8 4.8) scale(0.6)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % (a, b, t)
 
-def semplice(simbolo):
+def semplice(simbolo, colore="#e6edf3"):
     t = tracciati(simbolo)
     if t is None: return None
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">'
-      '<style type="text/css" id="current-color-scheme">.ColorScheme-Text{color:#6e7a88;}</style>'
-      '<g class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % t
+      '<style type="text/css" id="current-color-scheme">.ColorScheme-Text{color:%s;}</style>'
+      '<g class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % (colore, t)
 
 def scrivi(cartella, nomi, svg):
     os.makedirs(os.path.join(out, cartella), exist_ok=True)
@@ -178,7 +178,35 @@ for nomi, (sim, col) in COLORATE.items():
     if s:
         scrivi("SofiOS/scalable/apps", " ".join(n for n in nomi.split() if n + ".svg" not in esistenti), s); n_c += len(nomi.split())
 for nomi, sim in SEMPLICI.items():
-    s = semplice(sim)
+    s = semplice(sim, "#e6edf3")             # tema scuro: simboli chiari
     if s:
         scrivi("SofiOS/scalable/azioni", nomi, s); n_s += len(nomi.split())
+    s2 = semplice(sim, "#3b4654")            # tema chiaro: simboli scuri
+    if s2:
+        scrivi("SofiOS-chiaro/scalable/azioni", nomi, s2)
+# il tema di icone chiaro: stesse icone colorate, simboli semplici scuri
+import shutil
+dest = os.path.join(out, "SofiOS-chiaro/scalable/apps")
+shutil.rmtree(dest, ignore_errors=True)
+shutil.copytree(os.path.join(out, "SofiOS/scalable/apps"), dest)
+open(os.path.join(out, "SofiOS-chiaro/index.theme"), "w").write("""[Icon Theme]
+Name=SofiOS chiaro
+Comment=Icone di SofiOS per il tema chiaro
+Inherits=breeze,hicolor
+Directories=scalable/apps,scalable/azioni
+
+[scalable/apps]
+Size=128
+MinSize=16
+MaxSize=512
+Type=Scalable
+Context=Applications
+
+[scalable/azioni]
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable
+Context=Actions
+""")
 print("colorate:", n_c, "semplici:", n_s)

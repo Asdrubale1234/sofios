@@ -11,7 +11,7 @@ name=breeze-light
 Image=SofiOSChiaro
 
 [kdeglobals][Icons]
-Theme=SofiOS
+Theme=SofiOS-chiaro
 
 [kwinrc][org.kde.kdecoration2]
 library=org.kde.kwin.aurorae

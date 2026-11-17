@@ -1,0 +1,19 @@
+[Icon Theme]
+Name=SofiOS chiaro
+Comment=Icone di SofiOS per il tema chiaro
+Inherits=breeze,hicolor
+Directories=scalable/apps,scalable/azioni
+
+[scalable/apps]
+Size=128
+MinSize=16
+MaxSize=512
+Type=Scalable
+Context=Applications
+
+[scalable/azioni]
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable
+Context=Actions

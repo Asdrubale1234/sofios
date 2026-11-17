@@ -4,5 +4,7 @@ for t in breeze breeze-dark Breeze_Light Adwaita; do
   f=/usr/share/icons/$t/index.theme
   [ -f "$f" ] || continue
   grep -q '^Hidden=' "$f" && sed -i 's/^Hidden=.*/Hidden=true/' "$f" || sed -i '0,/^\[Icon Theme\]/s//[Icon Theme]\nHidden=true/' "$f"
+  # anche se la voce restasse visibile nelle Impostazioni, non porta il nome originale
+  sed -i '/^Name\[[^]]*\]=/d; s/^Name=.*/Name=Icone di base/' "$f"
 done
 exit 0

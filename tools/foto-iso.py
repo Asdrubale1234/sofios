@@ -200,7 +200,11 @@ try:
         esegui("systemsettings"); time.sleep(20); aspetta(30, "tema-chiaro-impostazioni", 10); tasti("alt-f4"); time.sleep(3)
         esegui("sofios-prova-store store-assistenti"); time.sleep(25); aspetta(30, "tema-chiaro-sostore", 10); tasti("alt-f4"); time.sleep(3)
         esegui("sofios-prova-store tema-chiaro-verifica"); time.sleep(5)
-        esegui("sofios-prova-store tema-scuro"); time.sleep(12)
+        esegui("sofios-prova-store tema-scuro"); time.sleep(15)
+        esegui("dolphin"); time.sleep(8); aspetta(14, "tema-scuro-file", 7)
+        tasti("meta_l"); time.sleep(4); foto("tema-scuro-menu"); tasti("esc"); time.sleep(2)
+        esegui("systemsettings"); time.sleep(20); aspetta(30, "tema-scuro-impostazioni", 10); tasti("alt-f4"); time.sleep(3)
+        tasti("alt-f4"); time.sleep(2)
     except Exception as e:
         L("errore prova tema", repr(e))
     try:
