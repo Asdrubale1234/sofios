@@ -1,0 +1,102 @@
+10:27:34 OVMF: /usr/share/OVMF/OVMF_CODE_4M.fd /usr/share/OVMF/OVMF_VARS_4M.fd kvm: True
+10:27:35 QMP collegato (mouse assoluto)
+10:27:36 PROVA CORTA: solo schermate e tema
+10:27:36 attendo il menu di avvio
+10:27:36 foto 001-0000s-avvio.png
+10:27:47 foto 002-0011s-avvio.png
+10:28:08 avvio premuto, attendo il caricamento
+10:28:08 foto 003-0032s-caricamento.png
+10:28:19 foto 004-0043s-caricamento.png
+10:28:29 foto 005-0053s-caricamento.png
+10:28:40 foto 006-0064s-caricamento.png
+10:28:50 foto 007-0074s-caricamento.png
+10:29:11 desktop appena avviato
+10:29:11 foto 008-0095s-desktop.png
+10:30:12 foto 009-0156s-desktop.png
+10:31:14 foto 010-0217s-desktop.png
+10:32:15 foto 011-0279s-desktop.png
+10:33:16 foto 012-0340s-desktop.png
+10:34:18 foto 013-0401s-desktop.png
+10:34:58 provo a sbloccare con la password della prova (live)
+10:35:15 foto 014-0458s-sbloccato.png
+10:36:04 foto 015-0508s-sbloccato.png
+10:36:16 chiudo il benvenuto e apro l'installer
+10:36:22 foto 016-0525s-dopo-benvenuto.png
+10:36:33 foto 017-0537s-app-mail.png
+10:36:42 foto 018-0545s-app-mail.png
+10:36:59 foto 019-0562s-app-mail.png
+10:37:07 foto 020-0571s-app-mail.png
+10:38:00 foto 021-0624s-app-cassaforte.png
+10:38:09 foto 022-0632s-app-cassaforte.png
+10:38:33 foto 023-0657s-app-note.png
+10:39:08 foto 024-0692s-app-browser.png
+10:39:16 foto 025-0700s-app-browser.png
+10:39:25 foto 026-0708s-app-browser.png
+10:39:33 foto 027-0717s-app-browser.png
+10:40:16 schermata: accesso-sddm
+10:41:22 foto 028-0826s-accesso-sddm.png
+10:41:23 foto 029-0827s-accesso-sddm-b.png
+10:41:27 schermata: info-sistema
+10:42:05 foto 030-0869s-info-sistema.png
+10:42:11 schermata: impostazioni
+10:42:47 foto 031-0911s-impostazioni.png
+10:42:48 foto 032-0912s-impostazioni-b.png
+10:42:52 schermata: utenti
+10:43:32 foto 033-0955s-utenti.png
+10:43:33 foto 034-0957s-utenti-b.png
+10:43:37 schermata: file
+10:44:03 foto 035-0986s-file.png
+10:44:08 schermata: sostore
+10:44:45 foto 036-1029s-sostore.png
+10:44:51 collaudo automatico nel sistema acceso
+10:44:51 errore collaudo RuntimeError('saltato (prova corta)')
+10:44:51 prova Windows: Notepad++ con Wine
+10:44:51 errore prova Windows RuntimeError('saltato (prova corta)')
+10:44:51 prova Android: attivazione e avvio
+10:44:51 errore prova Android RuntimeError('saltato (prova corta)')
+10:44:51 prova tema chiaro
+10:45:30 foto 037-1074s-tema-chiaro.png
+10:45:41 foto 038-1085s-tema-chiaro.png
+10:45:56 foto 039-1100s-tema-chiaro-menu.png
+10:46:36 foto 040-1139s-tema-chiaro-impostazioni.png
+10:46:46 foto 041-1150s-tema-chiaro-impostazioni.png
+10:48:06 foto 042-1230s-tema-chiaro-sostore.png
+10:50:21 foto 043-1365s-tema-scuro-file.png
+10:50:41 foto 044-1384s-tema-scuro-menu.png
+10:51:20 foto 045-1424s-tema-scuro-impostazioni.png
+10:51:57 pagine dei temi e del comportamento
+10:52:42 foto 046-1505s-tema-globale.png
+10:53:03 foto 047-1526s-tema-globale.png
+10:54:08 foto 048-1591s-colori.png
+10:55:36 foto 049-1679s-comportamento-generale.png
+10:56:07 foto 050-1711s-comportamento-generale.png
+10:57:01 foto 051-1764s-icone.png
+10:57:11 foto 052-1775s-icone.png
+10:57:46 icone non nostre
+10:58:22 SoStore: assistenti online
+10:59:19 foto 053-1902s-sostore-assistenti.png
+10:59:53 prova assistenza
+11:00:20 foto 054-1964s-assistenza.png
+11:00:33 foto 055-1977s-assistenza.png
+11:00:45 foto 056-1989s-assistenza.png
+11:01:31 foto 057-2034s-assistenza-mail.png
+11:01:51 foto 058-2055s-assistenza-mail.png
+11:02:12 foto 059-2075s-assistenza-mail.png
+11:02:55 schermata: menu
+11:03:36 foto 060-2160s-menu-applicazioni.png
+11:03:42 foto 061-2166s-menu-aiuto.png
+11:03:45 schermata: blocco
+11:04:16 foto 062-2199s-blocco.png
+11:04:27 foto 063-2210s-dopo-blocco.png
+11:06:18 foto 064-2322s-krunner.png
+11:06:19 foto 065-2323s-installer.png
+11:06:35 foto 066-2338s-installer.png
+11:07:06 foto 067-2369s-installer.png
+11:08:07 foto 068-2431s-installer.png
+11:09:15 foto 069-2498s-pagina2.png
+11:09:30 foto 070-2513s-pagina3.png
+11:09:45 foto 071-2528s-pagina4.png
+11:10:00 foto 072-2543s-partizioni.png
+11:10:07 foto 073-2551s-partizioni-cancella.png
+11:10:18 foto 074-2562s-utente.png
+11:10:18 fine
