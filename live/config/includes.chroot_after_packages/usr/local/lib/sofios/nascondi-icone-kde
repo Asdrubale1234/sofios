@@ -12,6 +12,12 @@ for t in base-riserva breeze-dark Breeze_Light Adwaita; do
   grep -q '^Hidden=' "$f" && sed -i 's/^Hidden=.*/Hidden=true/' "$f" || sed -i '0,/^\[Icon Theme\]/s//[Icon Theme]\nHidden=true/' "$f"
   sed -i '/^Name\[[^]]*\]=/d; s/^Name=.*/Name=Icone di base/' "$f"
 done
+# il tema del puntatore del mouse ("Brezza" nella pagina Icone era lui): resta in uso, ma con un nome nostro e non tra quelli da scegliere
+f=/usr/share/icons/breeze_cursors/index.theme
+if [ -f "$f" ]; then
+  grep -q '^Hidden=' "$f" && sed -i 's/^Hidden=.*/Hidden=true/' "$f" || sed -i '0,/^\[Icon Theme\]/s//[Icon Theme]\nHidden=true/' "$f"
+  sed -i '/^Name\[[^]]*\]=/d; s/^Name=.*/Name=Puntatore SofiOS/' "$f"
+fi
 # chi usava "breeze" come riserva ora usa "base-riserva"
 for t in base-riserva breeze-dark Breeze_Light SofiOS SofiOS-chiaro; do
   f=/usr/share/icons/$t/index.theme
