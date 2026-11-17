@@ -73,6 +73,11 @@ nascondi 'org.kde.kinfocenter.desktop'
 # anche dopo gli aggiornamenti (dpkg-divert lo mette da parte). Al suo posto c'e' "Informazioni su SofiOS".
 mkdir -p /usr/share/sofios/nascosti
 dpkg-divert --local --rename --divert /usr/share/sofios/nascosti/org.kde.kinfocenter.desktop --add /usr/share/applications/org.kde.kinfocenter.desktop || true
+# la pagina "Icone" delle Impostazioni elencava anche il tema di icone incorporato di KDE ("Brezza"), che non si puo' nascondere;
+# i temi di icone cambiano da soli con il tema chiaro/scuro, quindi la pagina non serve: messa da parte del tutto
+for f in $(find /usr/lib -name 'kcm_icons.so' 2>/dev/null); do
+  dpkg-divert --local --rename --divert "/usr/share/sofios/nascosti/$(echo "$f" | tr / _)" --add "$f" || true
+done
 nascondi 'kcm_about-distro.desktop'
 nascondi 'org.kde.kate.desktop'
 nascondi 'org.kde.konqueror.desktop'
