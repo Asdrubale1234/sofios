@@ -248,9 +248,9 @@ try:
         L("errore nel menu", repr(e))
     try:
         L("mascotte: passaggio del mouse e X")
-        muovi(1140, 560); foto("mascotte-mouse-sopra")
-        muovi(1210, 426); foto("mascotte-x")
-        clic(1210, 426); time.sleep(2); foto("mascotte-tolta")
+        muovi(1140, 520); foto("mascotte-mouse-sopra")
+        muovi(1212, 338); foto("mascotte-x")
+        clic(1212, 338); time.sleep(2); foto("mascotte-tolta")
     except Exception as e:
         L("errore prova mascotte", repr(e))
     try:
