@@ -2,7 +2,7 @@
 """Avvia la ISO in QEMU (UEFI) e salva schermate vere in una cartella.
 Uso: foto-iso.py ISO CARTELLA [minuti_massimi]
 Non e' un test: se qualcosa non va, salva comunque quello che ha visto e un file registro.txt."""
-import os, sys, time, socket, subprocess, hashlib, glob, shutil
+import os, re, sys, time, socket, subprocess, hashlib, glob, shutil
 
 iso, out = sys.argv[1], sys.argv[2]
 massimo = int(sys.argv[3]) if len(sys.argv) > 3 else 40
@@ -88,6 +88,13 @@ def muovi(x, y, w=1280, h=800):
     if qmp is None: return
     ax = int(x * 32767 / w); ay = int(y * 32767 / h)
     qmp_eventi([{"type": "abs", "data": {"axis": "x", "value": ax}}, {"type": "abs", "data": {"axis": "y", "value": ay}}]); time.sleep(1.2)
+def clicd(x, y, w=1280, h=800):
+    """tasto destro con il mouse assoluto"""
+    if qmp is None: return
+    ax = int(x * 32767 / w); ay = int(y * 32767 / h)
+    qmp_eventi([{"type": "abs", "data": {"axis": "x", "value": ax}}, {"type": "abs", "data": {"axis": "y", "value": ay}}]); time.sleep(0.6)
+    qmp_eventi([{"type": "btn", "data": {"down": True, "button": "right"}}]); time.sleep(0.2)
+    qmp_eventi([{"type": "btn", "data": {"down": False, "button": "right"}}]); time.sleep(1.2)
 def tasti(*k):
     for t in k:
         cmdmon(f"sendkey {t}"); time.sleep(0.3)
@@ -114,6 +121,7 @@ def aspetta_serie(testo, sec, nome, ogni=120):
         foto(nome); time.sleep(ogni)
     return False
 
+AUDIT = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "AUDIT"))   # giro completo dei nomi non nostri
 SOLO = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "SOLO_TEMA"))   # prova corta: salta collaudo, Windows e Android
 if SOLO: L("PROVA CORTA: solo schermate e tema")
 try:
@@ -251,6 +259,34 @@ try:
         serie("audit-nomi")
     except Exception as e:
         L("errore audit nomi", repr(e))
+    if AUDIT:
+        try:
+            L("giro di tutte le pagine delle Impostazioni")
+            serie("kcm-lista"); time.sleep(6)
+            ids = []
+            try:
+                ids = re.findall(r"KCM-ID: (\S+)", open(os.path.join(out, "seriale.txt"), errors="ignore").read())
+            except OSError: pass
+            ids = sorted(set(ids))
+            L("pagine trovate:", len(ids))
+            for kid in ids:
+                esegui("kcmshell6 " + kid); time.sleep(7); foto("kcm-" + kid)
+                tasti("alt-f4"); time.sleep(2)
+        except Exception as e:
+            L("errore giro Impostazioni", repr(e))
+        try:
+            L("menu del tasto destro, widget, terminale, aiuto")
+            clicd(500, 300); time.sleep(1); foto("destro-scrivania"); tasti("esc"); time.sleep(1)
+            clicd(640, 780); time.sleep(1); foto("destro-dock"); tasti("esc"); time.sleep(1)
+            clicd(100, 8); time.sleep(1); foto("destro-barra"); tasti("esc"); time.sleep(1)
+            tasti("alt-d", "a"); time.sleep(5); foto("aggiungi-widget"); tasti("esc"); time.sleep(2)
+            esegui("dolphin"); time.sleep(8); tasti("ctrl-m"); time.sleep(1); tasti("alt-h"); time.sleep(2); foto("file-menu-aiuto")
+            tasti("esc"); tasti("alt-f4"); time.sleep(2)
+            esegui("systemsettings"); time.sleep(12)
+            clicd(560, 300); foto("destro-impostazioni"); tasti("esc"); tasti("alt-f4"); time.sleep(2)
+            esegui("konsole"); time.sleep(8); scrivi("uname -a; cat /etc/os-release | head -4; lsb_release -a"); tasti("ret"); time.sleep(4); foto("terminale"); tasti("alt-f4"); time.sleep(2)
+        except Exception as e:
+            L("errore controlli a mano", repr(e))
     try:
         L("mascotte: passaggio del mouse e X")
         muovi(1140, 520); foto("mascotte-mouse-sopra")

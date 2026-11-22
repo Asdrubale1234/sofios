@@ -45,6 +45,8 @@ case "$1" in
         N "$ic" || echo "ICONA-NON-NOSTRA [$tag]: $ic ($(basename $f))"
       done | sort -u
       echo "### icone-diag-fine"; } 2>&1 | S ;;
+  kcm-lista)
+    { echo "### kcm-lista"; kcmshell6 --list 2>/dev/null | awk '$1 ~ /^kcm/ {print "KCM-ID: " $1}'; echo "### kcm-lista-fine"; } 2>&1 | S ;;
   audit-nomi)
     # solo lettura: elenca dove compaiono ancora nomi non nostri (non modifica niente)
     { echo "### audit-nomi"
@@ -82,6 +84,13 @@ case "$1" in
       done
       echo "--- schermate di accesso e avvio (testi):"
       grep -rEl "$P" /usr/share/sddm/themes/sofios /usr/share/plymouth/themes/sofios 2>/dev/null | sed 's#^#ACCESSO: #'
+      echo "--- terminale e identità del sistema:"
+      { uname -a; cat /etc/os-release /etc/issue /etc/issue.net /etc/motd /etc/debian_version 2>/dev/null; lsb_release -a 2>/dev/null; hostnamectl 2>/dev/null | head -12; } | grep -E "$P|deb1[0-9]" | sed 's#^#TERMINALE: #'
+      echo "--- programmi di terzi (pagine iniziali, motori di ricerca, informazioni):"
+      grep -rEl "debian|Debian" /etc/firefox-esr /usr/lib/firefox-esr/distribution /usr/lib/firefox-esr/defaults /etc/thunderbird /usr/lib/thunderbird/distribution 2>/dev/null | sed 's#^#TERZI: #'
+      grep -rEh "debian\.org|Debian" /etc/firefox-esr 2>/dev/null | head -5 | sed 's#^#TERZI-TESTO: #'
+      echo "--- menu «Aiuto» dei programmi (azioni standard):"
+      find /usr/share -name 'ui_standards.rc' 2>/dev/null | sed 's#^#AIUTO-STANDARD: #'
       echo "### audit-nomi-fine"; } 2>&1 | S ;;
   store-assistenti)
     SOFIOS_PAGINA=assistenti sofios-store >/dev/null 2>&1 & ;;
