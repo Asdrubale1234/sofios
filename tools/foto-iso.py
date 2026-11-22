@@ -247,6 +247,11 @@ try:
     except Exception as e:
         L("errore nel menu", repr(e))
     try:
+        L("controllo dei nomi non nostri (solo lettura)")
+        serie("audit-nomi")
+    except Exception as e:
+        L("errore audit nomi", repr(e))
+    try:
         L("mascotte: passaggio del mouse e X")
         muovi(1140, 520); foto("mascotte-mouse-sopra")
         muovi(1212, 338); foto("mascotte-x")

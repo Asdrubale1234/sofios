@@ -45,6 +45,44 @@ case "$1" in
         N "$ic" || echo "ICONA-NON-NOSTRA [$tag]: $ic ($(basename $f))"
       done | sort -u
       echo "### icone-diag-fine"; } 2>&1 | S ;;
+  audit-nomi)
+    # solo lettura: elenca dove compaiono ancora nomi non nostri (non modifica niente)
+    { echo "### audit-nomi"
+      P='KDE|Plasma|Kubuntu|Debian|Breeze|Brezza|Dolphin|Konsole|Kate|KWrite|Okular|Gwenview|Spectacle|Kirigami|Frameworks|KWin|Baloo|KRunner|Akonadi|Kontact|Discover'
+      echo "--- avvisi (nome del programma che avvisa):"
+      for f in /usr/share/knotifications6/*.notifyrc /usr/local/share/knotifications6/*.notifyrc; do
+        [ -f "$f" ] || continue
+        sed -n '1,/^\[Event/p' "$f" | grep -E "^(Name|Comment)(\[it\])?=" | grep -E "$P" | sed "s#^#AVVISO [$(basename $f)]: #"
+      done
+      echo "--- voci delle Impostazioni (nome e descrizione):"
+      for f in /usr/share/applications/kcm_*.desktop /usr/share/applications/*systemsettings*.desktop; do
+        [ -f "$f" ] || continue
+        grep -E "^(Name|Comment|GenericName)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#IMPOSTAZIONE [$(basename $f)]: #"
+      done
+      echo "--- programmi nel menu:"
+      for f in /usr/share/applications/*.desktop /usr/local/share/applications/*.desktop; do
+        [ -f "$f" ] || continue
+        grep -qE '^(NoDisplay|Hidden)=true' "$f" && continue
+        grep -E "^(Name|Comment|GenericName)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#PROGRAMMA [$(basename $f)]: #"
+      done
+      echo "--- widget (Aggiungi widget):"
+      for f in /usr/share/plasma/plasmoids/*/metadata.json; do
+        [ -f "$f" ] || continue
+        grep -E '"(Name|Description)(\[it\])?"' "$f" | grep -E "$P" | sed "s#^#WIDGET [$(basename $(dirname $f))]: #"
+      done
+      echo "--- temi (nomi visibili nelle scelte):"
+      for f in /usr/share/plasma/desktoptheme/*/metadata.json /usr/share/plasma/look-and-feel/*/metadata.json /usr/share/aurorae/themes/*/metadata.desktop /usr/share/color-schemes/*.colors; do
+        [ -f "$f" ] || continue
+        grep -E '^(Name|"Name")' "$f" | grep -E "$P" | sed "s#^#TEMA [$(basename $(dirname $f))/$(basename $f)]: #"
+      done
+      echo "--- cartelle e categorie del menu:"
+      for f in /usr/share/desktop-directories/*.directory; do
+        [ -f "$f" ] || continue
+        grep -E "^(Name|Comment)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#CATEGORIA [$(basename $f)]: #"
+      done
+      echo "--- schermate di accesso e avvio (testi):"
+      grep -rEl "$P" /usr/share/sddm/themes/sofios /usr/share/plymouth/themes/sofios 2>/dev/null | sed 's#^#ACCESSO: #'
+      echo "### audit-nomi-fine"; } 2>&1 | S ;;
   store-assistenti)
     SOFIOS_PAGINA=assistenti sofios-store >/dev/null 2>&1 & ;;
   tema-chiaro-verifica)
