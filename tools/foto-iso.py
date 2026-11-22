@@ -83,6 +83,11 @@ def clic(x, y, w=1280, h=800):
     qmp_eventi([{"type": "abs", "data": {"axis": "x", "value": ax}}, {"type": "abs", "data": {"axis": "y", "value": ay}}]); time.sleep(0.6)
     qmp_eventi([{"type": "btn", "data": {"down": True, "button": "left"}}]); time.sleep(0.2)
     qmp_eventi([{"type": "btn", "data": {"down": False, "button": "left"}}]); time.sleep(0.8)
+def muovi(x, y, w=1280, h=800):
+    """sposta il mouse assoluto senza cliccare (per vedere cosa compare al passaggio)"""
+    if qmp is None: return
+    ax = int(x * 32767 / w); ay = int(y * 32767 / h)
+    qmp_eventi([{"type": "abs", "data": {"axis": "x", "value": ax}}, {"type": "abs", "data": {"axis": "y", "value": ay}}]); time.sleep(1.2)
 def tasti(*k):
     for t in k:
         cmdmon(f"sendkey {t}"); time.sleep(0.3)
@@ -241,6 +246,13 @@ try:
         tasti("esc"); time.sleep(2)
     except Exception as e:
         L("errore nel menu", repr(e))
+    try:
+        L("mascotte: passaggio del mouse e X")
+        muovi(1140, 560); foto("mascotte-mouse-sopra")
+        muovi(1210, 426); foto("mascotte-x")
+        clic(1210, 426); time.sleep(2); foto("mascotte-tolta")
+    except Exception as e:
+        L("errore prova mascotte", repr(e))
     try:
         L("schermata: blocco")
         tasti("alt-f2"); time.sleep(3); scrivi("loginctl lock-session"); time.sleep(3); tasti("ret")

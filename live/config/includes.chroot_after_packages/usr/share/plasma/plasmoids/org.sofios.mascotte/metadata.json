@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Id": "org.sofios.mascotte",
+        "Name": "Mascotte SofiOS",
+        "Name[it]": "Mascotte SofiOS",
+        "Description": "L'aiutante di SofiOS: un faro simpatico sulla scrivania",
+        "Description[it]": "L'aiutante di SofiOS: un faro simpatico sulla scrivania",
+        "Icon": "sofios-logo",
+        "Category": "Utilities",
+        "License": "GPL-3.0-or-later",
+        "Authors": [{ "Name": "SofiOS" }],
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "KPackageStructure": "Plasma/Applet"
+}

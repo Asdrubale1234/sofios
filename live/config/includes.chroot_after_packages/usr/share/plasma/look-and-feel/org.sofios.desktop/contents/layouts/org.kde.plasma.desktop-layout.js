@@ -3,6 +3,10 @@ desktops().forEach(function (d) {
     d.wallpaperPlugin = "org.kde.image";
     d.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
     d.writeConfig("Image", "file:///usr/share/wallpapers/SofiOS");
+    // la mascotte (un widget: ha la sua X per toglierla), in basso a destra sopra il dock
+    var gs = {width: 1280, height: 800};
+    try { gs = screenGeometry(d.screen); } catch (e) {}
+    d.addWidget("org.sofios.mascotte", Math.max(0, gs.width - 180 - 50), Math.max(0, gs.height - 284 - 110), 180, 284);
 });
 
 // --- Barra in alto ---
