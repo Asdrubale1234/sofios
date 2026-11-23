@@ -1,0 +1,49 @@
+name: Android (compila e prova sul tablet simulato)
+on:
+  workflow_dispatch:
+  push:
+    branches: ['android/**']
+    paths: ['android/**', '.github/workflows/android.yml', '!android/prove/**']
+permissions:
+  contents: write
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Compila l'app
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug 2>&1 | tee /tmp/compila.txt
+      - name: Abilita l'emulazione veloce (KVM)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - name: Tablet simulato (Pixel Tablet, Android 14) e schermate vere
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_tablet
+          ram-size: 4096M
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: bash android/tools/prova-emulatore.sh android/app/build/outputs/apk/debug/app-debug.apk /tmp/prove
+      - name: Salva schermate e registro nel ramo
+        if: always()
+        env:
+          BR: ${{ github.ref_name }}
+        run: |
+          mkdir -p /tmp/prove && cp /tmp/compila.txt /tmp/prove/ 2>/dev/null || true
+          echo "esecuzione ${GITHUB_RUN_ID}, commit ${GITHUB_SHA}, esito job: ${{ job.status }}" > /tmp/prove/esecuzione.txt
+          rm -rf android/prove && mkdir -p android/prove && cp -r /tmp/prove/. android/prove/
+          git config user.name "sofios-build" && git config user.email "build@sofios.local"
+          git add android/prove && git commit -q -m "Android: schermate vere della prova ${GITHUB_RUN_ID} [skip ci]"
+          for i in 1 2 3 4; do git pull -q --rebase origin "$BR" && git push -q origin "HEAD:$BR" && break; sleep 5; done
