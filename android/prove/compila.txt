@@ -16,12 +16,12 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:checkKotlinGradlePluginConfigurationErrors
-> Task :app:generateDebugResValues
 > Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
-> Task :app:mergeDebugResources
 > Task :app:packageDebugResources
+> Task :app:mergeDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
 > Task :app:parseDebugLocalResources
@@ -36,13 +36,20 @@ Daemon will be stopped at the end of the build
 > Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
 > Task :app:mergeDebugStartupProfile
-> Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugJniLibFolders
 > Task :app:processDebugResources
-> Task :app:mergeExtDexDebug
-> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:mergeDebugJniLibFolders
+> Task :app:checkDebugDuplicateClasses
+> Task :app:compileDebugKotlin
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
 > Task :app:mergeLibDexDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:mergeDebugJavaResource
+> Task :app:mergeExtDexDebug
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
@@ -57,13 +64,16 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:parseDebugLocalResources
+> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:javaPreCompileDebug
+> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:mergeDebugShaders
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
 > Task :finto-fully:compileDebugShaders NO-SOURCE
 > Task :finto-fully:generateDebugAssets UP-TO-DATE
 > Task :finto-fully:mergeDebugAssets
@@ -71,7 +81,6 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:desugarDebugFileDependencies
 > Task :finto-fully:checkDebugDuplicateClasses
 > Task :finto-fully:mergeDebugStartupProfile
-> Task :finto-fully:processDebugResources
 > Task :finto-fully:mergeLibDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
@@ -79,6 +88,7 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:validateSigningDebug
 > Task :finto-fully:writeDebugAppMetadata
 > Task :finto-fully:writeDebugSigningConfigVersions
+> Task :finto-fully:processDebugResources
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:compileDebugKotlin
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
@@ -86,21 +96,11 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugGlobalSynthetics
 > Task :finto-fully:processDebugJavaRes
 > Task :finto-fully:mergeProjectDexDebug
-> Task :app:compileDebugKotlin
 > Task :finto-fully:mergeDebugJavaResource
-> Task :app:compileDebugJavaWithJavac NO-SOURCE
-> Task :app:dexBuilderDebug
-> Task :app:mergeDebugGlobalSynthetics
-> Task :app:processDebugJavaRes
-> Task :app:mergeProjectDexDebug
-> Task :app:mergeDebugJavaResource
 > Task :finto-fully:packageDebug
 > Task :finto-fully:createDebugApkListingFileRedirect
 > Task :finto-fully:assembleDebug
-> Task :app:packageDebug
-> Task :app:createDebugApkListingFileRedirect
-> Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795444079618.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795444435813.json
 
-BUILD SUCCESSFUL in 1m 20s
+BUILD SUCCESSFUL in 1m 9s
 70 actionable tasks: 70 executed
