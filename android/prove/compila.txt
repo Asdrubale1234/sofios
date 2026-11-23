@@ -16,8 +16,8 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:checkKotlinGradlePluginConfigurationErrors
-> Task :app:generateDebugResValues
 > Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
@@ -27,7 +27,6 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -38,18 +37,14 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugStartupProfile
 > Task :app:mergeDebugJniLibFolders
 > Task :app:mergeDebugNativeLibs NO-SOURCE
-> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:processDebugManifestForPackage
 > Task :app:checkDebugDuplicateClasses
 > Task :app:processDebugResources
-> Task :app:validateSigningDebug
-> Task :app:compileDebugKotlin
-> Task :app:compileDebugJavaWithJavac NO-SOURCE
-> Task :app:dexBuilderDebug
-> Task :app:mergeDebugGlobalSynthetics
-> Task :app:processDebugJavaRes
+> Task :app:mergeExtDexDebug
+> Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:mergeLibDexDebug
+> Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
-> Task :app:mergeProjectDexDebug
 > Task :app:writeDebugSigningConfigVersions
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
@@ -62,14 +57,13 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:extractDeepLinksDebug
+> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :app:mergeDebugJavaResource
+> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:javaPreCompileDebug
 > Task :finto-fully:mergeDebugShaders
-> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:compileDebugShaders NO-SOURCE
 > Task :finto-fully:generateDebugAssets UP-TO-DATE
 > Task :finto-fully:mergeDebugAssets
@@ -81,14 +75,10 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeLibDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
-> Task :app:mergeExtDexDebug
 > Task :finto-fully:stripDebugDebugSymbols NO-SOURCE
 > Task :finto-fully:validateSigningDebug
 > Task :finto-fully:writeDebugAppMetadata
 > Task :finto-fully:writeDebugSigningConfigVersions
-> Task :app:packageDebug
-> Task :app:createDebugApkListingFileRedirect
-> Task :app:assembleDebug
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:compileDebugKotlin
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
@@ -96,11 +86,21 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugGlobalSynthetics
 > Task :finto-fully:processDebugJavaRes
 > Task :finto-fully:mergeProjectDexDebug
+> Task :app:compileDebugKotlin
 > Task :finto-fully:mergeDebugJavaResource
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics
+> Task :app:processDebugJavaRes
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeDebugJavaResource
 > Task :finto-fully:packageDebug
 > Task :finto-fully:createDebugApkListingFileRedirect
 > Task :finto-fully:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795444765948.json
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795445312628.json
 
-BUILD SUCCESSFUL in 1m 27s
+BUILD SUCCESSFUL in 1m 36s
 70 actionable tasks: 70 executed

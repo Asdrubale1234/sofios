@@ -28,32 +28,36 @@ java.lang.IllegalArgumentException: Unknown package: com.android.launcher3
 	at android.os.Binder.execTransactInternal(Binder.java:1344)
 	at android.os.Binder.execTransact(Binder.java:1275)
 == A. Prima accensione: SofiOS parte e apre da solo Casa
-in primo piano: topResumedActivity=ActivityRecord{1f527e u0 de.ozerov.fully/.FintoFully t10}
+in primo piano: 
+ATTENZIONE: Casa non si è aperta
 foto: A-casa-aperta-da-sola.png
 == B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS
-in primo piano: topResumedActivity=ActivityRecord{2358331 u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{e555c77 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: B-schermata-iniziale.png
-== B2. Mascotte: tocco, compare la X, la tolgo; tengo premuto sullo sfondo e la rimetto
+== B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla
 tocco «Mascotte SofiOS» in 2268 1092
 foto: B2-mascotte-con-x.png
 tocco «Nascondi la mascotte» in 2400 856
 foto: B3-mascotte-tolta.png
-foto: B4-menu-sfondo.png
-tocco «Mostra la mascotte» in 1280 1307
+tocco «Mostra o nascondi la mascotte» in 1456 1476
+foto: B4-icona-mascotte-tocco.png
+tocco «Mostra o nascondi la mascotte» in 1456 1476
+foto: B4b-mascotte-di-nuovo-tolta.png
+tocco «Mostra o nascondi la mascotte» in 1456 1476
 foto: B5-mascotte-rimessa.png
 == C. Tasto Home non riapre Casa
-in primo piano: topResumedActivity=ActivityRecord{2358331 u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{e555c77 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: C-tasto-home.png
 == D. Tocco su Impostazioni e ritorno
-tocco «Impostazioni» in 1368 1476
-in primo piano: topResumedActivity=ActivityRecord{2082121 u0 com.android.settings/.homepage.SettingsHomepageActivity t9}
+tocco «Impostazioni» in 1280 1476
+in primo piano: topResumedActivity=ActivityRecord{1d057d9 u0 com.android.settings/.homepage.SettingsHomepageActivity t9}
 foto: D-impostazioni.png
-dopo Home: topResumedActivity=ActivityRecord{2358331 u0 it.sofilabs.sofios/.MainActivity t9}
+dopo Home: topResumedActivity=ActivityRecord{e555c77 u0 it.sofilabs.sofios/.MainActivity t9}
 == E. Riavvio del tablet: Casa deve riaprirsi da sola
 schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
-in primo piano: topResumedActivity=ActivityRecord{8354446 u0 de.ozerov.fully/.FintoFully t12}
+in primo piano: topResumedActivity=ActivityRecord{7dee19b u0 de.ozerov.fully/.FintoFully t12}
 foto: E-dopo-riavvio-casa.png
 == F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
-in primo piano: topResumedActivity=ActivityRecord{8cef685 u0 it.sofilabs.sofios/.MainActivity t11}
+in primo piano: topResumedActivity=ActivityRecord{a5449c4 u0 it.sofilabs.sofios/.MainActivity t11}
 foto: F-dopo-riavvio-schermata-iniziale.png
-ESITO FINALE: OK
+ESITO FINALE: NON OK
