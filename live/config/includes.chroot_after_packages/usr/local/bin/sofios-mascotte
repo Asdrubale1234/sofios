@@ -192,7 +192,7 @@ class Finestra(QWidget):
         self.di(r or "Questo schermo non permette di cambiare la luminosità da qui (succede con gli schermi dei computer fissi).")
 
     def fa_tema(self, arg):
-        r = C.tema(arg == "chiaro"); self.di("Tema %s impostato." % arg if r else "Non è stato possibile cambiare il tema.")
+        r = C.tema(arg); self.di("Tema %s impostato." % arg if r else "Non è stato possibile cambiare il tema.")
 
     def fa_schermata(self, arg):
         if QProcess.startDetached("spectacle", []): self.di("Ho aperto lo strumento per le schermate.")

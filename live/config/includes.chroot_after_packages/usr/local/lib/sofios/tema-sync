@@ -10,6 +10,7 @@ if [ ! -f "$stato" ]; then mkdir -p "$(dirname "$stato")"; echo "$tema" > "$stat
 pgrep -x plasmashell >/dev/null 2>&1 || exit 0
 case "$tema" in
   org.sofios.light) img=/usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png; barre=breeze-light ;;
+  org.sofios.silver) img=/usr/share/wallpapers/SofiOSArgento/contents/images/1920x1080.png; barre=breeze-light ;;
   org.sofios.desktop) img=/usr/share/wallpapers/SofiOS/contents/images/1920x1080.png; barre=breeze-dark ;;
   *) exit 0 ;;
 esac
