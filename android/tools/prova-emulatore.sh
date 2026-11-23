@@ -49,6 +49,8 @@ scrivi "modello: $(adb shell getprop ro.product.model | tr -d '\r')"
 scrivi "Android: $(adb shell getprop ro.build.version.release | tr -d '\r') (API $(adb shell getprop ro.build.version.sdk | tr -d '\r'))"
 scrivi "schermo: $(adb shell wm size | tr -d '\r')"
 
+# Nel simulato spengo il lanciatore di Google (non serve e rallenta la prova)
+adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher 2>&1 | tee -a "$LOG"
 scrivi "== Installazione (SofiOS e un FINTO Fully, solo per la prova)"
 adb install -r "$APK" 2>&1 | tee -a "$LOG"
 adb install -r "$FINTO" 2>&1 | tee -a "$LOG"
@@ -57,12 +59,10 @@ scrivi "== Imposto SofiOS come schermata iniziale"
 adb shell cmd role add-role-holder android.app.role.HOME $PKG 2>&1 | tee -a "$LOG"
 scrivi "schermata iniziale scelta: $(adb shell cmd role get-role-holders android.app.role.HOME | tr -d '\r')"
 
-# Nel simulato spengo il lanciatore di Google (non serve e rallenta la prova)
-adb shell pm disable-user --user 0 com.google.android.apps.nexuslauncher 2>&1 | tee -a "$LOG"
-adb shell pm disable-user --user 0 com.android.launcher3 2>&1 | tee -a "$LOG" || true
 scrivi "== A. Prima accensione: SofiOS parte e apre da solo Casa"
-adb shell input keyevent KEYCODE_HOME; sleep 4
-scrivi "in primo piano: $(in_primo_piano)"
+sleep 8
+# Se Android non ha già avviato SofiOS da solo, premo Home
+in_primo_piano | grep -qE "$PKG|de.ozerov.fully" || adb shell input keyevent KEYCODE_HOME
 aspetta_primo_piano "de.ozerov.fully" || scrivi "ATTENZIONE: Casa non si è aperta"
 foto A-casa-aperta-da-sola
 
