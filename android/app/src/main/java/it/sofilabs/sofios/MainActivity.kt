@@ -1,6 +1,7 @@
 package it.sofilabs.sofios
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -45,12 +46,24 @@ class MainActivity : Activity() {
         })
         radice.addView(riga)
         setContentView(radice)
+
+        // Dopo ogni accensione, la prima volta che parte SofiOS apre da solo Casa (Fully).
+        if (primaVoltaDopoAccensione()) apriFully(silenzioso = true)
     }
 
-    private fun apriFully() {
+    /** Vero solo la prima volta dopo ogni accensione del dispositivo. Nessun servizio acceso. */
+    private fun primaVoltaDopoAccensione(): Boolean {
+        val accensione = Settings.Global.getInt(contentResolver, Settings.Global.BOOT_COUNT, -1)
+        val memoria = getSharedPreferences("sofios", Context.MODE_PRIVATE)
+        if (memoria.getInt("accensione", -2) == accensione) return false
+        memoria.edit().putInt("accensione", accensione).apply()
+        return true
+    }
+
+    private fun apriFully(silenzioso: Boolean = false) {
         val i = packageManager.getLaunchIntentForPackage(fully)
         if (i != null) startActivity(i)
-        else Toast.makeText(this, "Fully Kiosk non è installato", Toast.LENGTH_LONG).show()
+        else if (!silenzioso) Toast.makeText(this, "Fully Kiosk non è installato", Toast.LENGTH_LONG).show()
     }
 
     private fun icona(nome: String, colore: Int, azione: () -> Unit): View =

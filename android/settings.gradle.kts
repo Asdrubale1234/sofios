@@ -7,3 +7,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "SofiOS"
 include(":app")
+include(":finto-fully")
