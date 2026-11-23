@@ -14,6 +14,16 @@ android {
         versionCode = 1
         versionName = "0.1"
     }
+    // Chiave di PROVA, uguale a ogni costruzione, così gli aggiornamenti si installano uno sopra l'altro.
+    // Non è la chiave per il Play Store: quella sarà separata e non entrerà mai nel repository.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("prova.keystore")
+            storePassword = "sofios-prova"
+            keyAlias = "prova"
+            keyPassword = "sofios-prova"
+        }
+    }
     buildTypes {
         release { isMinifyEnabled = true }
     }
