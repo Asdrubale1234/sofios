@@ -26,7 +26,9 @@ aspetta_avvio() {
   adb shell input keyevent 82 >/dev/null 2>&1   # sblocca lo schermo
 }
 # Tocca l'elemento che mostra il testo dato (legge la schermata vera, niente coordinate a caso)
-tocca_testo() {
+tocca_testo() { tocca_con_durata "$1" 0; }
+tocca_a_lungo() { tocca_con_durata "$1" 1200; }
+tocca_con_durata() {
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null
   adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
   xy=$(python3 - "$OUT/ui.xml" "$1" <<'EOF'
@@ -41,7 +43,8 @@ EOF
 )
   rm -f "$OUT/ui.xml"
   if [ -z "$xy" ]; then scrivi "ERRORE: non trovo «$1» sullo schermo"; return 1; fi
-  scrivi "tocco «$1» in $xy"; adb shell input tap $xy
+  if [ "$2" = 0 ]; then scrivi "tocco «$1» in $xy"; adb shell input tap $xy
+  else scrivi "tocco lungo «$1» in $xy"; adb shell input swipe $xy $xy $2; fi
 }
 
 scrivi "== Dispositivo"
@@ -59,14 +62,21 @@ scrivi "== Imposto SofiOS come schermata iniziale"
 adb shell cmd role add-role-holder android.app.role.HOME $PKG 2>&1 | tee -a "$LOG"
 scrivi "schermata iniziale scelta: $(adb shell cmd role get-role-holders android.app.role.HOME | tr -d '\r')"
 
-scrivi "== A. Prima accensione: SofiOS parte e apre da solo Casa"
+scrivi "== A. Prima di toccare Casa: SofiOS non apre niente da solo"
 sleep 8
-# Se Android non ha già avviato SofiOS da solo, premo Home
-in_primo_piano | grep -qE "$PKG|de.ozerov.fully" || adb shell input keyevent KEYCODE_HOME
-aspetta_primo_piano "de.ozerov.fully" || scrivi "ATTENZIONE: Casa non si è aperta"
-foto A-casa-aperta-da-sola
+in_primo_piano | grep -q "$PKG" || adb shell input keyevent KEYCODE_HOME
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: SofiOS non è in primo piano"
+sleep 6
+scrivi "in primo piano: $(in_primo_piano)"
+in_primo_piano | grep -q "$PKG/.MainActivity" || scrivi "ATTENZIONE: Fully si è aperto da solo senza che nessuno toccasse Casa"
+foto A-prima-di-toccare-casa
 
-scrivi "== B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS"
+scrivi "== A2. Tocco Casa: si apre Fully (e da ora parte sempre da solo)"
+tocca_testo "Casa"
+aspetta_primo_piano "de.ozerov.fully" || scrivi "ATTENZIONE: Casa non si è aperta"
+foto A2-casa-aperta
+
+scrivi "== B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS, con il puntino verde"
 adb shell input keyevent KEYCODE_BACK
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: SofiOS non è tornato in primo piano"
 sleep 2
@@ -111,6 +121,16 @@ aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: SofiOS non è to
 sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto F-dopo-riavvio-schermata-iniziale
+
+scrivi "== G. Tengo premuto su Casa: Fully non deve più partire da solo"
+tocca_a_lungo "Casa"; sleep 1
+foto_subito G-puntino-spento
+adb reboot
+aspetta_avvio
+sleep 10
+scrivi "in primo piano dopo il riavvio: $(in_primo_piano)"
+in_primo_piano | grep -q "$PKG/.MainActivity" || scrivi "ATTENZIONE: dopo il riavvio Fully è partito anche se l'avevo spento"
+foto G2-dopo-riavvio-senza-casa
 
 ok=1
 grep -q ATTENZIONE "$LOG" && ok=0

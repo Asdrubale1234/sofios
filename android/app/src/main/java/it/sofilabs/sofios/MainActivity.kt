@@ -14,7 +14,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextClock
 import android.widget.TextView
-import android.widget.Toast
 
 /** Schermata iniziale di SofiOS: stile del computer, nessuna libreria, nessun servizio acceso. */
 class MainActivity : Activity() {
@@ -22,6 +21,8 @@ class MainActivity : Activity() {
     private val fully = "de.ozerov.fully"
     private lateinit var mascotte: FrameLayout
     private lateinit var tastoX: TextView
+    private lateinit var casa: FrameLayout
+    private lateinit var puntino: View
     private val nascondiX = Runnable { tastoX.visibility = View.GONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +90,29 @@ class MainActivity : Activity() {
             setPadding(dp(14), dp(10), dp(14), dp(10))
             background = GradientDrawable().apply { setColor(BARRA); cornerRadius = dp(24).toFloat() }
         }
-        barra.addView(icona("Casa", R.drawable.ic_casa, ORO, ORO_SCURO) { apriFully() })
+        // Casa (Fully): si vede solo se Fully è installato. Dopo il primo tocco, parte sempre da solo
+        // all'accensione. Tenendo premuto si spegne e si riaccende (puntino verde = parte da solo).
+        val tastoCasa = icona("Casa", R.drawable.ic_casa, ORO, ORO_SCURO) {
+            memoria().edit().putBoolean("casa_auto", true).apply()
+            aggiornaCasa()
+            apriFully()
+        }
+        tastoCasa.setOnLongClickListener {
+            memoria().edit().putBoolean("casa_auto", !casaAuto()).apply()
+            aggiornaCasa()
+            true
+        }
+        puntino = View(this).apply {
+            background = GradientDrawable().apply { setColor(VERDE); setShape(GradientDrawable.OVAL); setStroke(dp(2), FONDO) }
+        }
+        casa = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(dp(88), dp(72))
+            addView(tastoCasa)
+            addView(puntino, FrameLayout.LayoutParams(dp(16), dp(16), Gravity.TOP or Gravity.END).apply {
+                topMargin = dp(4); rightMargin = dp(10)
+            })
+        }
+        barra.addView(casa)
         barra.addView(icona("Impostazioni", R.drawable.ic_impostazioni, GRIGIO, GRIGIO_SCURO) {
             startActivity(Intent(Settings.ACTION_SETTINGS))
         })
@@ -103,8 +126,24 @@ class MainActivity : Activity() {
 
         setContentView(radice)
 
-        // Dopo ogni accensione, la prima volta che parte SofiOS apre da solo Casa (Fully).
-        if (primaVoltaDopoAccensione()) apriFully(silenzioso = true)
+        aggiornaCasa()
+        // Dopo ogni accensione, se Casa è attiva, SofiOS apre da solo Fully (una volta sola per accensione).
+        if (primaVoltaDopoAccensione() && casaAuto() && fullyInstallato()) apriFully()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        aggiornaCasa()
+    }
+
+    private fun fullyInstallato() = packageManager.getLaunchIntentForPackage(fully) != null
+
+    private fun casaAuto() = memoria().getBoolean("casa_auto", false)
+
+    /** Casa si vede solo se Fully è installato; il puntino verde dice se parte da solo. */
+    private fun aggiornaCasa() {
+        casa.visibility = if (fullyInstallato()) View.VISIBLE else View.GONE
+        puntino.visibility = if (casaAuto()) View.VISIBLE else View.GONE
     }
 
     private fun memoria() = getSharedPreferences("sofios", Context.MODE_PRIVATE)
@@ -132,10 +171,8 @@ class MainActivity : Activity() {
         return true
     }
 
-    private fun apriFully(silenzioso: Boolean = false) {
-        val i = packageManager.getLaunchIntentForPackage(fully)
-        if (i != null) startActivity(i)
-        else if (!silenzioso) Toast.makeText(this, "Fully Kiosk non è installato", Toast.LENGTH_LONG).show()
+    private fun apriFully() {
+        packageManager.getLaunchIntentForPackage(fully)?.let { startActivity(it) }
     }
 
     /** Icona nello stile del computer: riquadro colorato con simbolo bianco. */
@@ -168,6 +205,7 @@ class MainActivity : Activity() {
         private const val TESTO = 0xFFE8F1F8.toInt()
         private const val ORO = 0xFFFFD479.toInt()
         private const val ORO_SCURO = 0xFFE0A93C.toInt()
+        private const val VERDE = 0xFF6FE0B0.toInt()
         private const val GRIGIO = 0xFF7D8DA0.toInt()
         private const val GRIGIO_SCURO = 0xFF566577.toInt()
         private const val MARE = 0xFF3A86B8.toInt()
