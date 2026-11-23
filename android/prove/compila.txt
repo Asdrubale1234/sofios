@@ -16,8 +16,8 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:checkKotlinGradlePluginConfigurationErrors
-> Task :app:checkDebugAarMetadata
 > Task :app:generateDebugResValues
+> Task :app:checkDebugAarMetadata
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
@@ -34,15 +34,15 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugAssets
 > Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
-> Task :app:mergeDebugStartupProfile
-> Task :app:mergeDebugJniLibFolders
-> Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:processDebugManifestForPackage
 > Task :app:checkDebugDuplicateClasses
+> Task :app:mergeDebugStartupProfile
 > Task :app:processDebugResources
 > Task :app:mergeExtDexDebug
-> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:mergeDebugJniLibFolders
 > Task :app:mergeLibDexDebug
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
@@ -57,8 +57,8 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:parseDebugLocalResources
+> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
 > Task :finto-fully:processDebugManifestForPackage
@@ -69,9 +69,8 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugAssets
 > Task :finto-fully:compressDebugAssets
 > Task :finto-fully:desugarDebugFileDependencies
-> Task :finto-fully:checkDebugDuplicateClasses
 > Task :finto-fully:mergeDebugStartupProfile
-> Task :finto-fully:processDebugResources
+> Task :finto-fully:checkDebugDuplicateClasses
 > Task :finto-fully:mergeLibDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
@@ -79,20 +78,21 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:validateSigningDebug
 > Task :finto-fully:writeDebugAppMetadata
 > Task :finto-fully:writeDebugSigningConfigVersions
+> Task :finto-fully:processDebugResources
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:compileDebugKotlin
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
-> Task :finto-fully:dexBuilderDebug
-> Task :finto-fully:mergeDebugGlobalSynthetics
-> Task :finto-fully:processDebugJavaRes
-> Task :finto-fully:mergeProjectDexDebug
 > Task :app:compileDebugKotlin
-> Task :finto-fully:mergeDebugJavaResource
+> Task :finto-fully:dexBuilderDebug
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
+> Task :finto-fully:processDebugJavaRes
+> Task :finto-fully:mergeDebugGlobalSynthetics
 > Task :app:mergeProjectDexDebug
+> Task :finto-fully:mergeProjectDexDebug
+> Task :finto-fully:mergeDebugJavaResource
 > Task :app:mergeDebugJavaResource
 > Task :finto-fully:packageDebug
 > Task :finto-fully:createDebugApkListingFileRedirect
@@ -100,7 +100,7 @@ Daemon will be stopped at the end of the build
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795445312628.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795445733263.json
 
-BUILD SUCCESSFUL in 1m 36s
+BUILD SUCCESSFUL in 1m 14s
 70 actionable tasks: 70 executed

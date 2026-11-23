@@ -2,6 +2,7 @@
 modello: sdk_gphone64_x86_64
 Android: 14 (API 34)
 schermo: Physical size: 2560x1600
+Package com.google.android.apps.nexuslauncher new state: disabled-user
 == Installazione (SofiOS e un FINTO Fully, solo per la prova)
 Performing Streamed Install
 Success
@@ -9,30 +10,10 @@ Performing Streamed Install
 Success
 == Imposto SofiOS come schermata iniziale
 schermata iniziale scelta: it.sofilabs.sofios
-Package com.google.android.apps.nexuslauncher new state: disabled-user
-
-Exception occurred while executing 'disable-user':
-java.lang.IllegalArgumentException: Unknown package: com.android.launcher3
-	at com.android.server.pm.PackageManagerService.setEnabledSettings(PackageManagerService.java:3904)
-	at com.android.server.pm.PackageManagerService.-$$Nest$msetEnabledSettings(PackageManagerService.java:0)
-	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.setApplicationEnabledSetting(PackageManagerService.java:5733)
-	at com.android.server.pm.PackageManagerShellCommand.runSetEnabledSetting(PackageManagerShellCommand.java:2482)
-	at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:273)
-	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
-	at android.os.ShellCommand.exec(ShellCommand.java:38)
-	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onShellCommand(PackageManagerService.java:6350)
-	at android.os.Binder.shellCommand(Binder.java:1068)
-	at android.os.Binder.onTransact(Binder.java:888)
-	at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4352)
-	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onTransact(PackageManagerService.java:6334)
-	at android.os.Binder.execTransactInternal(Binder.java:1344)
-	at android.os.Binder.execTransact(Binder.java:1275)
 == A. Prima accensione: SofiOS parte e apre da solo Casa
-in primo piano: 
-ATTENZIONE: Casa non si è aperta
 foto: A-casa-aperta-da-sola.png
 == B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS
-in primo piano: topResumedActivity=ActivityRecord{e555c77 u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{4b7bc9 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: B-schermata-iniziale.png
 == B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla
 tocco «Mascotte SofiOS» in 2268 1092
@@ -46,18 +27,18 @@ foto: B4b-mascotte-di-nuovo-tolta.png
 tocco «Mostra o nascondi la mascotte» in 1456 1476
 foto: B5-mascotte-rimessa.png
 == C. Tasto Home non riapre Casa
-in primo piano: topResumedActivity=ActivityRecord{e555c77 u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{4b7bc9 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: C-tasto-home.png
 == D. Tocco su Impostazioni e ritorno
 tocco «Impostazioni» in 1280 1476
-in primo piano: topResumedActivity=ActivityRecord{1d057d9 u0 com.android.settings/.homepage.SettingsHomepageActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{bf360d4 u0 com.android.settings/.homepage.SettingsHomepageActivity t9}
 foto: D-impostazioni.png
-dopo Home: topResumedActivity=ActivityRecord{e555c77 u0 it.sofilabs.sofios/.MainActivity t9}
+dopo Home: topResumedActivity=ActivityRecord{4b7bc9 u0 it.sofilabs.sofios/.MainActivity t9}
 == E. Riavvio del tablet: Casa deve riaprirsi da sola
 schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
-in primo piano: topResumedActivity=ActivityRecord{7dee19b u0 de.ozerov.fully/.FintoFully t12}
+in primo piano: topResumedActivity=ActivityRecord{7ef39af u0 de.ozerov.fully/.FintoFully t12}
 foto: E-dopo-riavvio-casa.png
 == F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
-in primo piano: topResumedActivity=ActivityRecord{a5449c4 u0 it.sofilabs.sofios/.MainActivity t11}
+in primo piano: topResumedActivity=ActivityRecord{c09537 u0 it.sofilabs.sofios/.MainActivity t11}
 foto: F-dopo-riavvio-schermata-iniziale.png
-ESITO FINALE: NON OK
+ESITO FINALE: OK
