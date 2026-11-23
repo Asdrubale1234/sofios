@@ -22,8 +22,6 @@ class MainActivity : Activity() {
     private val fully = "de.ozerov.fully"
     private lateinit var mascotte: FrameLayout
     private lateinit var tastoX: TextView
-    private lateinit var pastiglia: TextView
-    private val nascondiPastiglia = Runnable { pastiglia.visibility = View.GONE }
     private val nascondiX = Runnable { tastoX.visibility = View.GONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,11 +32,9 @@ class MainActivity : Activity() {
         val radice = FrameLayout(this)
 
         // Sfondo di SofiOS (lo stesso del computer): mare di notte e stelle.
-        // Tenendo premuto sullo sfondo si può rimettere la mascotte (come «Aggiungi widget» sul computer).
         radice.addView(ImageView(this).apply {
             setImageResource(R.drawable.sfondo)
             scaleType = ImageView.ScaleType.CENTER_CROP
-            setOnLongClickListener { menuSfondo(it); true }
         }, FrameLayout.LayoutParams(-1, -1))
 
         // Orologio e data, in alto a sinistra.
@@ -97,26 +93,14 @@ class MainActivity : Activity() {
         barra.addView(icona("Impostazioni", R.drawable.ic_impostazioni, GRIGIO, GRIGIO_SCURO) {
             startActivity(Intent(Settings.ACTION_SETTINGS))
         })
+        // Icona della mascotte: la toglie o la rimette (sul computer è «Aggiungi widget»).
+        barra.addView(icona("Mostra o nascondi la mascotte", R.drawable.mascotte, MARE, MARE_SCURO, piena = true) {
+            impostaMascotte(!mascotteVisibile())
+        })
         radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
             bottomMargin = dp(16)
         })
 
-        // Tasto che compare tenendo premuto sullo sfondo: toglie o rimette la mascotte.
-        pastiglia = TextView(this).apply {
-            textSize = 18f
-            setTextColor(ORO)
-            gravity = Gravity.CENTER
-            setPadding(dp(24), dp(14), dp(24), dp(14))
-            background = GradientDrawable().apply { setColor(BARRA); cornerRadius = dp(24).toFloat(); setStroke(dp(1), 0x66FFD479) }
-            visibility = View.GONE
-            setOnClickListener {
-                impostaMascotte(!mascotteVisibile())
-                removeCallbacks(nascondiPastiglia); visibility = View.GONE
-            }
-        }
-        radice.addView(pastiglia, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
-            bottomMargin = dp(120)
-        })
         setContentView(radice)
 
         // Dopo ogni accensione, la prima volta che parte SofiOS apre da solo Casa (Fully).
@@ -140,14 +124,6 @@ class MainActivity : Activity() {
         tastoX.postDelayed(nascondiX, 6000)
     }
 
-    private fun menuSfondo(@Suppress("UNUSED_PARAMETER") v: View) {
-        pastiglia.text = if (mascotteVisibile()) "Nascondi la mascotte" else "Mostra la mascotte"
-        pastiglia.contentDescription = pastiglia.text
-        pastiglia.visibility = View.VISIBLE
-        pastiglia.removeCallbacks(nascondiPastiglia)
-        pastiglia.postDelayed(nascondiPastiglia, 6000)
-    }
-
     /** Vero solo la prima volta dopo ogni accensione del dispositivo. */
     private fun primaVoltaDopoAccensione(): Boolean {
         val accensione = Settings.Global.getInt(contentResolver, Settings.Global.BOOT_COUNT, -1)
@@ -163,12 +139,13 @@ class MainActivity : Activity() {
     }
 
     /** Icona nello stile del computer: riquadro colorato con simbolo bianco. */
-    private fun icona(nome: String, immagine: Int, chiaro: Int, scuro: Int, azione: () -> Unit): View =
+    private fun icona(nome: String, immagine: Int, chiaro: Int, scuro: Int, piena: Boolean = false, azione: () -> Unit): View =
         ImageView(this).apply {
             setImageResource(immagine)
             contentDescription = nome
             scaleType = ImageView.ScaleType.CENTER_INSIDE
-            setPadding(dp(14), dp(14), dp(14), dp(14))
+            val m = if (piena) dp(6) else dp(14)
+            setPadding(m, m, m, m)
             background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(chiaro, scuro)).apply {
                 cornerRadius = dp(16).toFloat()
             }
@@ -193,5 +170,7 @@ class MainActivity : Activity() {
         private const val ORO_SCURO = 0xFFE0A93C.toInt()
         private const val GRIGIO = 0xFF7D8DA0.toInt()
         private const val GRIGIO_SCURO = 0xFF566577.toInt()
+        private const val MARE = 0xFF3A86B8.toInt()
+        private const val MARE_SCURO = 0xFF1B4F7A.toInt()
     }
 }

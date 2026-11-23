@@ -73,14 +73,16 @@ sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto B-schermata-iniziale
 
-scrivi "== B2. Mascotte: tocco, compare la X, la tolgo; tengo premuto sullo sfondo e la rimetto"
+scrivi "== B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla"
 tocca_testo "Mascotte SofiOS"; sleep 1
 foto_subito B2-mascotte-con-x
 tocca_testo "Nascondi la mascotte"; sleep 1
 foto B3-mascotte-tolta
-adb shell input swipe 600 400 600 400 900; sleep 1
-foto_subito B4-menu-sfondo
-tocca_testo "Mostra la mascotte"; sleep 1
+tocca_testo "Mostra o nascondi la mascotte"; sleep 1
+foto_subito B4-icona-mascotte-tocco
+tocca_testo "Mostra o nascondi la mascotte"; sleep 1
+foto_subito B4b-mascotte-di-nuovo-tolta
+tocca_testo "Mostra o nascondi la mascotte"; sleep 1
 foto B5-mascotte-rimessa
 
 scrivi "== C. Tasto Home non riapre Casa"
