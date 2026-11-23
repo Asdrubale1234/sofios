@@ -61,6 +61,16 @@ adb shell input keyevent KEYCODE_BACK; sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto B-schermata-iniziale
 
+scrivi "== B2. Mascotte: tocco, compare la X, la tolgo; tengo premuto sullo sfondo e la rimetto"
+tocca_testo "Mascotte SofiOS"; sleep 1
+foto B2-mascotte-con-x
+tocca_testo "Nascondi la mascotte"; sleep 1
+foto B3-mascotte-tolta
+adb shell input swipe 700 500 700 500 1500; sleep 1
+foto B4-menu-sfondo
+tocca_testo "Mostra la mascotte"; sleep 1
+foto B5-mascotte-rimessa
+
 scrivi "== C. Tasto Home non riapre Casa"
 adb shell input keyevent KEYCODE_HOME; sleep 3
 scrivi "in primo piano: $(in_primo_piano)"

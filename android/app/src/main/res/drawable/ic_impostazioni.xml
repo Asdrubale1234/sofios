@@ -1,7 +1,4 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp" android:height="48dp" android:viewportWidth="24" android:viewportHeight="24">
-    <path android:fillColor="#FFFFFF"
-        android:pathData="M4,6.2 H11 V7.8 H4 Z M15,6.2 H20 V7.8 H15 Z M4,11.2 H6 V12.8 H4 Z M10,11.2 H20 V12.8 H10 Z M4,16.2 H13 V17.8 H4 Z M17,16.2 H20 V17.8 H17 Z" />
-    <path android:fillColor="#FFFFFF"
-        android:pathData="M13,7 m-2.2,0 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0 M8,12 m-2.2,0 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0 M15,17 m-2.2,0 a2.2,2.2 0 1,0 4.4,0 a2.2,2.2 0 1,0 -4.4,0" />
+    <path android:fillColor="#FFFFFF" android:fillType="evenOdd" android:pathData="M19.78,10.13 L22.31,10.62 L22.31,13.38 L19.78,13.87 L18.82,16.18 L20.27,18.31 L18.31,20.27 L16.18,18.82 L13.87,19.78 L13.38,22.31 L10.62,22.31 L10.13,19.78 L7.82,18.82 L5.69,20.27 L3.73,18.31 L5.18,16.18 L4.22,13.87 L1.69,13.38 L1.69,10.62 L4.22,10.13 L5.18,7.82 L3.73,5.69 L5.69,3.73 L7.82,5.18 L10.13,4.22 L10.62,1.69 L13.38,1.69 L13.87,4.22 L16.18,5.18 L18.31,3.73 L20.27,5.69 L18.82,7.82 Z M15.2,12 A3.2,3.2 0 1,0 8.8,12 A3.2,3.2 0 1,0 15.2,12 Z" />
 </vector>
