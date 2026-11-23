@@ -44,6 +44,12 @@ jobs:
           mkdir -p /tmp/prove && cp /tmp/compila.txt /tmp/prove/ 2>/dev/null || true
           echo "esecuzione ${GITHUB_RUN_ID}, commit ${GITHUB_SHA}, esito job: ${{ job.status }}" > /tmp/prove/esecuzione.txt
           rm -rf android/prove && mkdir -p android/prove && cp -r /tmp/prove/. android/prove/
+          # File da installare sul tablet (versione di prova, firmata con la chiave di prova)
+          if [ -f android/app/build/outputs/apk/debug/app-debug.apk ]; then
+            mkdir -p android/apk && cp android/app/build/outputs/apk/debug/app-debug.apk android/apk/SofiOS-prova.apk
+            (cd android/apk && sha256sum SofiOS-prova.apk > SofiOS-prova.sha256)
+            git add -f android/apk
+          fi
           git config user.name "sofios-build" && git config user.email "build@sofios.local"
           git add android/prove && git commit -q -m "Android: schermate vere della prova ${GITHUB_RUN_ID} [skip ci]"
           for i in 1 2 3 4; do git pull -q --rebase origin "$BR" && git push -q origin "HEAD:$BR" && break; sleep 5; done
