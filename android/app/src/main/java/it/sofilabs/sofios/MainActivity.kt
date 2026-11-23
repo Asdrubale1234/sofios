@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.TextClock
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +22,8 @@ class MainActivity : Activity() {
     private val fully = "de.ozerov.fully"
     private lateinit var mascotte: FrameLayout
     private lateinit var tastoX: TextView
+    private lateinit var pastiglia: TextView
+    private val nascondiPastiglia = Runnable { pastiglia.visibility = View.GONE }
     private val nascondiX = Runnable { tastoX.visibility = View.GONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +100,23 @@ class MainActivity : Activity() {
         radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
             bottomMargin = dp(16)
         })
+
+        // Tasto che compare tenendo premuto sullo sfondo: toglie o rimette la mascotte.
+        pastiglia = TextView(this).apply {
+            textSize = 18f
+            setTextColor(ORO)
+            gravity = Gravity.CENTER
+            setPadding(dp(24), dp(14), dp(24), dp(14))
+            background = GradientDrawable().apply { setColor(BARRA); cornerRadius = dp(24).toFloat(); setStroke(dp(1), 0x66FFD479) }
+            visibility = View.GONE
+            setOnClickListener {
+                impostaMascotte(!mascotteVisibile())
+                removeCallbacks(nascondiPastiglia); visibility = View.GONE
+            }
+        }
+        radice.addView(pastiglia, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
+            bottomMargin = dp(120)
+        })
         setContentView(radice)
 
         // Dopo ogni accensione, la prima volta che parte SofiOS apre da solo Casa (Fully).
@@ -122,11 +140,12 @@ class MainActivity : Activity() {
         tastoX.postDelayed(nascondiX, 6000)
     }
 
-    private fun menuSfondo(v: View) {
-        val menu = PopupMenu(this, v, Gravity.CENTER)
-        if (mascotteVisibile()) menu.menu.add("Nascondi la mascotte") else menu.menu.add("Mostra la mascotte")
-        menu.setOnMenuItemClickListener { impostaMascotte(!mascotteVisibile()); true }
-        menu.show()
+    private fun menuSfondo(@Suppress("UNUSED_PARAMETER") v: View) {
+        pastiglia.text = if (mascotteVisibile()) "Nascondi la mascotte" else "Mostra la mascotte"
+        pastiglia.contentDescription = pastiglia.text
+        pastiglia.visibility = View.VISIBLE
+        pastiglia.removeCallbacks(nascondiPastiglia)
+        pastiglia.postDelayed(nascondiPastiglia, 6000)
     }
 
     /** Vero solo la prima volta dopo ogni accensione del dispositivo. */
