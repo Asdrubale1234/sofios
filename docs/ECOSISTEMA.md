@@ -12,7 +12,8 @@ le password, le note, i file e gli appunti sono gli stessi su tutti i dispositiv
 ## 2. Decisioni già prese (da non rimettere in discussione senza motivo)
 
 - **Computer (PC):** SofiOS è un sistema completo basato su Debian con desktop KDE Plasma, costruito con live-build. È il progetto di questo repository.
-- **Tablet e TV:** usano lo stesso SofiOS del computer (tablet x86, mini-PC collegato alla TV). Per la TV servirà più avanti un'interfaccia da telecomando.
+- **Tablet Intel/AMD e TV:** usano lo stesso SofiOS del computer (ramo `tablet/adattamento-tocco`; mini-PC collegato alla TV). Per la TV servirà più avanti un'interfaccia da telecomando.
+- **Tablet e telefoni Android** (compreso il Teclast T40HD di Luca, che non può avere Linux: processore ARM, bootloader bloccato): usano l'**app SofiOS Android**, generica per qualsiasi tablet o telefono, che fa da schermata iniziale. Lavoro nel ramo `android/schermata-iniziale` (cartella `android/`). Il Teclast è solo il primo tablet di prova.
 - **Telefono:** **Android come base**, sui **telefoni che le persone hanno già**. Prima versione: un pacchetto di app SofiOS (Cassaforte, Note, File…) più una schermata iniziale nostra, che si installano come qualsiasi app (Play Store o file scaricabile). Un sistema Android completo da installare al posto di quello del telefono è un'idea per dopo, solo per pochi modelli.
 - **Comunicazione:** **solo in casa**, quando i dispositivi sono sulla stessa rete Wi-Fi. Si sincronizza tutto da soli, senza server. Niente servizio da remoto (per ora).
 - **Motore di sincronizzazione:** partire da programmi aperti già pronti e provati (cartelle sincronizzate, formato aperto per le password), non da zero. Sopra ci mettiamo la nostra identità e le nostre schermate, in modo da poter cambiare il motore in futuro senza che l'utente se ne accorga.

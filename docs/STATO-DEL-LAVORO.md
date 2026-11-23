@@ -25,7 +25,9 @@ Versione pronta: ISO `iso-20261123-1246`, costruita da `main` (pagina dei rilasc
 
 ## Ecosistema (decisioni prese)
 - Telefono: Android come base, sui telefoni già in uso, con un pacchetto di app SofiOS e una schermata iniziale nostra (non un sistema nuovo).
-- Tablet e TV: usano lo stesso SofiOS del computer.
+- Tablet Intel/AMD e TV: usano lo stesso SofiOS del computer (ramo `tablet/adattamento-tocco`).
+- Tablet e telefoni Android: usano l'app SofiOS Android (schermata iniziale, ramo `android/schermata-iniziale`), non un sistema Linux. Il Teclast T40HD non può avere Linux.
+- Mascotte-assistente e scelta degli assistenti online: da fare sul PC; l'app Android la vorrà uguale (aspetto e testi), ma con i limiti di Android (chiudere app, installare/disinstallare in silenzio, volume, luminosità, cercare file ovunque).
 - Comunicazione solo in casa, sulla stessa rete Wi-Fi, senza server. Motore di sincronizzazione: partire da programmi aperti già pronti.
 - Da condividere (in ordine): password, note, file e foto, appunti.
 - Vedi anche `docs/ECOSISTEMA.md` e `docs/PROMPT-ALTRE-CHAT.md`.
