@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Assistente
+Comment=Scrivi cosa vuoi: apri, chiudi, installa, cerca file, volume…
+Exec=/usr/local/bin/sofios-mascotte
+Icon=sofios-mascotte
+Categories=Utility;
+Keywords=assistente;mascotte;comandi;aiuto;

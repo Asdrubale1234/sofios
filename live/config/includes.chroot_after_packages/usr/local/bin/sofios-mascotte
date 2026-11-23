@@ -1,0 +1,217 @@
+#!/usr/bin/python3
+# Mascotte SofiOS: una piccola casella dove scrivi cosa vuoi (apri, chiudi, installa, disinstalla, cerca file, volume...).
+# Prima di installare o disinstallare chiede sempre conferma. Funziona senza internet e non invia nulla all'esterno.
+import os, sys, json, threading
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+import mascotte_comandi as C
+from PyQt6.QtCore import Qt, QProcess, QTimer, QUrl, pyqtSignal, QObject
+from PyQt6.QtGui import QIcon, QDesktopServices
+from PyQt6.QtNetwork import QLocalServer, QLocalSocket
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QListWidget, QListWidgetItem)
+import tema_app
+
+CATALOGHI = (os.environ.get("SOFIOS_CATALOGO", ""), os.path.expanduser("~/.local/share/sofios/store/catalogo.json"), "/usr/share/sofios/store/catalogo.json")
+ELENCO_MIEI = os.path.expanduser("~/.local/share/sofios/store/miei.json")
+NOME_SERVER = "sofios-mascotte"
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel { color: #e6f1ff; font-size: 13px; }
+QLabel#titolo { color: #ffffff; font-size: 18px; font-weight: 700; }
+QLabel#nota { color: #8fb3d4; font-size: 12px; }
+QLineEdit { background: #12365a; color: #e6f1ff; border: 1px solid #25507c; border-radius: 10px; padding: 9px 12px; font-size: 14px; }
+QLineEdit:focus { border: 1px solid #ffd479; }
+QListWidget { background: #12365a; color: #e6f1ff; border: 1px solid #25507c; border-radius: 8px; padding: 4px; font-size: 13px; }
+QListWidget::item { padding: 5px 4px; }
+QListWidget::item:selected { background: #1e6fa8; color: #ffffff; }
+QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 700; }
+QPushButton:hover { background: #ffe19e; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; font-weight: 600; }
+QPushButton#secondario:hover { background: #2a82c2; }
+"""
+
+def catalogo():
+    for p in CATALOGHI:
+        if p and os.path.exists(p):
+            try: return json.load(open(p, encoding="utf-8")).get("vetrina", [])
+            except Exception: pass
+    return []
+
+def miei():
+    try: return json.load(open(ELENCO_MIEI, encoding="utf-8"))
+    except Exception: return {}
+
+def installato(pacchetto):
+    import subprocess
+    try: return subprocess.run(["dpkg-query", "-W", "-f=${db:Status-Status}", pacchetto], capture_output=True, text=True, timeout=10).stdout.strip() == "installed"
+    except Exception: return False
+
+class Ponte(QObject):
+    risultati = pyqtSignal(object)
+
+class Finestra(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("Assistente SofiOS"); self.setWindowIcon(QIcon.fromTheme("sofios-mascotte"))
+        self.resize(460, 520)
+        self.in_attesa = None          # funzione da eseguire se l'utente conferma
+        self.ponte = Ponte(); self.ponte.risultati.connect(self.mostra_file)
+        v = QVBoxLayout(self); v.setContentsMargins(18, 16, 18, 16); v.setSpacing(10)
+        t = QLabel("Cosa vuoi fare?"); t.setObjectName("titolo"); v.addWidget(t)
+        n = QLabel("Scrivi, per esempio: «apri il browser», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco."); n.setObjectName("nota"); n.setWordWrap(True); v.addWidget(n)
+        self.riga = QLineEdit(); self.riga.setPlaceholderText("Scrivi qui e premi Invio…"); self.riga.returnPressed.connect(self.invia); v.addWidget(self.riga)
+        self.risposta = QLabel(""); self.risposta.setWordWrap(True); self.risposta.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); v.addWidget(self.risposta)
+        self.elenco = QListWidget(); self.elenco.itemActivated.connect(self.scelto); self.elenco.itemClicked.connect(self.scelto); self.elenco.hide(); v.addWidget(self.elenco, 1)
+        self.conferma = QWidget(); h = QHBoxLayout(self.conferma); h.setContentsMargins(0, 0, 0, 0)
+        self.si = QPushButton("Sì"); self.no = QPushButton("No"); self.no.setObjectName("secondario")
+        self.si.clicked.connect(lambda: self.risolvi(True)); self.no.clicked.connect(lambda: self.risolvi(False))
+        h.addWidget(self.si); h.addWidget(self.no); h.addStretch(1); self.conferma.hide(); v.addWidget(self.conferma)
+        v.addStretch(0)
+        self.riga.setFocus()
+
+    # -------------------------------------------------- utilita'
+    def di(self, testo):
+        self.risposta.setText(testo)
+
+    def pulisci(self):
+        self.elenco.clear(); self.elenco.hide(); self.conferma.hide(); self.in_attesa = None
+
+    def chiedi(self, domanda, azione):
+        self.pulisci(); self.di(domanda); self.in_attesa = azione; self.conferma.show(); self.si.setFocus()
+
+    def risolvi(self, si):
+        a = self.in_attesa; self.pulisci()
+        if si and a: a()
+        else: self.di("Va bene, non ho fatto niente.")
+        self.riga.setFocus()
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key.Key_Escape: self.close()
+        else: super().keyPressEvent(e)
+
+    # -------------------------------------------------- comandi
+    def invia(self):
+        frase = self.riga.text().strip(); self.riga.clear(); self.pulisci()
+        azione, arg = C.interpreta(frase)
+        if azione == "niente": self.di("Non ho capito. Scrivi «aiuto» per vedere cosa so fare."); return
+        if azione == "aiuto": self.di(C.AIUTO); return
+        getattr(self, "fa_" + azione.replace("-", "_"))(arg)
+
+    def scegli_programma(self, arg, dopo, solo_se_unico=False):
+        voci = C.cerca_programmi(arg, C.programmi_installati())
+        if not voci: return None
+        if len(voci) == 1: dopo(voci[0]); return True
+        self.di("Quale intendi?"); self.elenco.clear()
+        for v in voci:
+            it = QListWidgetItem(QIcon.fromTheme(v.get("Icon", "")), v["_nome"]); it.setData(Qt.ItemDataRole.UserRole, ("prog", v, dopo)); self.elenco.addItem(it)
+        self.elenco.show(); return True
+
+    def fa_apri(self, arg):
+        def apri(v):
+            self.di("Apro «%s»." % v["_nome"] if C.apri_programma(v) else "Non è stato possibile aprire «%s»." % v["_nome"])
+        if not self.scegli_programma(arg, apri): self.di("Non trovo un programma chiamato «%s». Puoi cercarlo nello SoStore." % arg)
+
+    def fa_chiudi(self, arg):
+        def chiudi(v):
+            self.di("Ho chiuso «%s»." % v["_nome"] if C.chiudi_programma(v) else "«%s» non è aperto." % v["_nome"])
+        if not self.scegli_programma(arg, chiudi): self.di("Non trovo un programma chiamato «%s»." % arg)
+
+    def fa_disinstalla(self, arg):
+        def rimuovi(v):
+            pacchetto = C.pacchetto_di(v)
+            consentiti = {a.get("pacchetto") for a in catalogo()} | set(miei())
+            if not pacchetto or pacchetto not in consentiti:
+                self.di("«%s» fa parte di SofiOS: non lo tolgo, per non rompere il sistema." % v["_nome"]); return
+            self.chiedi("Vuoi disinstallare «%s»? Verrà chiesta la tua password." % v["_nome"], lambda: self.lavora(["remove", "-y", "-p", pacchetto], "Disinstallo «%s»…" % v["_nome"], "«%s» è stato disinstallato." % v["_nome"], lambda: not installato(pacchetto)))
+        if not self.scegli_programma(arg, rimuovi): self.di("Non trovo un programma chiamato «%s» tra quelli installati." % arg)
+
+    def fa_installa(self, arg):
+        parole = C.parole_utili(arg); trovati = []
+        for a in catalogo():
+            n = C.norm(a.get("nome", "")); p = C.norm(a.get("pacchetto", ""))
+            if parole and (all(w in n or w in p for w in parole)): trovati.append(a)
+        if not trovati:
+            self.di("Non trovo «%s» nel catalogo di SoStore. Apri SoStore per cercare meglio." % arg); return
+        def installa(a):
+            if installato(a["pacchetto"]): self.di("«%s» è già installato." % a["nome"]); return
+            self.chiedi("Vuoi installare «%s»? Verrà chiesta la tua password." % a["nome"], lambda: self.lavora(["install", "-y", "-p", a["pacchetto"]], "Installo «%s»…" % a["nome"], "«%s» è installato: lo trovi nel menu." % a["nome"], lambda: installato(a["pacchetto"]), a))
+        if len(trovati) == 1: installa(trovati[0]); return
+        self.di("Quale intendi?")
+        for a in trovati[:8]:
+            it = QListWidgetItem(QIcon.fromTheme(a.get("icona", "")), a["nome"]); it.setData(Qt.ItemDataRole.UserRole, ("catalogo", a, installa)); self.elenco.addItem(it)
+        self.elenco.show()
+
+    def lavora(self, args, durante, fatto, verifica, app=None):
+        self.di(durante); self.proc = p = QProcess(self)
+        def fine(codice, _):
+            if codice == 0 and verifica():
+                self.di(fatto)
+                if app is not None: self.segna(app)
+            elif codice in (126, 127): self.di("Operazione annullata.")
+            else: self.di("Non è riuscito. Controlla la connessione a Internet e riprova dallo SoStore.")
+        p.finished.connect(fine); p.errorOccurred.connect(lambda _: fine(1, None)); p.start("pkcon", args)
+
+    def segna(self, a):
+        try:
+            d = miei(); d[a["pacchetto"]] = {k: a.get(k) for k in ("pacchetto", "nome", "descrizione", "icona", "desktop") if a.get(k)}
+            os.makedirs(os.path.dirname(ELENCO_MIEI), exist_ok=True); json.dump(d, open(ELENCO_MIEI, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        except OSError: pass
+
+    def fa_cerca_file(self, arg):
+        self.di("Cerco «%s» nel computer, nei dischi collegati e nelle cartelle di rete… (al massimo 12 secondi)" % arg)
+        def lavoro():
+            try: self.ponte.risultati.emit((arg,) + C.cerca_file(arg))
+            except Exception: self.ponte.risultati.emit((arg, [], True))
+        threading.Thread(target=lavoro, daemon=True).start()
+
+    def mostra_file(self, r):
+        arg, trovati, finito = r
+        if not trovati:
+            self.di("Non ho trovato niente per «%s»%s." % (arg, "" if finito else " (la ricerca era lunga: ho guardato solo una parte)")); return
+        self.di("Ho trovato %d risultati per «%s»%s. Clicca per aprire." % (len(trovati), arg, "" if finito else " (ricerca incompleta)")); self.elenco.clear()
+        for p in trovati:
+            it = QListWidgetItem("%s   —   %s" % (os.path.basename(p), os.path.dirname(p).replace(os.path.expanduser("~"), "~"))); it.setData(Qt.ItemDataRole.UserRole, ("file", p, None)); self.elenco.addItem(it)
+        self.elenco.show()
+
+    def scelto(self, it):
+        tipo, dato, dopo = it.data(Qt.ItemDataRole.UserRole)
+        if tipo == "file": QDesktopServices.openUrl(QUrl.fromLocalFile(dato)); self.di("Apro «%s»." % os.path.basename(dato))
+        else: self.elenco.clear(); self.elenco.hide(); dopo(dato)
+
+    def fa_cerca_web(self, arg):
+        from urllib.parse import quote
+        QDesktopServices.openUrl(QUrl("https://duckduckgo.com/?q=" + quote(arg))); self.di("Ho aperto il browser con la ricerca.")
+
+    def fa_volume(self, arg):
+        tipo, n = arg
+        r = C.volume(livello=n if tipo == "livello" else None, delta=n if tipo == "delta" else None, muto=n if tipo == "muto" else None)
+        self.di(r or "Su questo computer non riesco a cambiare il volume.")
+
+    def fa_luminosita(self, arg):
+        tipo, n = arg
+        r = C.luminosita(livello=n if tipo == "livello" else None, delta=n if tipo == "delta" else None)
+        self.di(r or "Questo schermo non permette di cambiare la luminosità da qui (succede con gli schermi dei computer fissi).")
+
+    def fa_tema(self, arg):
+        r = C.tema(arg == "chiaro"); self.di("Tema %s impostato." % arg if r else "Non è stato possibile cambiare il tema.")
+
+    def fa_schermata(self, arg):
+        if QProcess.startDetached("spectacle", []): self.di("Ho aperto lo strumento per le schermate.")
+        else: self.di("Non trovo lo strumento per le schermate.")
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("sofios-mascotte"); app.setDesktopFileName("sofios-mascotte")
+    s = QLocalSocket(); s.connectToServer(NOME_SERVER)
+    if s.waitForConnected(300):        # gia' aperta: un secondo clic sulla mascotte la richiude
+        s.write(b"chiudi"); s.waitForBytesWritten(300); return 0
+    QLocalServer.removeServer(NOME_SERVER)
+    server = QLocalServer(); server.listen(NOME_SERVER)
+    f = Finestra(); f.setStyleSheet(tema_app.adatta(STILE))
+    def richiesta():
+        c = server.nextPendingConnection()
+        if c: c.waitForReadyRead(200); f.close()
+    server.newConnection.connect(richiesta)
+    f.show()
+    return app.exec()
+
+if __name__ == "__main__":
+    sys.exit(main())

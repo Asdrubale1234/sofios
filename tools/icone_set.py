@@ -54,7 +54,7 @@ COLORATE = {
  # assistenti online (un'icona nostra per ciascuno)
  "sofios-assistente-claude": ("sparkles", "arancio"), "sofios-assistente-chatgpt": ("message-circle", "verde"), "sofios-assistente-gemini": ("gem", "viola"),
  "sofios-assistente-copilot": ("bot", "blu"), "sofios-assistente-deepseek": ("telescope", "azzurro"), "sofios-assistente-mistral": ("wind", "rosso"),
- "sofios-assistente-perplexity": ("search", "petrolio"),
+ "sofios-assistente-perplexity": ("search", "petrolio"), "sofios-mascotte": ("lightbulb", "arancio"),
  # emersi dalla diagnosi sulla ISO
  "gvim": ("file-code", "verde"), "libreoffice-startcenter": ("layout-grid", "blu"), "preferences-desktop-emoticons": ("smile", "arancio"),
  "tools-report-bug": ("bug", "rosso"), "battery": ("battery-charging", "verde"), "emblem-music-symbolic": ("music", "viola"),

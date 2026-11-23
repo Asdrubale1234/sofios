@@ -1,16 +1,25 @@
 // Mascotte SofiOS: il faro sulla scrivania. Passandoci sopra con il mouse compare una X che la toglie
-// (si rimette da «Aggiungi widget»). Un giorno un clic aprirà l'assistente.
+// (si rimette da «Aggiungi widget»). Un clic sul faro apre la casella dei comandi.
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasma5support as P5Support
 
 PlasmoidItem {
     id: root
 
     preferredRepresentation: fullRepresentation
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+
+    // lancia la casella dei comandi (un secondo clic la richiude)
+    P5Support.DataSource {
+        id: lanciatore
+        engine: "executable"
+        connectedSources: []
+        onNewData: (sorgente) => disconnectSource(sorgente)
+    }
 
     fullRepresentation: Item {
         id: scena
@@ -27,6 +36,15 @@ PlasmoidItem {
             fillMode: Image.PreserveAspectFit
             smooth: true
             mipmap: true
+        }
+
+        // un clic sul faro apre la casella dove scrivere cosa fare
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: lanciatore.connectSource("/usr/local/bin/sofios-mascotte")
+            Accessible.role: Accessible.Button
+            Accessible.name: "Apri l'assistente"
         }
 
         // la X: compare solo con il mouse sopra

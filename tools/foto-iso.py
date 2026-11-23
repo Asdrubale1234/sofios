@@ -292,6 +292,11 @@ try:
         except Exception as e:
             L("errore controlli a mano", repr(e))
     try:
+        L("mascotte: clic, casella dei comandi")
+        clic(1140, 520); time.sleep(5); foto("mascotte-casella")
+        scrivi("aiuto"); tasti("ret"); time.sleep(2); foto("mascotte-aiuto")
+        scrivi("apri office"); tasti("ret"); time.sleep(2); foto("mascotte-quale")
+        tasti("esc"); time.sleep(2); foto("mascotte-chiusa")
         L("mascotte: passaggio del mouse e X")
         muovi(1140, 520); foto("mascotte-mouse-sopra")
         muovi(1212, 338); foto("mascotte-x")
