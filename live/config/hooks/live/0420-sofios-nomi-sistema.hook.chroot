@@ -101,4 +101,12 @@ done
 # 10) la pagina «File recenti» elenca i programmi: ricerca rapida e Impostazioni comparivano come codici
 [ -e "$O/org.kde.krunner.desktop" ] || printf '[Desktop Entry]\nType=Application\nName=Ricerca rapida\nExec=krunner\nIcon=sofios-cerca\nNoDisplay=true\n' > "$O/org.kde.krunner.desktop"
 [ -e "$O/org.kde.systemsettings.desktop" ] || printf '[Desktop Entry]\nType=Application\nName=Impostazioni\nExec=systemsettings\nIcon=sofios-impostazioni\nNoDisplay=true\n' > "$O/org.kde.systemsettings.desktop"
+
+# 11) anteprime di tre widget con scritte non nostre («www.kde.org», «kde-stuff», «Discover»): messe da parte, si vede l'icona
+for w in org.kde.plasma.clipboard org.kde.plasma.activitybar org.kde.plasma.kickoff; do
+  for f in $(find "/usr/share/plasma/plasmoids/$w" \( -iname 'screenshot*' -o -ipath '*/previews/*' \) -type f 2>/dev/null); do
+    echo "SOFIOS: anteprima messa da parte: $f"
+    dpkg-divert --local --rename --divert "/usr/share/sofios/nascosti/$(echo "$f" | tr / _)" --add "$f" || true
+  done
+done
 exit 0
