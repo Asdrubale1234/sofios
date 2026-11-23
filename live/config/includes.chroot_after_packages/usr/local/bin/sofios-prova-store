@@ -74,8 +74,9 @@ case "$1" in
         grep -E "^(Name|Comment|GenericName)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#PROGRAMMA [$(basename $f)]: #"
       done
       echo "--- widget (Aggiungi widget):"
-      for f in /usr/share/plasma/plasmoids/*/metadata.json; do
+      for f in /usr/local/share/plasma/plasmoids/*/metadata.json /usr/share/plasma/plasmoids/*/metadata.json; do
         [ -f "$f" ] || continue
+        case "$f" in /usr/share/*) [ -e "/usr/local/share/plasma/plasmoids/$(basename $(dirname $f))/metadata.json" ] && continue;; esac
         grep -E '"(Name|Description)(\[it\])?"' "$f" | grep -E "$P" | sed "s#^#WIDGET [$(basename $(dirname $f))]: #"
       done
       echo "--- temi (nomi visibili nelle scelte):"
@@ -99,10 +100,12 @@ case "$1" in
       echo "--- temi della schermata di accesso:"; ls /usr/share/sddm/themes | sed 's#^#ACCESSO-TEMA: #'
       echo "--- pagine delle Impostazioni nascoste:"; grep -A40 'KDE Control Module Restrictions' /etc/xdg/kdeglobals | grep '=false' | sed 's#^#PAGINA-NASCOSTA: #'
       echo "--- cartelle e categorie del menu:"
-      for f in /usr/share/desktop-directories/*.directory; do
+      for f in /usr/local/share/desktop-directories/*.directory /usr/share/desktop-directories/*.directory; do
         [ -f "$f" ] || continue
+        case "$f" in /usr/share/*) [ -e "/usr/local/share/desktop-directories/$(basename $f)" ] && continue;; esac
         grep -E "^(Name|Comment)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#CATEGORIA [$(basename $f)]: #"
       done
+      echo "--- anteprime dei widget ancora presenti (clipboard, activitybar, kickoff):"; find /usr/share/plasma/plasmoids/org.kde.plasma.clipboard /usr/share/plasma/plasmoids/org.kde.plasma.activitybar /usr/share/plasma/plasmoids/org.kde.plasma.kickoff \( -iname 'screenshot*' -o -ipath '*/previews/*' \) -type f 2>/dev/null | sed 's#^#ANTEPRIMA-RIMASTA: #'
       echo "--- schermate di accesso e avvio (testi):"
       grep -rEl "$P" /usr/share/sddm/themes/sofios /usr/share/plymouth/themes/sofios 2>/dev/null | sed 's#^#ACCESSO: #'
       echo "--- terminale e identità del sistema:"
