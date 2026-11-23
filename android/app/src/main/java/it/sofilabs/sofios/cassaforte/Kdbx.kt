@@ -89,14 +89,15 @@ class Kdbx private constructor(
     }
 
     private fun impostaCampo(entry: Element, chiave: String, valore: String, protetto: Boolean = false) {
-        var stringa = figli(entry, "String").firstOrNull { testoFiglio(it, "Key") == chiave }
-        if (stringa == null) {
-            stringa = doc.createElement("String")
-            val k = doc.createElement("Key"); k.textContent = chiave; stringa.appendChild(k)
-            stringa.appendChild(doc.createElement("Value"))
+        val esistente = figli(entry, "String").firstOrNull { testoFiglio(it, "Key") == chiave }
+        val stringa: Element = esistente ?: run {
+            val nuova = doc.createElement("String")
+            val k = doc.createElement("Key"); k.textContent = chiave; nuova.appendChild(k)
+            nuova.appendChild(doc.createElement("Value"))
             // le stringhe vanno prima di AutoType/History
             val dopo = figli(entry, "AutoType").firstOrNull() ?: figli(entry, "History").firstOrNull()
-            if (dopo != null) entry.insertBefore(stringa, dopo) else entry.appendChild(stringa)
+            if (dopo != null) entry.insertBefore(nuova, dopo) else entry.appendChild(nuova)
+            nuova
         }
         val v = figli(stringa, "Value").first()
         v.textContent = valore
