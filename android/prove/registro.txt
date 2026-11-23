@@ -1,0 +1,53 @@
+== Dispositivo
+modello: sdk_gphone64_x86_64
+Android: 14 (API 34)
+schermo: Physical size: 2560x1600
+Package com.google.android.apps.nexuslauncher new state: disabled-user
+== Installazione (SofiOS e un FINTO Fully, solo per la prova)
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+== Imposto SofiOS come schermata iniziale
+schermata iniziale scelta: it.sofilabs.sofios
+== A. Prima di toccare Casa: SofiOS non apre niente da solo
+in primo piano: topResumedActivity=ActivityRecord{b8cf1ea u0 it.sofilabs.sofios/.MainActivity t7}
+foto: A-prima-di-toccare-casa.png
+== A2. Tocco Casa: si apre Fully (e da ora parte sempre da solo)
+tocco «Casa» in 1104 1476
+foto: A2-casa-aperta.png
+== B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS, con il puntino verde
+in primo piano: topResumedActivity=ActivityRecord{b8cf1ea u0 it.sofilabs.sofios/.MainActivity t7}
+foto: B-schermata-iniziale.png
+== B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla
+tocco «Mascotte SofiOS» in 2268 1092
+foto: B2-mascotte-con-x.png
+tocco «Nascondi la mascotte» in 2400 856
+foto: B3-mascotte-tolta.png
+tocco «Mostra o nascondi la mascotte» in 1456 1476
+foto: B4-icona-mascotte-tocco.png
+tocco «Mostra o nascondi la mascotte» in 1456 1476
+foto: B4b-mascotte-di-nuovo-tolta.png
+tocco «Mostra o nascondi la mascotte» in 1456 1476
+foto: B5-mascotte-rimessa.png
+== C. Tasto Home non riapre Casa
+in primo piano: topResumedActivity=ActivityRecord{b8cf1ea u0 it.sofilabs.sofios/.MainActivity t7}
+foto: C-tasto-home.png
+== D. Tocco su Impostazioni e ritorno
+tocco «Impostazioni» in 1280 1476
+in primo piano: topResumedActivity=ActivityRecord{efe7022 u0 com.android.settings/.homepage.SettingsHomepageActivity t7}
+foto: D-impostazioni.png
+dopo Home: topResumedActivity=ActivityRecord{b8cf1ea u0 it.sofilabs.sofios/.MainActivity t7}
+== E. Riavvio del tablet: Casa deve riaprirsi da sola
+schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
+in primo piano: topResumedActivity=ActivityRecord{c0c8b4 u0 de.ozerov.fully/.FintoFully t13}
+foto: E-dopo-riavvio-casa.png
+== F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
+in primo piano: topResumedActivity=ActivityRecord{2ecee05 u0 it.sofilabs.sofios/.MainActivity t12}
+foto: F-dopo-riavvio-schermata-iniziale.png
+== G. Tengo premuto su Casa: Fully non deve più partire da solo
+tocco lungo «Casa» in 1104 1476
+foto: G-puntino-spento.png
+in primo piano dopo il riavvio: topResumedActivity=ActivityRecord{b4f89da u0 it.sofilabs.sofios/.MainActivity t14}
+foto: G2-dopo-riavvio-senza-casa.png
+ESITO FINALE: OK
