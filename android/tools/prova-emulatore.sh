@@ -3,7 +3,7 @@
 # Installa l'app, la imposta come schermata iniziale e scatta schermate reali.
 # Uso: prova-emulatore.sh <apk-sofios> <apk-finto-fully> <cartella-uscita>
 set -u
-APK="$1"; FINTO="$2"; OUT="$3"; PKG=it.sofilabs.sofios
+APK="$1"; FINTO="$2"; OUT="$3"; FIXTURE="${4:-}"; PKG=it.sofilabs.sofios
 mkdir -p "$OUT"; LOG="$OUT/registro.txt"; : > "$LOG"
 scrivi() { echo "$*" | tee -a "$LOG"; }
 foto_subito() { adb exec-out screencap -p > "$OUT/$1.png"; scrivi "foto: $1.png"; }
@@ -31,7 +31,8 @@ limiti_di() {
   adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
   python3 - "$OUT/ui.xml" "$1" <<'EOF2'
 import re, sys
-xml = open(sys.argv[1], encoding="utf-8").read()
+import html
+xml = html.unescape(open(sys.argv[1], encoding="utf-8").read())
 for n in re.finditer(r'<node [^>]*>', xml):
     t = n.group(0)
     if f'text="{sys.argv[2]}"' in t or f'content-desc="{sys.argv[2]}"' in t:
@@ -54,7 +55,8 @@ tocca_ultimo() {
   adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
   xy=$(python3 - "$OUT/ui.xml" "$1" <<'EOF3'
 import re, sys
-xml = open(sys.argv[1], encoding="utf-8").read()
+import html
+xml = html.unescape(open(sys.argv[1], encoding="utf-8").read())
 r = None
 for n in re.finditer(r'<node [^>]*>', xml):
     t = n.group(0)
@@ -68,6 +70,25 @@ EOF3
   if [ -z "$xy" ]; then scrivi "ERRORE: non trovo «$1» sullo schermo"; return 1; fi
   scrivi "tocco «$1» (ultimo) in $xy"; adb shell input tap $xy
 }
+# Testo mostrato dall'elemento con quella descrizione
+testo_di() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null
+  adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
+  python3 - "$OUT/ui.xml" "$1" <<'EOF4'
+import re, sys, html
+xml = html.unescape(open(sys.argv[1], encoding="utf-8").read())
+for n in re.finditer(r'<node [^>]*>', xml):
+    t = n.group(0)
+    if f'content-desc="{sys.argv[2]}"' in t:
+        m = re.search(r' text="([^"]*)"', t); print(m.group(1) if m else ""); break
+EOF4
+  rm -f "$OUT/ui.xml"
+}
+# Aspetta (al massimo N secondi) che sullo schermo compaia un elemento con quel testo o descrizione
+attendi() {
+  for _ in $(seq 1 $(( $2 / 3 + 1 ))); do [ -n "$(limiti_di "$1")" ] && return 0; sleep 3; done
+  return 1
+}
 # Tocca l'elemento che mostra il testo dato (legge la schermata vera, niente coordinate a caso)
 tocca_testo() { tocca_con_durata "$1" 0; }
 tocca_a_lungo() { tocca_con_durata "$1" 1200; }
@@ -76,7 +97,8 @@ tocca_con_durata() {
   adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
   xy=$(python3 - "$OUT/ui.xml" "$1" <<'EOF'
 import re, sys
-xml = open(sys.argv[1], encoding="utf-8").read()
+import html
+xml = html.unescape(open(sys.argv[1], encoding="utf-8").read())
 for n in re.finditer(r'<node [^>]*>', xml):
     t = n.group(0)
     if f'text="{sys.argv[2]}"' in t or f'content-desc="{sys.argv[2]}"' in t:
@@ -173,10 +195,10 @@ adb shell appops set $PKG WRITE_SETTINGS allow
 adb shell settings put system screen_brightness 40
 tocca_testo "Barra SofiOS"; sleep 2
 foto_subito P1-pannello
-trascina_cursore "Luminosità"; sleep 1
+trascina_cursore "Cursore Luminosità"; sleep 1
 scrivi "luminosità dopo il cursore: $(adb shell settings get system screen_brightness | tr -d '\r') (prima: 40)"
 [ "$(adb shell settings get system screen_brightness | tr -d '\r')" -gt 100 ] || scrivi "ATTENZIONE: la luminosità non è cambiata"
-trascina_cursore "Volume"; sleep 1
+trascina_cursore "Cursore Volume"; sleep 1
 foto_subito P2-pannello-dopo-cursori
 adb shell input keyevent KEYCODE_BACK; sleep 1
 tocca_testo "Barra SofiOS"; sleep 1
@@ -229,6 +251,57 @@ foto_subito F6-dopo-eliminazione
 scrivi "cartella dopo eliminazione: $(adb shell ls $CART | tr '\r\n' '  ')"
 adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
+scrivi "== C. Cassaforte Password (formato del computer)"
+tocca_testo "Cassaforte"; sleep 3
+foto C1-crea-cassaforte
+tocca_testo "Password principale"; adb shell input text "prova-android-1"; sleep 1
+tocca_testo "Ripeti la password principale"; adb shell input text "prova-android-1"; sleep 1
+foto_subito C1b-password-scritte
+tocca_ultimo "Crea cassaforte"
+attendi "Nuova password" 90 || scrivi "ATTENZIONE: la cassaforte non si è aperta"
+foto C2-cassaforte-vuota
+tocca_testo "Nuova password"; sleep 2
+tocca_ultimo "Nome"; adb shell input text "Posta"
+tocca_ultimo "Utente"; adb shell input text "luca"
+tocca_ultimo "Sito"; adb shell input text "mail.sofilabs.it"
+tocca_ultimo "Note"; adb shell input text "Prova%sdi%snota"
+foto_subito C3-nuova-password
+tocca_ultimo "Salva"; sleep 3
+foto_subito C4-voce-salvata
+tocca_ultimo "Mostra"; sleep 1
+PWUI=$(testo_di "Valore password")
+scrivi "password mostrata dall'app: lunga ${#PWUI} caratteri"
+foto_subito C5-password-mostrata
+printf 'Posta\tluca\t%s\tmail.sofilabs.it\tProva di nota\n' "$PWUI" > "$OUT/cassaforte-attese.tsv"
+tocca_ultimo "Blocca"; sleep 2
+foto_subito C6-bloccata
+tocca_testo "Password principale"; adb shell input text "sbagliata-1"; adb shell input keyevent KEYCODE_ENTER
+attendi "Password sbagliata." 60 || scrivi "ATTENZIONE: non è comparso l'avviso di password sbagliata"
+foto_subito C7-password-sbagliata
+tocca_testo "Password principale"
+adb shell input keyevent KEYCODE_MOVE_END
+for _ in $(seq 1 20); do adb shell input keyevent KEYCODE_DEL; done
+adb shell input text "prova-android-1"; adb shell input keyevent KEYCODE_ENTER
+attendi "Nuova password" 90 || scrivi "ATTENZIONE: non si è sbloccata con la password giusta"
+foto C8-sbloccata-di-nuovo
+adb exec-out run-as $PKG cat files/Password/cassaforte.kdbx > "$OUT/cassaforte-da-android.kdbx"
+scrivi "file della cassaforte fatto da Android: $(wc -c < "$OUT/cassaforte-da-android.kdbx") byte"
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+if [ -n "$FIXTURE" ] && [ -f "$FIXTURE" ]; then
+  scrivi "-- cassaforte fatta dal programma del computer, aperta su Android"
+  adb shell am force-stop $PKG; sleep 1
+  adb shell "run-as $PKG sh -c 'cat > files/Password/cassaforte.kdbx'" < "$FIXTURE"
+  adb shell input keyevent KEYCODE_HOME; sleep 4
+  tocca_testo "Cassaforte"; sleep 3
+  tocca_testo "Password principale"; adb shell input text "pc-password-1"; adb shell input keyevent KEYCODE_ENTER
+  attendi "Sito di prova" 120 || scrivi "ATTENZIONE: la cassaforte del computer non si è aperta"
+  foto C9-cassaforte-del-computer
+  tocca_testo "Sito di prova"; sleep 2
+  foto_subito C10-voce-del-computer
+  adb shell input keyevent KEYCODE_HOME; sleep 3
+fi
 
 scrivi "== D. Tocco su Impostazioni e ritorno"
 tocca_testo "Impostazioni"; sleep 3

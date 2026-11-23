@@ -25,7 +25,7 @@ object Controlli {
 
     private fun cursore(a: Activity, nome: String, massimo: Int, valore: Int, ascolta: (Int) -> Unit) = SeekBar(a).apply {
         max = massimo; progress = valore.coerceIn(0, massimo)
-        contentDescription = nome
+        contentDescription = "Cursore $nome"
         progressTintList = ColorStateList.valueOf(Stile.ORO)
         thumbTintList = ColorStateList.valueOf(Stile.ORO)
         progressBackgroundTintList = ColorStateList.valueOf(Stile.SECONDARIO)

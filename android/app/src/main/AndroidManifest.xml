@@ -47,6 +47,8 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".ImpostazioniActivity" android:exported="false" android:label="Impostazioni" />
+        <activity android:name=".CassaforteActivity" android:exported="false" android:label="Cassaforte Password"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".FileActivity" android:exported="false" android:label="File" />
     </application>
 </manifest>

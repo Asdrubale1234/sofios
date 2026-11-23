@@ -33,4 +33,8 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
 }
+dependencies {
+    // Solo per i collaudi automatici (non entra nell'app): niente librerie esterne nell'app.
+    testImplementation("junit:junit:4.13.2")
+}
 // Nessuna libreria esterna: app leggera e veloce.

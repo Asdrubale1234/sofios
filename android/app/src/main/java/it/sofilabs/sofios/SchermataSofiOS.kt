@@ -67,6 +67,7 @@ open class SchermataSofiOS : Activity() {
         Scorciatoia("Schermata iniziale") { startActivity(Intent(this, MainActivity::class.java)) },
         Scorciatoia("Note") { startActivity(Intent(this, NoteActivity::class.java)) },
         Scorciatoia("File") { startActivity(Intent(this, FileActivity::class.java)) },
+        Scorciatoia("Cassaforte") { startActivity(Intent(this, CassaforteActivity::class.java)) },
         Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) },
     )
 

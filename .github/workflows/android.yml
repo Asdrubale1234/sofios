@@ -18,6 +18,18 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Collaudi della Cassaforte contro la libreria del computer
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/prove
+          pip install pykeepass argon2-cffi 2>&1 | tail -1
+          python3 android/tools/fixture-kdbx.py android/app/build/fixture 2>&1 | tee /tmp/prove/collaudi-fixture.txt
+          cd android && ./gradlew --no-daemon testDebugUnitTest 2>&1 | tee /tmp/prove/collaudi-kotlin.txt
+          cd .. && for n in kotlin-nuovo kotlin-da-pc; do
+            python3 android/tools/verifica-kdbx.py android/app/build/fixture/$n.kdbx "$(cat android/app/build/fixture/$n.kdbx.password)" android/app/build/fixture/$n.kdbx.attese.tsv 2>&1 | tee -a /tmp/prove/collaudi-python.txt
+          done
       - name: Compila l'app
         working-directory: android
         run: ./gradlew --no-daemon assembleDebug 2>&1 | tee /tmp/compila.txt
@@ -35,13 +47,22 @@ jobs:
           ram-size: 4096M
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: bash android/tools/prova-emulatore.sh android/app/build/outputs/apk/debug/app-debug.apk android/finto-fully/build/outputs/apk/debug/finto-fully-debug.apk /tmp/prove
+          script: bash android/tools/prova-emulatore.sh android/app/build/outputs/apk/debug/app-debug.apk android/finto-fully/build/outputs/apk/debug/finto-fully-debug.apk /tmp/prove android/app/build/fixture/pc-predefinita.kdbx
+      - name: Il programma del computer legge la cassaforte fatta da Android
+        if: always()
+        continue-on-error: true
+        run: |
+          pip install pykeepass 2>&1 | tail -1
+          if [ -f /tmp/prove/cassaforte-da-android.kdbx ]; then
+            python3 android/tools/verifica-kdbx.py /tmp/prove/cassaforte-da-android.kdbx prova-android-1 /tmp/prove/cassaforte-attese.tsv 2>&1 | tee -a /tmp/prove/collaudi-python.txt
+          else echo "manca il file della cassaforte fatto da Android" | tee -a /tmp/prove/collaudi-python.txt; fi
       - name: Salva schermate e registro nel ramo
         if: always()
         env:
           BR: ${{ github.ref_name }}
         run: |
           mkdir -p /tmp/prove && cp /tmp/compila.txt /tmp/prove/ 2>/dev/null || true
+          rm -f /tmp/prove/cassaforte-da-android.kdbx
           echo "esecuzione ${GITHUB_RUN_ID}, commit ${GITHUB_SHA}, esito job: ${{ job.status }}" > /tmp/prove/esecuzione.txt
           rm -rf android/prove && mkdir -p android/prove && cp -r /tmp/prove/. android/prove/
           # File da installare sul tablet (versione di prova, firmata con la chiave di prova)

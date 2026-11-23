@@ -117,6 +117,9 @@ class MainActivity : SchermataSofiOS() {
         barra.addView(icona("File", R.drawable.ic_file, ORO_FILE, ORO_FILE_SCURO, piena = true) {
             startActivity(Intent(this, FileActivity::class.java))
         })
+        barra.addView(icona("Cassaforte", R.drawable.ic_password, TURCHESE, TURCHESE_SCURO, piena = true) {
+            startActivity(Intent(this, CassaforteActivity::class.java))
+        })
         // Icona della mascotte: la toglie o la rimette (sul computer è «Aggiungi widget»).
         barra.addView(icona("Mostra o nascondi la mascotte", R.drawable.mascotte, MARE, MARE_SCURO, piena = true) {
             impostaMascotte(!mascotteVisibile())
@@ -220,6 +223,7 @@ class MainActivity : SchermataSofiOS() {
         l.add(Scorciatoia("Mascotte") { impostaMascotte(!mascotteVisibile()) })
         l.add(Scorciatoia("Note") { startActivity(Intent(this, NoteActivity::class.java)) })
         l.add(Scorciatoia("File") { startActivity(Intent(this, FileActivity::class.java)) })
+        l.add(Scorciatoia("Cassaforte") { startActivity(Intent(this, CassaforteActivity::class.java)) })
         l.add(Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) })
         return l
     }
@@ -241,6 +245,8 @@ class MainActivity : SchermataSofiOS() {
         private const val GRIGIO_SCURO = 0xFF566577.toInt()
         private const val ORO_FILE = 0xFFF2C26B.toInt()
         private const val ORO_FILE_SCURO = 0xFFC98A2B.toInt()
+        private const val TURCHESE = 0xFF3FC1C9.toInt()
+        private const val TURCHESE_SCURO = 0xFF1D7F8C.toInt()
         private const val ROSA = 0xFFFF8FB8.toInt()
         private const val ROSA_SCURO = 0xFFD6457F.toInt()
         private const val MARE = 0xFF3A86B8.toInt()
