@@ -1,6 +1,5 @@
 package it.sofilabs.sofios
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -34,7 +33,7 @@ import java.util.Locale
  * elenco a sinistra e testo a destra (su schermi stretti: prima l'elenco, poi la nota).
  * Le note stanno nella cartella privata dell'app (più avanti diventerà la Cartella SofiOS).
  */
-class NoteActivity : Activity() {
+class NoteActivity : SchermataSofiOS() {
 
     private lateinit var cartella: File
     private var note: List<File> = emptyList()
@@ -121,7 +120,7 @@ class NoteActivity : Activity() {
             radice.addView(colonnaElenco, LinearLayout.LayoutParams(dp(250), -1))
             radice.addView(colonnaTesto, LinearLayout.LayoutParams(0, -1, 1f).apply { leftMargin = dp(16) })
         }
-        setContentView(radice)
+        mostra(radice)
 
         carica(null, vaiAlTesto = !stretto)
         if (note.isEmpty()) nuova() else if (stretto) mostraElenco()
@@ -234,6 +233,7 @@ class NoteActivity : Activity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        if (chiudiPannelloSeAperto()) return
         if (stretto && nelTesto) mostraElenco() else super.onBackPressed()
     }
 

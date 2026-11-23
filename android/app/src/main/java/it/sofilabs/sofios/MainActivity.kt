@@ -1,6 +1,5 @@
 package it.sofilabs.sofios
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -16,7 +15,7 @@ import android.widget.TextClock
 import android.widget.TextView
 
 /** Schermata iniziale di SofiOS: stile del computer, nessuna libreria, nessun servizio acceso. */
-class MainActivity : Activity() {
+class MainActivity : SchermataSofiOS() {
 
     private val fully = "de.ozerov.fully"
     private var fullyTrovato: String? = null
@@ -28,8 +27,6 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = FONDO
-        window.navigationBarColor = FONDO
 
         val radice = FrameLayout(this)
 
@@ -42,7 +39,7 @@ class MainActivity : Activity() {
         // Orologio e data, in alto a sinistra.
         val orologio = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(32), dp(24), dp(32), 0)
+            setPadding(dp(32), dp(48), dp(32), 0)
         }
         orologio.addView(TextClock(this).apply {
             format24Hour = "HH:mm"; format12Hour = "HH:mm"
@@ -93,11 +90,7 @@ class MainActivity : Activity() {
         }
         // Casa (Fully): si vede solo se Fully è installato. Dopo il primo tocco, parte sempre da solo
         // all'accensione. Tenendo premuto si spegne e si riaccende (puntino verde = parte da solo).
-        val tastoCasa = icona("Casa", R.drawable.ic_casa, ORO, ORO_SCURO) {
-            memoria().edit().putBoolean("casa_auto", true).apply()
-            aggiornaCasa()
-            apriFully()
-        }
+        val tastoCasa = icona("Casa", R.drawable.ic_casa, ORO, ORO_SCURO) { tocchiCasa() }
         tastoCasa.setOnLongClickListener {
             memoria().edit().putBoolean("casa_auto", !casaAuto()).apply()
             aggiornaCasa()
@@ -115,11 +108,14 @@ class MainActivity : Activity() {
         }
         barra.addView(casa)
         barra.addView(icona("Impostazioni", R.drawable.ic_impostazioni, GRIGIO, GRIGIO_SCURO) {
-            startActivity(Intent(Settings.ACTION_SETTINGS))
+            startActivity(Intent(this, ImpostazioniActivity::class.java))
         })
         // Note: stesse note e stesso aspetto del computer
         barra.addView(icona("Note", R.drawable.ic_note, ROSA, ROSA_SCURO, piena = true) {
             startActivity(Intent(this, NoteActivity::class.java))
+        })
+        barra.addView(icona("File", R.drawable.ic_file, ORO_FILE, ORO_FILE_SCURO, piena = true) {
+            startActivity(Intent(this, FileActivity::class.java))
         })
         // Icona della mascotte: la toglie o la rimette (sul computer è «Aggiungi widget»).
         barra.addView(icona("Mostra o nascondi la mascotte", R.drawable.mascotte, MARE, MARE_SCURO, piena = true) {
@@ -129,7 +125,7 @@ class MainActivity : Activity() {
             bottomMargin = dp(16)
         })
 
-        setContentView(radice)
+        mostra(radice, sovrapposta = true)
 
         aggiornaCasa()
         // Dopo ogni accensione, se Casa è attiva, SofiOS apre da solo Fully (una volta sola per accensione).
@@ -213,9 +209,26 @@ class MainActivity : Activity() {
     // Tasto Home: resta qui, niente da fare.
     override fun onNewIntent(intent: Intent) { super.onNewIntent(intent) }
 
-    // Indietro non deve mai chiudere la schermata iniziale.
+    // Indietro non deve mai chiudere la schermata iniziale (chiude solo il pannello, se aperto).
     @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {}
+    override fun onBackPressed() { chiudiPannelloSeAperto() }
+
+    // Scorciatoie del pannello SofiOS, quando si è nella schermata iniziale.
+    override fun scorciatoie(): List<Scorciatoia> {
+        val l = mutableListOf<Scorciatoia>()
+        if (fullyInstallato()) l.add(Scorciatoia("Casa") { tocchiCasa() })
+        l.add(Scorciatoia("Mascotte") { impostaMascotte(!mascotteVisibile()) })
+        l.add(Scorciatoia("Note") { startActivity(Intent(this, NoteActivity::class.java)) })
+        l.add(Scorciatoia("File") { startActivity(Intent(this, FileActivity::class.java)) })
+        l.add(Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) })
+        return l
+    }
+
+    private fun tocchiCasa() {
+        memoria().edit().putBoolean("casa_auto", true).apply()
+        aggiornaCasa()
+        apriFully()
+    }
 
     companion object {
         private const val FONDO = 0xFF0B1F33.toInt()       // blu notte del computer
@@ -226,6 +239,8 @@ class MainActivity : Activity() {
         private const val VERDE = 0xFF6FE0B0.toInt()
         private const val GRIGIO = 0xFF7D8DA0.toInt()
         private const val GRIGIO_SCURO = 0xFF566577.toInt()
+        private const val ORO_FILE = 0xFFF2C26B.toInt()
+        private const val ORO_FILE_SCURO = 0xFFC98A2B.toInt()
         private const val ROSA = 0xFFFF8FB8.toInt()
         private const val ROSA_SCURO = 0xFFD6457F.toInt()
         private const val MARE = 0xFF3A86B8.toInt()

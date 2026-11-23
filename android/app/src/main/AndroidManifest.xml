@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Rete e batteria nella barra SofiOS; luminosità e rotazione dal pannello (con il consenso dell'utente) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
     <!-- Per vedere e aprire altre app (Fully, Impostazioni) -->
     <queries>
         <package android:name="de.ozerov.fully" />
@@ -41,5 +45,8 @@
             android:exported="false"
             android:label="Note"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".ImpostazioniActivity" android:exported="false" android:label="Impostazioni" />
+        <activity android:name=".FileActivity" android:exported="false" android:label="File" />
     </application>
 </manifest>

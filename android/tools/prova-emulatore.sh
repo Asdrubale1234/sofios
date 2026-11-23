@@ -25,6 +25,49 @@ aspetta_avvio() {
   sleep 15
   adb shell input keyevent 82 >/dev/null 2>&1   # sblocca lo schermo
 }
+# Scrive "sinistra alto destra basso" dell'elemento con quel testo o descrizione
+limiti_di() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null
+  adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
+  python3 - "$OUT/ui.xml" "$1" <<'EOF2'
+import re, sys
+xml = open(sys.argv[1], encoding="utf-8").read()
+for n in re.finditer(r'<node [^>]*>', xml):
+    t = n.group(0)
+    if f'text="{sys.argv[2]}"' in t or f'content-desc="{sys.argv[2]}"' in t:
+        print(*re.search(r'bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', t).groups()); break
+EOF2
+  rm -f "$OUT/ui.xml"
+}
+# Trascina il cursore con quel nome fino all'80% della sua lunghezza
+trascina_cursore() {
+  b=$(limiti_di "$1")
+  if [ -z "$b" ]; then scrivi "ERRORE: non trovo il cursore «$1»"; return 1; fi
+  set -- $b
+  y=$(( ($2 + $4) / 2 )); x1=$(( $1 + 10 )); x2=$(( $1 + ($3 - $1) * 8 / 10 ))
+  scrivi "trascino il cursore da $x1 a $x2 (altezza $y)"
+  adb shell input swipe $x1 $y $x2 $y 400
+}
+# Come tocca_testo, ma sceglie l'ULTIMO elemento che corrisponde (quello più in alto sullo schermo, es. il pannello)
+tocca_ultimo() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null
+  adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null
+  xy=$(python3 - "$OUT/ui.xml" "$1" <<'EOF3'
+import re, sys
+xml = open(sys.argv[1], encoding="utf-8").read()
+r = None
+for n in re.finditer(r'<node [^>]*>', xml):
+    t = n.group(0)
+    if f'text="{sys.argv[2]}"' in t or f'content-desc="{sys.argv[2]}"' in t:
+        a, b, c, d = map(int, re.search(r'bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', t).groups())
+        r = ((a + c) // 2, (b + d) // 2)
+if r: print(*r)
+EOF3
+)
+  rm -f "$OUT/ui.xml"
+  if [ -z "$xy" ]; then scrivi "ERRORE: non trovo «$1» sullo schermo"; return 1; fi
+  scrivi "tocco «$1» (ultimo) in $xy"; adb shell input tap $xy
+}
 # Tocca l'elemento che mostra il testo dato (legge la schermata vera, niente coordinate a caso)
 tocca_testo() { tocca_con_durata "$1" 0; }
 tocca_a_lungo() { tocca_con_durata "$1" 1200; }
@@ -125,10 +168,75 @@ scrivi "file sul tablet dopo l'eliminazione:"; contenuto_note
 adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: dalle Note il tasto Home non torna a SofiOS"
 
+scrivi "== P. Pannello SofiOS (si apre dalla barra in alto)"
+adb shell appops set $PKG WRITE_SETTINGS allow
+adb shell settings put system screen_brightness 40
+tocca_testo "Barra SofiOS"; sleep 2
+foto_subito P1-pannello
+trascina_cursore "Luminosità"; sleep 1
+scrivi "luminosità dopo il cursore: $(adb shell settings get system screen_brightness | tr -d '\r') (prima: 40)"
+[ "$(adb shell settings get system screen_brightness | tr -d '\r')" -gt 100 ] || scrivi "ATTENZIONE: la luminosità non è cambiata"
+trascina_cursore "Volume"; sleep 1
+foto_subito P2-pannello-dopo-cursori
+adb shell input keyevent KEYCODE_BACK; sleep 1
+tocca_testo "Barra SofiOS"; sleep 1
+tocca_ultimo "File"; sleep 3
+foto_subito P3-file-dal-pannello
+scrivi "in primo piano: $(in_primo_piano)"
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
+scrivi "== I. Impostazioni nostre"
+tocca_testo "Impostazioni"; sleep 3
+foto I1-impostazioni-schermo
+tocca_testo "Suono"; sleep 2
+foto_subito I2-suono
+tocca_testo "Batteria"; sleep 2
+foto_subito I3-batteria
+tocca_testo "Spazio"; sleep 2
+foto_subito I4-spazio
+tocca_testo "App"; sleep 3
+foto_subito I5-app
+tocca_testo "Informazioni"; sleep 2
+foto_subito I6-informazioni
+tocca_testo "Altre impostazioni"; sleep 2
+foto_subito I7-altre
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
+scrivi "== F. File: la Cartella SofiOS"
+tocca_testo "File"; sleep 3
+foto F1-file-vuota
+adb shell input keyevent KEYCODE_HOME; sleep 2
+CART=/sdcard/Android/data/$PKG/files/SofiOS
+adb shell "echo 'Ciao dal Mac di Luca' > $CART/prova.txt; mkdir -p $CART/Documenti"
+scrivi "creato un file di prova e una cartella con adb"
+tocca_testo "File"; sleep 3
+foto_subito F2-file-con-prova
+tocca_testo "📄  prova.txt"; sleep 2
+foto_subito F3-file-aperto
+tocca_testo "Chiudi"; sleep 1
+tocca_testo "Nuova cartella"; sleep 1
+adb shell input text "Foto"; sleep 1
+tocca_testo "Crea"; sleep 2
+foto_subito F4-nuova-cartella
+scrivi "cartella sul tablet: $(adb shell ls $CART | tr '\r\n' '  ')"
+tocca_a_lungo "📄  prova.txt"; sleep 1
+tocca_testo "Elimina"; sleep 1
+foto_subito F5-conferma-eliminazione
+tocca_testo "Sì"; sleep 2
+foto_subito F6-dopo-eliminazione
+scrivi "cartella dopo eliminazione: $(adb shell ls $CART | tr '\r\n' '  ')"
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
 scrivi "== D. Tocco su Impostazioni e ritorno"
 tocca_testo "Impostazioni"; sleep 3
 scrivi "in primo piano: $(in_primo_piano)"
-foto D-impostazioni
+tocca_testo "Altre impostazioni"; sleep 2
+tocca_testo "Tutte le impostazioni di Android"; sleep 3
+scrivi "in primo piano: $(in_primo_piano)"
+foto D-impostazioni-di-android
 adb shell input keyevent KEYCODE_HOME; sleep 3
 scrivi "dopo Home: $(in_primo_piano)"
 
