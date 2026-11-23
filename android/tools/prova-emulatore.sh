@@ -253,6 +253,7 @@ adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
 
 scrivi "== C. Cassaforte Password (formato del computer)"
+adb logcat -c
 tocca_testo "Cassaforte"; sleep 3
 foto C1-crea-cassaforte
 tocca_testo "Password principale"; adb shell input text "prova-android-1"; sleep 1
@@ -261,6 +262,9 @@ foto_subito C1b-password-scritte
 tocca_ultimo "Crea cassaforte"
 attendi "Nuova password" 90 || scrivi "ATTENZIONE: la cassaforte non si è aperta"
 foto C2-cassaforte-vuota
+scrivi "--- errori di Android durante la creazione (se ce ne sono):"
+adb logcat -d -b crash 2>&1 | head -60 | tee -a "$LOG"
+adb logcat -d -s AndroidRuntime:E System.err:W 2>&1 | head -60 | tee -a "$LOG"
 tocca_testo "Nuova password"; sleep 2
 tocca_ultimo "Nome"; adb shell input text "Posta"
 tocca_ultimo "Utente"; adb shell input text "luca"

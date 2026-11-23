@@ -191,11 +191,17 @@ class CassaforteActivity : SchermataSofiOS() {
                     kdbx = k
                     campoPw.setText(""); campoPw2.setText("")
                     paginaSblocco.visibility = View.GONE; paginaPrincipale.visibility = View.VISIBLE
+                    nascondiTastiera()
                     carica(null)
                     riavviaBlocco()
                 }
             }
         }.start()
+    }
+
+    private fun nascondiTastiera() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0); it.clearFocus() }
     }
 
     /** Scrive il file con una copia di sicurezza (.bak): se qualcosa va storto resta quello di prima. */
