@@ -6,20 +6,20 @@ import numpy as np
 from PIL import Image, ImageFilter
 inc = sys.argv[1]; prev = sys.argv[2] if len(sys.argv) > 2 else None
 P = lambda *a: os.path.join(inc, *a)
-W, H = 1920, 1080
+W, H = 3840, 2160
 
 TEMI = {
- "argento": dict(lnf="org.sofios.desktop", nome="SofiOS argento e rosso", desc="Argento satinato con accenti rossi", colori="SofiOSArgento", sfondo="SofiOSArgento",
+ "argento": dict(file="Silver_Red", lnf="org.sofios.desktop", nome="SofiOS argento e rosso", desc="Argento satinato con accenti rossi", colori="SofiOSArgento", sfondo="SofiOSArgento",
      icone="SofiOS-chiaro", barre="breeze-light", finestre="SofiOSChiaro", scuro=False,
      base=(236, 238, 242), base2=(204, 207, 214), nastro=((120, 8, 22), (205, 20, 42), (240, 90, 100)),
      win=(230, 232, 236), win2=(218, 221, 227), view=(248, 249, 251), view2=(240, 242, 245), btn=(244, 245, 247), fg=(28, 28, 30), fgi=(110, 110, 118),
      acc=(196, 28, 46), sel=(196, 28, 46), selfg=(255, 255, 255), link=(170, 20, 40), neg=(200, 40, 40), neu=(190, 110, 0), pos=(30, 140, 80)),
- "grafite": dict(lnf="org.sofios.graphite", nome="SofiOS grigio scuro e rosso", desc="Grigio antracite con accenti rossi", colori="SofiOSGrafite", sfondo="SofiOSGrafite",
+ "grafite": dict(file="Dark_Grey_Red", lnf="org.sofios.graphite", nome="SofiOS grigio scuro e rosso", desc="Grigio antracite con accenti rossi", colori="SofiOSGrafite", sfondo="SofiOSGrafite",
      icone="SofiOS", barre="breeze-dark", finestre="SofiOSGrafite", scuro=True,
      base=(44, 46, 52), base2=(16, 17, 20), nastro=((110, 6, 20), (200, 22, 44), (245, 100, 110)),
      win=(36, 38, 43), win2=(46, 48, 54), view=(26, 27, 31), view2=(32, 34, 38), btn=(52, 54, 61), fg=(236, 237, 240), fgi=(160, 163, 172),
      acc=(226, 52, 68), sel=(196, 28, 46), selfg=(255, 255, 255), link=(255, 120, 132), neg=(255, 138, 128), neu=(255, 190, 90), pos=(111, 224, 176)),
- "oro": dict(lnf="org.sofios.gold", nome="SofiOS bianco e oro", desc="Bianco perla con accenti dorati", colori="SofiOSOro", sfondo="SofiOSOro",
+ "oro": dict(file="White_Gold", lnf="org.sofios.gold", nome="SofiOS bianco e oro", desc="Bianco perla con accenti dorati", colori="SofiOSOro", sfondo="SofiOSOro",
      icone="SofiOS-chiaro", barre="breeze-light", finestre="SofiOSChiaro", scuro=False,
      base=(248, 245, 238), base2=(226, 222, 212), nastro=((140, 98, 18), (214, 172, 72), (248, 226, 156)),
      win=(244, 241, 234), win2=(232, 228, 218), view=(252, 251, 247), view2=(244, 241, 234), btn=(250, 248, 243), fg=(40, 36, 28), fgi=(120, 112, 98),
@@ -27,38 +27,50 @@ TEMI = {
 }
 
 def nastro_img(t):
-    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
     u = xx / W; v = yy / H
-    a = np.array(t["base"], float); b = np.array(t["base2"], float)
-    k = np.clip(0.55 * v + 0.35 * u, 0, 1)[..., None]
+    a = np.array(t["base"], np.float32); b = np.array(t["base2"], np.float32)
+    k = np.clip(0.5 * v + 0.4 * u, 0, 1)[..., None]
     fondo = a * (1 - k) + b * k
-    bag = np.exp(-(((xx - W * 0.3) / 700) ** 2 + ((yy - H * 0.25) / 400) ** 2))[..., None] * (-14 if t["scuro"] else 16)
-    fondo = fondo + bag
-    def curva(s):
-        return W * (-0.1 + 1.25 * s), H * (0.95 - 0.95 * s + 0.28 * np.sin(s * np.pi * 1.1) * (1 - s * 0.4))
-    ts = np.linspace(0, 1, 5200); cx_, cy_ = curva(ts); dx_ = np.gradient(cx_); dy_ = np.gradient(cy_)
-    mask = np.zeros((H, W)); luce = np.zeros((H, W))
-    for i, s in enumerate(ts):
-        sp = 40 + 210 * np.sin(np.pi * min(1, s * 1.05)) ** 1.3
-        ang = np.arctan2(dy_[i], dx_[i]); nx, ny = -np.sin(ang), np.cos(ang)
-        for q in np.linspace(-1, 1, 700):
-            px = int(cx_[i] + nx * sp * q); py = int(cy_[i] + ny * sp * q)
-            if 0 <= px < W and 0 <= py < H: mask[py, px] = 1; luce[py, px] = q
-    m = Image.fromarray((mask * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(3))
-    l = Image.fromarray(((luce + 1) / 2 * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(14))
-    mm = np.asarray(m).astype(float)[..., None] / 255.0; ll = np.asarray(l).astype(float)[..., None] / 255.0
-    sc, me, ch = (np.array(c, float) for c in t["nastro"])
-    tt = np.clip(1 - np.abs(ll - 0.38) * 2.4, 0, 1)
-    nas = sc * (1 - ll) + me * ll; nas = nas * (1 - tt * 0.5) + ch * tt * 0.5
-    ombra = np.asarray(m.filter(ImageFilter.GaussianBlur(40))).astype(float)[..., None] / 255.0
-    fondo = fondo * (1 - ombra * (0.35 if t["scuro"] else 0.18)); fondo = fondo * (1 - mm) + nas * mm
-    res = Image.fromarray(np.clip(fondo, 0, 255).astype(np.uint8)).convert("RGBA")
-    logo = Image.open("docs/logo-sofios-chiaro.png").convert("RGBA"); L = 340; lg = logo.resize((L, L), Image.LANCZOS)
-    cx, cy = (W - L) // 2, int(H * 0.46 - L / 2)
-    sh = Image.new("RGBA", (W, H), (0, 0, 0, 0)); s_ = Image.new("RGBA", (L, L), (0, 0, 0, 0)); s_.putalpha(lg.split()[3].point(lambda v_: int(v_ * 0.4)))
-    sh.paste(s_, (cx, cy + 20), s_); sh = sh.filter(ImageFilter.GaussianBlur(26))
-    res = Image.alpha_composite(res, sh); res.paste(lg, (cx, cy), lg)
-    return res.convert("RGB")
+    # luce morbida in alto a sinistra (zona tranquilla per le icone) e un secondo riflesso a destra
+    luce1 = np.exp(-(((xx - W * 0.25) / (W * 0.4)) ** 2 + ((yy - H * 0.2) / (H * 0.45)) ** 2))[..., None]
+    luce2 = np.exp(-(((xx - W * 0.85) / (W * 0.25)) ** 2 + ((yy - H * 0.6) / (H * 0.3)) ** 2))[..., None]
+    fondo = fondo + luce1 * (-12 if t["scuro"] else 18) + luce2 * (-8 if t["scuro"] else 8)
+    sc, me, ch = (np.array(c_, np.float32) for c_ in t["nastro"])
+    # tre nastri: uno sottile e uno medio dietro, uno grande davanti. (a, b, c, d, e, f, g, spessore, scala)
+    NASTRI = [(0.30, 0.95, 1.06, 0.80, 0.22, 1.00, 0.30, 85, 0.85), (0.00, 1.15, 1.00, 0.88, 0.30, 1.05, 0.35, 150, 1.0), (-0.12, 1.30, 1.05, 0.98, 0.30, 1.10, 0.40, 230, 1.0)]
+    for (a_, b_, c_, d_, e_, f_, g_, sp0, sc_) in NASTRI:
+        ts = np.linspace(0, 1, 13000, dtype=np.float32)
+        cx = W * (a_ + b_ * ts); cy = H * (c_ - d_ * ts + e_ * np.sin(ts * np.pi * f_) * (1 - ts * g_))
+        dx = np.gradient(cx); dy = np.gradient(cy); n = np.hypot(dx, dy) + 1e-6
+        nx = -dy / n; ny = dx / n
+        spess = (sp0 * 0.25 + sp0 * 0.75 * np.sin(np.pi * np.clip(ts * 1.05, 0, 1)) ** 1.3) * (W / 1920.0) * sc_ * 0.5
+        mask = np.zeros((H, W), np.float32); luce = np.zeros((H, W), np.float32)
+        qs = np.linspace(-1, 1, 1500, dtype=np.float32)
+        for i0 in range(0, len(ts), 1300):
+            sl = slice(i0, i0 + 1300)
+            px = (cx[sl, None] + nx[sl, None] * spess[sl, None] * qs[None, :]).astype(np.int32)
+            py = (cy[sl, None] + ny[sl, None] * spess[sl, None] * qs[None, :]).astype(np.int32)
+            ok = (px >= 0) & (px < W) & (py >= 0) & (py < H)
+            qq = np.broadcast_to(qs[None, :], px.shape)
+            mask[py[ok], px[ok]] = 1; luce[py[ok], px[ok]] = qq[ok]
+        m = Image.fromarray((mask * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(2.2))
+        l = Image.fromarray(((luce + 1) / 2 * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(26))
+        mm = np.asarray(m).astype(np.float32)[..., None] / 255.0; ll = np.asarray(l).astype(np.float32)[..., None] / 255.0
+        lunga = (0.5 + 0.5 * np.sin((xx / W * 3.2 + yy / H * 1.4) * np.pi))[..., None] * 0.18          # variazione di luce lungo il nastro
+        ll = np.clip(ll + lunga - 0.09, 0, 1)
+        riflesso = np.exp(-((ll - 0.36) / 0.10) ** 2) * 0.55 + np.exp(-((ll - 0.78) / 0.07) ** 2) * 0.28
+        nas = sc * (1 - ll) + me * ll
+        nas = nas * (1 - riflesso * 0.55) + ch * riflesso * 0.55
+        nas = nas * (1 - np.clip(np.abs(ll - 0.5) * 2 - 0.7, 0, 1) * 0.25)                              # bordi leggermente piu' scuri
+        ombra = np.asarray(m.filter(ImageFilter.GaussianBlur(70))).astype(np.float32)[..., None] / 255.0
+        if t["scuro"]:
+            lum = np.asarray(m.filter(ImageFilter.GaussianBlur(45))).astype(np.float32)[..., None] / 255.0
+            fondo = fondo + lum * me * 0.28 - ombra * 6                                                  # alone rosso
+        else:
+            fondo = fondo * (1 - ombra * 0.22)
+        fondo = fondo * (1 - mm) + nas * mm
+    return Image.fromarray(np.clip(fondo, 0, 255).astype(np.uint8)).convert("RGB")
 
 def c(t): return "%d,%d,%d" % tuple(t)
 def schema(t):
@@ -96,13 +108,15 @@ if os.path.isdir(P("usr/share/aurorae/themes/SofiOS")):       # la prima volta: 
   md = open(os.path.join(dec, "metadata.desktop")).read().replace("Name=SofiOS\n", "Name=SofiOS grigio scuro\n", 1).replace("X-KDE-PluginInfo-Name=SofiOS", "X-KDE-PluginInfo-Name=SofiOSGrafite")
   open(os.path.join(dec, "metadata.desktop"), "w").write(md)
   if os.path.exists(os.path.join(dec, "metadata.json")):
-      open(os.path.join(dec, "metadata.json"), "w").write(open(os.path.join(dec, "metadata.json")).read().replace('"SofiOS"', '"SofiOSGrafite"'))
+      _j = open(os.path.join(dec, "metadata.json")).read().replace('"SofiOS"', '"SofiOSGrafite"')
+      open(os.path.join(dec, "metadata.json"), "w").write(_j)
   shutil.rmtree(P("usr/share/aurorae/themes/SofiOS"), ignore_errors=True)
 
 # --- 2) i tre temi
 for chiave, t in TEMI.items():
     img = nastro_img(t)
-    d = P("usr/share/wallpapers", t["sfondo"], "contents/images"); os.makedirs(d, exist_ok=True); img.save(os.path.join(d, "1920x1080.png"), optimize=True)
+    d = P("usr/share/wallpapers", t["sfondo"], "contents/images"); os.makedirs(d, exist_ok=True); img.save(os.path.join(d, "3840x2160.png"), optimize=True)
+    if prev: os.makedirs(prev, exist_ok=True); img.save(os.path.join(prev, "SofiOS_%s.png" % t["file"]), optimize=True)
     open(P("usr/share/wallpapers", t["sfondo"], "metadata.json"), "w").write('{"KPlugin": {"Id": "%s", "Name": "%s", "Authors": [{"Name": "SofiOS"}], "License": "CC-BY-SA-4.0"}}\n' % (t["sfondo"], t["nome"]))
     open(P("usr/share/color-schemes", t["colori"] + ".colors"), "w").write(schema(t))
     lnf = P("usr/share/plasma/look-and-feel", t["lnf"])
@@ -115,5 +129,4 @@ for chiave, t in TEMI.items():
         "[kdeglobals][General]\nColorScheme=%s\n\n[kdeglobals][KDE]\nwidgetStyle=Breeze\n\n[plasmarc][Theme]\nname=%s\n\n[Wallpaper]\nImage=%s\n\n[kdeglobals][Icons]\nTheme=%s\n\n"
         "[kwinrc][org.kde.kdecoration2]\nlibrary=org.kde.kwin.aurorae\ntheme=__aurorae__svg__%s\n" % (t["colori"], t["barre"], t["sfondo"], t["icone"], t["finestre"]))
     img.resize((800, 450)).save(os.path.join(lnf, "contents/previews/preview.png")); img.save(os.path.join(lnf, "contents/previews/fullscreenpreview.jpg"), quality=88)
-    if prev: os.makedirs(prev, exist_ok=True); img.resize((960, 540)).save(os.path.join(prev, chiave + ".png"))
 print("ok")
