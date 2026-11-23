@@ -97,4 +97,8 @@ for d in /usr/share/plasma/plasmoids/*/; do
   rm -rf "$W/$b"; cp -r "$d" "$W/$b"
   sed -i -E '/^ {8}"(Name|Description)(\[[^]]*\])?"/ s/(KDE|Plasma|KWin|KRunner)/SofiOS/g' "$W/$b/metadata.json"
 done
+
+# 10) la pagina «File recenti» elenca i programmi: ricerca rapida e Impostazioni comparivano come codici
+[ -e "$O/org.kde.krunner.desktop" ] || printf '[Desktop Entry]\nType=Application\nName=Ricerca rapida\nExec=krunner\nIcon=sofios-cerca\nNoDisplay=true\n' > "$O/org.kde.krunner.desktop"
+[ -e "$O/org.kde.systemsettings.desktop" ] || printf '[Desktop Entry]\nType=Application\nName=Impostazioni\nExec=systemsettings\nIcon=sofios-impostazioni\nNoDisplay=true\n' > "$O/org.kde.systemsettings.desktop"
 exit 0

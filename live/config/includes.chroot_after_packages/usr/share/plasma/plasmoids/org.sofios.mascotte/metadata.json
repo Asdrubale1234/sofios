@@ -8,8 +8,13 @@
         "Icon": "sofios-logo",
         "Category": "Utilities",
         "License": "GPL-3.0-or-later",
-        "Authors": [{ "Name": "SofiOS" }],
-        "Version": "1.0"
+        "Authors": [
+            {
+                "Name": "SofiOS"
+            }
+        ],
+        "Version": "1.0",
+        "Website": "https://sofilabs.it"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "KPackageStructure": "Plasma/Applet"
