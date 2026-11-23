@@ -1,0 +1,16 @@
+#!/bin/sh
+# Tablet: modo tocco automatico e tastiera sullo schermo.
+# Il nome del file della tastiera non lo indoviniamo: lo cerchiamo nel sistema appena costruito.
+K=/etc/xdg/kwinrc
+kwriteconfig6 --file $K --group Input --key TabletMode auto
+D=$(ls /usr/share/applications/*maliit*keyboard*.desktop 2>/dev/null | head -n1)
+if [ -n "$D" ]; then
+  kwriteconfig6 --file $K --group Wayland --key InputMethod "$D"
+  kwriteconfig6 --file $K --group Wayland --key VirtualKeyboardEnabled true
+  echo "SOFIOS tablet: tastiera sullo schermo = $D"
+else
+  echo "ATTENZIONE SOFIOS tablet: file della tastiera sullo schermo NON trovato"
+  ls /usr/share/applications | grep -i maliit
+fi
+echo "SOFIOS tablet: contenuto di $K"; cat $K
+exit 0

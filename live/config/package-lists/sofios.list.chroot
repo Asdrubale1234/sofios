@@ -39,6 +39,7 @@ cryptsetup
 # --- Tablet / touch ---
 iio-sensor-proxy
 libinput-tools
+maliit-keyboard
 # --- Programmi ---
 firefox-esr
 firefox-esr-l10n-it

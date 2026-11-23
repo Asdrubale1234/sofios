@@ -1,0 +1,49 @@
+name: Prova tablet (senza pubblicare nulla)
+# Costruisce la ISO del ramo tablet e salva schermate vere nel ramo "tablet-schermate".
+# NON crea Releases e NON tocca "main".
+on:
+  workflow_dispatch:
+  push:
+    branches: ['tablet/**']
+    paths: ['live/**', 'build/**', 'tools/foto-iso.py', '.github/workflows/tablet-prova.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - name: Libera spazio sul disco
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost || true
+          sudo docker image prune -af || true
+      - name: Costruisci la ISO
+        run: |
+          mkdir -p out
+          set -o pipefail
+          sudo docker run --rm --privileged -v "$PWD":/work -w /work debian:trixie bash build/build.sh 2>&1 | tee out/build.log
+      - name: Avvia la ISO e salva schermate vere
+        continue-on-error: true
+        timeout-minutes: 100
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-system-x86 qemu-utils ovmf imagemagick
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
+          ISO=$(ls out/*.iso | head -n1)
+          python3 tools/foto-iso.py "$ISO" out/foto 75
+      - name: Salva schermate e registro nel ramo tablet-schermate
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          mkdir -p /tmp/lg && cd /tmp/lg
+          cp -r "$GITHUB_WORKSPACE/out/foto" ./foto 2>/dev/null || true
+          tail -n 3000 "$GITHUB_WORKSPACE/out/build.log" > build-tail.log 2>/dev/null || echo "nessun registro" > build-tail.log
+          grep -n "SOFIOS tablet" -A40 "$GITHUB_WORKSPACE/out/build.log" > tablet-hook.log 2>/dev/null || true
+          git init -q && git checkout -q -b tablet-schermate
+          git config user.name "sofios-build" && git config user.email "build@sofios.local"
+          git add . && git commit -q -m "Prova tablet ${GITHUB_RUN_ID}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" tablet-schermate
