@@ -1,0 +1,1197 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+DIAG: servizio avviato 14:46:51
+=== RAPPORTO +70 14:48:01 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1208 user    tty2 no -
+2 1000 sofios -     1221 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   580 23 nov 14.47 .
+drwx------ 16 sofios sofios   480 23 nov 14.47 ..
+drwx------  2 sofios sofios    60 23 nov 14.47 dconf
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 23 nov 14.46 gtkrc
+-rw-rw-r--  1 sofios sofios    86 23 nov 14.46 gtkrc-2.0
+-rw-------  1 sofios sofios   123 23 nov 14.47 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 23 nov 14.47 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 23 nov 14.47 kconf_updaterc
+-rw-------  1 sofios sofios    43 23 nov 14.47 kded5rc
+drwxrwxr-x  2 sofios sofios   140 23 nov 14.46 kdedefaults
+-rw-------  1 sofios sofios  3110 23 nov 14.46 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 kde.org
+-rw-------  1 sofios sofios 14442 23 nov 14.47 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 23 nov 14.47 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 23 nov 14.46 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 23 nov 14.46 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 23 nov 14.46 kwinrc
+-rw-------  1 sofios sofios    27 23 nov 14.46 plasma-localerc
+-rw-------  1 sofios sofios  4321 23 nov 14.47 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1654 23 nov 14.47 plasmashellrc
+-rw-------  1 sofios sofios    51 23 nov 14.47 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 23 nov 14.47 pulse
+-rw-rw-r--  1 sofios sofios     0 23 nov 14.47 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 23 nov 14.46 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 23 nov 14.46 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 23 nov 14.46 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+14:47:06 avvio
+14:47:22 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 23 14:46:37 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 23 14:46:37 sofios kernel:     keyboard-layouts=it
+nov 23 14:46:56 sofios kwin_wayland_wrapper[1322]: kwin_core: Failed to open drm node: ""
+nov 23 14:46:57 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: EGL setup failed, disabling glamor
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: Failed to initialize glamor, falling back to sw
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1393]: Errors from xkbcomp are not fatal to the X server
+nov 23 14:47:00 sofios systemd[1221]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:02 sofios dbus-daemon[1264]: [session uid=1000 pid=1264 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.28' (uid=1000 pid=1437 comm="/usr/bin/plasmashell --no-respawn")
+nov 23 14:47:02 sofios systemd[1221]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 23 14:47:03 sofios NetworkManager[1104]: <info>  [1795441623.5893] agent-manager: agent[4b29c8342c61665a,:1.37/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 23 14:47:04 sofios plasmashell[1437]: kf.plasma.quick: Applet preload policy set to 1
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 23 14:47:04 sofios plasmashell[1437]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 23 14:47:06 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:06 sofios systemd[1221]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 23 14:47:06 sofios systemd[1221]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec3e78940
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec3e880b0
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 23 14:47:11 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:11 sofios plasmashell[1437]: kde.plasmashell: Activity added twice "d4ad4463-9d81-4874-96e7-ee95805bbbf5"
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 23 14:47:27 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+=== FINE RAPPORTO +70 ===
+=== RAPPORTO +90 14:49:31 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1208 user    tty2 no -
+2 1000 sofios -     1221 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   580 23 nov 14.47 .
+drwx------ 16 sofios sofios   480 23 nov 14.47 ..
+drwx------  2 sofios sofios    60 23 nov 14.47 dconf
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 23 nov 14.46 gtkrc
+-rw-rw-r--  1 sofios sofios    86 23 nov 14.46 gtkrc-2.0
+-rw-------  1 sofios sofios   123 23 nov 14.47 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 23 nov 14.47 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 23 nov 14.47 kconf_updaterc
+-rw-------  1 sofios sofios    43 23 nov 14.47 kded5rc
+drwxrwxr-x  2 sofios sofios   140 23 nov 14.46 kdedefaults
+-rw-------  1 sofios sofios  3110 23 nov 14.46 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 kde.org
+-rw-------  1 sofios sofios 14442 23 nov 14.47 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 23 nov 14.47 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 23 nov 14.46 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 23 nov 14.46 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 23 nov 14.46 kwinrc
+-rw-------  1 sofios sofios    27 23 nov 14.46 plasma-localerc
+-rw-------  1 sofios sofios  4321 23 nov 14.47 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1654 23 nov 14.47 plasmashellrc
+-rw-------  1 sofios sofios    51 23 nov 14.47 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 23 nov 14.47 pulse
+-rw-rw-r--  1 sofios sofios     0 23 nov 14.47 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 23 nov 14.46 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 23 nov 14.46 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 23 nov 14.46 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+14:47:06 avvio
+14:47:22 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 23 14:46:37 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 23 14:46:37 sofios kernel:     keyboard-layouts=it
+nov 23 14:46:56 sofios kwin_wayland_wrapper[1322]: kwin_core: Failed to open drm node: ""
+nov 23 14:46:57 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: EGL setup failed, disabling glamor
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: Failed to initialize glamor, falling back to sw
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1393]: Errors from xkbcomp are not fatal to the X server
+nov 23 14:47:00 sofios systemd[1221]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:02 sofios dbus-daemon[1264]: [session uid=1000 pid=1264 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.28' (uid=1000 pid=1437 comm="/usr/bin/plasmashell --no-respawn")
+nov 23 14:47:02 sofios systemd[1221]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 23 14:47:03 sofios NetworkManager[1104]: <info>  [1795441623.5893] agent-manager: agent[4b29c8342c61665a,:1.37/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 23 14:47:04 sofios plasmashell[1437]: kf.plasma.quick: Applet preload policy set to 1
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 23 14:47:04 sofios plasmashell[1437]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 23 14:47:06 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:06 sofios systemd[1221]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 23 14:47:06 sofios systemd[1221]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec3e78940
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec3e880b0
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 23 14:47:11 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:11 sofios plasmashell[1437]: kde.plasmashell: Activity added twice "d4ad4463-9d81-4874-96e7-ee95805bbbf5"
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 23 14:47:27 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+=== FINE RAPPORTO +90 ===
+=== RAPPORTO +150 14:52:01 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1208 user    tty2 no -
+2 1000 sofios -     1221 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   580 23 nov 14.47 .
+drwx------ 16 sofios sofios   480 23 nov 14.47 ..
+drwx------  2 sofios sofios    60 23 nov 14.47 dconf
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 23 nov 14.46 gtkrc
+-rw-rw-r--  1 sofios sofios    86 23 nov 14.46 gtkrc-2.0
+-rw-------  1 sofios sofios   123 23 nov 14.47 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 23 nov 14.47 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 23 nov 14.47 kconf_updaterc
+-rw-------  1 sofios sofios    43 23 nov 14.47 kded5rc
+drwxrwxr-x  2 sofios sofios   140 23 nov 14.46 kdedefaults
+-rw-------  1 sofios sofios  3110 23 nov 14.46 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 kde.org
+-rw-------  1 sofios sofios 14442 23 nov 14.47 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 23 nov 14.47 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 23 nov 14.46 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 23 nov 14.46 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 23 nov 14.46 kwinrc
+-rw-------  1 sofios sofios    27 23 nov 14.46 plasma-localerc
+-rw-------  1 sofios sofios  4321 23 nov 14.47 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1654 23 nov 14.47 plasmashellrc
+-rw-------  1 sofios sofios    51 23 nov 14.47 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 23 nov 14.47 pulse
+-rw-rw-r--  1 sofios sofios     0 23 nov 14.47 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 23 nov 14.46 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 23 nov 14.46 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 23 nov 14.46 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+14:47:06 avvio
+14:47:22 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 23 14:46:37 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 23 14:46:37 sofios kernel:     keyboard-layouts=it
+nov 23 14:46:56 sofios kwin_wayland_wrapper[1322]: kwin_core: Failed to open drm node: ""
+nov 23 14:46:57 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: EGL setup failed, disabling glamor
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: Failed to initialize glamor, falling back to sw
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1393]: Errors from xkbcomp are not fatal to the X server
+nov 23 14:47:00 sofios systemd[1221]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:02 sofios dbus-daemon[1264]: [session uid=1000 pid=1264 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.28' (uid=1000 pid=1437 comm="/usr/bin/plasmashell --no-respawn")
+nov 23 14:47:02 sofios systemd[1221]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 23 14:47:03 sofios NetworkManager[1104]: <info>  [1795441623.5893] agent-manager: agent[4b29c8342c61665a,:1.37/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 23 14:47:04 sofios plasmashell[1437]: kf.plasma.quick: Applet preload policy set to 1
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 23 14:47:04 sofios plasmashell[1437]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 23 14:47:06 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:06 sofios systemd[1221]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 23 14:47:06 sofios systemd[1221]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec3e78940
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec3e880b0
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 23 14:47:11 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:11 sofios plasmashell[1437]: kde.plasmashell: Activity added twice "d4ad4463-9d81-4874-96e7-ee95805bbbf5"
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 23 14:47:27 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+=== FINE RAPPORTO +150 ===
+=== RAPPORTO +120 14:54:02 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1208 user    tty2 no -
+2 1000 sofios -     1221 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   580 23 nov 14.47 .
+drwx------ 16 sofios sofios   480 23 nov 14.47 ..
+drwx------  2 sofios sofios    60 23 nov 14.47 dconf
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 23 nov 14.47 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 23 nov 14.46 gtkrc
+-rw-rw-r--  1 sofios sofios    86 23 nov 14.46 gtkrc-2.0
+-rw-------  1 sofios sofios   123 23 nov 14.47 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 23 nov 14.47 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 23 nov 14.47 kconf_updaterc
+-rw-------  1 sofios sofios    43 23 nov 14.47 kded5rc
+drwxrwxr-x  2 sofios sofios   140 23 nov 14.46 kdedefaults
+-rw-------  1 sofios sofios  3110 23 nov 14.46 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 kde.org
+-rw-------  1 sofios sofios 14442 23 nov 14.47 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 23 nov 14.47 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 23 nov 14.46 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 23 nov 14.46 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 23 nov 14.46 kwinrc
+-rw-------  1 sofios sofios    27 23 nov 14.46 plasma-localerc
+-rw-------  1 sofios sofios  4321 23 nov 14.47 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1654 23 nov 14.47 plasmashellrc
+-rw-------  1 sofios sofios    51 23 nov 14.47 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 23 nov 14.47 pulse
+-rw-rw-r--  1 sofios sofios     0 23 nov 14.47 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 23 nov 14.46 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 23 nov 14.46 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 23 nov 14.46 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 23 nov 14.47 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+14:47:06 avvio
+14:47:22 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 23 14:46:37 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 23 14:46:37 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 23 14:46:37 sofios kernel:     keyboard-layouts=it
+nov 23 14:46:56 sofios kwin_wayland_wrapper[1322]: kwin_core: Failed to open drm node: ""
+nov 23 14:46:57 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: EGL setup failed, disabling glamor
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1372]: Failed to initialize glamor, falling back to sw
+nov 23 14:46:58 sofios kwin_wayland_wrapper[1393]: Errors from xkbcomp are not fatal to the X server
+nov 23 14:47:00 sofios systemd[1221]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 23 14:47:01 sofios kwin_wayland_wrapper[1366]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:01 sofios plasmashell[1437]: pci id for fd 15: 1234:1111, driver (null)
+nov 23 14:47:01 sofios plasmashell[1437]: kmsro: driver missing
+nov 23 14:47:01 sofios plasmashell[1437]: libEGL warning: egl: failed to create dri2 screen
+nov 23 14:47:02 sofios dbus-daemon[1264]: [session uid=1000 pid=1264 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.28' (uid=1000 pid=1437 comm="/usr/bin/plasmashell --no-respawn")
+nov 23 14:47:02 sofios systemd[1221]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 23 14:47:03 sofios NetworkManager[1104]: <info>  [1795441623.5893] agent-manager: agent[4b29c8342c61665a,:1.37/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 23 14:47:04 sofios plasmashell[1437]: kf.plasma.quick: Applet preload policy set to 1
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 23 14:47:04 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 23 14:47:04 sofios plasmashell[1437]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 23 14:47:06 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:06 sofios systemd[1221]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 23 14:47:06 sofios systemd[1221]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec3e78940
+nov 23 14:47:06 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec3e880b0
+nov 23 14:47:06 sofios plasmashell[1437]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 23 14:47:11 sofios plasmashell[1437]: This plugin does not support setting window opacity
+nov 23 14:47:11 sofios plasmashell[1437]: kde.plasmashell: Activity added twice "d4ad4463-9d81-4874-96e7-ee95805bbbf5"
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x55bec2722350
+nov 23 14:47:13 sofios plasmashell[1437]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 23 14:47:27 sofios kwin_wayland_wrapper[1322]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+=== FINE RAPPORTO +120 ===
+### collaudo-inizio
+### collaudo-fine
+### collaudo-duro-inizio
+NOTA avvio: Startup finished in 4.177s (kernel) + 15.303s (userspace) = 19.481s 
+NOTA memoria sofios-info: 73928 kB
+NOTA memoria sofios-note: 73924 kB
+NOTA memoria sofios-password: 104028 kB
+NOTA memoria sofios-benvenuto: 75168 kB
+NOTA memoria sofios-store: 106460 kB
+### collaudo-duro-fine
+### kernel-android
+ls: impossibile accedere a '/dev/binder*': File o directory non esistente
+ls: impossibile accedere a '/dev/binderfs': File o directory non esistente
+6.12.118+deb13-amd64
+CONFIG_ANDROID_BINDER_IPC=m
+# CONFIG_ANDROID_BINDERFS is not set
+CONFIG_ANDROID_BINDER_DEVICES="binder"
+# CONFIG_ANDROID_BINDER_IPC_SELFTEST is not set
+/usr/bin/waydroid
+1.6.3
+ii  waydroid       1.6.3+ds-2~bpo13+1 all          container-based approach to boot a full Android system on GNU/Linux
+### windows-store
+libEGL warning: pci id for fd 10: 1234:1111, driver (null)
+
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+finestra: visibile=True PyQt6.QtCore.QRect(0, 0, 1040, 668) schermo=PyQt6.QtCore.QRect(0, 0, 1280, 800)
+stato: Scarico «Notepad++»…
+stato: Installo «Notepad++»…
+stato: Fatto: «Notepad++».
+### windows-registro
+codice 0 Errore sconosciuto
+wine: created the configuration directory '/home/sofios/.wine'
+/home/sofios/.wine/drive_c/ProgramData:
+Microsoft
+
+/home/sofios/.wine/drive_c/Program Files:
+Common Files
+Internet Explorer
+Notepad++
+Windows Media Player
+Windows NT
+
+/home/sofios/.wine/drive_c/Program Files/Notepad++:
+autoCompletion
+change.log
+contextMenu
+functionList
+langs.model.xml
+LICENSE
+localization
+notepad++.exe
+plugins
+readme.txt
+stylers.model.xml
+themes
+uninstall.exe
+updater
+
+/home/sofios/.wine/drive_c/Program Files (x86):
+Common Files
+Internet Explorer
+Windows Media Player
+File system     Dim. Usati Dispon. Uso% Montato su
+/dev/vdb         20G  2,1M     19G   1% /var/lib/waydroid
+/dev/vdb         20G  2,1M     19G   1% /home/sofios/.local/share/waydroid
+Preparo Android (VANILLA)…
+[15:27:52] Downloading https://sourceforge.net/projects/waydroid/files/images/system/lineage/waydroid_x86_64/lineage-20.0-20260927-VANILLA-waydroid_x86_64-system.zip/download
+[15:27:56] Validating system image
+[15:27:57] Extracting to /var/lib/waydroid/images
+[15:28:09] Downloading https://sourceforge.net/projects/waydroid/files/images/vendor/waydroid_x86_64/lineage-20.0-20261022-MAINLINE-waydroid_x86_64-vendor.zip/download
+[15:28:15] Validating vendor image
+[15:28:15] Extracting to /var/lib/waydroid/images
+[Downloading]    0.0 MB/847.45 MB        0.0 kB/s(approx.) [Downloading] 436.01 MB/847.45 MB     216.95 MB/s(approx.) [Downloading] 837.48 MB/847.45 MB      200.7 MB/s(approx.) [Downloading]    0.0 MB/189.82 MB        0.0 kB/s(approx.) [Downloading]  64.29 MB/189.82 MB      32.14 MB/s(approx.) [Downloading] 140.57 MB/189.82 MB      38.14 MB/s(approx.) avvio atteso: 9 giri
+tolgo com.android.contacts: Success
+tolgo org.lineageos.recorder: Success
+tolgo com.android.gallery3d: Success
+tolgo org.lineageos.jelly: Success
+tolgo org.lineageos.eleven: Success
+tolgo org.lineageos.etar: Success
+tolgo org.lineageos.aperture: Success
+tolgo com.android.calculator2: Success
+tolgo com.android.deskclock: Success
+tolgo org.lineageos.backgrounds: Success
+package:com.android.providers.contacts
+package:org.calyxos.backup.contacts
+[15:29:11] WayDroid session is stopped
+[15:29:11] WayDroid session is stopped
+[15:29:11] WayDroid session is stopped
+[15:29:11] WayDroid session is stopped
+tastiera a schermo: 0
+Android pronto.
+### android-stato
+Session:	RUNNING
+Container:	RUNNING
+Vendor type:	MAINLINE
+IP address:	192.168.240.112
+Session user:	sofios(1000)
+Wayland display:	wayland-0
+active
+Hint: You are currently not seeing messages from other users and the system.
+      Users in groups 'adm', 'systemd-journal' can see all messages.
+      Pass -q to turn off this notice.
+-- No entries --
+binder_linux          237568  105
+ls: impossibile accedere a '/dev/binderfs': File o directory non esistente
+crw-rw-rw- 1 root root 10, 260 23 nov 15.27 /dev/binder
+### android-stato
+Session:	RUNNING
+Container:	RUNNING
+Vendor type:	MAINLINE
+IP address:	192.168.240.112
+Session user:	sofios(1000)
+Wayland display:	wayland-0
+active
+Hint: You are currently not seeing messages from other users and the system.
+      Users in groups 'adm', 'systemd-journal' can see all messages.
+      Pass -q to turn off this notice.
+-- No entries --
+binder_linux          237568  106
+ls: impossibile accedere a '/dev/binderfs': File o directory non esistente
+crw-rw-rw- 1 root root 10, 260 23 nov 15.27 /dev/binder
+### android-app
+libEGL warning: pci id for fd 13: 1234:1111, driver (null)
+
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+finestra: visibile=True PyQt6.QtCore.QRect(0, 0, 1040, 668) schermo=PyQt6.QtCore.QRect(0, 0, 1280, 800)
+stato: Catalogo Android aggiornato: 4683 app.
+stato: Scarico «Organic Maps: Mappe Offline»…
+stato: Scarico «Organic Maps: Mappe Offline»… 0%
+stato: Scarico «Organic Maps: Mappe Offline»… 1%
+stato: Scarico «Organic Maps: Mappe Offline»… 11%
+stato: Scarico «Organic Maps: Mappe Offline»… 28%
+stato: Scarico «Organic Maps: Mappe Offline»… 47%
+stato: Scarico «Organic Maps: Mappe Offline»… 63%
+stato: Scarico «Organic Maps: Mappe Offline»… 82%
+stato: Installo «Organic Maps: Mappe Offline» in Android…
+stato: Fatto: «Organic Maps: Mappe Offline».
+android.permission.READ_EXTERNAL_STORAGE: 
+Exception occurred while executing 'grant':
+java.lang.SecurityException: Package app.organicmaps has not requested permission android.permission.READ_EXTERNAL_STORAGE
+	at com.android.server.pm.permission.PermissionManagerServiceImpl.grantRuntimePermissionInternal(PermissionManagerServiceImpl.java:1405)
+	at com.android.server.pm.permission.PermissionManagerServiceImpl.grantRuntimePermission(PermissionManagerServiceImpl.java:1320)
+	at com.android.server.pm.permission.PermissionManagerService.grantRuntimePermission(PermissionManagerService.java:545)
+	at android.permission.PermissionManager.grantRuntimePermission(PermissionManager.java:600)
+	at com.android.server.pm.PackageManagerShellCommand.runGrantRevokePermission(PackageManagerShellCommand.java:2557)
+	at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:292)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onShellCommand(PackageManagerService.java:6088)
+	at android.os.Binder.shellCommand(Binder.java:1049)
+	at android.os.Binder.onTransact(Binder.java:877)
+	at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4318)
+	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onTransact(PackageManagerService.java:6072)
+	at android.os.Binder.execTransactInternal(Binder.java:1285)
+	at android.os.Binder.execTransact(Binder.java:1244)
+android.permission.ACCESS_COARSE_LOCATION: 
+android.permission.ACCESS_FINE_LOCATION: 
+android.permission.POST_NOTIFICATIONS: 
+### android-lista
+Name: File
+packageName: com.android.documentsui
+categories:
+	android.intent.category.LAUNCHER
+Name: Impostazioni
+packageName: com.android.settings
+categories:
+	android.intent.category.LAUNCHER
+Name: Organic Maps
+packageName: app.organicmaps
+categories:
+	android.intent.category.LAUNCHER
+--- pulizia:
+avvio atteso: 9 giri
+tolgo com.android.contacts: Success
+tolgo org.lineageos.recorder: Success
+tolgo com.android.gallery3d: Success
+tolgo org.lineageos.jelly: Success
+tolgo org.lineageos.eleven: Success
+tolgo org.lineageos.etar: Success
+tolgo org.lineageos.aperture: Success
+tolgo com.android.calculator2: Success
+tolgo com.android.deskclock: Success
+tolgo org.lineageos.backgrounds: Success
+package:com.android.providers.contacts
+package:org.calyxos.backup.contacts
+[15:29:11] WayDroid session is stopped
+[15:29:11] WayDroid session is stopped
+[15:29:11] WayDroid session is stopped
+[15:29:11] WayDroid session is stopped
+tastiera a schermo: 0
+--- cartelle di menu:
+/home/sofios/.config/menus:
+applications-merged
+
+/home/sofios/.config/menus/applications-merged:
+wine-Programs-Notepad++.menu
+zz-sofios-nomi.menu
+
+/home/sofios/.local/share/desktop-directories:
+wine-Programs.directory
+wine-wine.directory
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+</Menu>
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>wine-wine</Name>
+    <Directory>sofios-windows.directory</Directory>
+    <Include>
+      <Filename>wine-Programs-Notepad++.desktop</Filename>
+    </Include>
+  </Menu>
+</Menu>
+/home/sofios/.local/share/applications/waydroid.app.organicmaps.desktop:Name=Organic Maps
+/home/sofios/.local/share/applications/waydroid.app.organicmaps.desktop:Exec=waydroid app launch app.organicmaps
+/home/sofios/.local/share/applications/waydroid.app.organicmaps.desktop:Categories=X-WayDroid-App;
+/home/sofios/.local/share/applications/waydroid.app.organicmaps.desktop:Name=App Settings
+/home/sofios/.local/share/applications/waydroid.app.organicmaps.desktop:Exec=waydroid app intent android.settings.APPLICATION_DETAILS_SETTINGS package:app.organicmaps
+/home/sofios/.local/share/applications/waydroid.com.android.documentsui.desktop:Name=File
+/home/sofios/.local/share/applications/waydroid.com.android.documentsui.desktop:Exec=waydroid app launch com.android.documentsui
+/home/sofios/.local/share/applications/waydroid.com.android.documentsui.desktop:Categories=X-WayDroid-App;
+/home/sofios/.local/share/applications/waydroid.com.android.documentsui.desktop:Name=App Settings
+/home/sofios/.local/share/applications/waydroid.com.android.documentsui.desktop:Exec=waydroid app intent android.settings.APPLICATION_DETAILS_SETTINGS package:com.android.documentsui
+/home/sofios/.local/share/applications/waydroid.com.android.settings.desktop:Name=Impostazioni
+/home/sofios/.local/share/applications/waydroid.com.android.settings.desktop:Exec=waydroid app launch com.android.settings
+/home/sofios/.local/share/applications/waydroid.com.android.settings.desktop:Categories=X-WayDroid-App;
+/home/sofios/.local/share/applications/waydroid.com.android.settings.desktop:Name=App Settings
+/home/sofios/.local/share/applications/waydroid.com.android.settings.desktop:Exec=waydroid app intent android.settings.APPLICATION_DETAILS_SETTINGS package:com.android.settings
+/home/sofios/.local/share/applications/wine/Programs/Notepad++.desktop:Name=Notepad++
+/home/sofios/.local/share/applications/wine/Programs/Notepad++.desktop:Exec=env WINEPREFIX="/home/sofios/.wine" wine-stable C:\\\\ProgramData\\\\Microsoft\\\\Windows\\\\Start\\ Menu\\\\Programs\\\\Notepad++.lnk
+--- avvio waydroid:
+--- windows menu:
+/home/sofios/.local/share/applications:
+waydroid.app.organicmaps.desktop
+waydroid.com.android.documentsui.desktop
+waydroid.com.android.settings.desktop
+wine
+
+/home/sofios/.local/share/applications/wine:
+Programs
+
+/home/sofios/.local/share/applications/wine/Programs:
+Notepad++.desktop
+totale 64120
+drwxrwxr-x 2 sofios sofios       60 23 nov 15.35 .
+drwxrwxr-x 3 sofios sofios      120 23 nov 15.35 ..
+-rw-rw-r-- 1 sofios sofios 65658285 23 nov 15.35 app.organicmaps.apk
+--- registro installazione:
+codice 0
+--- permessi concessi a Organic Maps:
+      android.permission.ACCESS_COARSE_LOCATION
+      android.permission.ACCESS_FINE_LOCATION
+      android.permission.POST_NOTIFICATIONS
+        android.permission.POST_NOTIFICATIONS: granted=true, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+        android.permission.ACCESS_FINE_LOCATION: granted=true, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+        android.permission.ACCESS_COARSE_LOCATION: granted=true, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]
+--- pacchetti android:
+package:app.organicmaps
+--- spazio android:
+Filesystem      Size Used Avail Use% Mounted on
+/dev/vdb         20G 2.3G   17G  12% /storage/emulated/0/Android/obb
+--- menu uniti:
+/etc/xdg/menus/applications-merged/:
+sofios-nascondi-android.menu
+waydroid.menu
+zz-sofios-nomi.menu
+
+/home/sofios/.config/menus/applications-merged/:
+wine-Programs-Notepad++.menu
+zz-sofios-nomi.menu
+
+/usr/local/share/desktop-directories/:
+kf5-main.directory
+waydroid.directory
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>Waydroid</Name>
+    <Directory>sofios-android.directory</Directory>
+    <Exclude>
+      <Filename>Waydroid.desktop</Filename>
+      <Filename>waydroid.desktop</Filename>
+      <Filename>id.waydro.waydroid.desktop</Filename>
+      <Filename>waydroid.waydroid.desktop</Filename>
+    </Exclude>
+  </Menu>
+</Menu>
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>wine-wine</Name>
+    <Directory>sofios-windows.directory</Directory>
+    <Include>
+      <Filename>wine-Programs-Notepad++.desktop</Filename>
+    </Include>
+  </Menu>
+</Menu>
+× sofios-nomi-menu.path - SofiOS: segue i cambiamenti del menu fatti da Wine e Waydroid
+     Loaded: loaded (/usr/lib/systemd/user/sofios-nomi-menu.path; enabled; preset: enabled)
+     Active: failed (Result: unit-start-limit-hit) since Mon 2026-11-23 15:29:05 CET; 21min ago
+   Duration: 42min 14.721s
+--- installa a mano:
+package:app.organicmaps
+--- logcat:
+11-23 14:50:47.478   267   329 I ActivityManager: Force stopping app.organicmaps appid=10125 user=0: pkg removed
+11-23 14:50:47.485  1036  1036 I MediaProvider: Invalidating LocalCallingIdentity cache for package app.organicmaps. Reason: package android.intent.action.PACKAGE_REMOVED
+11-23 14:50:47.497  1036  1036 I MediaProvider: Invalidating LocalCallingIdentity cache for package app.organicmaps. Reason: package android.intent.action.PACKAGE_ADDED
+11-23 14:50:47.505   267   308 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package: flg=0x4000010 (has extras) } to com.android.packageinstaller/.PackageInstalledReceiver
+11-23 14:50:47.519   267   329 D PackageInstallerSession: Marking session 1713340754 as applied
+11-23 14:50:47.527   685   685 D CarrierSvcBindHelper: onPackageUpdateFinished: app.organicmaps
+11-23 14:50:47.527   685   685 D CarrierSvcBindHelper: onPackageModified: app.organicmaps
+11-23 14:50:47.531   267   267 I Telecom : CarModeTracker: Package app.organicmaps is not tracked.: SSH.oR@ACU
+11-23 14:50:47.534   267   335 E ActivityManager: 	at com.android.server.pm.PackageInstallerSession.sendOnPackageInstalled(PackageInstallerSession.java:4324)
+11-23 14:50:47.534   267   335 E ActivityManager: 	at com.android.server.pm.PackageInstallerSession.-$$Nest$smsendOnPackageInstalled(Unknown Source:0)
+11-23 14:50:47.534   267   335 E ActivityManager: 	at com.android.server.pm.PackageInstallerSession$4.handleMessage(PackageInstallerSession.java:750)
+11-23 14:50:47.547   267   267 W AlarmManager: Package app.organicmaps, uid 10125 lost permission to set exact alarms!
+11-23 14:50:47.547   267   267 W AlarmManager: Package app.organicmaps, uid 10125 lost permission to set exact alarms!
+11-23 14:50:47.591   267   307 D AppWidgetServiceImpl: Provider info from ComponentInfo{app.organicmaps/app.organicmaps.widget.TrackRecordingWidget} won't be persisted.
+11-23 14:50:47.601   267   307 D AppWidgetServiceImpl: Provider info from ComponentInfo{app.organicmaps/app.organicmaps.widget.TrackRecordingWidget} won't be persisted.
+--- app list ora:
+Name: File
+packageName: com.android.documentsui
+Name: Impostazioni
+packageName: com.android.settings
+Name: Organic Maps
+packageName: app.organicmaps
+### android-lingua
+[15:53:33] Android with user 0 is ready
+### tema-chiaro
+--- temi globali:
+libEGL warning: pci id for fd 10: 1234:1111, driver (null)
+
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+org.sofios.desktop
+org.sofios.light
+--- schemi di colori:
+SofiOSChiaro.colors
+SofiOS.colors
+--- stili di Plasma:
+breeze-dark
+breeze-light
+default
+--- icone:
+Adwaita
+base-riserva
+breeze_cursors
+breeze-dark
+Breeze_Light
+default
+desktop-base
+hicolor
+locolor
+SofiOS
+SofiOS-chiaro
+vendor
+zbar.ico
+--- decorazioni finestre:
+SofiOS
+SofiOSChiaro
+--- stili delle finestre:
+breeze6.so
+--- fine elenco
+libEGL warning: pci id for fd 11: 1234:1111, driver (null)
+
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+--- unita di sincronizzazione:
+active
+stato dopo il cambio: org.sofios.light
+--- fine barre
+### tema-chiaro-verifica
+ColorSchemeHash=10f2312201a5168fbf61040792bd2e181481b6e7
+LookAndFeelPackage=org.sofios.light
+plasmarc:
+Hidden:
+/usr/share/icons/Adwaita/index.theme:Hidden=true
+/usr/share/icons/Breeze_Light/index.theme:Hidden=true
+/usr/share/icons/base-riserva/index.theme:Hidden=true
+/usr/share/icons/breeze-dark/index.theme:Hidden=true
+/usr/share/icons/breeze_cursors/index.theme:Hidden=true
+/usr/share/icons/hicolor/index.theme:Hidden=true
+Pagina Icone:
+/usr/share/applications/kcm_icons.desktop
+/usr/share/locale/af/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ar/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ast/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/az/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/be/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/be@latin/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/bg/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/bn/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/bn_IN/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/br/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/bs/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ca/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ca@valencia/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/cs/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/csb/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/cy/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/da/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/de/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/el/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/en_GB/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/eo/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/es/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/et/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/eu/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/fa/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/fi/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/fr/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/fy/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ga/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/gl/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/gu/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/he/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/hi/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/hne/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/hr/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/hsb/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/hu/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ia/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/id/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/is/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/it/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ja/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ka/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/kk/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/km/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/kn/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ko/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ku/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/lt/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/lv/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/mai/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/mk/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ml/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/mr/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ms/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/nb/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/nds/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ne/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/nl/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/nn/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/oc/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/or/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/pa/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/pl/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/pt/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/pt_BR/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ro/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ru/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sa/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/se/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/si/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sk/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sl/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sq/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sr/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sr@ijekavian/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sr@ijekavianlatin/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sr@latin/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/sv/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ta/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/te/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/tg/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/th/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/tok/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/tr/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/ug/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/uk/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/uz/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/uz@cyrillic/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/vi/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/wa/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/xh/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/zh_CN/LC_MESSAGES/kcm_icons.mo
+/usr/share/locale/zh_TW/LC_MESSAGES/kcm_icons.mo
+deviazione locale di /usr/lib/x86_64-linux-gnu/qt6/plugins/plasma/kcms/systemsettings/kcm_icons.so in /usr/share/sofios/nascosti/_usr_lib_x86_64-linux-gnu_qt6_plugins_plasma_kcms_systemsettings_kcm_icons.so
+Nomi dei temi di icone:
+/usr/share/icons/Adwaita/index.theme:Name=Icone di base
+/usr/share/icons/Breeze_Light/index.theme:Name=Icone di base
+/usr/share/icons/SofiOS-chiaro/index.theme:Name=SofiOS chiaro
+/usr/share/icons/SofiOS/index.theme:Name=SofiOS
+/usr/share/icons/base-riserva/index.theme:Name=Icone di base
+/usr/share/icons/breeze-dark/index.theme:Name=Icone di base
+/usr/share/icons/breeze_cursors/index.theme:Name=Puntatore SofiOS
+/usr/share/icons/hicolor/index.theme:Name=Hicolor
+totale 7
+drwxr-xr-x 14 root root  337 23 nov 14.24 .
+drwxr-xr-x  1 root root   60 23 nov 14.24 ..
+drwxr-xr-x  6 root root  138 23 nov 14.24 Adwaita
+drwxr-xr-x 14 root root  352 23 nov 14.24 base-riserva
+drwxr-xr-x  4 root root   85 23 nov 14.24 breeze_cursors
+drwxr-xr-x 14 root root  328 23 nov 14.24 breeze-dark
+drwxr-xr-x  4 root root   85 23 nov 14.24 Breeze_Light
+drwxr-xr-x  2 root root   34 23 nov 14.24 default
+drwxr-xr-x  6 root root   74 23 nov 14.24 desktop-base
+drwxr-xr-x 33 root root  573 23 nov 14.24 hicolor
+drwxr-xr-x  4 root root   41 23 nov 14.24 locolor
+drwxr-xr-x  3 root root   86 23 nov 14.24 SofiOS
+drwxr-xr-x  3 root root   86 23 nov 14.24 SofiOS-chiaro
+drwxr-xr-x  6 root root   86 23 nov 14.24 vendor
+-rw-r--r--  1 root root 6318  9 gen  2024 zbar.ico
+/usr/share/icons/Breeze_Light/index.theme
+/usr/share/icons/breeze-dark/index.theme
+/usr/share/icons/breeze_cursors/index.theme
+breeze-dark
+breeze-light
+default
+### tema-scuro
+libEGL warning: pci id for fd 13: 1234:1111, driver (null)
+
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+pci id for fd 15: 1234:1111, driver (null)
+kmsro: driver missing
+libEGL warning: egl: failed to create dri2 screen
+### icone-diag
+### icone-diag-fine
+### menu-diag
+== /usr/local/share/applications/Waydroid.desktop
+Name=Waydroid.desktop
+NoDisplay=true
+Hidden=true
+== /usr/local/share/applications/waydroid.app.install.desktop
+Name=waydroid.app.install.desktop
+NoDisplay=true
+Hidden=true
+== /usr/local/share/applications/waydroid.market.desktop
+Name=waydroid.market.desktop
+NoDisplay=true
+Hidden=true
+== /usr/share/applications/waydroid.market.desktop
+Name=Waydroid Market
+Exec=waydroid app intent android.intent.action.VIEW %u
+NoDisplay=true
+Categories=Utility;
+--- unita':
+× sofios-nomi-menu.path - SofiOS: segue i cambiamenti del menu fatti da Wine e Waydroid
+     Loaded: loaded (/usr/lib/systemd/user/sofios-nomi-menu.path; enabled; preset: enabled)
+     Active: failed (Result: unit-start-limit-hit) since Mon 2026-11-23 15:29:05 CET; 44min ago
+   Duration: 42min 14.721s
+ Invocation: 89be3fe8a4224fdebb2a9d0f3fa5d979
+   Triggers: ● sofios-nomi-menu.service
+
+nov 23 14:46:51 sofios systemd[1221]: Started sofios-nomi-menu.path - SofiOS: segue i cambiamenti del menu fatti da Wine e Waydroid.
+nov 23 15:29:05 sofios systemd[1221]: sofios-nomi-menu.path: Failed with result 'unit-start-limit-hit'.
+
+× sofios-nomi-menu.service - SofiOS: nomi del menu per le app Android e i programmi Windows
+     Loaded: loaded (/usr/lib/systemd/user/sofios-nomi-menu.service; static)
+     Active: failed (Result: start-limit-hit) since Mon 2026-11-23 15:29:05 CET; 44min ago
+ Invocation: 2e608bc5eca54895979facd34b86620e
+wine-Programs-Notepad++.menu
+zz-sofios-nomi.menu
+### audit-nomi
+--- avvisi (nome del programma che avvisa):
+--- voci delle Impostazioni (nome e descrizione):
+IMPOSTAZIONE [kcm_breezedecoration.desktop]: Name=Breeze Window Decoration
+IMPOSTAZIONE [kcm_breezedecoration.desktop]: Name[it]=Decorazione delle finestre di Brezza
+IMPOSTAZIONE [kcm_desktoptheme.desktop]: Name=Plasma Style
+IMPOSTAZIONE [kcm_desktoptheme.desktop]: Name[it]=Stile di Plasma
+IMPOSTAZIONE [kcm_krunnersettings.desktop]: Name=KRunner Settings
+IMPOSTAZIONE [kcm_krunnersettings.desktop]: Name[it]=Impostazioni di KRunner
+IMPOSTAZIONE [kcm_kwin_scripts.desktop]: Name=KWin Scripts
+IMPOSTAZIONE [kcm_kwin_scripts.desktop]: Name[it]=Script di KWin
+IMPOSTAZIONE [kcm_plasmasearch.desktop]: Name=Plasma Search
+IMPOSTAZIONE [kcm_plasmasearch.desktop]: Name[it]=Ricerca di Plasma
+IMPOSTAZIONE [kcm_qtquicksettings.desktop]: Name=Plasma Renderer
+IMPOSTAZIONE [kcm_qtquicksettings.desktop]: Name[it]=Plasma Renderer
+IMPOSTAZIONE [kdesystemsettings.desktop]: GenericName=KDE System Settings
+IMPOSTAZIONE [kdesystemsettings.desktop]: GenericName[it]=Impostazioni di sistema KDE
+IMPOSTAZIONE [kdesystemsettings.desktop]: Name=KDE System Settings
+IMPOSTAZIONE [kdesystemsettings.desktop]: Name[it]=Impostazioni di sistema KDE
+--- programmi nel menu:
+--- widget (Aggiungi widget):
+WIDGET [org.kde.plasma.activitypager]:                 "Name": "The Plasma Team",
+WIDGET [org.kde.plasma.activitypager]:                 "Name[it]": "La squadra di Plasma",
+WIDGET [org.kde.plasma.icon]:                 "Name": "The Plasma Team",
+WIDGET [org.kde.plasma.icon]:                 "Name[it]": "La squadra di Plasma",
+WIDGET [org.kde.plasma.pager]:                 "Name": "The Plasma Team",
+WIDGET [org.kde.plasma.pager]:                 "Name[it]": "La squadra di Plasma",
+WIDGET [org.kde.plasma.panelspacer]:                 "Name": "The Plasma Team",
+WIDGET [org.kde.plasma.panelspacer]:                 "Name[it]": "La squadra di Plasma",
+--- temi (nomi visibili nelle scelte):
+--- nomi nelle scorciatoie:
+--- mittenti degli avvisi (voci nascoste con nome non nostro):
+--- temi della schermata di accesso:
+ACCESSO-TEMA: sofios
+--- pagine delle Impostazioni nascoste:
+PAGINA-NASCOSTA: kcm_about-distro=false
+PAGINA-NASCOSTA: kcm_desktoptheme=false
+PAGINA-NASCOSTA: kcm_feedback=false
+PAGINA-NASCOSTA: kcm_icons=false
+PAGINA-NASCOSTA: kcm_kdeconnect=false
+PAGINA-NASCOSTA: kcm_krunnersettings=false
+PAGINA-NASCOSTA: kcm_kwin_scripts=false
+PAGINA-NASCOSTA: kcm_kwindecoration=false
+PAGINA-NASCOSTA: kcm_kwinsupportinfo=false
+PAGINA-NASCOSTA: kcm_plasmasearch=false
+PAGINA-NASCOSTA: kcm_qtquicksettings=false
+PAGINA-NASCOSTA: kcm_style=false
+--- cartelle e categorie del menu:
+--- anteprime dei widget ancora presenti (clipboard, activitybar, kickoff):
+--- schermate di accesso e avvio (testi):
+--- terminale e identità del sistema:
+TERMINALE: Linux sofios 6.12.118+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.118-1 (2026-11-20) x86_64 GNU/Linux
+TERMINALE:           Kernel: Linux 6.12.118+deb13-amd64
+--- programmi di terzi (pagine iniziali, motori di ricerca, informazioni):
+TERZI: /etc/firefox-esr/firefox-esr.js
+TERZI: /etc/thunderbird/pref/thunderbird.js
+TERZI-TESTO: // This is the Debian specific preferences file for Firefox ESR
+--- menu «Aiuto» dei programmi (azioni standard):
+### audit-nomi-fine

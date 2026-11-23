@@ -1,0 +1,157 @@
+13:45:56 OVMF: /usr/share/OVMF/OVMF_CODE_4M.fd /usr/share/OVMF/OVMF_VARS_4M.fd kvm: True
+13:45:57 QMP collegato (mouse assoluto)
+13:45:58 attendo il menu di avvio
+13:45:58 foto 001-0000s-avvio.png
+13:46:09 foto 002-0011s-avvio.png
+13:46:30 avvio premuto, attendo il caricamento
+13:46:30 foto 003-0032s-caricamento.png
+13:46:41 foto 004-0043s-caricamento.png
+13:46:51 foto 005-0053s-caricamento.png
+13:47:02 foto 006-0064s-caricamento.png
+13:47:12 foto 007-0074s-caricamento.png
+13:47:33 desktop appena avviato
+13:47:33 foto 008-0095s-desktop.png
+13:48:14 foto 009-0136s-desktop.png
+13:49:16 foto 010-0197s-desktop.png
+13:50:17 foto 011-0258s-desktop.png
+13:51:18 foto 012-0320s-desktop.png
+13:52:19 foto 013-0381s-desktop.png
+13:53:20 provo a sbloccare con la password della prova (live)
+13:53:37 foto 014-0459s-sbloccato.png
+13:54:14 foto 015-0496s-sbloccato.png
+13:54:39 chiudo il benvenuto e apro l'installer
+13:54:44 foto 016-0526s-dopo-benvenuto.png
+13:54:55 foto 017-0537s-app-mail.png
+13:55:04 foto 018-0546s-app-mail.png
+13:55:12 foto 019-0554s-app-mail.png
+13:55:21 foto 020-0563s-app-mail.png
+13:56:22 foto 021-0624s-app-cassaforte.png
+13:56:31 foto 022-0633s-app-cassaforte.png
+13:56:55 foto 023-0657s-app-note.png
+13:57:04 foto 024-0665s-app-note.png
+13:57:30 foto 025-0692s-app-browser.png
+13:57:39 foto 026-0700s-app-browser.png
+13:57:47 foto 027-0709s-app-browser.png
+13:57:56 foto 028-0717s-app-browser.png
+13:58:04 foto 029-0726s-app-browser.png
+13:58:38 schermata: accesso-sddm
+13:59:44 foto 030-0826s-accesso-sddm.png
+13:59:46 foto 031-0828s-accesso-sddm-b.png
+13:59:50 schermata: info-sistema
+14:00:28 foto 032-0870s-info-sistema.png
+14:00:33 schermata: impostazioni
+14:01:09 foto 033-0911s-impostazioni.png
+14:01:11 foto 034-0912s-impostazioni-b.png
+14:01:15 schermata: utenti
+14:01:54 foto 035-0956s-utenti.png
+14:01:59 schermata: file
+14:02:25 foto 036-0987s-file.png
+14:02:30 schermata: sostore
+14:03:08 foto 037-1030s-sostore.png
+14:03:13 collaudo automatico nel sistema acceso
+14:03:39 foto 038-1060s-collaudo.png
+14:04:39 foto 039-1121s-collaudo.png
+14:06:09 foto 040-1210s-collaudo-duro.png
+14:07:09 foto 041-1271s-collaudo-duro.png
+14:08:09 foto 042-1331s-collaudo-duro.png
+14:09:09 prova Windows: Notepad++ con Wine
+14:10:08 foto 043-1450s-win-installazione.png
+14:10:39 foto 044-1481s-win-installazione.png
+14:11:09 foto 045-1511s-win-installazione.png
+14:11:40 foto 046-1542s-win-installazione.png
+14:12:10 foto 047-1572s-win-installazione.png
+14:13:11 foto 048-1633s-win-installazione.png
+14:14:12 foto 049-1694s-win-installazione.png
+14:15:13 foto 050-1755s-win-installazione.png
+14:16:14 foto 051-1816s-win-installazione.png
+14:17:15 foto 052-1876s-win-installazione.png
+14:18:16 foto 053-1937s-win-installazione.png
+14:19:17 foto 054-1998s-win-installazione.png
+14:20:17 foto 055-2059s-win-installazione.png
+14:21:18 foto 056-2120s-win-installazione.png
+14:22:19 foto 057-2181s-win-installazione.png
+14:24:26 foto 058-2307s-win-aperto.png
+14:24:56 foto 059-2338s-win-aperto.png
+14:25:27 foto 060-2368s-win-aperto.png
+14:25:57 foto 061-2399s-win-aperto.png
+14:26:28 foto 062-2429s-win-aperto.png
+14:27:22 prova Android: attivazione e avvio
+14:27:52 foto 063-2514s-android-attivazione.png
+14:30:22 Android pronto: True
+14:31:30 foto 064-2732s-android-avvio.png
+14:32:21 foto 065-2782s-android-avvio.png
+14:33:12 foto 066-2833s-android-avvio.png
+14:35:09 foto 067-2950s-android-app.png
+14:35:54 foto 068-2996s-android-app.png
+14:36:40 foto 069-3041s-android-app.png
+14:37:25 foto 070-3087s-android-app.png
+14:38:11 foto 071-3132s-android-app.png
+14:39:42 foto 072-3223s-android-app.png
+14:40:27 foto 073-3269s-android-app.png
+14:41:12 foto 074-3314s-android-app.png
+14:42:43 foto 075-3405s-android-app.png
+14:43:29 foto 076-3450s-android-app.png
+14:44:14 foto 077-3496s-android-app.png
+14:45:45 foto 078-3587s-android-app.png
+14:46:31 foto 079-3632s-android-app.png
+14:47:16 foto 080-3678s-android-app.png
+14:48:47 foto 081-3769s-android-app.png
+14:49:32 foto 082-3814s-android-app.png
+14:51:25 foto 083-3927s-android-app-aperta.png
+14:51:45 foto 084-3947s-android-app-aperta.png
+14:52:06 foto 085-3967s-android-app-aperta.png
+14:53:21 foto 086-4043s-android-lingua.png
+14:53:47 foto 087-4068s-android-lingua.png
+14:54:12 foto 088-4094s-android-lingua.png
+14:55:03 foto 089-4145s-android-lingua.png
+14:55:32 prova tema chiaro
+14:56:12 foto 090-4213s-tema-chiaro.png
+14:56:37 foto 091-4239s-tema-chiaro-menu.png
+14:57:17 foto 092-4278s-tema-chiaro-impostazioni.png
+14:57:27 foto 093-4289s-tema-chiaro-impostazioni.png
+14:58:48 foto 094-4369s-tema-chiaro-sostore.png
+14:59:08 foto 095-4390s-tema-chiaro-sostore.png
+15:01:02 foto 096-4504s-tema-scuro-file.png
+15:01:10 foto 097-4512s-tema-scuro-file.png
+15:01:22 foto 098-4524s-tema-scuro-menu.png
+15:02:12 foto 099-4574s-tema-scuro-impostazioni.png
+15:02:39 pagine dei temi e del comportamento
+15:03:23 foto 100-4645s-tema-globale.png
+15:04:49 foto 101-4731s-colori.png
+15:05:10 foto 102-4751s-colori.png
+15:06:17 foto 103-4819s-comportamento-generale.png
+15:07:42 foto 104-4904s-icone.png
+15:08:03 foto 105-4924s-icone.png
+15:08:27 icone non nostre
+15:09:04 SoStore: assistenti online
+15:10:00 foto 106-5042s-sostore-assistenti.png
+15:10:10 foto 107-5052s-sostore-assistenti.png
+15:10:35 prova assistenza
+15:11:02 foto 108-5103s-assistenza.png
+15:11:14 foto 109-5116s-assistenza.png
+15:11:27 foto 110-5128s-assistenza.png
+15:12:12 foto 111-5174s-assistenza-mail.png
+15:12:33 foto 112-5194s-assistenza-mail.png
+15:13:36 schermata: menu
+15:14:18 foto 113-5299s-menu-applicazioni.png
+15:14:24 foto 114-5305s-menu-aiuto.png
+15:14:26 controllo dei nomi non nostri (solo lettura)
+15:15:03 mascotte: passaggio del mouse e X
+15:15:05 foto 115-5347s-mascotte-mouse-sopra.png
+15:15:07 foto 116-5349s-mascotte-x.png
+15:15:12 foto 117-5354s-mascotte-tolta.png
+15:15:12 schermata: blocco
+15:15:42 foto 118-5384s-blocco.png
+15:17:45 foto 119-5507s-krunner.png
+15:17:46 foto 120-5508s-installer.png
+15:18:02 foto 121-5523s-installer.png
+15:18:17 foto 122-5539s-installer.png
+15:19:03 foto 123-5585s-installer.png
+15:20:05 foto 124-5647s-installer.png
+15:20:42 foto 125-5683s-pagina2.png
+15:20:57 foto 126-5698s-pagina3.png
+15:21:11 foto 127-5713s-pagina4.png
+15:21:26 foto 128-5728s-partizioni.png
+15:21:34 foto 129-5736s-partizioni-cancella.png
+15:21:45 foto 130-5747s-utente.png
+15:21:45 fine

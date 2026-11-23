@@ -1,0 +1,42 @@
+18618:SOFIOS tablet: tastiera sullo schermo = /usr/share/applications/com.github.maliit.keyboard.desktop
+18619:SOFIOS tablet: contenuto di /etc/xdg/kwinrc
+18620-[Input]
+18621-TabletMode=auto
+18622-
+18623-[Wayland]
+18624-InputMethod=/usr/share/applications/com.github.maliit.keyboard.desktop
+18625-VirtualKeyboardEnabled=true
+18626-
+18627-[org.kde.kdecoration2]
+18628-BorderSize=None
+18629-ButtonsOnLeft=
+18630-ButtonsOnRight=IAX
+18631-library=org.kde.kwin.aurorae
+18632-theme=__aurorae__svg__SofiOS
+18633-P: Executing hook config/hooks/live/0990-sofios-verifica.hook.chroot...
+18634-== SOFIOS: sfondo GRUB (sistema installato) ==
+18635-update-alternatives: using /usr/share/sofios/grub-sfondo.png to provide /usr/share/images/desktop-base/desktop-grub.png (desktop-grub) in auto mode
+18636-desktop-grub - manual mode
+18637-  link best version is /usr/share/sofios/grub-sfondo.png
+18638-  link currently points to /usr/share/sofios/grub-sfondo.png
+18639-  link desktop-grub is /usr/share/images/desktop-base/desktop-grub.png
+18640-  slave desktop-grub.sh is /usr/share/desktop-base/grub_background.sh
+18641-/usr/share/desktop-base/active-theme/grub/grub-16x9.png - priority 50
+18642-  slave desktop-grub.sh: /usr/share/desktop-base/active-theme/grub/grub_background.sh
+18643-/usr/share/desktop-base/active-theme/grub/grub-4x3.png - priority 45
+18644-SOFIOS: 10_linux, riga OS=:
+18645-37:  OS=GNU/Linux
+18646-41:      OS="${GRUB_DISTRIBUTOR}"
+18647-44:      OS="${GRUB_DISTRIBUTOR}"
+18648-SOFIOS: preferenze Mail scritte in /etc/thunderbird/pref (e' un collegamento? /etc/thunderbird/pref)
+18649-SOFIOS: preferenze Mail scritte in /usr/lib/thunderbird/defaults/pref (e' un collegamento? /usr/share/thunderbird/defaults/pref)
+18650-== SOFIOS: controllo marchi ==
+18651--- os-release / issue / lsb --
+18652-PRETTY_NAME="SofiOS"
+18653-NAME="SofiOS"
+18654-VERSION="1.0"
+18655-VERSION_ID="1.0"
+18656-ID=sofios
+18657-ID_LIKE=debian
+18658-HOME_URL="https://github.com/Asdrubale1234/sofios"
+18659-LOGO=sofios-logo
