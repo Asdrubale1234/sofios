@@ -119,7 +119,7 @@ class MainActivity : Activity() {
     private fun mostraX() {
         tastoX.visibility = View.VISIBLE
         tastoX.removeCallbacks(nascondiX)
-        tastoX.postDelayed(nascondiX, 4000)
+        tastoX.postDelayed(nascondiX, 6000)
     }
 
     private fun menuSfondo(v: View) {

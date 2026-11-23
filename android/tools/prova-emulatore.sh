@@ -6,6 +6,7 @@ set -u
 APK="$1"; FINTO="$2"; OUT="$3"; PKG=it.sofilabs.sofios
 mkdir -p "$OUT"; LOG="$OUT/registro.txt"; : > "$LOG"
 scrivi() { echo "$*" | tee -a "$LOG"; }
+foto_subito() { adb exec-out screencap -p > "$OUT/$1.png"; scrivi "foto: $1.png"; }
 foto() { sleep 3; adb exec-out screencap -p > "$OUT/$1.png"; scrivi "foto: $1.png"; }
 in_primo_piano() {
   adb shell dumpsys activity activities | grep -m1 -E 'topResumedActivity|mResumedActivity' | sed 's/^ *//'
@@ -63,11 +64,11 @@ foto B-schermata-iniziale
 
 scrivi "== B2. Mascotte: tocco, compare la X, la tolgo; tengo premuto sullo sfondo e la rimetto"
 tocca_testo "Mascotte SofiOS"; sleep 1
-foto B2-mascotte-con-x
+foto_subito B2-mascotte-con-x
 tocca_testo "Nascondi la mascotte"; sleep 1
 foto B3-mascotte-tolta
-adb shell input swipe 700 500 700 500 1500; sleep 1
-foto B4-menu-sfondo
+adb shell input swipe 600 400 600 400 900; sleep 1
+foto_subito B4-menu-sfondo
 tocca_testo "Mostra la mascotte"; sleep 1
 foto B5-mascotte-rimessa
 
