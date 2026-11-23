@@ -27,6 +27,7 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -34,44 +35,43 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugAssets
 > Task :app:compressDebugAssets
 > Task :app:desugarDebugFileDependencies
+> Task :app:processDebugResources
+> Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugStartupProfile
 > Task :app:mergeDebugJniLibFolders
-> Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugNativeLibs NO-SOURCE
-> Task :app:processDebugManifestForPackage
+> Task :app:mergeLibDexDebug
 > Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
-> Task :app:mergeLibDexDebug
 > Task :app:writeDebugSigningConfigVersions
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
 > Task :finto-fully:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
-> Task :finto-fully:generateDebugResValues
 > Task :finto-fully:checkDebugAarMetadata
+> Task :finto-fully:generateDebugResValues
 > Task :finto-fully:mapDebugSourceSetPaths
 > Task :finto-fully:generateDebugResources
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:extractDeepLinksDebug
+> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:javaPreCompileDebug
-> Task :app:processDebugResources
+> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:mergeDebugShaders
-> Task :app:mergeExtDexDebug
-> Task :finto-fully:processDebugResources
 > Task :finto-fully:compileDebugShaders NO-SOURCE
 > Task :finto-fully:generateDebugAssets UP-TO-DATE
 > Task :finto-fully:mergeDebugAssets
 > Task :finto-fully:compressDebugAssets
 > Task :finto-fully:desugarDebugFileDependencies
 > Task :finto-fully:checkDebugDuplicateClasses
+> Task :finto-fully:processDebugResources
 > Task :finto-fully:mergeDebugStartupProfile
+> Task :app:mergeExtDexDebug
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:mergeLibDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
@@ -92,18 +92,21 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:assembleDebug
 
 > Task :app:compileDebugKotlin
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/FileActivity.kt:101:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:126:22 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/NoteActivity.kt:237:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/SchermataSofiOS.kt:81:46 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics
 > Task :app:processDebugJavaRes
-> Task :app:mergeProjectDexDebug
 > Task :app:mergeDebugJavaResource
+> Task :app:mergeProjectDexDebug
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795457643821.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795465213876.json
 
-BUILD SUCCESSFUL in 1m 21s
+BUILD SUCCESSFUL in 1m 12s
 70 actionable tasks: 70 executed

@@ -11,64 +11,113 @@ Success
 == Imposto SofiOS come schermata iniziale
 schermata iniziale scelta: it.sofilabs.sofios
 == A. Prima di toccare Casa: SofiOS non apre niente da solo
-in primo piano: topResumedActivity=ActivityRecord{ba0acaf u0 it.sofilabs.sofios/.MainActivity t237}
+in primo piano: topResumedActivity=ActivityRecord{a9d3cd3 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: A-prima-di-toccare-casa.png
 == A2. Tocco Casa: si apre Fully (e da ora parte sempre da solo)
-tocco «Casa» in 1016 1476
+tocco «Casa» in 928 1476
 foto: A2-casa-aperta.png
 == B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS, con il puntino verde
-in primo piano: topResumedActivity=ActivityRecord{ba0acaf u0 it.sofilabs.sofios/.MainActivity t237}
+in primo piano: topResumedActivity=ActivityRecord{a9d3cd3 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: B-schermata-iniziale.png
 == B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla
 tocco «Mascotte SofiOS» in 2268 1092
 foto: B2-mascotte-con-x.png
 tocco «Nascondi la mascotte» in 2400 856
 foto: B3-mascotte-tolta.png
-tocco «Mostra o nascondi la mascotte» in 1544 1476
+tocco «Mostra o nascondi la mascotte» in 1632 1476
 foto: B4-icona-mascotte-tocco.png
-tocco «Mostra o nascondi la mascotte» in 1544 1476
+tocco «Mostra o nascondi la mascotte» in 1632 1476
 foto: B4b-mascotte-di-nuovo-tolta.png
-tocco «Mostra o nascondi la mascotte» in 1544 1476
+tocco «Mostra o nascondi la mascotte» in 1632 1476
 foto: B5-mascotte-rimessa.png
 == C. Tasto Home non riapre Casa
-in primo piano: topResumedActivity=ActivityRecord{ba0acaf u0 it.sofilabs.sofios/.MainActivity t237}
+in primo piano: topResumedActivity=ActivityRecord{a9d3cd3 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: C-tasto-home.png
 == N. Note: scrivo, seconda nota, chiudo e riapro, elimino
-tocco «Note» in 1368 1476
+tocco «Note» in 1280 1476
 foto: N1-note-vuota.png
 foto: N2-prima-nota.png
 file sul tablet dopo la prima nota:
-files/Note/nota-20261123-181750.txt: Spesa del sabato
+files/Note/nota-20261123-202357.txt: Spesa del sabato
 tocco «Nuova nota» in 290 660
 foto: N3-due-note.png
 file sul tablet dopo la seconda nota:
-files/Note/nota-20261123-181750.txt: Spesa del sabato
-files/Note/nota-20261123-181804.txt: Chiamare Luca
-tocco «Note» in 1368 1476
+files/Note/nota-20261123-202357.txt: Spesa del sabato
+files/Note/nota-20261123-202409.txt: Chiamare Luca
+tocco «Note» in 1280 1476
 foto: N4-dopo-chiusura-e-riapertura.png
-tocco «Spesa del sabato» in 290 323
+tocco «Spesa del sabato» in 290 347
 foto: N5-riaperta-la-prima-nota.png
 tocco «Elimina nota» in 290 1516
 foto: N6-conferma-eliminazione.png
-tocco «Sì» in 1736 925
+tocco «Sì» in 1736 901
 foto: N7-dopo-eliminazione.png
 file sul tablet dopo l'eliminazione:
-files/Note/nota-20261123-181804.txt: Chiamare Luca
+files/Note/nota-20261123-202409.txt: Chiamare Luca
+== P. Pannello SofiOS (si apre dalla barra in alto)
+tocco «Barra SofiOS» in 1280 36
+foto: P1-pannello.png
+trascino il cursore da 870 a 1532 (altezza 183)
+luminosità dopo il cursore: 40 (prima: 40)
+ATTENZIONE: la luminosità non è cambiata
+trascino il cursore da 870 a 1532 (altezza 279)
+foto: P2-pannello-dopo-cursori.png
+tocco «Barra SofiOS» in 1280 36
+tocco «File» (ultimo) in 1070 781
+foto: P3-file-dal-pannello.png
+in primo piano: topResumedActivity=ActivityRecord{967aed3 u0 it.sofilabs.sofios/.FileActivity t14}
+== I. Impostazioni nostre
+tocco «Impostazioni» in 1104 1476
+foto: I1-impostazioni-schermo.png
+tocco «Suono» in 290 364
+foto: I2-suono.png
+tocco «Batteria» in 290 474
+foto: I3-batteria.png
+tocco «Spazio» in 290 584
+foto: I4-spazio.png
+tocco «App» in 290 694
+foto: I5-app.png
+tocco «Informazioni» in 290 914
+foto: I6-informazioni.png
+tocco «Altre impostazioni» in 290 804
+foto: I7-altre.png
+== F. File: la Cartella SofiOS
+tocco «File» in 1456 1476
+foto: F1-file-vuota.png
+creato un file di prova e una cartella con adb
+tocco «File» in 1456 1476
+foto: F2-file-con-prova.png
+ERRORE: non trovo «📄  prova.txt» sullo schermo
+foto: F3-file-aperto.png
+ERRORE: non trovo «Chiudi» sullo schermo
+tocco «Nuova cartella» in 1908 1516
+tocco «Crea» in 1736 523
+foto: F4-nuova-cartella.png
+cartella sul tablet: Documenti Foto prova.txt 
+ERRORE: non trovo «📄  prova.txt» sullo schermo
+ERRORE: non trovo «Elimina» sullo schermo
+foto: F5-conferma-eliminazione.png
+ERRORE: non trovo «Sì» sullo schermo
+foto: F6-dopo-eliminazione.png
+cartella dopo eliminazione: Documenti Foto prova.txt 
 == D. Tocco su Impostazioni e ritorno
-tocco «Impostazioni» in 1192 1476
-in primo piano: topResumedActivity=ActivityRecord{c9e5608 u0 com.android.settings/.homepage.SettingsHomepageActivity t242}
-foto: D-impostazioni.png
-dopo Home: topResumedActivity=ActivityRecord{a42beab u0 it.sofilabs.sofios/.MainActivity t242}
+tocco «Impostazioni» in 1104 1476
+in primo piano: topResumedActivity=ActivityRecord{bf5032f u0 it.sofilabs.sofios/.ImpostazioniActivity t14}
+tocco «Altre impostazioni» in 290 804
+tocco «Tutte le impostazioni di Android» in 1546 1019
+in primo piano: topResumedActivity=ActivityRecord{1c36b91 u0 com.android.settings/.homepage.SettingsHomepageActivity t14}
+foto: D-impostazioni-di-android.png
+dopo Home: topResumedActivity=ActivityRecord{f7170db u0 it.sofilabs.sofios/.MainActivity t14}
 == E. Riavvio del tablet: Casa deve riaprirsi da sola
 schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
-in primo piano: topResumedActivity=ActivityRecord{cdb4f27 u0 de.ozerov.fully/.FintoFully t243}
+in primo piano: topResumedActivity=ActivityRecord{ab0b80a u0 de.ozerov.fully/.FintoFully t15}
 foto: E-dopo-riavvio-casa.png
 == F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
-in primo piano: topResumedActivity=ActivityRecord{c44ca26 u0 it.sofilabs.sofios/.MainActivity t242}
+in primo piano: topResumedActivity=ActivityRecord{b8842d4 u0 it.sofilabs.sofios/.MainActivity t14}
 foto: F-dopo-riavvio-schermata-iniziale.png
 == G. Tengo premuto su Casa: Fully non deve più partire da solo
-tocco lungo «Casa» in 1016 1476
+tocco lungo «Casa» in 928 1476
 foto: G-puntino-spento.png
-in primo piano dopo il riavvio: topResumedActivity=ActivityRecord{f4c9743 u0 it.sofilabs.sofios/.MainActivity t244}
+in primo piano dopo il riavvio: topResumedActivity=ActivityRecord{dd0f082 u0 it.sofilabs.sofios/.MainActivity t16}
 foto: G2-dopo-riavvio-senza-casa.png
-ESITO FINALE: OK
+ESITO FINALE: NON OK
