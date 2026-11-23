@@ -3,14 +3,14 @@ package it.sofilabs.sofios
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 
 /** Schermata iniziale di SofiOS: versione 0.1, solo due icone, nessuna libreria. */
@@ -20,31 +20,33 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = BLU
-        window.navigationBarColor = BLU
+        window.statusBarColor = FONDO
+        window.navigationBarColor = FONDO
 
-        val riga = LinearLayout(this).apply {
+        val radice = FrameLayout(this)
+        // Sfondo di SofiOS (lo stesso del computer): mare di notte, stelle e il faro.
+        radice.addView(ImageView(this).apply {
+            setImageResource(R.drawable.sfondo)
+            scaleType = ImageView.ScaleType.CENTER_CROP
+        }, FrameLayout.LayoutParams(-1, -1))
+
+        // Barra in basso, come sul computer: icone tonde colorate.
+        val barra = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
+            setPadding(dp(14), dp(10), dp(14), dp(10))
+            background = GradientDrawable().apply {
+                setColor(BARRA)
+                cornerRadius = dp(24).toFloat()
+            }
         }
-        riga.addView(icona("Casa", ORO) { apriFully() })
-        riga.addView(icona("Impostazioni", Color.WHITE) {
+        barra.addView(icona("Casa", R.drawable.ic_casa, ORO) { apriFully() })
+        barra.addView(icona("Impostazioni", R.drawable.ic_impostazioni, GRIGIO) {
             startActivity(Intent(Settings.ACTION_SETTINGS))
         })
-
-        val radice = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            setBackgroundColor(BLU)
-        }
-        radice.addView(TextView(this).apply {
-            text = "SofiOS"
-            textSize = 32f
-            setTextColor(ORO)
-            gravity = Gravity.CENTER
-            setPadding(0, 0, 0, dp(32))
+        radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
+            bottomMargin = dp(16)
         })
-        radice.addView(riga)
         setContentView(radice)
 
         // Dopo ogni accensione, la prima volta che parte SofiOS apre da solo Casa (Fully).
@@ -66,18 +68,18 @@ class MainActivity : Activity() {
         else if (!silenzioso) Toast.makeText(this, "Fully Kiosk non è installato", Toast.LENGTH_LONG).show()
     }
 
-    private fun icona(nome: String, colore: Int, azione: () -> Unit): View =
-        TextView(this).apply {
-            text = nome
-            textSize = 18f
-            setTextColor(BLU)
-            gravity = Gravity.CENTER
+    private fun icona(nome: String, immagine: Int, colore: Int, azione: () -> Unit): View =
+        ImageView(this).apply {
+            setImageResource(immagine)
+            contentDescription = nome
+            scaleType = ImageView.ScaleType.CENTER_INSIDE
+            setPadding(dp(14), dp(14), dp(14), dp(14))
             background = GradientDrawable().apply {
                 setColor(colore)
-                cornerRadius = dp(28).toFloat()
+                cornerRadius = dp(16).toFloat()
             }
-            layoutParams = LinearLayout.LayoutParams(dp(160), dp(160)).apply {
-                setMargins(dp(16), dp(16), dp(16), dp(16))
+            layoutParams = LinearLayout.LayoutParams(dp(72), dp(72)).apply {
+                setMargins(dp(8), 0, dp(8), 0)
             }
             setOnClickListener { azione() }
         }
@@ -92,7 +94,9 @@ class MainActivity : Activity() {
     override fun onBackPressed() {}
 
     companion object {
-        private const val BLU = 0xFF0B2A4A.toInt()
-        private const val ORO = 0xFFE8B84A.toInt()
+        private const val FONDO = 0xFF0B1F33.toInt()          // blu notte del computer
+        private const val BARRA = 0xE60B1F33.toInt()          // barra in basso, un po' trasparente
+        private const val ORO = 0xFFFFD479.toInt()
+        private const val GRIGIO = 0xFF6B7A8C.toInt()
     }
 }

@@ -28,7 +28,7 @@ import re, sys
 xml = open(sys.argv[1], encoding="utf-8").read()
 for n in re.finditer(r'<node [^>]*>', xml):
     t = n.group(0)
-    if f'text="{sys.argv[2]}"' in t:
+    if f'text="{sys.argv[2]}"' in t or f'content-desc="{sys.argv[2]}"' in t:
         a, b, c, d = map(int, re.search(r'bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', t).groups())
         print((a + c) // 2, (b + d) // 2); break
 EOF
@@ -69,6 +69,7 @@ foto C-tasto-home
 scrivi "== D. Tocco su Impostazioni e ritorno"
 tocca_testo "Impostazioni"; sleep 3
 scrivi "in primo piano: $(in_primo_piano)"
+foto D-impostazioni
 adb shell input keyevent KEYCODE_HOME; sleep 3
 scrivi "dopo Home: $(in_primo_piano)"
 
