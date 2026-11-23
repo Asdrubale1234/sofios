@@ -5,6 +5,11 @@
     <queries>
         <package android:name="de.ozerov.fully" />
         <intent><action android:name="android.settings.SETTINGS" /></intent>
+        <!-- Per riconoscere Fully anche se il pacchetto avesse un nome diverso -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
     </queries>
 
     <application

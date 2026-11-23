@@ -19,6 +19,7 @@ import android.widget.TextView
 class MainActivity : Activity() {
 
     private val fully = "de.ozerov.fully"
+    private var fullyTrovato: String? = null
     private lateinit var mascotte: FrameLayout
     private lateinit var tastoX: TextView
     private lateinit var casa: FrameLayout
@@ -136,7 +137,19 @@ class MainActivity : Activity() {
         aggiornaCasa()
     }
 
-    private fun fullyInstallato() = packageManager.getLaunchIntentForPackage(fully) != null
+    /** Cerca Fully tra i programmi che si possono aprire: per nome del pacchetto, oppure per nome «Fully». */
+    private fun cercaFully(): String? {
+        val elenco = packageManager.queryIntentActivities(
+            Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER), 0)
+        elenco.firstOrNull { it.activityInfo.packageName == fully }?.let { return fully }
+        return elenco.firstOrNull { it.loadLabel(packageManager).toString().contains("fully", ignoreCase = true) }
+            ?.activityInfo?.packageName
+    }
+
+    private fun fullyInstallato(): Boolean {
+        fullyTrovato = cercaFully()
+        return fullyTrovato != null
+    }
 
     private fun casaAuto() = memoria().getBoolean("casa_auto", false)
 
@@ -172,7 +185,8 @@ class MainActivity : Activity() {
     }
 
     private fun apriFully() {
-        packageManager.getLaunchIntentForPackage(fully)?.let { startActivity(it) }
+        val nome = fullyTrovato ?: cercaFully() ?: return
+        packageManager.getLaunchIntentForPackage(nome)?.let { startActivity(it) }
     }
 
     /** Icona nello stile del computer: riquadro colorato con simbolo bianco. */
