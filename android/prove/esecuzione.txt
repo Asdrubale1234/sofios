@@ -1,0 +1,1 @@
+esecuzione 45189985079, commit fe424c4faf179ebdc3bde3c0b98f78a8e58705a7, esito job: success

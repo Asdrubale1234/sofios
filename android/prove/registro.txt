@@ -1,0 +1,32 @@
+== Dispositivo
+modello: sdk_gphone64_x86_64
+Android: 14 (API 34)
+schermo: Physical size: 2560x1600
+== Installazione (SofiOS e un FINTO Fully, solo per la prova)
+Performing Streamed Install
+Success
+Performing Streamed Install
+Success
+== Imposto SofiOS come schermata iniziale
+schermata iniziale scelta: it.sofilabs.sofios
+== A. Prima accensione: SofiOS parte e apre da solo Casa
+in primo piano: topResumedActivity=ActivityRecord{d1e66a4 u0 de.ozerov.fully/.FintoFully t9}
+foto: A-casa-aperta-da-sola.png
+== B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS
+in primo piano: topResumedActivity=ActivityRecord{bdccf6a u0 it.sofilabs.sofios/.MainActivity t8}
+foto: B-schermata-iniziale.png
+== C. Tasto Home non riapre Casa
+in primo piano: topResumedActivity=ActivityRecord{bdccf6a u0 it.sofilabs.sofios/.MainActivity t8}
+foto: C-tasto-home.png
+== D. Tocco su Impostazioni e ritorno
+tocco «Impostazioni» in 1472 839
+in primo piano: topResumedActivity=ActivityRecord{9a2a4c6 u0 com.android.settings/.homepage.SettingsHomepageActivity t8}
+dopo Home: topResumedActivity=ActivityRecord{bdccf6a u0 it.sofilabs.sofios/.MainActivity t8}
+== E. Riavvio del tablet: Casa deve riaprirsi da sola
+schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
+in primo piano: topResumedActivity=ActivityRecord{a818969 u0 de.ozerov.fully/.FintoFully t11}
+foto: E-dopo-riavvio-casa.png
+== F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
+in primo piano: topResumedActivity=ActivityRecord{bb50d32 u0 it.sofilabs.sofios/.MainActivity t10}
+foto: F-dopo-riavvio-schermata-iniziale.png
+ESITO FINALE: OK
