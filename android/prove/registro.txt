@@ -5,124 +5,114 @@ schermo: Physical size: 2560x1600
 Package com.google.android.apps.nexuslauncher new state: disabled-user
 == Installazione (SofiOS e un FINTO Fully, solo per la prova)
 Performing Streamed Install
-adb: failed to stat android/app/build/outputs/apk/debug/app-debug.apk: No such file or directory
+Success
 Performing Streamed Install
 Success
 == Imposto SofiOS come schermata iniziale
-Error: see logcat for details.
-java.util.concurrent.ExecutionException: java.lang.RuntimeException: Failed
-schermata iniziale scelta: 
+schermata iniziale scelta: it.sofilabs.sofios
 == A. Prima di toccare Casa: SofiOS non apre niente da solo
-ATTENZIONE: SofiOS non è in primo piano
-in primo piano: topResumedActivity=ActivityRecord{18e7d6d u0 com.android.settings/.FallbackHome t7}
-ATTENZIONE: Fully si è aperto da solo senza che nessuno toccasse Casa
+in primo piano: topResumedActivity=ActivityRecord{9ad48f8 u0 it.sofilabs.sofios/.MainActivity t10}
 foto: A-prima-di-toccare-casa.png
 == A2. Tocco Casa: si apre Fully (e da ora parte sempre da solo)
-ERRORE: non trovo «Casa» sullo schermo
-ATTENZIONE: Casa non si è aperta
+tocco «Casa» in 840 1476
 foto: A2-casa-aperta.png
 == B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS, con il puntino verde
-ATTENZIONE: SofiOS non è tornato in primo piano
-in primo piano: topResumedActivity=ActivityRecord{8d37f44 u0 com.android.settings/.FallbackHome t11}
+in primo piano: topResumedActivity=ActivityRecord{9ad48f8 u0 it.sofilabs.sofios/.MainActivity t10}
 foto: B-schermata-iniziale.png
 == B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla
-ERRORE: non trovo «Mascotte SofiOS» sullo schermo
+tocco «Mascotte SofiOS» in 2268 1092
 foto: B2-mascotte-con-x.png
-ERRORE: non trovo «Nascondi la mascotte» sullo schermo
+tocco «Nascondi la mascotte» in 2400 856
 foto: B3-mascotte-tolta.png
-ERRORE: non trovo «Mostra o nascondi la mascotte» sullo schermo
+tocco «Mostra o nascondi la mascotte» in 1720 1476
 foto: B4-icona-mascotte-tocco.png
-ERRORE: non trovo «Mostra o nascondi la mascotte» sullo schermo
+tocco «Mostra o nascondi la mascotte» in 1720 1476
 foto: B4b-mascotte-di-nuovo-tolta.png
-ERRORE: non trovo «Mostra o nascondi la mascotte» sullo schermo
+tocco «Mostra o nascondi la mascotte» in 1720 1476
 foto: B5-mascotte-rimessa.png
 == C. Tasto Home non riapre Casa
-in primo piano: topResumedActivity=ActivityRecord{8d37f44 u0 com.android.settings/.FallbackHome t11}
+in primo piano: topResumedActivity=ActivityRecord{9ad48f8 u0 it.sofilabs.sofios/.MainActivity t10}
 foto: C-tasto-home.png
 == N. Note: scrivo, seconda nota, chiudo e riapro, elimino
-ERRORE: non trovo «Note» sullo schermo
+tocco «Note» in 1192 1476
 foto: N1-note-vuota.png
 foto: N2-prima-nota.png
 file sul tablet dopo la prima nota:
-run-as: unknown package: it.sofilabs.sofios
-ERRORE: non trovo «Nuova nota» sullo schermo
+files/Note/nota-20261123-211010.txt: Spesa del sabato
+tocco «Nuova nota» in 290 660
 foto: N3-due-note.png
 file sul tablet dopo la seconda nota:
-run-as: unknown package: it.sofilabs.sofios
-ERRORE: non trovo «Note» sullo schermo
+files/Note/nota-20261123-211010.txt: Spesa del sabato
+files/Note/nota-20261123-211025.txt: Chiamare Luca
+tocco «Note» in 1192 1476
 foto: N4-dopo-chiusura-e-riapertura.png
-ERRORE: non trovo «Spesa del sabato» sullo schermo
+tocco «Spesa del sabato» in 290 347
 foto: N5-riaperta-la-prima-nota.png
-ERRORE: non trovo «Elimina nota» sullo schermo
+tocco «Elimina nota» in 290 1516
 foto: N6-conferma-eliminazione.png
-ERRORE: non trovo «Sì» sullo schermo
+tocco «Sì» in 1736 901
 foto: N7-dopo-eliminazione.png
 file sul tablet dopo l'eliminazione:
-run-as: unknown package: it.sofilabs.sofios
-ATTENZIONE: dalle Note il tasto Home non torna a SofiOS
+files/Note/nota-20261123-211025.txt: Chiamare Luca
 == P. Pannello SofiOS (si apre dalla barra in alto)
-ERRORE: non trovo «Barra SofiOS» sullo schermo
+tocco «Barra SofiOS» in 1280 36
 foto: P1-pannello.png
-ERRORE: non trovo il cursore «Cursore Luminosità»
-luminosità dopo il cursore: 40 (prima: 40)
-ATTENZIONE: la luminosità non è cambiata
-ERRORE: non trovo il cursore «Cursore Volume»
+trascino il cursore da 870 a 1532 (altezza 219)
+luminosità dopo il cursore: 210 (prima: 40)
+trascino il cursore da 870 a 1532 (altezza 315)
 foto: P2-pannello-dopo-cursori.png
-ERRORE: non trovo «Barra SofiOS» sullo schermo
-ERRORE: non trovo «File» sullo schermo
+tocco «Barra SofiOS» in 1280 36
+tocco «File» (ultimo) in 1000 781
 foto: P3-file-dal-pannello.png
-in primo piano: topResumedActivity=ActivityRecord{2f12b45 u0 com.android.settings/.FallbackHome t12}
-ATTENZIONE: Home non torna a SofiOS
+in primo piano: topResumedActivity=ActivityRecord{d106db6 u0 it.sofilabs.sofios/.FileActivity t15}
 == I. Impostazioni nostre
-ERRORE: non trovo «Impostazioni» sullo schermo
+tocco «Impostazioni» in 1016 1476
 foto: I1-impostazioni-schermo.png
-ERRORE: non trovo «Suono» sullo schermo
+tocco «Suono» in 290 364
 foto: I2-suono.png
-ERRORE: non trovo «Batteria» sullo schermo
+tocco «Batteria» in 290 474
 foto: I3-batteria.png
-ERRORE: non trovo «Spazio» sullo schermo
+tocco «Spazio» in 290 584
 foto: I4-spazio.png
-ERRORE: non trovo «App» sullo schermo
+tocco «App» in 290 694
 foto: I5-app.png
-ERRORE: non trovo «Informazioni» sullo schermo
+tocco «Informazioni» in 290 914
 foto: I6-informazioni.png
-ERRORE: non trovo «Altre impostazioni» sullo schermo
+tocco «Altre impostazioni» in 290 804
 foto: I7-altre.png
-ATTENZIONE: Home non torna a SofiOS
 == F. File: la Cartella SofiOS
-ERRORE: non trovo «File» sullo schermo
+tocco «File» in 1368 1476
 foto: F1-file-vuota.png
 creato un file di prova e una cartella con adb
-ERRORE: non trovo «File» sullo schermo
+tocco «File» in 1368 1476
 foto: F2-file-con-prova.png
-ERRORE: non trovo «📄  prova.txt» sullo schermo
+tocco «📄  prova.txt» in 1280 396
 foto: F3-file-aperto.png
-ERRORE: non trovo «Chiudi» sullo schermo
-ERRORE: non trovo «Nuova cartella» sullo schermo
-ERRORE: non trovo «Crea» sullo schermo
+tocco «Chiudi» in 2442 132
+tocco «Nuova cartella» in 1908 1516
+tocco «Crea» in 1736 523
 foto: F4-nuova-cartella.png
-cartella sul tablet: Documenti 
-ERRORE: non trovo «📄  prova.txt» sullo schermo
-ERRORE: non trovo «Elimina» sullo schermo
+cartella sul tablet: Documenti Foto prova.txt 
+tocco lungo «📄  prova.txt» in 1280 512
+tocco «Elimina» in 1280 839
 foto: F5-conferma-eliminazione.png
-ERRORE: non trovo «Sì» sullo schermo
+tocco «Sì» in 1736 901
 foto: F6-dopo-eliminazione.png
-cartella dopo eliminazione: Documenti 
-ATTENZIONE: Home non torna a SofiOS
+cartella dopo eliminazione: Documenti Foto 
 == C. Cassaforte Password (formato del computer)
-ERRORE: non trovo «Cassaforte» sullo schermo
+tocco «Cassaforte» in 1544 1476
 foto: C1-crea-cassaforte.png
-ERRORE: non trovo «Password principale» sullo schermo
-ERRORE: non trovo «Ripeti la password principale» sullo schermo
+tocco «Password principale» in 1280 727
+tocco «Ripeti la password principale» in 1280 475
 foto: C1b-password-scritte.png
-ERRORE: non trovo «Crea cassaforte» sullo schermo
+tocco «Crea cassaforte» (ultimo) in 1280 754
 ATTENZIONE: la cassaforte non si è aperta
 foto: C2-cassaforte-vuota.png
 ERRORE: non trovo «Nuova password» sullo schermo
 ERRORE: non trovo «Nome» sullo schermo
 ERRORE: non trovo «Utente» sullo schermo
 ERRORE: non trovo «Sito» sullo schermo
-ERRORE: non trovo «Note» sullo schermo
+tocco «Note» (ultimo) in 1192 1476
 foto: C3-nuova-password.png
 ERRORE: non trovo «Salva» sullo schermo
 foto: C4-voce-salvata.png
@@ -137,36 +127,31 @@ foto: C7-password-sbagliata.png
 ERRORE: non trovo «Password principale» sullo schermo
 ATTENZIONE: non si è sbloccata con la password giusta
 foto: C8-sbloccata-di-nuovo.png
-file della cassaforte fatto da Android: 44 byte
-ATTENZIONE: Home non torna a SofiOS
+file della cassaforte fatto da Android: 63 byte
 -- cassaforte fatta dal programma del computer, aperta su Android
-ERRORE: non trovo «Cassaforte» sullo schermo
-ERRORE: non trovo «Password principale» sullo schermo
-ATTENZIONE: la cassaforte del computer non si è aperta
+tocco «Cassaforte» in 1544 1476
+tocco «Password principale» in 1280 831
 foto: C9-cassaforte-del-computer.png
-ERRORE: non trovo «Sito di prova» sullo schermo
+tocco «Sito di prova» in 330 562
 foto: C10-voce-del-computer.png
 == D. Tocco su Impostazioni e ritorno
-ERRORE: non trovo «Impostazioni» sullo schermo
-in primo piano: topResumedActivity=ActivityRecord{2f12b45 u0 com.android.settings/.FallbackHome t12}
-ERRORE: non trovo «Altre impostazioni» sullo schermo
-ERRORE: non trovo «Tutte le impostazioni di Android» sullo schermo
-in primo piano: topResumedActivity=ActivityRecord{2f12b45 u0 com.android.settings/.FallbackHome t12}
+tocco «Impostazioni» in 1016 1476
+in primo piano: topResumedActivity=ActivityRecord{a8b094f u0 it.sofilabs.sofios/.ImpostazioniActivity t16}
+tocco «Altre impostazioni» in 290 804
+tocco «Tutte le impostazioni di Android» in 1546 1019
+in primo piano: topResumedActivity=ActivityRecord{53ac7ca u0 com.android.settings/.homepage.SettingsHomepageActivity t16}
 foto: D-impostazioni-di-android.png
-dopo Home: topResumedActivity=ActivityRecord{2f12b45 u0 com.android.settings/.FallbackHome t12}
+dopo Home: topResumedActivity=ActivityRecord{f7db3c8 u0 it.sofilabs.sofios/.MainActivity t16}
 == E. Riavvio del tablet: Casa deve riaprirsi da sola
-schermata iniziale scelta dopo il riavvio: 
-ATTENZIONE: Casa non si è aperta
-in primo piano: topResumedActivity=ActivityRecord{149172f u0 com.android.settings/.FallbackHome t5}
+schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
+in primo piano: topResumedActivity=ActivityRecord{9a8b274 u0 de.ozerov.fully/.FintoFully t16}
 foto: E-dopo-riavvio-casa.png
 == F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
-ATTENZIONE: SofiOS non è tornato in primo piano
-in primo piano: topResumedActivity=ActivityRecord{855ff76 u0 com.android.settings/.FallbackHome t6}
+in primo piano: topResumedActivity=ActivityRecord{4b2c050 u0 it.sofilabs.sofios/.MainActivity t15}
 foto: F-dopo-riavvio-schermata-iniziale.png
 == G. Tengo premuto su Casa: Fully non deve più partire da solo
-ERRORE: non trovo «Casa» sullo schermo
+tocco lungo «Casa» in 840 1476
 foto: G-puntino-spento.png
-in primo piano dopo il riavvio: topResumedActivity=ActivityRecord{dc9488a u0 com.android.settings/.FallbackHome t5}
-ATTENZIONE: dopo il riavvio Fully è partito anche se l'avevo spento
+in primo piano dopo il riavvio: topResumedActivity=ActivityRecord{f0b897a u0 it.sofilabs.sofios/.MainActivity t17}
 foto: G2-dopo-riavvio-senza-casa.png
 ESITO FINALE: NON OK
