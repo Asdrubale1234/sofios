@@ -17,5 +17,5 @@ lb config noauto \
   --updates true \
   --apt-indices false \
   --chroot-squashfs-compression-type xz \
-  --bootappend-live "boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS" \
+  --bootappend-live "boot=live components live-media-timeout=60 quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS" \
   "${@}"
