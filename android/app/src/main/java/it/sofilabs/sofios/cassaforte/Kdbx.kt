@@ -181,17 +181,19 @@ class Kdbx private constructor(
         val chiaveInterna = ByteArray(64).also { casuale.nextBytes(it) }
 
         // 1) il testo XML, con le password protette dal flusso interno
-        val copia = doc.cloneNode(true) as Document
+        //    (Android non sa copiare un intero documento XML: si cifra sul posto e poi si rimette in chiaro)
         val flusso = flussoInterno(chiaveInterna)
-        val valori = copia.getElementsByTagName("Value")
+        val valori = doc.getElementsByTagName("Value")
+        val originali = ArrayList<Pair<Element, String>>()
         for (i in 0 until valori.length) {
             val v = valori.item(i) as Element
             if (v.getAttribute("Protected").equals("True", ignoreCase = true)) {
-                val chiaro = v.textContent.toByteArray(Charsets.UTF_8)
-                v.textContent = Base64.getEncoder().encodeToString(flusso.applica(chiaro))
+                val chiaro = v.textContent
+                originali.add(v to chiaro)
+                v.textContent = Base64.getEncoder().encodeToString(flusso.applica(chiaro.toByteArray(Charsets.UTF_8)))
             }
         }
-        val xml = serializza(copia)
+        val xml = try { serializza(doc) } finally { for ((v, t) in originali) v.textContent = t }
 
         // 2) intestazione interna + XML, compressi e cifrati
         val interno = ByteArrayOutputStream()
