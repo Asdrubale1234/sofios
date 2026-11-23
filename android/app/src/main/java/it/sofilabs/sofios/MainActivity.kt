@@ -117,6 +117,10 @@ class MainActivity : Activity() {
         barra.addView(icona("Impostazioni", R.drawable.ic_impostazioni, GRIGIO, GRIGIO_SCURO) {
             startActivity(Intent(Settings.ACTION_SETTINGS))
         })
+        // Note: stesse note e stesso aspetto del computer
+        barra.addView(icona("Note", R.drawable.ic_note, ROSA, ROSA_SCURO, piena = true) {
+            startActivity(Intent(this, NoteActivity::class.java))
+        })
         // Icona della mascotte: la toglie o la rimette (sul computer è «Aggiungi widget»).
         barra.addView(icona("Mostra o nascondi la mascotte", R.drawable.mascotte, MARE, MARE_SCURO, piena = true) {
             impostaMascotte(!mascotteVisibile())
@@ -222,6 +226,8 @@ class MainActivity : Activity() {
         private const val VERDE = 0xFF6FE0B0.toInt()
         private const val GRIGIO = 0xFF7D8DA0.toInt()
         private const val GRIGIO_SCURO = 0xFF566577.toInt()
+        private const val ROSA = 0xFFFF8FB8.toInt()
+        private const val ROSA_SCURO = 0xFFD6457F.toInt()
         private const val MARE = 0xFF3A86B8.toInt()
         private const val MARE_SCURO = 0xFF1B4F7A.toInt()
     }

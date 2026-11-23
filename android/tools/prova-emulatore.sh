@@ -100,6 +100,31 @@ adb shell input keyevent KEYCODE_HOME; sleep 3
 scrivi "in primo piano: $(in_primo_piano)"
 foto C-tasto-home
 
+scrivi "== N. Note: scrivo, seconda nota, chiudo e riapro, elimino"
+contenuto_note() { adb shell "run-as $PKG sh -c 'for f in files/Note/*.txt; do echo \"\$f: \$(cat \$f)\"; done'" 2>&1 | tr -d '\r' | tee -a "$LOG"; }
+tocca_testo "Note"; sleep 3
+foto N1-note-vuota
+adb shell input text "Spesa%sdel%ssabato"; sleep 2
+foto_subito N2-prima-nota
+scrivi "file sul tablet dopo la prima nota:"; contenuto_note
+tocca_testo "Nuova nota"; sleep 2
+adb shell input text "Chiamare%sLuca"; sleep 2
+foto_subito N3-due-note
+scrivi "file sul tablet dopo la seconda nota:"; contenuto_note
+adb shell am force-stop $PKG; sleep 1
+adb shell input keyevent KEYCODE_HOME; sleep 4
+tocca_testo "Note"; sleep 3
+foto N4-dopo-chiusura-e-riapertura
+tocca_testo "Spesa del sabato"; sleep 2
+foto_subito N5-riaperta-la-prima-nota
+tocca_testo "Elimina nota"; sleep 2
+foto_subito N6-conferma-eliminazione
+tocca_testo "Sì"; sleep 2
+foto_subito N7-dopo-eliminazione
+scrivi "file sul tablet dopo l'eliminazione:"; contenuto_note
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: dalle Note il tasto Home non torna a SofiOS"
+
 scrivi "== D. Tocco su Impostazioni e ritorno"
 tocca_testo "Impostazioni"; sleep 3
 scrivi "in primo piano: $(in_primo_piano)"

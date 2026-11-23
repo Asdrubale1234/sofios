@@ -34,5 +34,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Note: come sul computer, un file di testo per nota -->
+        <activity
+            android:name=".NoteActivity"
+            android:exported="false"
+            android:label="Note"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 </manifest>
