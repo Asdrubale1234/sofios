@@ -280,11 +280,16 @@ try:
             clicd(640, 780); time.sleep(1); foto("destro-dock"); tasti("esc"); time.sleep(1)
             clicd(100, 8); time.sleep(1); foto("destro-barra"); tasti("esc"); time.sleep(1)
             tasti("alt-d", "a"); time.sleep(5); foto("aggiungi-widget"); tasti("esc"); time.sleep(2)
-            esegui("dolphin"); time.sleep(8); tasti("ctrl-m"); time.sleep(1); tasti("alt-h"); time.sleep(2); foto("file-menu-aiuto")
+            esegui("pkill -f kcmshell6"); time.sleep(2)
+            esegui("sofios-prova-store dolphin-apri"); time.sleep(10); tasti("ctrl-m"); time.sleep(1); tasti("alt-h"); time.sleep(2); foto("file-menu-aiuto")
             tasti("esc"); tasti("alt-f4"); time.sleep(2)
             esegui("systemsettings"); time.sleep(12)
             clicd(560, 300); foto("destro-impostazioni"); tasti("esc"); tasti("alt-f4"); time.sleep(2)
-            esegui("konsole"); time.sleep(8); scrivi("uname -a; cat /etc/os-release | head -4; lsb_release -a"); tasti("ret"); time.sleep(4); foto("terminale"); tasti("alt-f4"); time.sleep(2)
+            esegui("sofios-prova-store terminale"); time.sleep(10); foto("terminale"); tasti("alt-f4"); time.sleep(2)
+            esegui("systemsettings"); time.sleep(12)
+            for termine in ("plasma", "kde", "brezza", "kwin", "debian"):     # la ricerca delle Impostazioni mostra le pagine con quel nome
+                tasti("ctrl-f"); scrivi(termine); time.sleep(3); foto("cerca-" + termine); tasti("ctrl-a"); tasti("backspace")
+            tasti("alt-f4"); time.sleep(2)
         except Exception as e:
             L("errore controlli a mano", repr(e))
     try:

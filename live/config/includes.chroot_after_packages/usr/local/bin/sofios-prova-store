@@ -45,6 +45,10 @@ case "$1" in
         N "$ic" || echo "ICONA-NON-NOSTRA [$tag]: $ic ($(basename $f))"
       done | sort -u
       echo "### icone-diag-fine"; } 2>&1 | S ;;
+  dolphin-apri)
+    dolphin >/dev/null 2>&1 & ;;
+  terminale)
+    konsole -e sh -c 'uname -a; head -4 /etc/os-release; cat /etc/motd; sleep 30' >/dev/null 2>&1 & ;;
   kcm-lista)
     { echo "### kcm-lista"; kcmshell6 --list 2>/dev/null | awk '$1 ~ /^kcm/ {print "KCM-ID: " $1}'; echo "### kcm-lista-fine"; } 2>&1 | S ;;
   audit-nomi)
