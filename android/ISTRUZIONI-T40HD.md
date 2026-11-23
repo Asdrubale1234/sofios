@@ -7,6 +7,10 @@ Il file è `android/apk/SofiOS-prova.apk`. È una versione di prova: serve a ved
 2. Sul tablet tocca il file. Se Android chiede di permettere l'installazione da questa fonte, tocca «Consenti».
 3. Tocca «Installa», poi «Apri».
 
+Se compare «App non installata perché in conflitto con un pacchetto esistente»: c'è già una versione di SofiOS
+firmata con un'altra chiave. Disinstalla SofiOS (Impostazioni → App → SofiOS → Disinstalla) e installa di nuovo.
+Con la chiave di prova fissa (da questa versione) gli aggiornamenti successivi si installano uno sopra l'altro.
+
 ## 2. Metterlo come schermata iniziale
 1. Premi il tasto Home. Android chiede quale app di avvio usare.
 2. Scegli **SofiOS** e tocca **«Sempre»**.
@@ -17,6 +21,8 @@ Il file è `android/apk/SofiOS-prova.apk`. È una versione di prova: serve a ved
 2. Da quel momento, dopo ogni accensione, Fully si apre da solo. Sull'icona c'è un puntino verde.
 3. Per smettere: tieni premuta l'icona Casa. Il puntino sparisce.
 4. Chiudendo Fully trovi SofiOS.
+5. Se Fully mostra «Hmmm... Difficult case» (vuole essere lui la Home): tocca «Ignore». Per non vederlo più, nelle
+   impostazioni di Fully, Modalità kiosk, spegni l'opzione che blocca il tasto Home («Disable Home Button»).
 
 ## 4. Tornare indietro
 Impostazioni → App → App predefinite → App Home → scegli quella del Teclast. SofiOS si può disinstallare come qualsiasi app.
