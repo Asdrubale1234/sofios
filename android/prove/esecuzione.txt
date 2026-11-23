@@ -1,1 +1,1 @@
-esecuzione 45209489898, commit c869aad2186b9f7a381c0ef17a46e6662bd57d85, esito job: success
+esecuzione 45211282193, commit a18e70f4b72f152cec2830e82c3a7c80953b2ca1, esito job: cancelled
