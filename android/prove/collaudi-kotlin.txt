@@ -19,17 +19,16 @@ Daemon will be stopped at the end of the build
 > Task :app:checkDebugAarMetadata
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
-> Task :app:packageDebugResources
 > Task :app:mergeDebugResources
+> Task :app:packageDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
-> Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :app:javaPreCompileDebug
-> Task :app:processDebugManifestForPackage
+> Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :app:javaPreCompileDebugUnitTest
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
@@ -38,15 +37,16 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mapDebugSourceSetPaths
 > Task :finto-fully:generateDebugResources
 > Task :finto-fully:mergeDebugResources
+> Task :app:processDebugManifestForPackage
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:extractDeepLinksDebug
+> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
+> Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebug
 > Task :finto-fully:processDebugManifestForPackage
-> Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :app:processDebugResources
 > Task :finto-fully:processDebugResources
@@ -61,8 +61,8 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:testDebugUnitTest NO-SOURCE
 
 > Task :app:compileDebugKotlin
-w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:369:80 'onBackPressed(): Unit' is deprecated. Deprecated in Java
-w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:472:63 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:375:80 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:478:63 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/FileActivity.kt:101:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:126:22 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/NoteActivity.kt:237:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
@@ -70,13 +70,13 @@ w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/
 
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
 > Task :app:bundleDebugClassesToRuntimeJar
-> Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToCompileJar
+> Task :app:processDebugJavaRes
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795467930344.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795469124694.json
 
-BUILD SUCCESSFUL in 1m 35s
+BUILD SUCCESSFUL in 1m 45s
 43 actionable tasks: 43 executed
