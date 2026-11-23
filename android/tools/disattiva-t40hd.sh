@@ -21,6 +21,7 @@ com.sprd.engineermode
 com.sprd.cameracalibration
 com.sprd.camta
 com.sprd.logmanager
+com.sprd.omacp
 com.sktl.sktldeviceinfo
 com.tencent.soter.soterserver
 com.android.egg
