@@ -14,4 +14,8 @@ if [ -f /etc/grub.d/10_linux ] && grep -q 'OS="${GRUB_DISTRIBUTOR} GNU/Linux"' /
     update-grub >/dev/null 2>&1 || true
   fi
 fi
+# schermata di accesso: dopo un aggiornamento tornano i temi originali; restano solo i nostri
+if [ -d /usr/share/sddm/themes ]; then
+  for t in /usr/share/sddm/themes/*; do [ "$(basename "$t")" = sofios ] || rm -rf "$t"; done
+fi
 exit 0

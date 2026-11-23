@@ -1,0 +1,27 @@
+SofiOS si basa su software libero di altri progetti. Le loro licenze chiedono di indicarli, e li ringraziamo.
+
+Base del sistema
+  Debian GNU/Linux (licenze varie, in gran parte GPL)
+  Linux, il kernel (GPL-2.0)
+
+Desktop
+  KDE Plasma, KDE Frameworks e le applicazioni KDE (GPL, LGPL)
+  Qt (LGPL-3.0)
+
+Programmi inclusi
+  Firefox (MPL-2.0), Thunderbird (MPL-2.0), LibreOffice (MPL-2.0)
+  VLC (GPL-2.0), KeePassXC (GPL-2.0/3.0)
+
+Windows e Android
+  Wine (LGPL-2.1+)
+  Waydroid e Android Open Source Project (Apache-2.0, GPL-2.0)
+
+Aspetto
+  Disegni delle icone: Lucide (licenza ISC)
+  Decorazione delle finestre: basata su WhiteSur (GPL-3.0)
+
+Installatore
+  Calamares (GPL-3.0+)
+
+I testi completi delle licenze si trovano nella cartella /usr/share/doc del sistema.
+Tutti i nomi e i marchi appartengono ai rispettivi proprietari.

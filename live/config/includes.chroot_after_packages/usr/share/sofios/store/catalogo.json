@@ -196,6 +196,13 @@
       "nome": "Blender",
       "descrizione": "Modelli 3D, animazioni ed effetti speciali.",
       "icona": "blender"
+    },
+    {
+      "categoria": "Telefono",
+      "pacchetto": "kdeconnect",
+      "nome": "Collega telefono (KDE Connect)",
+      "descrizione": "Manda foto e file tra telefono e computer, vedi le notifiche del telefono e rispondi ai messaggi. Serve anche l'app «KDE Connect» sul telefono, sulla stessa rete Wi-Fi.",
+      "icona": "kdeconnect"
     }
   ],
   "android": [

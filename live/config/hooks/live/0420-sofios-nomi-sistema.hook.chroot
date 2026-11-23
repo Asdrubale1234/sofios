@@ -1,0 +1,88 @@
+#!/bin/bash
+# Nomi: niente nomi del sistema sotto in tutto cio' che l'utente vede (avvisi, liste, accesso, terminale, Firefox).
+# Tutto cio' che si puo' fare senza rompere il sistema; il resto sta in "Componenti e licenze".
+MARCHI='KDE|Plasma|KWin|KRunner|Breeze|Brezza|Debian|Discover|Dolphin|Konsole|Kate|KWrite|Okular|Gwenview|Spectacle|Baloo|Akonadi|Kontact|Kirigami|Frameworks'
+O=/usr/local/share/applications
+mkdir -p "$O"
+
+sostituisci_nome() {  # file-origine file-destinazione nuovo-nome
+  grep -v -E '^(Name|GenericName|Comment)(\[[^]]*\])?=' "$1" > "$2"
+  sed -i "0,/^\[Desktop Entry\]/s//[Desktop Entry]\nName=$3/" "$2"
+}
+
+# 1) voci nascoste che compaiono come "mittente" degli avvisi (es. «Spazio di lavoro del desktop di Plasma»): ora «SofiOS»
+for f in /usr/share/applications/*.desktop; do
+  b=$(basename "$f")
+  [ -e "$O/$b" ] && continue
+  grep -qE '^(NoDisplay|Hidden)=true' "$f" || continue
+  grep -qE "^(Name|GenericName)(\[[^]]*\])?=.*($MARCHI)" "$f" || continue
+  sostituisci_nome "$f" "$O/$b" "SofiOS"
+done
+
+# 2) nomi dei programmi che avvisano (file degli avvisi): file nostri in una cartella che ha la precedenza
+N=/usr/local/share/knotifications6
+mkdir -p "$N"
+nome_avviso() { case "$1" in
+  kwalletd6) echo "Portafoglio";; spectacle) echo "Schermate";; konsole) echo "Terminale";;
+  freespacenotifier) echo "Spazio libero";; discoverabstractnotifier) echo "Aggiornamenti";; kdeconnect) echo "Collega telefono";;
+  *) echo "SofiOS";; esac; }
+for f in /usr/share/knotifications6/*.notifyrc; do
+  [ -f "$f" ] || continue
+  b=$(basename "$f" .notifyrc)
+  sed -n '1,/^\[Event/p' "$f" | grep -qE "^(Name|Comment)(\[[^]]*\])?=.*($MARCHI)" || continue
+  awk -v n="$(nome_avviso "$b")" 'BEGIN{h=1} /^\[Event/{h=0}
+    { if (h && $0 ~ /^(Name|Comment)(\[[^]]*\])?=/) { if ($0 ~ /^(Name|Comment)=/) { sub(/=.*/, "=" n); print } ; next } print }' "$f" > "$N/$(basename "$f")"
+done
+# la richiesta annuale di donazione a KDE: non deve comparire
+[ -f "$N/donationmessage.notifyrc" ] && sed -i 's/^Action=.*/Action=/' "$N/donationmessage.notifyrc"
+
+# 3) nomi nelle scorciatoie (Impostazioni -> Scorciatoie): Dolphin, Konsole, KRunner, Spectacle...
+G=/usr/local/share/kglobalaccel
+mkdir -p "$G"
+for f in /usr/share/kglobalaccel/*.desktop; do
+  [ -f "$f" ] || continue
+  b=$(basename "$f")
+  grep -qE "^(Name|GenericName)(\[[^]]*\])?=.*($MARCHI)" "$f" || continue
+  case "$b" in
+    org.kde.dolphin.desktop) n="File";; org.kde.konsole.desktop) n="Terminale";; org.kde.spectacle.desktop) n="Schermate";;
+    org.kde.krunner.desktop) n="Ricerca rapida";; org.kde.okular.desktop) n="Lettore PDF";; org.kde.gwenview.desktop) n="Foto";;
+    org.kde.kwrite.desktop) n="Editor di testo";; org.kde.ark.desktop) n="Archivi";;
+    *) n="SofiOS";; esac
+  sostituisci_nome "$f" "$G/$b" "$n"
+done
+
+# 4) categoria del menu «Menu di KDE»
+D=/usr/local/share/desktop-directories
+mkdir -p "$D"
+printf '[Desktop Entry]\nType=Directory\nName=SofiOS\nIcon=sofios-logo\n' > "$D/kf5-main.directory"
+
+# 5) pagine delle Impostazioni con nomi KDE e senza utilita' per un utente normale: non compaiono (si cambiano da sole con il tema)
+for k in kcm_desktoptheme kcm_style kcm_kwindecoration kcm_plasmasearch kcm_qtquicksettings kcm_kwin_scripts kcm_krunnersettings kcm_kwinsupportinfo kcm_feedback kcm_icons; do
+  kwriteconfig6 --file /etc/xdg/kdeglobals --group "KDE Control Module Restrictions" --key "$k" false 2>/dev/null || \
+    printf '%s=false\n' "$k" >> /etc/xdg/kdeglobals
+done
+
+# 6) schermata di accesso: restano solo i temi nostri
+if [ -d /usr/share/sddm/themes ]; then
+  for t in /usr/share/sddm/themes/*; do
+    [ "$(basename "$t")" = sofios ] || rm -rf "$t"
+  done
+fi
+
+# 7) messaggio del terminale e dell'accesso testuale: nostro (l'avviso di assenza di garanzia resta, come chiedono le licenze)
+if [ -e /etc/motd ] && ! dpkg-divert --list /etc/motd | grep -q motd; then
+  dpkg-divert --local --rename --divert /etc/motd.originale --add /etc/motd || true
+fi
+cat > /etc/motd <<'MOTD'
+
+SofiOS e' software libero. I programmi che lo compongono sono distribuiti con le loro licenze
+e senza alcuna garanzia, nei limiti consentiti dalla legge.
+Per l'elenco dei componenti e delle licenze: "Informazioni su SofiOS".
+
+MOTD
+
+# 8) Firefox: tolti i motori di ricerca della distribuzione sotto
+for f in $(grep -rlE "Debian|debian" /usr/lib/firefox-esr/distribution/searchplugins 2>/dev/null); do
+  dpkg-divert --local --rename --divert "/usr/share/sofios/nascosti/$(echo "$f" | tr / _)" --add "$f" || true
+done
+exit 0

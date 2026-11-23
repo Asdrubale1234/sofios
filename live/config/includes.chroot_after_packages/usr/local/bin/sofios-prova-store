@@ -52,8 +52,9 @@ case "$1" in
     { echo "### audit-nomi"
       P='KDE|Plasma|Kubuntu|Debian|Breeze|Brezza|Dolphin|Konsole|Kate|KWrite|Okular|Gwenview|Spectacle|Kirigami|Frameworks|KWin|Baloo|KRunner|Akonadi|Kontact|Discover'
       echo "--- avvisi (nome del programma che avvisa):"
-      for f in /usr/share/knotifications6/*.notifyrc /usr/local/share/knotifications6/*.notifyrc; do
+      for f in /usr/local/share/knotifications6/*.notifyrc /usr/share/knotifications6/*.notifyrc; do
         [ -f "$f" ] || continue
+        case "$f" in /usr/share/*) [ -e "/usr/local/share/knotifications6/$(basename $f)" ] && continue;; esac
         sed -n '1,/^\[Event/p' "$f" | grep -E "^(Name|Comment)(\[it\])?=" | grep -E "$P" | sed "s#^#AVVISO [$(basename $f)]: #"
       done
       echo "--- voci delle Impostazioni (nome e descrizione):"
@@ -62,8 +63,9 @@ case "$1" in
         grep -E "^(Name|Comment|GenericName)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#IMPOSTAZIONE [$(basename $f)]: #"
       done
       echo "--- programmi nel menu:"
-      for f in /usr/share/applications/*.desktop /usr/local/share/applications/*.desktop; do
+      for f in /usr/local/share/applications/*.desktop /usr/share/applications/*.desktop; do
         [ -f "$f" ] || continue
+        case "$f" in /usr/share/*) [ -e "/usr/local/share/applications/$(basename $f)" ] && continue;; esac
         grep -qE '^(NoDisplay|Hidden)=true' "$f" && continue
         grep -E "^(Name|Comment|GenericName)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#PROGRAMMA [$(basename $f)]: #"
       done
@@ -77,6 +79,21 @@ case "$1" in
         [ -f "$f" ] || continue
         grep -E '^(Name|"Name")' "$f" | grep -E "$P" | sed "s#^#TEMA [$(basename $(dirname $f))/$(basename $f)]: #"
       done
+      echo "--- nomi nelle scorciatoie:"
+      for f in /usr/local/share/kglobalaccel/*.desktop /usr/share/kglobalaccel/*.desktop; do
+        [ -f "$f" ] || continue
+        case "$f" in /usr/share/*) [ -e "/usr/local/share/kglobalaccel/$(basename $f)" ] && continue;; esac
+        grep -E "^(Name|GenericName)(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#SCORCIATOIE [$(basename $f)]: #"
+      done
+      echo "--- mittenti degli avvisi (voci nascoste con nome non nostro):"
+      for f in /usr/local/share/applications/*.desktop /usr/share/applications/*.desktop; do
+        [ -f "$f" ] || continue
+        case "$f" in /usr/share/*) [ -e "/usr/local/share/applications/$(basename $f)" ] && continue;; esac
+        grep -qE '^(NoDisplay|Hidden)=true' "$f" || continue
+        grep -E "^Name(\[it\])?=" "$f" | grep -E "$P" | sed "s#^#MITTENTE [$(basename $f)]: #"
+      done
+      echo "--- temi della schermata di accesso:"; ls /usr/share/sddm/themes | sed 's#^#ACCESSO-TEMA: #'
+      echo "--- pagine delle Impostazioni nascoste:"; grep -A40 'KDE Control Module Restrictions' /etc/xdg/kdeglobals | grep '=false' | sed 's#^#PAGINA-NASCOSTA: #'
       echo "--- cartelle e categorie del menu:"
       for f in /usr/share/desktop-directories/*.directory; do
         [ -f "$f" ] || continue

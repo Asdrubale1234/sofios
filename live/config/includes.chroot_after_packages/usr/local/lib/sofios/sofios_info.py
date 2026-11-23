@@ -6,6 +6,10 @@ from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 VERSIONE = "1.0"
 import os
 import json
+import platform, re
+def kernel_pulito():
+    """versione del kernel senza i suffissi della distribuzione sotto (es. 6.12.118+deb13-amd64 -> 6.12.118)"""
+    return re.sub(r"[-+].*$", "", platform.release())
 def _crediti():
     base = {"azienda": "Sofi Labs", "anno": "2026", "email": "", "sito": ""}
     try:

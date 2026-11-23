@@ -2,7 +2,7 @@
 # Informazioni su SofiOS: nome, versione, crediti e i dati del computer (processore, memoria, disco, grafica).
 import os, re, sys, shutil, socket, subprocess, platform
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
-from sofios_info import CREDITI, ANNO, VERSIONE, AZIENDA, CONTATTI
+from sofios_info import CREDITI, ANNO, VERSIONE, AZIENDA, CONTATTI, kernel_pulito
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon, QPixmap, QGuiApplication
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGridLayout)
@@ -62,7 +62,7 @@ def dati():
 
 def testo_per_assistenza(d):
     righe = ["SofiOS " + VERSIONE] + ["%s: %s" % x for x in d]
-    righe.append("Sistema: " + platform.system() + " " + platform.release() + " " + platform.machine())
+    righe.append("Sistema: " + platform.system() + " " + kernel_pulito() + " " + platform.machine())
     return "\n".join(righe)
 
 class Info(QWidget):
@@ -101,6 +101,18 @@ class Info(QWidget):
         self.copia = QPushButton("Copia informazioni"); self.copia.setObjectName("secondario"); self.copia.clicked.connect(self.copia_info); r.addWidget(self.copia)
         ch = QPushButton("Chiudi"); ch.clicked.connect(self.close); r.addWidget(ch); r.addStretch()
         v.addLayout(r)
+        lic = QPushButton("Componenti e licenze"); lic.setObjectName("secondario"); lic.setFlat(True); lic.clicked.connect(self.mostra_componenti)
+        v.addWidget(lic, alignment=Qt.AlignmentFlag.AlignCenter)
+
+    def mostra_componenti(self):
+        """i programmi di terzi su cui si basa SofiOS, con le loro licenze (le licenze impongono di indicarli)"""
+        from PyQt6.QtWidgets import QDialog, QPlainTextEdit
+        try: testo = open(os.environ.get("SOFIOS_COMPONENTI", "/usr/share/sofios/componenti.txt"), encoding="utf-8").read()
+        except OSError: testo = "Elenco non disponibile."
+        d = QDialog(self); d.setWindowTitle("Componenti e licenze"); d.setStyleSheet(tema_app.adatta(STILE)); d.resize(560, 520)
+        l = QVBoxLayout(d); e = QPlainTextEdit(testo); e.setReadOnly(True); l.addWidget(e)
+        b = QPushButton("Chiudi"); b.clicked.connect(d.accept); l.addWidget(b, alignment=Qt.AlignmentFlag.AlignCenter)
+        d.exec()
 
     def copia_info(self):
         QGuiApplication.clipboard().setText(testo_per_assistenza(self.d))
