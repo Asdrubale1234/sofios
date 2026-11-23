@@ -13,6 +13,13 @@ REGOLE = {
     "plasma-discover": [("Discover", "SoStore"), ("+Discover", "SoStore")],
     "dolphin": [("Dolphin", "File"), ("+Dolphin", "File")],
     "systemsettings": [("=Plasma", "SofiOS")],
+    "konsole": [("Konsole", "Terminale"), ("+Konsole", "Terminale")],
+    "okular": [("Okular", "Lettore PDF"), ("+Okular", "Lettore PDF")],
+    "gwenview": [("Gwenview", "Foto"), ("+Gwenview", "Foto")],
+    "spectacle": [("Spectacle", "Schermate"), ("+Spectacle", "Schermate")],
+    "kwrite": [("KWrite", "Editor di testo"), ("+KWrite", "Editor di testo")],
+    "kcalc": [("KCalc", "Calcolatrice"), ("+KCalc", "Calcolatrice")],
+    "ark": [("Ark", "Archivi"), ("+Ark", "Archivi")],
 }
 
 def leggi(dati):

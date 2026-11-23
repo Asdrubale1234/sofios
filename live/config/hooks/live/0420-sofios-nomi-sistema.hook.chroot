@@ -85,4 +85,16 @@ MOTD
 for f in $(grep -rlE "Debian|debian" /usr/lib/firefox-esr/distribution/searchplugins 2>/dev/null); do
   dpkg-divert --local --rename --divert "/usr/share/sofios/nascosti/$(echo "$f" | tr / _)" --add "$f" || true
 done
+
+# 9) widget (elenco «Aggiungi widget»): nome e descrizione senza i nomi del sistema sotto (l'autore, che e' un dato, non si tocca)
+W=/usr/local/share/plasma/plasmoids
+mkdir -p "$W"
+for d in /usr/share/plasma/plasmoids/*/; do
+  m="${d}metadata.json"
+  [ -f "$m" ] || continue
+  grep -qE '^ {8}"(Name|Description)(\[[^]]*\])?".*(KDE|Plasma|KWin|KRunner)' "$m" || continue
+  b=$(basename "$d")
+  rm -rf "$W/$b"; cp -r "$d" "$W/$b"
+  sed -i -E '/^ {8}"(Name|Description)(\[[^]]*\])?"/ s/(KDE|Plasma|KWin|KRunner)/SofiOS/g' "$W/$b/metadata.json"
+done
 exit 0
