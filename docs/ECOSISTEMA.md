@@ -30,7 +30,7 @@ Da costruire come pezzi comuni (vedi sezione 6): identità del dispositivo, scop
 
 ## 4. Stato del computer (dove siamo)
 
-- Repository: `asdrubale1234/sofios`. Il lavoro è sul ramo `claude/jolly-davinci-ltzvwz`. **`main` non si tocca senza il permesso di Luca.**
+- Repository: `asdrubale1234/sofios`. La versione per computer è su `main` (ISO `iso-20261123-1246`). Il lavoro nuovo si fa su un ramo di lavoro a parte: **`main` non si tocca senza il permesso di Luca.**
 - ISO costruita da GitHub Actions (`build-iso.yml`); prova automatica in una macchina virtuale (`foto.yml`, `tools/foto-iso.py`) che scatta schermate vere; controlli statici (`tools/collaudo.py`); lettura del testo nelle foto per cercare nomi non nostri (`tools/ocr_nomi.py`).
 - Il progetto ha già: installatore in italiano a livelli, SoStore (negozio nostro), supporto Windows (Wine) e Android (Waydroid), tema scuro e chiaro, mascotte come widget, app Assistenza (prepara una mail), Cassaforte Password, Note.
 
@@ -61,4 +61,4 @@ Da costruire come pezzi comuni (vedi sezione 6): identità del dispositivo, scop
 
 Incolla questo come primo messaggio nella nuova conversazione:
 
-> Lavoriamo su SofiOS, il progetto di Sofi Labs. Questa conversazione è per il **[tablet / telefono / TV]**. Prima di tutto leggi `docs/ECOSISTEMA.md` nel repository `asdrubale1234/sofios` (ramo `claude/jolly-davinci-ltzvwz`) e segui le regole che trovi. Poi dimmi in italiano cosa hai capito e da dove proponi di partire.
+> Lavoriamo su SofiOS, il progetto di Sofi Labs. Questa conversazione è per il **[tablet / telefono / TV]**. Prima di tutto leggi `docs/ECOSISTEMA.md` nel repository `asdrubale1234/sofios` (ramo `main`) e segui le regole che trovi. Poi dimmi in italiano cosa hai capito e da dove proponi di partire.
