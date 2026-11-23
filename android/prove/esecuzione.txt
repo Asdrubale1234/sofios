@@ -1,1 +1,1 @@
-esecuzione 45269424068, commit 14ccc8bd978a654251de4010fea4713043f2177e, esito job: success
+esecuzione 45272744978, commit ce866c0abf2e7ed01109ab70663bd94116dd20ad, esito job: success
