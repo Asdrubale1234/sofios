@@ -204,7 +204,7 @@ def luminosita(livello=None, delta=None):
     return "Fatto." if r and r.returncode == 0 else None
 
 def tema(chiaro):
-    nomi = {"chiaro": "org.sofios.light", "scuro": "org.sofios.desktop", "argento": "org.sofios.silver"}
+    nomi = {"argento": "org.sofios.desktop", "scuro": "org.sofios.graphite", "oro": "org.sofios.gold"}
     r = _esegui(["plasma-apply-lookandfeel", "-a", nomi.get(chiaro if isinstance(chiaro, str) else ("chiaro" if chiaro else "scuro"), "org.sofios.desktop")])
     return "Fatto." if r and r.returncode == 0 else None
 
@@ -224,9 +224,9 @@ def interpreta(frase):
     if re.search(r"\b(aiuto|cosa sai fare|cosa puoi fare|che cosa sai fare|comandi)\b", t): return ("aiuto", None)
     if re.search(r"\b(schermata|screenshot|cattura (lo )?schermo|foto (allo )?schermo)\b", t): return ("schermata", None)
     if re.search(r"\btema\b|\bmodalita (chiara|scura)\b|\bmetti (chiaro|scuro)\b", t) or re.search(r"\b(chiaro|scuro)\b", t) and re.search(r"\b(metti|passa|cambia|usa|attiva)\b", t):
-        if re.search(r"\b(argent|ross)", t): return ("tema", "argento")
-        if re.search(r"\bchiar", t): return ("tema", "chiaro")
-        if re.search(r"\bscur", t): return ("tema", "scuro")
+        if re.search(r"\b(oro|dorat|bianc)", t): return ("tema", "oro")
+        if re.search(r"\b(grigi|scur|antracite|nero)", t): return ("tema", "scuro")
+        if re.search(r"\b(argent|ross|chiar)", t): return ("tema", "argento")
     if re.search(r"\bvolume\b|\baudio\b|\bsilenzio\b|\bmuto\b|\bmutal", t):
         if re.search(r"\b(togli|riattiva|riattivare) (il )?(muto|silenzio)\b|\bsmuta\b|\bnon muto\b", t): return ("volume", ("muto", False))
         if re.search(r"\b(muto|silenzio|zitto|muta|mutalo)\b", t): return ("volume", ("muto", True))

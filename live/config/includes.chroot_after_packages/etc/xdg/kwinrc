@@ -1,6 +1,6 @@
 [org.kde.kdecoration2]
 library=org.kde.kwin.aurorae
-theme=__aurorae__svg__SofiOS
+theme=__aurorae__svg__SofiOSChiaro
 ButtonsOnLeft=
 ButtonsOnRight=IAX
 BorderSize=None

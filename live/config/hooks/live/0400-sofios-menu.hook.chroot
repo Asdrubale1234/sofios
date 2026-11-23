@@ -102,7 +102,7 @@ rm -rf /usr/share/plasma/look-and-feel/org.debian.desktop
 rm -rf /usr/share/plasma/look-and-feel/org.kde.breeze.desktop /usr/share/plasma/look-and-feel/org.kde.breezedark.desktop /usr/share/plasma/look-and-feel/org.kde.breezetwilight.desktop
 rm -f /usr/share/color-schemes/BreezeLight.colors /usr/share/color-schemes/BreezeDark.colors /usr/share/color-schemes/BreezeClassic.colors
 /usr/local/lib/sofios/nascondi-icone-kde || true
-printf '[Icons]\nTheme=SofiOS\n' >> /etc/xdg/kdeglobals
+printf '[Icons]\nTheme=SofiOS-chiaro\n' >> /etc/xdg/kdeglobals
 # cartelle del menu create da Waydroid e Wine: "App Android" e "Programmi Windows"
 echo "menu uniti di sistema:"; ls -la /etc/xdg/menus/applications-merged/ 2>&1; grep -l -i waydroid /etc/xdg/menus/applications-merged/*.menu 2>/dev/null | xargs -r cat
 /usr/local/lib/sofios/nomi-menu sistema || true

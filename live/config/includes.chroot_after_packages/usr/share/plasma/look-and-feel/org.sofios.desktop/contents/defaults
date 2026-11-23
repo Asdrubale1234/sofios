@@ -1,18 +1,18 @@
 [kdeglobals][General]
-ColorScheme=SofiOS
+ColorScheme=SofiOSArgento
 
 [kdeglobals][KDE]
 widgetStyle=Breeze
 
 [plasmarc][Theme]
-name=breeze-dark
+name=breeze-light
 
 [Wallpaper]
-Image=SofiOS
+Image=SofiOSArgento
 
 [kdeglobals][Icons]
-Theme=SofiOS
+Theme=SofiOS-chiaro
 
 [kwinrc][org.kde.kdecoration2]
 library=org.kde.kwin.aurorae
-theme=__aurorae__svg__SofiOS
+theme=__aurorae__svg__SofiOSChiaro
