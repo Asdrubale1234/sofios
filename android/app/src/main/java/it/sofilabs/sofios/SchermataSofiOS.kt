@@ -108,7 +108,7 @@ open class SchermataSofiOS : Activity() {
         val b = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundColor(if (sovrapposta) 0x990B2740.toInt() else Stile.FONDO)
+            setBackgroundColor(if (sovrapposta) (if (Stile.chiaro) 0x99F2F2F7.toInt() else 0x990B2740.toInt()) else Stile.FONDO)
             setPadding(Stile.dp(context, 16), 0, Stile.dp(context, 16), 0)
             contentDescription = "Barra SofiOS"
             isClickable = true
@@ -116,7 +116,7 @@ open class SchermataSofiOS : Activity() {
         b.addView(TextView(this).apply {
             text = "SofiOS ▾"; textSize = 14f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
         }, LinearLayout.LayoutParams(0, -2, 1f))
-        val tb = if (sovrapposta) Stile.TESTO_NOTTE else Stile.TESTO
+        val tb = Stile.TESTO
         barraInfo = TextView(this).apply { textSize = 14f; setTextColor(tb) }
         b.addView(barraInfo)
         b.addView(TextClock(this).apply {

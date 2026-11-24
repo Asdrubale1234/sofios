@@ -32,7 +32,7 @@ class MainActivity : SchermataSofiOS() {
 
         // Sfondo di SofiOS (lo stesso del computer): mare di notte e stelle.
         radice.addView(ImageView(this).apply {
-            setImageResource(R.drawable.sfondo)
+            setImageResource(if (Stile.chiaro) R.drawable.sfondo_chiaro else R.drawable.sfondo)
             scaleType = ImageView.ScaleType.CENTER_CROP
         }, FrameLayout.LayoutParams(-1, -1))
 
@@ -44,13 +44,13 @@ class MainActivity : SchermataSofiOS() {
         orologio.addView(TextClock(this).apply {
             format24Hour = "HH:mm"; format12Hour = "HH:mm"
             textSize = 56f
-            setTextColor(TESTO)
+            setTextColor(Stile.TESTO)
             typeface = Typeface.create("sans-serif-light", Typeface.NORMAL)
         })
         orologio.addView(TextClock(this).apply {
             format24Hour = "EEEE d MMMM"; format12Hour = "EEEE d MMMM"
             textSize = 20f
-            setTextColor(ORO)
+            setTextColor(Stile.ORO)
         })
         radice.addView(orologio, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START))
 
@@ -73,7 +73,7 @@ class MainActivity : SchermataSofiOS() {
             gravity = Gravity.CENTER
             setPadding(dp(14), dp(12), dp(14), dp(10))
             // barra «di vetro»: trasparente, con un filo chiaro sul bordo (senza sfocatura, per non pesare sui tablet modesti)
-            background = GradientDrawable().apply { setColor(BARRA); cornerRadius = dp(32).toFloat(); setStroke(dp(1), 0x33FFFFFF) }
+            background = GradientDrawable().apply { setColor(if (Stile.chiaro) 0xB3FFFFFF.toInt() else BARRA); cornerRadius = dp(32).toFloat(); setStroke(dp(1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF) }
         }
         // Casa (Fully): si vede solo se Fully è installato. Dopo il primo tocco, parte sempre da solo
         // all'accensione. Tenendo premuto si spegne e si riaccende (puntino verde = parte da solo).
@@ -204,7 +204,7 @@ class MainActivity : SchermataSofiOS() {
             elevation = dp(3).toFloat()
         }
         val nomeSotto = TextView(this).apply {
-            text = etichetta; textSize = 11.5f; setTextColor(TESTO); gravity = Gravity.CENTER
+            text = etichetta; textSize = 11.5f; setTextColor(Stile.TESTO); gravity = Gravity.CENTER
             typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL); maxLines = 1
             setPadding(0, dp(6), 0, 0)
         }
