@@ -850,7 +850,7 @@ class SoStore(QWidget):
             a = QLabel(nome); a.setObjectName("sezione"); l.addWidget(a)
             d = QLabel(descr); d.setObjectName("descr"); d.setWordWrap(True); l.addWidget(d)
             r.addLayout(l, 1)
-            if os.path.exists(self.voce_assistente(chiave)):
+            if os.path.exists(self.voce_assistente(chiave)) or os.path.exists("/usr/share/applications/sofios-web-%s.desktop" % chiave):
                 b = QPushButton("Apri"); b.setObjectName("azione"); b.clicked.connect(lambda _, u=url: QProcess.startDetached("firefox-esr", ["--new-window", u]))
             else:
                 b = QPushButton("Aggiungi al menu"); b.setObjectName("azione"); b.clicked.connect(lambda _, k=chiave, n=nome, u=url: self.aggiungi_assistente(k, n, u))

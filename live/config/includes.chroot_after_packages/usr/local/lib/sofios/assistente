@@ -1,0 +1,26 @@
+#!/bin/sh
+# Mette nel menu (Internet) il collegamento a un assistente online scelto durante l'installazione. Uso: assistente <id>
+# Non scarica niente: il collegamento apre il sito in una finestra del Browser.
+id="$1"
+case "$id" in
+  claude) nome="Claude"; url="https://claude.ai" ;;
+  chatgpt) nome="ChatGPT"; url="https://chatgpt.com" ;;
+  gemini) nome="Gemini"; url="https://gemini.google.com" ;;
+  copilot) nome="Copilot"; url="https://copilot.microsoft.com" ;;
+  deepseek) nome="DeepSeek"; url="https://chat.deepseek.com" ;;
+  mistral) nome="Le Chat (Mistral)"; url="https://chat.mistral.ai" ;;
+  perplexity) nome="Perplexity"; url="https://www.perplexity.ai" ;;
+  *) exit 0 ;;
+esac
+mkdir -p /usr/share/applications
+cat > "/usr/share/applications/sofios-web-$id.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=$nome
+Comment=Assistente online nel Browser
+Exec=firefox-esr --new-window $url
+Icon=/usr/share/sofios/assistenti/$id.png
+Categories=Network;
+StartupNotify=true
+EOF
+exit 0
