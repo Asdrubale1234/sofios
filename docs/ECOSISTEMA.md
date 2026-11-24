@@ -42,10 +42,12 @@ Da costruire come pezzi comuni (vedi sezione 6): identità del dispositivo, scop
 - **Non mettere nulla su `main`** e non rendere pubblico nulla senza permesso esplicito.
 - **Prima di cambiare un messaggio di sistema o un testo non nostro, dillo a Luca** e aspetta il suo ok.
 - **Nessun nome del sistema sottostante visibile all'utente** (KDE, Plasma, Debian, Breeze, Dolphin…). Dove la legge impone di citarli, vanno solo in «Componenti e licenze». I programmi di terzi (Firefox, Wine, Waydroid…) mantengono il loro nome.
-- **Niente marchi o loghi altrui**: le icone e le immagini sono nostre.
+- **Loghi altrui:** la regola era «niente marchi o loghi altrui». Luca ha deciso (24 novembre) di usare le **icone originali degli assistenti online** (Claude, ChatGPT, Gemini, Copilot, DeepSeek, Le Chat, Perplexity) al posto di quelle nostre. Ogni azienda ha le sue regole d'uso sui propri loghi e gli store sono severi: la decisione e la responsabilità sono di Luca. I file stanno in `docs/assets/assistenti/` (da fornire). Per tutto il resto le icone e le immagini restano nostre.
 - **Onestà prima di tutto**: dire cosa è verificato e cosa no. Non promettere ciò che non si è provato.
 - **Privacy**: nessuna statistica verso terzi; non scrivere mai nel progetto gli indirizzi personali di Luca.
 - Stile grafico: blu notte `#0b2740`, oro `#ffd479`, la mascotte del faro, icone «riquadro colorato con simbolo bianco».
+- **Stile «un po' più Apple»** (deciso da Luca, uguale su PC, tablet e telefono): colori invariati; angoli più morbidi (+40%: pulsanti ~14, schede ~18-20, finestre ~30, dock 32); dock «di vetro» (`#0b1f33` al 70%, filo bianco al 20%, niente sfocatura vera); icone del dock grandi (76 px, angolo ~24%) con il nome sotto; titoli grandi in grassetto; orologio grande e sottile; tocco leggero (95% in 90 ms); entrata dolce di pannelli (dissolvenza e 14 px in ~190 ms). Sul PC: le app di SofiOS hanno già gli angoli +40%; il dock e le finestre di Plasma sono da fare.
+- **Sofi, la mascotte** (faro di pietra, 8 pose in `docs/assets/sofi/`): stati — apertura della casella = saluta (poi ascolta dopo 1,4 s); mentre si scrive = ascolta; capisce = pensa; lavora o cerca = concentrata; riuscito = felice; non capito, errore o permesso negato = preoccupata; informazione = parla; casella chiusa = neutra; dopo 3 s si torna ad ascolta. Dissolvenza di 250 ms tra le pose. Ondeggia piano: rotazione da −1,2° a +1,2° col perno ai piedi, 2,6 s per andata e ritorno. Piccola X per nasconderla. I comandi sono quelli di `mascotte_comandi.py`; se cambiano sul PC, il tablet va riallineato.
 - Email dell'azienda: info@, assistenza@, privacy@ sul dominio dell'azienda.
 
 ## 6. Pezzi comuni da costruire (in questo ordine)

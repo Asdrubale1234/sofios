@@ -36,6 +36,11 @@ def _blocco(b):
         if _accento(m.group(1)): return b
     return _HEX.sub(_inverti, b)
 
+def _morbidi(stile):
+    """stile piu' «Apple»: tutti gli angoli arrotondati del 40% in piu'"""
+    return re.sub(r"(border-radius\s*:\s*)(\d+)(px)", lambda m: "%s%d%s" % (m.group(1), round(int(m.group(2)) * 1.4), m.group(3)), stile)
+
 def adatta(stile):
+    stile = _morbidi(stile)
     if not _chiaro(): return stile
     return "}".join(_blocco(b) for b in stile.split("}"))

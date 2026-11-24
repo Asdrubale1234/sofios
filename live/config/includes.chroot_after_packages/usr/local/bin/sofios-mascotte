@@ -68,7 +68,7 @@ class Finestra(QWidget):
         v = QVBoxLayout(self); v.setContentsMargins(18, 16, 18, 16); v.setSpacing(10)
         t = QLabel("Cosa vuoi fare?"); t.setObjectName("titolo"); v.addWidget(t)
         n = QLabel("Scrivi, per esempio: «apri il browser», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco."); n.setObjectName("nota"); n.setWordWrap(True); v.addWidget(n)
-        self.riga = QLineEdit(); self.riga.setPlaceholderText("Scrivi qui e premi Invio…"); self.riga.returnPressed.connect(self.invia); v.addWidget(self.riga)
+        self.riga = QLineEdit(); self.riga.setPlaceholderText("Scrivi qui e premi Invio…"); self.riga.returnPressed.connect(self.invia); self.riga.textEdited.connect(lambda _: scrivi_stato("ascolta")); v.addWidget(self.riga)
         self.risposta = QLabel(""); self.risposta.setWordWrap(True); self.risposta.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); v.addWidget(self.risposta)
         self.elenco = QListWidget(); self.elenco.itemActivated.connect(self.scelto); self.elenco.itemClicked.connect(self.scelto); self.elenco.hide(); v.addWidget(self.elenco, 1)
         self.conferma = QWidget(); h = QHBoxLayout(self.conferma); h.setContentsMargins(0, 0, 0, 0)
@@ -78,7 +78,7 @@ class Finestra(QWidget):
         v.addStretch(0)
         self.riga.setFocus()
         self.t_stato = QTimer(self); self.t_stato.setSingleShot(True); self.t_stato.timeout.connect(lambda: scrivi_stato("ascolta"))
-        scrivi_stato("saluta"); self.t_stato.start(1800)
+        scrivi_stato("saluta"); self.t_stato.start(1400)
 
     def sofi(self, v, poi=2500):
         scrivi_stato(v); self.t_stato.start(poi)
@@ -90,7 +90,7 @@ class Finestra(QWidget):
     def di(self, testo):
         self.risposta.setText(testo)
         if testo.startswith(("Non ", "Questo schermo", "Su questo")): self.sofi("preoccupata", 3000)
-        elif testo.startswith(("Apro", "Ho chiuso", "Fatto", "Tema", "Ho aperto")) or "è installato" in testo or "disinstallato" in testo: self.sofi("felice", 2800)
+        elif testo.startswith(("Apro", "Ho chiuso", "Fatto", "Tema", "Ho aperto")) or "è installato" in testo or "disinstallato" in testo: self.sofi("felice", 3000)
         elif testo.startswith(("Cerco", "Installo", "Disinstallo")): scrivi_stato("concentrata")
         else: self.sofi("parla", 3000)
 

@@ -56,10 +56,13 @@ PlasmoidItem {
                 else { immA.source = src; immA.opacity = 1; immB.opacity = 0 }
                 davanti = !davanti
             }
-            SequentialAnimation on y {
+            // ondeggia piano: rotazione da -1,2° a +1,2° con perno ai piedi, 2,6 s per andata e ritorno
+            property real ang: 0
+            transform: Rotation { origin.x: corpo.width / 2; origin.y: corpo.height; angle: corpo.ang }
+            SequentialAnimation on ang {
                 loops: Animation.Infinite
-                NumberAnimation { to: -5; duration: 1700; easing.type: Easing.InOutSine }
-                NumberAnimation { to: 0; duration: 1700; easing.type: Easing.InOutSine }
+                NumberAnimation { from: -1.2; to: 1.2; duration: 1300; easing.type: Easing.InOutSine }
+                NumberAnimation { from: 1.2; to: -1.2; duration: 1300; easing.type: Easing.InOutSine }
             }
             Image {
                 id: immA
@@ -67,7 +70,7 @@ PlasmoidItem {
                 source: Qt.resolvedUrl("../images/sofi-neutra.png")
                 fillMode: Image.PreserveAspectFit
                 smooth: true; mipmap: true
-                Behavior on opacity { NumberAnimation { duration: 240 } }
+                Behavior on opacity { NumberAnimation { duration: 250 } }
             }
             Image {
                 id: immB
@@ -75,7 +78,7 @@ PlasmoidItem {
                 opacity: 0
                 fillMode: Image.PreserveAspectFit
                 smooth: true; mipmap: true
-                Behavior on opacity { NumberAnimation { duration: 240 } }
+                Behavior on opacity { NumberAnimation { duration: 250 } }
             }
         }
 

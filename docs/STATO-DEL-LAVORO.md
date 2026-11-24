@@ -39,3 +39,5 @@ Versione pronta: ISO `iso-20261123-1246`, costruita da `main` (pagina dei rilasc
 ## Idee future
 - Assistente a comandi semplici con la mascotte (apri, chiudi, disinstalla), con modello locale facoltativo.
 - Sincronizzazione tra dispositivi (Cartella SofiOS), SofiOS Plus (idee a pagamento), anteprime widget da sistemare.
+
+- Sofi (mascotte, faro di pietra di Nano Banana): clic = casella dei comandi; pose che cambiano con lo stato; ondeggia piano. Stile «un po' più Apple»: angoli +40% nelle app (fatto), dock di vetro e finestre (da fare). Icone originali degli assistenti: decisione di Luca, file da fornire.
