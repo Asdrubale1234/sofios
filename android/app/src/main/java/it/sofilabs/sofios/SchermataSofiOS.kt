@@ -203,9 +203,9 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
         scheda.apply {
             addView(contenuto)
             isClickable = true; overScrollMode = View.OVER_SCROLL_NEVER
-            val r = Stile.dp(att, 22).toFloat()
+            val r = Stile.dp(att, 30).toFloat()
             background = GradientDrawable().apply {
-                setColor(0xF20B2740.toInt())
+                setColor(0xEE0B2740.toInt()); setStroke(Stile.dp(att, 1), 0x33FFFFFF)
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
         }
@@ -244,6 +244,8 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
             i += 3
         }
         visibility = View.VISIBLE
+        scheda.alpha = 0f; scheda.translationY = -Stile.dp(att, 14).toFloat()
+        scheda.animate().alpha(1f).translationY(0f).setDuration(190).start()
     }
 
     private fun voce() = LinearLayout.LayoutParams(-1, -2).apply { topMargin = Stile.dp(att, 10) }

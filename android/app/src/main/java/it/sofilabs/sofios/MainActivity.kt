@@ -60,7 +60,7 @@ class MainActivity : SchermataSofiOS() {
             alNascondere = { impostaMascotte(false) }
         }
         radice.addView(sofi, FrameLayout.LayoutParams(dp(200), dp(255), Gravity.BOTTOM or Gravity.END).apply {
-            bottomMargin = dp(112); rightMargin = dp(56)
+            bottomMargin = dp(140); rightMargin = dp(56)
         })
         sofi.visibility = if (mascotteVisibile()) View.VISIBLE else View.GONE
         casella = CasellaSofi(this, sofi)
@@ -70,8 +70,9 @@ class MainActivity : SchermataSofiOS() {
         val barra = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
-            setPadding(dp(14), dp(10), dp(14), dp(10))
-            background = GradientDrawable().apply { setColor(BARRA); cornerRadius = dp(24).toFloat() }
+            setPadding(dp(14), dp(12), dp(14), dp(10))
+            // barra «di vetro»: trasparente, con un filo chiaro sul bordo (senza sfocatura, per non pesare sui tablet modesti)
+            background = GradientDrawable().apply { setColor(BARRA); cornerRadius = dp(32).toFloat(); setStroke(dp(1), 0x33FFFFFF) }
         }
         // Casa (Fully): si vede solo se Fully è installato. Dopo il primo tocco, parte sempre da solo
         // all'accensione. Tenendo premuto si spegne e si riaccende (puntino verde = parte da solo).
@@ -85,10 +86,11 @@ class MainActivity : SchermataSofiOS() {
             background = GradientDrawable().apply { setColor(VERDE); setShape(GradientDrawable.OVAL); setStroke(dp(2), FONDO) }
         }
         casa = FrameLayout(this).apply {
-            layoutParams = LinearLayout.LayoutParams(dp(88), dp(72))
+            layoutParams = LinearLayout.LayoutParams(dp(92), -2).apply { setMargins(dp(4), 0, dp(4), 0) }
+            tastoCasa.layoutParams = FrameLayout.LayoutParams(-1, -2)
             addView(tastoCasa)
             addView(puntino, FrameLayout.LayoutParams(dp(16), dp(16), Gravity.TOP or Gravity.END).apply {
-                topMargin = dp(4); rightMargin = dp(10)
+                topMargin = dp(2); rightMargin = dp(6)
             })
         }
         barra.addView(casa)
@@ -106,7 +108,7 @@ class MainActivity : SchermataSofiOS() {
             startActivity(Intent(this, CassaforteActivity::class.java))
         })
         // Icona di Sofi: la toglie o la rimette (sul computer è «Aggiungi widget»).
-        barra.addView(icona("Mostra o nascondi Sofi", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true) {
+        barra.addView(icona("Mostra o nascondi Sofi", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true, etichetta = "Sofi") {
             impostaMascotte(!mascotteVisibile())
         })
         radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
@@ -172,19 +174,34 @@ class MainActivity : SchermataSofiOS() {
     }
 
     /** Icona nello stile del computer: riquadro colorato con simbolo bianco. */
-    private fun icona(nome: String, immagine: Int, chiaro: Int, scuro: Int, piena: Boolean = false, azione: () -> Unit): View =
-        ImageView(this).apply {
+    /** Icona del dock: riquadro colorato con simbolo bianco e il nome sotto, come sui tablet Apple. */
+    private fun icona(nome: String, immagine: Int, chiaro: Int, scuro: Int, piena: Boolean = false,
+                      etichetta: String = nome, azione: () -> Unit): LinearLayout {
+        val tessera = ImageView(this).apply {
             setImageResource(immagine)
-            contentDescription = nome
             scaleType = ImageView.ScaleType.CENTER_INSIDE
-            val m = if (piena) dp(6) else dp(14)
+            val m = if (piena) dp(7) else dp(15)
             setPadding(m, m, m, m)
             background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(chiaro, scuro)).apply {
-                cornerRadius = dp(16).toFloat()
+                cornerRadius = dp(18).toFloat()
             }
-            layoutParams = LinearLayout.LayoutParams(dp(72), dp(72)).apply { setMargins(dp(8), 0, dp(8), 0) }
-            setOnClickListener { azione() }
+            elevation = dp(3).toFloat()
         }
+        val nomeSotto = TextView(this).apply {
+            text = etichetta; textSize = 11.5f; setTextColor(TESTO); gravity = Gravity.CENTER
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL); maxLines = 1
+            setPadding(0, dp(6), 0, 0)
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
+            contentDescription = nome; isClickable = true
+            addView(tessera, LinearLayout.LayoutParams(dp(76), dp(76)))
+            addView(nomeSotto, LinearLayout.LayoutParams(dp(88), -2))
+            layoutParams = LinearLayout.LayoutParams(dp(92), -2).apply { setMargins(dp(4), 0, dp(4), 0) }
+            setOnClickListener { azione() }
+            Stile.premi(this)
+        }
+    }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
@@ -229,7 +246,7 @@ class MainActivity : SchermataSofiOS() {
 
     companion object {
         private const val FONDO = 0xFF0B1F33.toInt()       // blu notte del computer
-        private const val BARRA = 0xE60B1F33.toInt()
+        private const val BARRA = 0xB30B1F33.toInt()
         private const val TESTO = 0xFFE8F1F8.toInt()
         private const val ORO = 0xFFFFD479.toInt()
         private const val ORO_SCURO = 0xFFE0A93C.toInt()

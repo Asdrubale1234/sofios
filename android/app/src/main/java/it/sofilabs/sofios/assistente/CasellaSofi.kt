@@ -64,8 +64,11 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         scheda.apply {
             contentDescription = "Casella di Sofi"
             setPadding(dp(20), dp(16), dp(20), dp(18)); isClickable = true
-            val r = dp(22).toFloat()
-            background = GradientDrawable().apply { setColor(0xF50B2740.toInt()); cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r) }
+            val r = dp(30).toFloat()
+            background = GradientDrawable().apply {
+                setColor(0xF00B2740.toInt()); setStroke(dp(1), 0x33FFFFFF)
+                cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
+            }
         }
         scheda.addView(Stile.testo(att, "Cosa vuoi fare?", 20f, Stile.BIANCO, true))
         scheda.addView(Stile.testo(att, "Scrivi, per esempio: «apri note», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco.",
@@ -103,6 +106,8 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
     fun apri() {
         pulisci(); risposta.text = ""; campo.setText("")
         visibility = View.VISIBLE
+        scheda.alpha = 0f; scheda.translationY = -dp(14).toFloat()
+        scheda.animate().alpha(1f).translationY(0f).setDuration(190).start()
         sofi.posa("saluta"); ritardo.removeCallbacks(tornaAscolta); ritardo.postDelayed(tornaAscolta, 1400)
         campo.requestFocus()
         campo.postDelayed({

@@ -17,6 +17,15 @@ object Assistenti {
         Assistente("perplexity", "Perplexity", "https://www.perplexity.ai", R.drawable.ic_ass_perplexity, 0xFF3FC1C9.toInt(), 0xFF1D7F8C.toInt()),
     )
 
+    /**
+     * Icona originale dell'assistente, se il file `ass_<id>.png` (o .webp) è nella cartella delle immagini dell'app.
+     * Se non c'è, si usa l'icona nostra (la stessa del computer).
+     */
+    fun iconaOriginale(c: Context, a: Assistente): android.graphics.drawable.Drawable? {
+        val id = c.resources.getIdentifier("ass_" + a.id, "drawable", c.packageName)
+        return if (id != 0) c.resources.getDrawable(id, c.theme) else null
+    }
+
     private fun memoria(c: Context) = c.getSharedPreferences("sofios", Context.MODE_PRIVATE)
 
     fun scelti(c: Context): List<Assistente> {

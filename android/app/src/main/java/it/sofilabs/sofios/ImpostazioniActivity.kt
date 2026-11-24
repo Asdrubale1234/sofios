@@ -206,10 +206,20 @@ class ImpostazioniActivity : SchermataSofiOS() {
                 background = Stile.riquadro(this@ImpostazioniActivity, if (acceso) Stile.SELEZ else Stile.SECONDARIO, 12)
                 setOnClickListener { Assistenti.imposta(this@ImpostazioniActivity, a.id, !acceso); apri(scelta) }
             }
+            val originale = Assistenti.iconaOriginale(this, a)
             riga.addView(ImageView(this).apply {
-                setImageResource(a.icona); setPadding(dp(8), dp(8), dp(8), dp(8))
-                background = android.graphics.drawable.GradientDrawable(
-                    android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(a.chiaro, a.scuro)).apply { cornerRadius = dp(12).toFloat() }
+                if (originale != null) {
+                    // icona originale dell'assistente (se il file è stato messo nell'app)
+                    setImageDrawable(originale); scaleType = ImageView.ScaleType.FIT_CENTER
+                    outlineProvider = object : android.view.ViewOutlineProvider() {
+                        override fun getOutline(v: View, o: android.graphics.Outline) { o.setRoundRect(0, 0, v.width, v.height, dp(12).toFloat()) }
+                    }
+                    clipToOutline = true
+                } else {
+                    setImageResource(a.icona); setPadding(dp(8), dp(8), dp(8), dp(8))
+                    background = android.graphics.drawable.GradientDrawable(
+                        android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(a.chiaro, a.scuro)).apply { cornerRadius = dp(12).toFloat() }
+                }
             }, LinearLayout.LayoutParams(dp(48), dp(48)))
             riga.addView(Stile.testo(this, a.nome, 18f, Stile.BIANCO, true).apply { setPadding(dp(14), 0, 0, 0) },
                 LinearLayout.LayoutParams(0, -2, 1f))
