@@ -29,7 +29,7 @@ alto.addWidget("org.kde.plasma.digitalclock");
 // --- Dock in basso ---
 var dock = new Panel();
 dock.location = "bottom";
-dock.height = 64;
+dock.height = 76;
 dock.floating = true;
 dock.opacity = "translucent";
 dock.lengthMode = "fit";

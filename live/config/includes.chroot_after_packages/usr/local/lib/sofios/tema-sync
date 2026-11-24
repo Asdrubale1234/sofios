@@ -9,12 +9,12 @@ if [ ! -f "$stato" ]; then mkdir -p "$(dirname "$stato")"; echo "$tema" > "$stat
 # senza la barra di Plasma già attiva non c'è niente da ricaricare
 pgrep -x plasmashell >/dev/null 2>&1 || exit 0
 case "$tema" in
-  org.sofios.light) img=/usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png; barre=breeze-light ;;
-  org.sofios.desktop) img=/usr/share/wallpapers/SofiOS/contents/images/1920x1080.png; barre=breeze-dark ;;
+  org.sofios.light) img=/usr/share/wallpapers/SofiOSChiaro/contents/images/1920x1080.png; barre=sofios-chiaro ;;
+  org.sofios.desktop) img=/usr/share/wallpapers/SofiOS/contents/images/1920x1080.png; barre=sofios-scuro ;;
   *) exit 0 ;;
 esac
 # le barre si ricaricano davvero solo se il tema cambia: passo da un altro e poi torno
-altro=default; [ "$barre" = default ] && altro=breeze-dark
+altro=default; [ "$barre" = default ] && altro=default
 plasma-apply-desktoptheme "$altro" >/dev/null 2>&1; sleep 1
 plasma-apply-desktoptheme "$barre" >/dev/null 2>&1
 plasma-apply-wallpaperimage "$img" >/dev/null 2>&1 && { mkdir -p "$(dirname "$stato")"; echo "$tema" > "$stato"; }

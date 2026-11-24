@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<defs><style type="text/css" id="current-color-scheme">.ColorScheme-Text{color:#e6f1ff}.ColorScheme-Background{color:#0b1f33}</style></defs>
+<g id="topleft"><path class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" d="M0,18 A18,18 0 0 1 18,0 L18,18 Z"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M0.5,18 A17,17 0 0 1 18,0.5"/></g>
+<g id="topright"><path class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" d="M46,0 A18,18 0 0 1 64,18 L46,18 Z"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M46,0.5 A17.5,17.5 0 0 1 63.5,18"/></g>
+<g id="bottomleft"><path class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" d="M0,46 A18,18 0 0 0 18,64 L18,46 Z"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M0.5,46 A17.5,17.5 0 0 0 18,63.5"/></g>
+<g id="bottomright"><path class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" d="M64,46 A18,18 0 0 1 46,64 L46,46 Z"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M63.5,46 A17.5,17.5 0 0 1 46,63.5"/></g>
+<g id="top"><rect class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" x="18" y="0" width="28" height="18"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M18,0.5 H46"/></g>
+<g id="bottom"><rect class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" x="18" y="46" width="28" height="18"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M18,63.5 H46"/></g>
+<g id="left"><rect class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" x="0" y="18" width="18" height="28"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M0.5,18 V46"/></g>
+<g id="right"><rect class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" x="46" y="18" width="18" height="28"/><path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-opacity="0.20" stroke-width="1" d="M63.5,18 V46"/></g>
+<rect id="center" class="ColorScheme-Background" fill="currentColor" fill-opacity="0.80" x="18" y="18" width="28" height="28"/>
+<rect id="hint-tile-center" x="0" y="0" width="1" height="1" fill="none"/>
+<rect id="hint-top-margin" x="0" y="0" width="1" height="10" fill="none"/>
+<rect id="hint-bottom-margin" x="0" y="0" width="1" height="10" fill="none"/>
+<rect id="hint-left-margin" x="0" y="0" width="10" height="1" fill="none"/>
+<rect id="hint-right-margin" x="0" y="0" width="10" height="1" fill="none"/>
+<rect id="mask-center" x="18" y="18" width="28" height="28" fill="none"/>
+</svg>
