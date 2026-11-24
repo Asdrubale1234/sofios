@@ -15,8 +15,8 @@ Daemon will be stopped at the end of the build
 > Task :app:checkKotlinGradlePluginConfigurationErrors
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
-> Task :app:generateDebugResValues
 > Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
@@ -28,25 +28,25 @@ Daemon will be stopped at the end of the build
 > Task :app:processDebugManifest
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebug
-> Task :app:javaPreCompileDebugUnitTest
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
 > Task :finto-fully:checkDebugAarMetadata
-> Task :app:processDebugManifestForPackage
 > Task :finto-fully:generateDebugResValues
 > Task :finto-fully:mapDebugSourceSetPaths
 > Task :finto-fully:generateDebugResources
 > Task :finto-fully:mergeDebugResources
+> Task :app:processDebugManifestForPackage
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
 > Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:javaPreCompileDebug
-> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
+> Task :finto-fully:processDebugManifestForPackage
+> Task :finto-fully:javaPreCompileDebug
 > Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :app:processDebugResources
 > Task :finto-fully:processDebugResources
@@ -64,20 +64,37 @@ Daemon will be stopped at the end of the build
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:413:80 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:516:63 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/FileActivity.kt:110:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
-w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:129:22 'onBackPressed(): Unit' is deprecated. Deprecated in Java
-w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:137:50 Parameter 'ultimo' is never used
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:138:22 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:146:50 Parameter 'ultimo' is never used
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/NoteActivity.kt:297:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/SchermataSofiOS.kt:102:46 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToCompileJar
-> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
-> Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795531762931.json
 
-BUILD SUCCESSFUL in 1m 54s
+> Task :app:testDebugUnitTest
+
+SincronizzaTest > conUnSyncthingVero FAILED
+    java.net.ProtocolException at SincronizzaTest.kt:61
+
+22 tests completed, 1 failed
+
+> Task :app:testDebugUnitTest FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795540710616.json
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///home/runner/work/sofios/sofios/android/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 2m 2s
 43 actionable tasks: 43 executed

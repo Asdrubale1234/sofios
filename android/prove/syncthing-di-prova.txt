@@ -1,0 +1,26 @@
+[start] 2026/11/24 17:18:21 INFO: syncthing v1.29.5 "Gold Grasshopper" (go1.25.0 linux-amd64) debian@debian 2025-11-29 20:48:58 UTC
+[NL7KC] 2026/11/24 17:18:21 INFO: My ID: NL7KCOO-UALCLSV-BJRLJSM-EEWCRDL-EAH2PGK-W3OKZVF-G5N5AJH-AYJSIAS
+[NL7KC] 2026/11/24 17:18:22 INFO: Hashing performance is 169.00 MB/s
+[NL7KC] 2026/11/24 17:18:22 INFO: Running database migration 14...
+[NL7KC] 2026/11/24 17:18:22 INFO: Running database migration 16...
+[NL7KC] 2026/11/24 17:18:22 INFO: Running database migration 17...
+[NL7KC] 2026/11/24 17:18:22 INFO: Running database migration 19...
+[NL7KC] 2026/11/24 17:18:22 INFO: Running database migration 20...
+[NL7KC] 2026/11/24 17:18:22 INFO: Compacting database after migration...
+2026/11/24 17:18:22 failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+[NL7KC] 2026/11/24 17:18:22 INFO: Overall send rate is unlimited, receive rate is unlimited
+[NL7KC] 2026/11/24 17:18:22 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) starting
+[NL7KC] 2026/11/24 17:18:22 INFO: Using discovery mechanism: global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
+[NL7KC] 2026/11/24 17:18:22 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
+[NL7KC] 2026/11/24 17:18:22 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
+[NL7KC] 2026/11/24 17:18:22 INFO: Using discovery mechanism: IPv4 local broadcast discovery on port 21027
+[NL7KC] 2026/11/24 17:18:22 INFO: Using discovery mechanism: IPv6 local multicast discovery on address [ff12::8384]:21027
+[NL7KC] 2026/11/24 17:18:22 INFO: Loading HTTPS certificate: open /tmp/st/https-cert.pem: no such file or directory
+[NL7KC] 2026/11/24 17:18:22 INFO: Creating new HTTPS certificate
+[NL7KC] 2026/11/24 17:18:22 INFO: QUIC listener ([::]:22000) starting
+[NL7KC] 2026/11/24 17:18:22 INFO: TCP listener ([::]:22000) starting
+[NL7KC] 2026/11/24 17:18:22 INFO: GUI and API listening on 127.0.0.1:8384
+[NL7KC] 2026/11/24 17:18:22 INFO: Access the GUI via the following URL: http://127.0.0.1:8384/
+[NL7KC] 2026/11/24 17:18:22 INFO: My name is "runnervm0hi8g"
+[NL7KC] 2026/11/24 17:18:36 INFO: Joined relay relay://177.7.56.110:22067
+[NL7KC] 2026/11/24 17:18:42 INFO: Detected 0 NAT services
