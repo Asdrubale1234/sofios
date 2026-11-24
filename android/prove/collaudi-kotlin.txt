@@ -19,8 +19,8 @@ Daemon will be stopped at the end of the build
 > Task :app:checkDebugAarMetadata
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
-> Task :app:packageDebugResources
 > Task :app:mergeDebugResources
+> Task :app:packageDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
 > Task :app:parseDebugLocalResources
@@ -29,6 +29,7 @@ Daemon will be stopped at the end of the build
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebug
 > Task :app:javaPreCompileDebugUnitTest
+> Task :app:processDebugManifestForPackage
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
@@ -39,14 +40,13 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :app:processDebugManifestForPackage
 > Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:javaPreCompileDebug
 > Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
+> Task :finto-fully:javaPreCompileDebug
 > Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :app:processDebugResources
 > Task :finto-fully:processDebugResources
@@ -70,14 +70,14 @@ w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/SchermataSofiOS.kt:102:46 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
-> Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToCompileJar
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795542931626.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795550565527.json
 
-BUILD SUCCESSFUL in 1m 21s
+BUILD SUCCESSFUL in 1m 27s
 43 actionable tasks: 43 executed
