@@ -148,17 +148,11 @@ sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto B-schermata-iniziale
 
-scrivi "== B2. Mascotte: tocco, compare la X, la tolgo; uso l'icona accanto a Impostazioni per rimetterla"
-tocca_testo "Mascotte SofiOS"; sleep 1
-foto_subito B2-mascotte-con-x
-tocca_testo "Nascondi la mascotte"; sleep 1
-foto B3-mascotte-tolta
-tocca_testo "Mostra o nascondi la mascotte"; sleep 1
-foto_subito B4-icona-mascotte-tocco
-tocca_testo "Mostra o nascondi la mascotte"; sleep 1
-foto_subito B4b-mascotte-di-nuovo-tolta
-tocca_testo "Mostra o nascondi la mascotte"; sleep 1
-foto B5-mascotte-rimessa
+scrivi "== B2. Sofi: la X la toglie, l'icona nella barra la rimette"
+tocca_testo "Nascondi Sofi"; sleep 1
+foto_subito B3-sofi-tolta
+tocca_testo "Mostra o nascondi Sofi"; sleep 1
+foto B5-sofi-rimessa
 
 scrivi "== C. Tasto Home non riapre Casa"
 adb shell input keyevent KEYCODE_HOME; sleep 3
@@ -249,6 +243,102 @@ foto_subito F5-conferma-eliminazione
 tocca_testo "Sì"; sleep 2
 foto_subito F6-dopo-eliminazione
 scrivi "cartella dopo eliminazione: $(adb shell ls $CART | tr '\r\n' '  ')"
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
+scrivi "== S. Sofi: la casella dei comandi"
+adb shell appops set $PKG WRITE_SETTINGS allow
+CART=/sdcard/Android/data/$PKG/files/SofiOS
+risposta_sofi() { testo_di "Risposta di Sofi"; }
+comando() {  # scrive un comando nella casella di Sofi e preme Invio
+  adb shell input text "$1"; sleep 1; adb shell input keyevent KEYCODE_ENTER; sleep 2
+}
+apri_sofi() { tocca_testo "Sofi"; attendi "Casella di Sofi" 15 || scrivi "ATTENZIONE: la casella di Sofi non si è aperta"; sleep 1; }
+apri_sofi
+foto_subito S1-casella-aperta
+comando "aiuto"
+foto_subito S2-aiuto
+comando "volume%sal%s40"
+VOL=$(adb shell media volume --stream 3 --get 2>&1 | tr -d '\r')
+scrivi "volume dopo «volume al 40»: $VOL"
+python3 - "$VOL" <<'EOF5' || scrivi "ATTENZIONE: il volume non è al 40%"
+import re, sys
+m = re.search(r"volume is (\d+) in range \[(\d+)\.\.(\d+)\]", sys.argv[1])
+v, lo, hi = map(int, m.groups())
+atteso = round(hi * 0.4)
+sys.exit(0 if abs(v - atteso) <= 1 else 1)
+EOF5
+comando "luminosita%s70"
+LUM=$(adb shell settings get system screen_brightness | tr -d '\r')
+scrivi "luminosità dopo «luminosità 70»: $LUM (attesa 178)"
+[ "$LUM" -ge 175 ] && [ "$LUM" -le 181 ] || scrivi "ATTENZIONE: la luminosità non è al 70%"
+comando "metti%sil%stema%schiaro"
+scrivi "Sofi dice: $(risposta_sofi)"
+foto_subito S3-tema
+comando "cosa%sfa%squesto"
+scrivi "Sofi dice: $(risposta_sofi)"
+adb shell "echo 'Ciao, questa e una fattura di prova' > $CART/fattura-prova.txt"
+comando "cerca%sfattura"
+attendi "📄  fattura-prova.txt" 20 || scrivi "ATTENZIONE: Sofi non ha trovato il file"
+foto_subito S4-trovato-il-file
+tocca_testo "📄  fattura-prova.txt"; sleep 3
+foto_subito S5-file-aperto
+scrivi "in primo piano: $(in_primo_piano)"
+tocca_ultimo "Chiudi"; sleep 1
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
+apri_sofi
+comando "apri%snote"
+aspetta_primo_piano "NoteActivity" && scrivi "«apri note»: si è aperta l'app Note" || scrivi "ATTENZIONE: «apri note» non ha aperto le Note"
+foto_subito S6-apri-note
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+
+# chiudere un programma in secondo piano
+adb shell am start -n de.ozerov.fully/.FintoFully >/dev/null; sleep 2
+adb shell input keyevent KEYCODE_HOME; sleep 3
+aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
+scrivi "processo del finto Fully prima di «chiudi»: $(adb shell pidof de.ozerov.fully | tr -d '\r')"
+apri_sofi
+comando "chiudi%sfully"
+sleep 3
+scrivi "Sofi dice: $(risposta_sofi)"
+PID=$(adb shell pidof de.ozerov.fully | tr -d '\r')
+[ -z "$PID" ] && scrivi "«chiudi fully»: il programma è stato chiuso" || scrivi "ATTENZIONE: «chiudi fully» non ha chiuso il programma (processo $PID)"
+foto_subito S7-chiudi
+
+# disinstallare e installare chiedono sempre conferma
+comando "disinstalla%sfully"
+foto_subito S8-conferma-disinstalla
+scrivi "Sofi dice: $(risposta_sofi)"
+tocca_ultimo "No"; sleep 1
+scrivi "Sofi dice dopo «No»: $(risposta_sofi)"
+adb shell pm list packages | grep -q de.ozerov.fully && scrivi "il finto Fully è ancora installato (giusto)" || scrivi "ATTENZIONE: il finto Fully è sparito senza conferma"
+comando "installa%sgimp"
+scrivi "Sofi dice: $(risposta_sofi)"
+foto_subito S9-conferma-installa
+tocca_ultimo "No"; sleep 1
+adb shell input keyevent KEYCODE_BACK; sleep 1
+
+# assistenti online
+adb shell input keyevent KEYCODE_HOME; sleep 2
+tocca_testo "Impostazioni"; sleep 3
+tocca_testo "Assistenti online"; sleep 2
+foto_subito S10-assistenti
+tocca_testo "Claude"; sleep 1
+tocca_testo "Gemini"; sleep 1
+foto_subito S11-assistenti-scelti
+adb shell input keyevent KEYCODE_HOME; sleep 3
+tocca_testo "Barra SofiOS"; sleep 2
+foto_subito S12-pannello-con-assistenti
+limiti_di "Claude" > /dev/null; [ -n "$(limiti_di "Claude")" ] || scrivi "ATTENZIONE: Claude non compare nel pannello"
+adb shell input keyevent KEYCODE_BACK; sleep 1
+apri_sofi
+comando "apri%sclaude"
+sleep 3
+scrivi "dopo «apri claude» in primo piano: $(in_primo_piano)"
+in_primo_piano | grep -q "$PKG/.MainActivity" && scrivi "ATTENZIONE: «apri claude» non ha aperto il browser"
 adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
 

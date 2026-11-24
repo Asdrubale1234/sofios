@@ -4,6 +4,8 @@
     <!-- Rete e batteria nella barra SofiOS; luminosità e rotazione dal pannello (con il consenso dell'utente) -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- Per il comando «chiudi…» di Sofi (chiude solo i programmi in secondo piano) -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <!-- Per vedere e aprire altre app (Fully, Impostazioni) -->
     <queries>

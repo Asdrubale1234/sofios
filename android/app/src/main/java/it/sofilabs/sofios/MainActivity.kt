@@ -13,17 +13,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextClock
 import android.widget.TextView
+import it.sofilabs.sofios.assistente.CasellaSofi
 
 /** Schermata iniziale di SofiOS: stile del computer, nessuna libreria, nessun servizio acceso. */
 class MainActivity : SchermataSofiOS() {
 
     private val fully = "de.ozerov.fully"
     private var fullyTrovato: String? = null
-    private lateinit var mascotte: FrameLayout
-    private lateinit var tastoX: TextView
+    private lateinit var sofi: SofiView
+    private lateinit var casella: CasellaSofi
     private lateinit var casa: FrameLayout
     private lateinit var puntino: View
-    private val nascondiX = Runnable { tastoX.visibility = View.GONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,32 +54,17 @@ class MainActivity : SchermataSofiOS() {
         })
         radice.addView(orologio, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START))
 
-        // La mascotte: sta sul fondo a destra. Un tocco mostra la X che la toglie.
-        mascotte = FrameLayout(this)
-        mascotte.addView(ImageView(this).apply {
-            setImageResource(R.drawable.mascotte)
-            scaleType = ImageView.ScaleType.FIT_CENTER
-            contentDescription = "Mascotte SofiOS"
-            setOnClickListener { mostraX() }
-        }, FrameLayout.LayoutParams(-1, -1))
-        tastoX = TextView(this).apply {
-            text = "✕"
-            textSize = 14f
-            setTextColor(0xFFFFFFFF.toInt())
-            typeface = Typeface.DEFAULT_BOLD
-            gravity = Gravity.CENTER
-            contentDescription = "Nascondi la mascotte"
-            background = GradientDrawable().apply { setColor(0xCC0B2740.toInt()); setShape(GradientDrawable.OVAL); setStroke(dp(1), 0x66FFFFFF) }
-            visibility = View.GONE
-            setOnClickListener { impostaMascotte(false) }
+        // Sofi, la mascotte: sta sul fondo a destra. Un tocco apre la casella dove si scrive un comando.
+        sofi = SofiView(this).apply {
+            alToccare = { chiudiPannelloSeAperto(); casella.apri() }
+            alNascondere = { impostaMascotte(false) }
         }
-        mascotte.addView(tastoX, FrameLayout.LayoutParams(dp(36), dp(36), Gravity.TOP or Gravity.END).apply {
-            topMargin = dp(6); rightMargin = dp(6)
-        })
-        radice.addView(mascotte, FrameLayout.LayoutParams(dp(180), dp(284), Gravity.BOTTOM or Gravity.END).apply {
+        radice.addView(sofi, FrameLayout.LayoutParams(dp(200), dp(255), Gravity.BOTTOM or Gravity.END).apply {
             bottomMargin = dp(112); rightMargin = dp(56)
         })
-        mascotte.visibility = if (mascotteVisibile()) View.VISIBLE else View.GONE
+        sofi.visibility = if (mascotteVisibile()) View.VISIBLE else View.GONE
+        casella = CasellaSofi(this, sofi)
+        radice.addView(casella, FrameLayout.LayoutParams(-1, -1))
 
         // Barra in basso, come sul computer: icone tonde colorate.
         val barra = LinearLayout(this).apply {
@@ -120,8 +105,8 @@ class MainActivity : SchermataSofiOS() {
         barra.addView(icona("Cassaforte", R.drawable.ic_password, TURCHESE, TURCHESE_SCURO, piena = true) {
             startActivity(Intent(this, CassaforteActivity::class.java))
         })
-        // Icona della mascotte: la toglie o la rimette (sul computer è «Aggiungi widget»).
-        barra.addView(icona("Mostra o nascondi la mascotte", R.drawable.mascotte, MARE, MARE_SCURO, piena = true) {
+        // Icona di Sofi: la toglie o la rimette (sul computer è «Aggiungi widget»).
+        barra.addView(icona("Mostra o nascondi Sofi", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true) {
             impostaMascotte(!mascotteVisibile())
         })
         radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
@@ -137,6 +122,7 @@ class MainActivity : SchermataSofiOS() {
 
     override fun onResume() {
         super.onResume()
+        sofi.ondeggia(mascotteVisibile())
         aggiornaCasa()
     }
 
@@ -168,15 +154,8 @@ class MainActivity : SchermataSofiOS() {
 
     private fun impostaMascotte(visibile: Boolean) {
         memoria().edit().putBoolean("mascotte", visibile).apply()
-        mascotte.visibility = if (visibile) View.VISIBLE else View.GONE
-        tastoX.visibility = View.GONE
-    }
-
-    /** Un tocco sulla mascotte mostra la X per qualche secondo (sul computer compare passandoci sopra). */
-    private fun mostraX() {
-        tastoX.visibility = View.VISIBLE
-        tastoX.removeCallbacks(nascondiX)
-        tastoX.postDelayed(nascondiX, 6000)
+        sofi.visibility = if (visibile) View.VISIBLE else View.GONE
+        if (visibile) sofi.ondeggia(true) else { sofi.ondeggia(false); casella.chiudi() }
     }
 
     /** Vero solo la prima volta dopo ogni accensione del dispositivo. */
@@ -214,17 +193,26 @@ class MainActivity : SchermataSofiOS() {
 
     // Indietro non deve mai chiudere la schermata iniziale (chiude solo il pannello, se aperto).
     @Deprecated("Deprecated in Java")
-    override fun onBackPressed() { chiudiPannelloSeAperto() }
+    override fun onBackPressed() {
+        if (casella.aperta()) { casella.chiudi(); return }
+        chiudiPannelloSeAperto()
+    }
+
+    override fun onPause() {
+        if (::sofi.isInitialized) sofi.ondeggia(false)
+        super.onPause()
+    }
 
     // Scorciatoie del pannello SofiOS, quando si è nella schermata iniziale.
     override fun scorciatoie(): List<Scorciatoia> {
         val l = mutableListOf<Scorciatoia>()
         if (fullyInstallato()) l.add(Scorciatoia("Casa") { tocchiCasa() })
-        l.add(Scorciatoia("Mascotte") { impostaMascotte(!mascotteVisibile()) })
+        l.add(Scorciatoia("Sofi") { if (!mascotteVisibile()) impostaMascotte(true); casella.apri() })
         l.add(Scorciatoia("Note") { startActivity(Intent(this, NoteActivity::class.java)) })
         l.add(Scorciatoia("File") { startActivity(Intent(this, FileActivity::class.java)) })
         l.add(Scorciatoia("Cassaforte") { startActivity(Intent(this, CassaforteActivity::class.java)) })
         l.add(Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) })
+        l.addAll(scorciatoieAssistenti())
         return l
     }
 

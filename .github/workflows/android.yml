@@ -26,6 +26,10 @@ jobs:
           mkdir -p /tmp/prove
           pip install pykeepass argon2-cffi 2>&1 | tail -1
           python3 android/tools/fixture-kdbx.py android/app/build/fixture 2>&1 | tee /tmp/prove/collaudi-fixture.txt
+          # i comandi di Sofi: le risposte del programma del computer, per confrontarle
+          git fetch --depth=1 origin claude/jolly-davinci-ltzvwz 2>&1 | tail -1 || true
+          mkdir -p /tmp/pc && git show origin/claude/jolly-davinci-ltzvwz:live/config/includes.chroot_after_packages/usr/local/lib/sofios/mascotte_comandi.py > /tmp/pc/mascotte_comandi.py \
+            && python3 -I android/tools/fixture-comandi.py /tmp/pc/mascotte_comandi.py android/app/build/fixture/comandi.tsv 2>&1 | tee -a /tmp/prove/collaudi-fixture.txt || echo "senza confronto con i comandi del computer" | tee -a /tmp/prove/collaudi-fixture.txt
           cd android && ./gradlew --no-daemon testDebugUnitTest 2>&1 | tee /tmp/prove/collaudi-kotlin.txt
           cd .. && for n in kotlin-nuovo kotlin-da-pc; do
             python3 android/tools/verifica-kdbx.py android/app/build/fixture/$n.kdbx "$(cat android/app/build/fixture/$n.kdbx.password)" android/app/build/fixture/$n.kdbx.attese.tsv 2>&1 | tee -a /tmp/prove/collaudi-python.txt

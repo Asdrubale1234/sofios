@@ -27,6 +27,7 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.ScrollView
 import android.widget.TextView
+import it.sofilabs.sofios.assistente.Assistenti
 import java.util.Locale
 
 /**
@@ -35,7 +36,7 @@ import java.util.Locale
  */
 class ImpostazioniActivity : SchermataSofiOS() {
 
-    private val voci = listOf("Schermo", "Suono", "Batteria", "Spazio", "App", "Altre impostazioni", "Informazioni")
+    private val voci = listOf("Schermo", "Suono", "Batteria", "Spazio", "App", "Assistenti online", "Altre impostazioni", "Informazioni")
     private var stretto = false
     private var nelContenuto = false
     private var scelta = 0
@@ -107,6 +108,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             "Batteria" -> pagina("Batteria", *batteria())
             "Spazio" -> pagina("Spazio", *spazio())
             "App" -> paginaApp()
+            "Assistenti online" -> pagina("Assistenti online", *assistenti())
             "Altre impostazioni" -> pagina("Altre impostazioni di Android", *altre())
             else -> pagina("Informazioni", *informazioni())
         }
@@ -187,6 +189,34 @@ class ImpostazioniActivity : SchermataSofiOS() {
                 "Le icone, i colori e la mascotte sono di Sofi Labs.")
             .setPositiveButton("Chiudi", null)
             .show().getButton(android.content.DialogInterface.BUTTON_POSITIVE).isAllCaps = false
+    }
+
+    /** Scelta degli assistenti online: quelli attivi compaiono nel pannello e si aprono nel browser. */
+    private fun assistenti(): Array<View> {
+        val scelti = Assistenti.scelti(this).map { it.id }.toSet()
+        val l = ArrayList<View>()
+        l.add(Stile.testo(this, "Si aprono nel browser, con internet e il tuo account. Non si scarica niente e SofiOS non vede cosa scrivi.",
+            13f, Stile.PICCOLO))
+        for (a in Assistenti.tutti) {
+            val acceso = a.id in scelti
+            val riga = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(12), dp(10), dp(12), dp(10)); isClickable = true
+                contentDescription = a.nome
+                background = Stile.riquadro(this@ImpostazioniActivity, if (acceso) Stile.SELEZ else Stile.SECONDARIO, 12)
+                setOnClickListener { Assistenti.imposta(this@ImpostazioniActivity, a.id, !acceso); apri(scelta) }
+            }
+            riga.addView(ImageView(this).apply {
+                setImageResource(a.icona); setPadding(dp(8), dp(8), dp(8), dp(8))
+                background = android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(a.chiaro, a.scuro)).apply { cornerRadius = dp(12).toFloat() }
+            }, LinearLayout.LayoutParams(dp(48), dp(48)))
+            riga.addView(Stile.testo(this, a.nome, 18f, Stile.BIANCO, true).apply { setPadding(dp(14), 0, 0, 0) },
+                LinearLayout.LayoutParams(0, -2, 1f))
+            riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.ORO else Stile.PICCOLO))
+            l.add(riga)
+        }
+        return l.toTypedArray()
     }
 
     private fun altre(): Array<View> {

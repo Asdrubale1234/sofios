@@ -1,6 +1,7 @@
 package it.sofilabs.sofios
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,8 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
+import it.sofilabs.sofios.assistente.Assistenti
 import android.os.BatteryManager
 import android.os.Build
 import android.provider.Settings
@@ -63,13 +66,19 @@ open class SchermataSofiOS : Activity() {
     }
 
     /** Scorciatoie mostrate nel pannello; le schermate possono cambiarle. */
+    protected fun scorciatoieAssistenti(): List<Scorciatoia> = Assistenti.scelti(this).map { a ->
+        Scorciatoia(a.nome) {
+            try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(a.indirizzo))) } catch (e: ActivityNotFoundException) { }
+        }
+    }
+
     open fun scorciatoie(): List<Scorciatoia> = listOf(
         Scorciatoia("Schermata iniziale") { startActivity(Intent(this, MainActivity::class.java)) },
         Scorciatoia("Note") { startActivity(Intent(this, NoteActivity::class.java)) },
         Scorciatoia("File") { startActivity(Intent(this, FileActivity::class.java)) },
         Scorciatoia("Cassaforte") { startActivity(Intent(this, CassaforteActivity::class.java)) },
         Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) },
-    )
+    ) + scorciatoieAssistenti()
 
     protected fun chiudiPannelloSeAperto(): Boolean {
         val p = pannello ?: return false

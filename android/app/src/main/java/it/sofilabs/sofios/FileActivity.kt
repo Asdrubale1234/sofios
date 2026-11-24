@@ -40,11 +40,19 @@ class FileActivity : SchermataSofiOS() {
     private lateinit var vuoto: TextView
     private lateinit var su: TextView
     private val adattatore = Adattatore()
+    private var daAprire: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         radiceCartella = File(getExternalFilesDir(null) ?: filesDir, "SofiOS").apply { mkdirs() }
         corrente = radiceCartella
+        intent.getStringExtra(EXTRA_PERCORSO)?.let { p ->
+            val f = File(p)
+            if (f.exists() && f.path.startsWith(radiceCartella.path)) {
+                corrente = if (f.isDirectory) f else (f.parentFile ?: radiceCartella)
+                if (f.isFile) daAprire = f
+            }
+        }
 
         val radice = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -79,6 +87,7 @@ class FileActivity : SchermataSofiOS() {
     override fun onResume() {
         super.onResume()
         aggiorna()
+        daAprire?.let { daAprire = null; tocca(it) }
     }
 
     private fun aggiorna() {
@@ -246,4 +255,6 @@ class FileActivity : SchermataSofiOS() {
     }
 
     private fun dp(v: Int) = Stile.dp(this, v)
+
+    companion object { const val EXTRA_PERCORSO = "percorso" }
 }
