@@ -259,11 +259,12 @@ foto_subito S1-casella-aperta
 comando "aiuto"
 foto_subito S2-aiuto
 comando "volume%sal%s40"
-VOL=$(adb shell media volume --stream 3 --get 2>&1 | tr -d '\r')
+VOL=$(adb shell cmd media_session volume --stream 3 --get 2>&1 | tr -d '\r')
 scrivi "volume dopo «volume al 40»: $VOL"
 python3 - "$VOL" <<'EOF5' || scrivi "ATTENZIONE: il volume non è al 40%"
 import re, sys
 m = re.search(r"volume is (\d+) in range \[(\d+)\.\.(\d+)\]", sys.argv[1])
+if not m: sys.exit(2)
 v, lo, hi = map(int, m.groups())
 atteso = round(hi * 0.4)
 sys.exit(0 if abs(v - atteso) <= 1 else 1)

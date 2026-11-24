@@ -18,6 +18,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -76,7 +77,8 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             imeOptions = EditorInfo.IME_ACTION_SEND
             setSingleLine()
             background = Stile.riquadro(att, Stile.PANNELLO, 12); setPadding(dp(14), dp(12), dp(14), dp(12))
-            setOnEditorActionListener { _, _, _ -> invia(); true }
+            // da una tastiera fisica Android avvisa due volte (pressione e rilascio): si agisce solo alla pressione
+            setOnEditorActionListener { _, _, e -> if (e == null || e.action == KeyEvent.ACTION_DOWN) invia(); true }
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
                 override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}

@@ -126,10 +126,16 @@ class CassaforteActivity : SchermataSofiOS() {
         campoPw = campoTesto("Password principale", "Password principale")
         campoPw2 = campoTesto("Ripeti la password principale", "Ripeti la password principale")
         // Invio sulla tastiera: dalla prima password si passa alla seconda (se si crea), altrimenti si sblocca
-        campoPw.setOnEditorActionListener { _, _, _ ->
-            if (campoPw2.visibility == View.VISIBLE) campoPw2.requestFocus() else sblocca(); true
+        // da una tastiera fisica Android avvisa due volte (pressione e rilascio): si agisce solo alla pressione
+        campoPw.setOnEditorActionListener { _, _, e ->
+            if (e == null || e.action == android.view.KeyEvent.ACTION_DOWN) {
+                if (campoPw2.visibility == View.VISIBLE) campoPw2.requestFocus() else sblocca()
+            }
+            true
         }
-        campoPw2.setOnEditorActionListener { _, _, _ -> sblocca(); true }
+        campoPw2.setOnEditorActionListener { _, _, e ->
+            if (e == null || e.action == android.view.KeyEvent.ACTION_DOWN) sblocca(); true
+        }
         avvisoSblocco = Stile.testo(this, "Se la dimentichi, nessuno può recuperare le tue password: nemmeno noi.", 13f, Stile.ORO)
         erroreSblocco = Stile.testo(this, "", 14f, Stile.ORO).apply { gravity = Gravity.CENTER; contentDescription = "Errore" }
         bottoneSblocco = Stile.bottone(this, "", Stile.ORO, Stile.FONDO) { sblocca() }

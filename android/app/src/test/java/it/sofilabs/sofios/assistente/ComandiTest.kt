@@ -10,7 +10,7 @@ class ComandiTest {
     private fun f(t: String) = Comandi.interpreta(t)
 
     @Test fun frasi_di_base() {
-        assertEquals(Frase("apri", "browser"), f("apri il browser"))
+        assertEquals(Frase("apri", "il browser"), f("apri il browser"))   // come sul computer: gli articoli si tolgono dopo
         assertEquals(Frase("volume", "livello" to 40), f("volume al 40"))
         assertEquals(Frase("volume", "delta" to 10), f("alza il volume"))
         assertEquals(Frase("volume", "muto" to true), f("muto"))
