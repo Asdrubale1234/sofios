@@ -30,6 +30,8 @@ if codice and vars_src:
     cmd += ["-drive", f"if=pflash,format=raw,readonly=on,file={codice}", "-drive", "if=pflash,format=raw,file=/tmp/OVMF_VARS.fd"]
 elif codice:
     cmd += ["-bios", codice]
+if os.path.exists("patch.iso"):     # prova veloce: le modifiche del ramo arrivano in un secondo disco e si copiano nel sistema acceso
+    cmd += ["-drive", "file=patch.iso,if=none,id=patch,format=raw,readonly=on", "-device", "usb-storage,drive=patch"]
 proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=open(os.path.join(out, "qemu-errori.txt"), "w"))
 for _ in range(30):
     if os.path.exists("/tmp/qmon"): break
@@ -140,6 +142,11 @@ try:
     aspetta(60, "sbloccato", 12)
     L("chiudo il benvenuto e apro l'installer")
     tasti("alt-f4"); time.sleep(4); foto("dopo-benvenuto")
+    if os.path.exists("patch.iso"):
+        L("applico le modifiche del ramo (prova veloce)")
+        for c in ("sudo mount -r /dev/disk/by-label/PATCH /mnt", "sudo sh /mnt/applica-patch.sh", "plasma-apply-desktoptheme sofios-scuro"):
+            tasti("alt-f2"); time.sleep(3); scrivi(c); time.sleep(2); tasti("ret"); time.sleep(8)
+        tasti("alt-f2"); time.sleep(3); scrivi("plasmashell --replace"); time.sleep(2); tasti("ret"); time.sleep(25); foto("dopo-patch")
     for app_nome in ("Mail", "Cassaforte", "Note", "Browser"):     # i programmi nuovi, aperti dal menu veloce
         tasti("alt-f2"); time.sleep(3); scrivi(app_nome); time.sleep(4); tasti("ret")
         aspetta(40 if app_nome in ("Mail", "Browser") else 15, "app-" + app_nome.lower(), 8)
