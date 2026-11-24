@@ -2,7 +2,9 @@
 # Al primo accesso: se Plasma non ha creato la barra in alto e il Dock, li crea con il disegno SofiOS.
 FLAG="$HOME/.config/sofios-pannelli-fatto"
 LOG="$HOME/.cache/sofios-pannelli.log"
-LAYOUT=/usr/share/plasma/look-and-feel/org.sofios.desktop/contents/layouts/org.kde.plasma.desktop-layout.js
+PACCHETTO=$(kreadconfig6 --file kdeglobals --group KDE --key LookAndFeelPackage 2>/dev/null)
+[ "$PACCHETTO" = org.sofios.light ] || PACCHETTO=org.sofios.desktop
+LAYOUT=/usr/share/plasma/look-and-feel/$PACCHETTO/contents/layouts/org.kde.plasma.desktop-layout.js
 mkdir -p "$HOME/.cache" "$HOME/.config"
 [ -e "$FLAG" ] && exit 0
 chiama() { busctl --user call org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell evaluateScript s "$1" 2>&1; }

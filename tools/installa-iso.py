@@ -116,6 +116,7 @@ try:
     for (x, y, t) in ((430, 165, "Prova Uno"), (430, 278, "sofios-prova"), (430, 335, "ProvaSofios1!"), (636, 335, "ProvaSofios1!")):
         clic(x, y); time.sleep(1); scrivi(t); time.sleep(1)
     foto("utente-compilato")
+    clic(1020, 690); time.sleep(8); foto("aspetto")          # nuova pagina: scuro o chiaro
     clic(1020, 690); time.sleep(8); foto("assistenti")      # nuova pagina: assistenti online (facoltativi)
     clic(1020, 690); time.sleep(8); foto("riepilogo")
     clic(1020, 690); time.sleep(4); foto("conferma")

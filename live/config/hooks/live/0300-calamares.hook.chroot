@@ -18,10 +18,10 @@ for riga in r:
         out.append(riga.replace("- keyboard", "- packagechooser@livelli")); tast = True
     if riga.strip() == "- exec:": exec_ = True
     if riga.strip() == "- users" and not exec_ and not ass_vista:
-        out.append(riga.replace("- users", "- packagechooser@assistenti")); ass_vista = True
+        out.append(riga.replace("- users", "- packagechooser@aspetto")); out.append(riga.replace("- users", "- packagechooser@assistenti")); ass_vista = True
     if exec_ and riga.strip() == "- packages" and not vista:
-        out.append(riga.replace("- packages", "- contextualprocess")); out.append(riga.replace("- packages", "- contextualprocess@assistenti")); vista = True
-t = "\n".join(out).rstrip("\n") + "\ninstances:\n- id: livelli\n  module: packagechooser\n  config: livelli.conf\n- id: assistenti\n  module: packagechooser\n  config: packagechooser_assistenti.conf\n- id: assistenti\n  module: contextualprocess\n  config: contextualprocess_assistenti.conf\n"
+        out.append(riga.replace("- packages", "- contextualprocess")); out.append(riga.replace("- packages", "- contextualprocess@aspetto")); out.append(riga.replace("- packages", "- contextualprocess@assistenti")); vista = True
+t = "\n".join(out).rstrip("\n") + "\ninstances:\n- id: livelli\n  module: packagechooser\n  config: livelli.conf\n- id: aspetto\n  module: packagechooser\n  config: packagechooser_aspetto.conf\n- id: aspetto\n  module: contextualprocess\n  config: contextualprocess_aspetto.conf\n- id: assistenti\n  module: packagechooser\n  config: packagechooser_assistenti.conf\n- id: assistenti\n  module: contextualprocess\n  config: contextualprocess_assistenti.conf\n"
 open(p, "w").write(t)
 PY
   echo "SOFIOS: sequenza installatore:"; sed -n '/^sequence/,$p' "$S" | head -60

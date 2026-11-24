@@ -1,0 +1,15 @@
+#!/bin/sh
+# Imposta l'aspetto scelto durante l'installazione (scuro o chiaro) come predefinito dell'utente. Uso: aspetto scuro|chiaro
+case "$1" in
+  chiaro) pacchetto=org.sofios.light ;;
+  *) pacchetto=org.sofios.desktop ;;
+esac
+kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage "$pacchetto" 2>/dev/null || {
+  if grep -q '^LookAndFeelPackage=' /etc/xdg/kdeglobals 2>/dev/null; then sed -i "s/^LookAndFeelPackage=.*/LookAndFeelPackage=$pacchetto/" /etc/xdg/kdeglobals
+  else printf '[KDE]\nLookAndFeelPackage=%s\n' "$pacchetto" >> /etc/xdg/kdeglobals; fi
+}
+if [ "$1" = chiaro ]; then
+  kwriteconfig6 --file /etc/xdg/kdeglobals --group Icons --key Theme SofiOS-chiaro 2>/dev/null || true
+  [ -f /etc/xdg/kwinrc ] && sed -i 's/__aurorae__svg__SofiOS$/__aurorae__svg__SofiOSChiaro/' /etc/xdg/kwinrc
+fi
+exit 0
