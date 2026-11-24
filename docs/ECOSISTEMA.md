@@ -65,3 +65,8 @@ Da costruire come pezzi comuni (vedi sezione 6): identità del dispositivo, scop
 Incolla questo come primo messaggio nella nuova conversazione:
 
 > Lavoriamo su SofiOS, il progetto di Sofi Labs. Questa conversazione è per il **[tablet / telefono / TV]**. Prima di tutto leggi `docs/ECOSISTEMA.md` nel repository `asdrubale1234/sofios` (ramo `main`) e segui le regole che trovi. Poi dimmi in italiano cosa hai capito e da dove proponi di partire.
+
+
+## 8. Cartella SofiOS e collegamento dei dispositivi (decisione di Luca, 24 novembre)
+Luca vuole un ecosistema «come iCloud, senza server»: scrivo una nota o una password su un dispositivo e la ritrovo sugli altri; lo stesso per le foto. Si collega **una volta sola con un QR** e poi è automatico; sincronizzazione **solo sulla rete di casa** (Syncthing, nessun relay, nessun nostro server). Più avanti, se Sofi Labs vorrà, un account cloud (Sofi ID) con cifratura da un capo all'altro sopra gli stessi file.
+Il progetto completo (cartelle, migrazione, regola di unione della cassaforte, pagina «Dispositivi», conflitti) è in `docs/DISPOSITIVI.md`.

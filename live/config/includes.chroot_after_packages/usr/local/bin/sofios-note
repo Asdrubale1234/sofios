@@ -9,7 +9,8 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QListWidget, QListWidgetItem, QPlainTextEdit,
                              QPushButton, QHBoxLayout, QVBoxLayout, QLabel, QMessageBox)
 
-CARTELLA = os.environ.get("SOFIOS_NOTE", os.path.expanduser("~/Note"))
+import cartella_sofios as CS
+CARTELLA = CS.NOTE
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 STILE = """
 QWidget#finestra { background: #0b2740; }
@@ -123,8 +124,11 @@ class Note(QWidget):
 
 def main():
     app = QApplication(sys.argv); app.setApplicationName("Note"); app.setDesktopFileName("sofios-note")
+    messaggio = CS.migra()      # copia le note di prima nella cartella SofiOS (mai sposta, mai cancella)
     w = Note()
     if os.environ.get("SOFIOS_FOTO"):
         w.show(); app.processEvents(); w.grab().save(os.environ["SOFIOS_FOTO"]); return 0
-    w.show(); return app.exec()
+    w.show()
+    if messaggio: QTimer.singleShot(500, lambda: QMessageBox.information(w, "Note", messaggio))
+    return app.exec()
 if __name__ == "__main__": sys.exit(main())
