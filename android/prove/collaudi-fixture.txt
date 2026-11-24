@@ -1,9 +1,0 @@
-creato pc-predefinita.kdbx formato (4, 0) kdf argon2 cifratura aes256
-variante non disponibile: pc-chacha20.kdbx property 'encryption_algorithm' of 'PyKeePass' object has no setter
-variante non disponibile: pc-argon2id.kdbx property 'kdf_algorithm' of 'PyKeePass' object has no setter
-variante non disponibile: pc-aeskdf.kdbx property 'kdf_algorithm' of 'PyKeePass' object has no setter
-10 righe di confronto in android/app/build/fixture
-72 frasi
-AB {'aggiunte': 2, 'rimosse': 0, 'vinte_dal_remoto': 2, 'tenute_locali': 1}
-BA {'aggiunte': 1, 'rimosse': 1, 'vinte_dal_remoto': 0, 'tenute_locali': 3}
-CD {'aggiunte': 1, 'rimosse': 0, 'vinte_dal_remoto': 0, 'tenute_locali': 3}
