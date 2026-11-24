@@ -338,6 +338,9 @@ scrivi "Luma dice: $(risposta_sofi)"
 foto_subito S3-tema
 # giro in tema chiaro: schermata iniziale, Note, Impostazioni (la casella si chiude da sola quando il tema cambia)
 sleep 3; foto T1-casa-tema-chiaro
+# diagnosi del riquadro chiaro dietro Luma: senza Luma lo sfondo è uniforme?
+tocca_testo "Mostra o nascondi Luma"; sleep 2; foto_subito T1c-tema-chiaro-senza-luma
+tocca_testo "Mostra o nascondi Luma"; sleep 2
 tocca_testo "Barra SofiOS"; sleep 2; foto_subito T1b-pannello-tema-chiaro
 tocca_testo "Barra SofiOS"; sleep 1
 tocca_testo "Note"; sleep 3; foto T2-note-tema-chiaro
