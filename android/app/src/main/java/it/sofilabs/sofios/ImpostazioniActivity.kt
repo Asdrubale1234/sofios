@@ -52,7 +52,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             setPadding(dp(20), dp(18), dp(20), dp(18))
         }
         colonnaElenco = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        colonnaElenco.addView(Stile.testo(this, "Impostazioni", 22f, Stile.BIANCO, true).apply {
+        colonnaElenco.addView(Stile.testo(this, "Impostazioni", 22f, Stile.TESTO, true).apply {
             setPadding(0, 0, 0, dp(10))
         })
         adattatore = object : BaseAdapter() {
@@ -64,7 +64,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
                     textSize = 17f; setTextColor(Stile.TESTO); setPadding(dp(14), dp(16), dp(14), dp(16))
                 }
                 t.text = voci[i]
-                t.background = if (i == scelta && !stretto) Stile.riquadro(this@ImpostazioniActivity, Stile.SELEZ, 8) else null
+                t.background = if (i == scelta && !stretto) Stile.riquadro(this@ImpostazioniActivity, Stile.SCELTA, 8) else null
                 return t
             }
         }
@@ -101,7 +101,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
         adattatore.notifyDataSetChanged()
         colonnaContenuto.removeAllViews()
         val corpo = when (voci[i]) {
-            "Schermo" -> pagina("Schermo", Controlli.luminosita(this), Controlli.rotazione(this))
+            "Schermo" -> pagina("Schermo", temaScelta(), Controlli.luminosita(this), Controlli.rotazione(this))
             "Suono" -> pagina("Suono",
                 Controlli.volume(this, AudioManager.STREAM_MUSIC, "Volume multimediale"),
                 Controlli.volume(this, AudioManager.STREAM_ALARM, "Volume della sveglia"))
@@ -131,12 +131,26 @@ class ImpostazioniActivity : SchermataSofiOS() {
 
     // ---- pagine ----
 
+    /** Tema scuro o chiaro (come sul computer). */
+    private fun temaScelta(): View {
+        val riga = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; contentDescription = "Tema" }
+        fun tasto(nome: String, chiaro: Boolean, ultimo: Boolean): View {
+            val attivo = Stile.chiaro == chiaro
+            return Stile.bottone(this, nome, if (attivo) Stile.SELEZ else Stile.SECONDARIO, if (attivo) Stile.BIANCO else Stile.TESTO) {
+                if (Stile.chiaro != chiaro) { Stile.imposta(this, chiaro); recreate() }
+            }.apply { contentDescription = nome + if (attivo) " (attivo)" else "" }
+        }
+        riga.addView(tasto("Tema scuro", false, false), LinearLayout.LayoutParams(0, -2, 1f).apply { rightMargin = dp(6) })
+        riga.addView(tasto("Tema chiaro", true, true), LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(6) })
+        return riga
+    }
+
     private fun pagina(titolo: String, vararg corpo: View): View {
         val colonna = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(24), dp(20), dp(24), dp(20))
         }
-        colonna.addView(Stile.testo(this, titolo, 22f, Stile.BIANCO, true).apply { setPadding(0, 0, 0, dp(12)) })
+        colonna.addView(Stile.testo(this, titolo, 22f, Stile.TESTO, true).apply { setPadding(0, 0, 0, dp(12)) })
         for (v in corpo) colonna.addView(v, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         return ScrollView(this).apply { addView(colonna) }
     }
@@ -172,7 +186,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
         l.add(riga("Accesso ai file", if (ok) "Concesso" else "Non concesso"))
         if (!ok) {
             l.add(Stile.testo(this, "Senza l'accesso ai file la cartella resta privata e gli altri dispositivi non possono sincronizzarla.", 13f, Stile.PICCOLO))
-            l.add(Stile.bottone(this, "Consenti accesso ai file", Stile.ORO, Stile.FONDO) { Controlli.apri(this, Cartella.richiestaPermesso(this)) })
+            l.add(Stile.bottone(this, "Consenti accesso ai file", Stile.ORO, Stile.SU_ORO) { Controlli.apri(this, Cartella.richiestaPermesso(this)) })
         }
         l.add(Stile.testo(this, "La sincronizzazione con gli altri dispositivi non è ancora attiva.", 13f, Stile.PICCOLO))
         return l.toTypedArray()
@@ -192,7 +206,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             riga("SofiOS", "versione $versione"),
             riga("Android", Build.VERSION.RELEASE),
             riga("Sviluppato da", "Sofi Labs · © 2026 · Tutti i diritti riservati"),
-            Stile.bottone(this, "Componenti e licenze", Stile.SECONDARIO, Stile.BIANCO) { licenze() },
+            Stile.bottone(this, "Componenti e licenze", Stile.SECONDARIO, Stile.TESTO) { licenze() },
         )
     }
 
@@ -218,7 +232,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
                 orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
                 setPadding(dp(12), dp(10), dp(12), dp(10)); isClickable = true
                 contentDescription = a.nome
-                background = Stile.riquadro(this@ImpostazioniActivity, if (acceso) Stile.SELEZ else Stile.SECONDARIO, 12)
+                background = Stile.riquadro(this@ImpostazioniActivity, if (acceso) Stile.SCELTA else Stile.SECONDARIO, 12)
                 setOnClickListener { Assistenti.imposta(this@ImpostazioniActivity, a.id, !acceso); apri(scelta) }
             }
             val originale = Assistenti.iconaOriginale(this, a)
@@ -236,7 +250,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
                         android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(a.chiaro, a.scuro)).apply { cornerRadius = dp(12).toFloat() }
                 }
             }, LinearLayout.LayoutParams(dp(48), dp(48)))
-            riga.addView(Stile.testo(this, a.nome, 18f, Stile.BIANCO, true).apply { setPadding(dp(14), 0, 0, 0) },
+            riga.addView(Stile.testo(this, a.nome, 18f, Stile.TESTO, true).apply { setPadding(dp(14), 0, 0, 0) },
                 LinearLayout.LayoutParams(0, -2, 1f))
             riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.ORO else Stile.PICCOLO))
             l.add(riga)
@@ -245,7 +259,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     }
 
     private fun altre(): Array<View> {
-        fun voce(nome: String, i: Intent) = Stile.bottone(this, nome, Stile.SECONDARIO, Stile.BIANCO) { Controlli.apri(this, i) }
+        fun voce(nome: String, i: Intent) = Stile.bottone(this, nome, Stile.SECONDARIO, Stile.TESTO) { Controlli.apri(this, i) }
         return arrayOf(
             Stile.testo(this, "Queste pagine sono di Android: qui sono solo le scorciatoie.", 13f, Stile.PICCOLO),
             voce("Wi-Fi", Intent(Settings.ACTION_WIFI_SETTINGS)),
@@ -269,7 +283,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(24), dp(20), dp(24), dp(12))
         }
-        colonna.addView(Stile.testo(this, "App", 22f, Stile.BIANCO, true).apply { setPadding(0, 0, 0, dp(6)) })
+        colonna.addView(Stile.testo(this, "App", 22f, Stile.TESTO, true).apply { setPadding(0, 0, 0, dp(6)) })
         colonna.addView(Stile.testo(this, "${app.size} app. Tocca un'app per aprirla o disinstallarla.", 13f, Stile.PICCOLO))
         colonna.addView(ListView(this).apply {
             divider = null; dividerHeight = 0

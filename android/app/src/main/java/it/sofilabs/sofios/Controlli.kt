@@ -55,7 +55,7 @@ object Controlli {
                 } catch (e: SecurityException) { }
             }
         } else {
-            Stile.bottone(a, "Consenti di cambiare la luminosità", Stile.ORO, Stile.FONDO) {
+            Stile.bottone(a, "Consenti di cambiare la luminosità", Stile.ORO, Stile.SU_ORO) {
                 apri(a, permessoScrittura(a))
             }.apply { contentDescription = "Consenti luminosità" }
         }
@@ -77,7 +77,7 @@ object Controlli {
             val v = Settings.System.getInt(a.contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1)
             return "Rotazione automatica: " + if (v == 1) "sì" else "no"
         }
-        val b = Stile.bottone(a, if (ok) testo() else "Consenti la rotazione", Stile.SECONDARIO, Stile.BIANCO) {}
+        val b = Stile.bottone(a, if (ok) testo() else "Consenti la rotazione", Stile.SECONDARIO, Stile.TESTO) {}
         b.setOnClickListener {
             if (!Settings.System.canWrite(a)) { apri(a, permessoScrittura(a)); return@setOnClickListener }
             val v = Settings.System.getInt(a.contentResolver, Settings.System.ACCELEROMETER_ROTATION, 1)

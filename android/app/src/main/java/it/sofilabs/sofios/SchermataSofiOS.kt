@@ -44,6 +44,13 @@ open class SchermataSofiOS : Activity() {
         override fun onReceive(c: Context, i: Intent) { leggiBatteria(i); aggiornaBarra() }
     }
 
+    private var temaMostrato = false
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        Stile.carica(this); temaMostrato = Stile.chiaro
+        super.onCreate(savedInstanceState)
+    }
+
     protected fun mostra(contenuto: View, sovrapposta: Boolean = false) {
         window.statusBarColor = Stile.FONDO
         window.navigationBarColor = Stile.FONDO
@@ -109,11 +116,12 @@ open class SchermataSofiOS : Activity() {
         b.addView(TextView(this).apply {
             text = "SofiOS ▾"; textSize = 14f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
         }, LinearLayout.LayoutParams(0, -2, 1f))
-        barraInfo = TextView(this).apply { textSize = 14f; setTextColor(Stile.TESTO) }
+        val tb = if (sovrapposta) Stile.TESTO_NOTTE else Stile.TESTO
+        barraInfo = TextView(this).apply { textSize = 14f; setTextColor(tb) }
         b.addView(barraInfo)
         b.addView(TextClock(this).apply {
             format24Hour = "HH:mm"; format12Hour = "HH:mm"
-            textSize = 14f; setTextColor(Stile.TESTO)
+            textSize = 14f; setTextColor(tb)
             setPadding(Stile.dp(context, 12), 0, 0, 0)
         })
         // un tocco o uno scorrimento verso il basso aprono il pannello
@@ -151,6 +159,8 @@ open class SchermataSofiOS : Activity() {
 
     override fun onResume() {
         super.onResume()
+        Stile.carica(this)
+        if (Stile.chiaro != temaMostrato) { recreate(); return }
         registerReceiver(ricevitore, IntentFilter(Intent.ACTION_BATTERY_CHANGED))?.let { leggiBatteria(it) }
         aggiornaBarra()
         nascondiBarraAndroid()
@@ -205,7 +215,7 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
             isClickable = true; overScrollMode = View.OVER_SCROLL_NEVER
             val r = Stile.dp(att, 30).toFloat()
             background = GradientDrawable().apply {
-                setColor(0xEE0B2740.toInt()); setStroke(Stile.dp(att, 1), 0x33FFFFFF)
+                setColor(if (Stile.chiaro) 0xEEF2F2F7.toInt() else 0xEE0B2740.toInt()); setStroke(Stile.dp(att, 1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF)
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
         }
@@ -221,7 +231,7 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
     private fun apri() {
         att.alAprirePannello()
         contenuto.removeAllViews()
-        contenuto.addView(Stile.testo(att, "Pannello SofiOS", 18f, Stile.BIANCO, true))
+        contenuto.addView(Stile.testo(att, "Pannello SofiOS", 18f, Stile.TESTO, true))
         contenuto.addView(Controlli.luminosita(att))
         contenuto.addView(Controlli.volume(att, AudioManager.STREAM_MUSIC, "Volume"))
         contenuto.addView(Controlli.rotazione(att), voce())
@@ -254,5 +264,5 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
     }
 
     private fun tessera(nome: String, azione: () -> Unit) =
-        Stile.bottone(att, nome, Stile.SECONDARIO, Stile.BIANCO, azione).apply { textSize = 14f }
+        Stile.bottone(att, nome, Stile.SECONDARIO, Stile.TESTO, azione).apply { textSize = 14f }
 }

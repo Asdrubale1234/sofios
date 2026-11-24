@@ -108,7 +108,7 @@ class CassaforteActivity : SchermataSofiOS() {
 
     private fun campoTesto(descrizione: String, suggerimento: String) = EditText(this).apply {
         hint = suggerimento; contentDescription = descrizione
-        setHintTextColor(0xFF8FB0CC.toInt()); setTextColor(Stile.TESTO); textSize = 17f
+        setHintTextColor(Stile.PICCOLO); setTextColor(Stile.TESTO); textSize = 17f
         inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         background = Stile.riquadro(this@CassaforteActivity, Stile.PANNELLO, 10)
         setPadding(dp(14), dp(12), dp(14), dp(12))
@@ -121,7 +121,7 @@ class CassaforteActivity : SchermataSofiOS() {
             setPadding(dp(24), dp(24), dp(24), dp(24))
         }
         val largo = LinearLayout.LayoutParams(dp(380), -2).apply { topMargin = dp(12) }
-        titoloSblocco = Stile.testo(this, "", 26f, Stile.BIANCO, true).apply { gravity = Gravity.CENTER }
+        titoloSblocco = Stile.testo(this, "", 26f, Stile.TESTO, true).apply { gravity = Gravity.CENTER }
         testoSblocco = Stile.testo(this, "", 14f, Stile.PICCOLO).apply { gravity = Gravity.CENTER }
         campoPw = campoTesto("Password principale", "Password principale")
         campoPw2 = campoTesto("Ripeti la password principale", "Ripeti la password principale")
@@ -138,7 +138,7 @@ class CassaforteActivity : SchermataSofiOS() {
         }
         avvisoSblocco = Stile.testo(this, "Se la dimentichi, nessuno può recuperare le tue password: nemmeno noi.", 13f, Stile.ORO)
         erroreSblocco = Stile.testo(this, "", 14f, Stile.ORO).apply { gravity = Gravity.CENTER; contentDescription = "Errore" }
-        bottoneSblocco = Stile.bottone(this, "", Stile.ORO, Stile.FONDO) { sblocca() }
+        bottoneSblocco = Stile.bottone(this, "", Stile.ORO, Stile.SU_ORO) { sblocca() }
         colonna.addView(titoloSblocco, largo); colonna.addView(testoSblocco, largo)
         colonna.addView(campoPw, largo); colonna.addView(campoPw2, largo)
         colonna.addView(avvisoSblocco, largo); colonna.addView(erroreSblocco, largo)
@@ -291,9 +291,9 @@ class CassaforteActivity : SchermataSofiOS() {
             orientation = LinearLayout.HORIZONTAL; setPadding(dp(20), dp(18), dp(20), dp(18))
         }
         colonnaElenco = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        colonnaElenco.addView(Stile.testo(this, "Cassaforte Password", 20f, Stile.BIANCO, true).apply { setPadding(0, 0, 0, dp(8)) })
+        colonnaElenco.addView(Stile.testo(this, "Cassaforte Password", 20f, Stile.TESTO, true).apply { setPadding(0, 0, 0, dp(8)) })
         cerca = EditText(this).apply {
-            hint = "Cerca…"; contentDescription = "Cerca"; setHintTextColor(0xFF8FB0CC.toInt()); setTextColor(Stile.TESTO)
+            hint = "Cerca…"; contentDescription = "Cerca"; setHintTextColor(Stile.PICCOLO); setTextColor(Stile.TESTO)
             textSize = 16f; setSingleLine(); inputType = InputType.TYPE_CLASS_TEXT
             background = Stile.riquadro(this@CassaforteActivity, Stile.PANNELLO, 10); setPadding(dp(12), dp(10), dp(12), dp(10))
             addTextChangedListener(object : android.text.TextWatcher {
@@ -310,7 +310,7 @@ class CassaforteActivity : SchermataSofiOS() {
             setOnItemClickListener { _, _, i, _ -> scegli(elencoVisibile[i], vaiAlDettaglio = true) }
         }
         colonnaElenco.addView(elenco, LinearLayout.LayoutParams(-1, 0, 1f))
-        colonnaElenco.addView(Stile.bottone(this, "Nuova password", Stile.ORO, Stile.FONDO) { modificaVoce(null) },
+        colonnaElenco.addView(Stile.bottone(this, "Nuova password", Stile.ORO, Stile.SU_ORO) { modificaVoce(null) },
             LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) })
         colonnaElenco.addView(Stile.bottone(this, "Blocca", Stile.SELEZ, Stile.BIANCO) { blocca() },
             LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) })
@@ -343,7 +343,7 @@ class CassaforteActivity : SchermataSofiOS() {
         if (stretto) colonna.addView(Stile.testo(this, "‹ Elenco", 16f, Stile.ORO, true).apply {
             setPadding(0, 0, 0, dp(8)); setOnClickListener { mostraElenco() }
         })
-        dTitolo = Stile.testo(this, "", 24f, Stile.BIANCO, true).apply { contentDescription = "Titolo della voce" }
+        dTitolo = Stile.testo(this, "", 24f, Stile.TESTO, true).apply { contentDescription = "Titolo della voce" }
         colonna.addView(dTitolo)
         fun riga(nome: String, valore: TextView, vararg pulsanti: TextView) {
             colonna.addView(Stile.testo(this, nome, 12f, Stile.PICCOLO).apply { setPadding(0, dp(12), 0, 0) })
@@ -366,7 +366,7 @@ class CassaforteActivity : SchermataSofiOS() {
         colonna.addView(dAvviso)
         colonna.addView(View(this), LinearLayout.LayoutParams(-1, 0, 1f))
         val b = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        b.addView(Stile.bottone(this, "Modifica", Stile.ORO, Stile.FONDO) { modificaVoce(scelta) },
+        b.addView(Stile.bottone(this, "Modifica", Stile.ORO, Stile.SU_ORO) { modificaVoce(scelta) },
             LinearLayout.LayoutParams(0, dp(48), 1f).apply { rightMargin = dp(8) })
         b.addView(Stile.bottone(this, "Elimina", Stile.SELEZ, Stile.BIANCO) { eliminaVoce() },
             LinearLayout.LayoutParams(0, dp(48), 1f).apply { leftMargin = dp(8) })
@@ -427,7 +427,7 @@ class CassaforteActivity : SchermataSofiOS() {
             (r.getChildAt(0) as TextView).text = x.titolo.ifEmpty { "(senza nome)" }
             (r.getChildAt(1) as TextView).text = x.utente
             r.getChildAt(1).visibility = if (x.utente.isEmpty()) View.GONE else View.VISIBLE
-            r.background = if (x.id == scelta?.id && !stretto) Stile.riquadro(this@CassaforteActivity, Stile.SELEZ, 8) else null
+            r.background = if (x.id == scelta?.id && !stretto) Stile.riquadro(this@CassaforteActivity, Stile.SCELTA, 8) else null
             return r
         }
     }
@@ -477,7 +477,7 @@ class CassaforteActivity : SchermataSofiOS() {
     private fun modificaVoce(v: Voce?) {
         val k = kdbx ?: return
         fun campo(nome: String, valore: String, multi: Boolean = false) = EditText(this).apply {
-            contentDescription = nome; hint = nome; setText(valore); setTextColor(Stile.TESTO); setHintTextColor(0xFF8FB0CC.toInt())
+            contentDescription = nome; hint = nome; setText(valore); setTextColor(Stile.TESTO); setHintTextColor(Stile.PICCOLO)
             textSize = 16f
             inputType = if (multi) InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                         else InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS

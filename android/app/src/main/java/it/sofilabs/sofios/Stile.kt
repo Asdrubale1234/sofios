@@ -10,14 +10,33 @@ import android.widget.TextView
 
 /** Colori e piccoli pezzi comuni a tutte le app SofiOS (stessi colori del computer). */
 object Stile {
-    const val FONDO = 0xFF0B2740.toInt()
-    const val PANNELLO = 0xFF12365A.toInt()
-    const val TESTO = 0xFFE6F1FF.toInt()
-    const val PICCOLO = 0xFF8FB3D4.toInt()
-    const val SELEZ = 0xFF1E6FA8.toInt()
-    const val SECONDARIO = 0xFF1E4F7C.toInt()
-    const val ORO = 0xFFFFD479.toInt()
+    /** Tema scelto: false = scuro (blu notte), true = chiaro (come SofiOSChiaro del computer). */
+    var chiaro = false
+
+    val FONDO get() = if (chiaro) 0xFFF2F2F7.toInt() else 0xFF0B2740.toInt()
+    val PANNELLO get() = if (chiaro) 0xFFFFFFFF.toInt() else 0xFF12365A.toInt()
+    val TESTO get() = if (chiaro) 0xFF1C1C1E.toInt() else 0xFFE6F1FF.toInt()
+    val PICCOLO get() = if (chiaro) 0xFF6E6E76.toInt() else 0xFF8FB3D4.toInt()
+    val SELEZ get() = if (chiaro) 0xFF0A6EDC.toInt() else 0xFF1E6FA8.toInt()
+    val SECONDARIO get() = if (chiaro) 0xFFE2E2EA.toInt() else 0xFF1E4F7C.toInt()
+    /** Riga scelta in un elenco (testo normale sopra). */
+    val SCELTA get() = if (chiaro) 0xFFD2E4FA.toInt() else 0xFF1E6FA8.toInt()
+    /** Oro: nel tema chiaro è più scuro, per potersi leggere su sfondo bianco. */
+    val ORO get() = if (chiaro) 0xFFA66A00.toInt() else 0xFFFFD479.toInt()
+    /** Testo sopra l'oro e sopra il blu: sempre leggibile. */
+    val SU_ORO get() = if (chiaro) 0xFFFFFFFF.toInt() else 0xFF0B2740.toInt()
     const val BIANCO = 0xFFFFFFFF.toInt()
+    /** Per le cose che stanno sempre su fondo notte (barra sopra lo sfondo, dock). */
+    const val TESTO_NOTTE = 0xFFE6F1FF.toInt()
+
+    private const val PREF = "sofios"
+    fun carica(c: Context) {
+        chiaro = try { c.getSharedPreferences(PREF, Context.MODE_PRIVATE).getBoolean("tema_chiaro", false) } catch (e: Exception) { false }
+    }
+    fun imposta(c: Context, vuoleChiaro: Boolean) {
+        chiaro = vuoleChiaro
+        try { c.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putBoolean("tema_chiaro", vuoleChiaro).apply() } catch (e: Exception) {}
+    }
 
     fun dp(c: Context, v: Int) = (v * c.resources.displayMetrics.density).toInt()
 

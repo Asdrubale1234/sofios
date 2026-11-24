@@ -58,7 +58,7 @@ class FileActivity : SchermataSofiOS() {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(20), dp(18), dp(20), dp(18))
         }
-        radice.addView(Stile.testo(this, "File", 22f, Stile.BIANCO, true))
+        radice.addView(Stile.testo(this, "File", 22f, Stile.TESTO, true))
         percorso = Stile.testo(this, "", 13f, Stile.PICCOLO).apply { setPadding(0, dp(2), 0, dp(10)) }
         radice.addView(percorso)
 
@@ -76,9 +76,9 @@ class FileActivity : SchermataSofiOS() {
         radice.addView(corpo, LinearLayout.LayoutParams(-1, 0, 1f))
 
         val bottoni = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        su = Stile.bottone(this, "Cartella superiore", Stile.SECONDARIO, Stile.BIANCO) { vaiSu() }
+        su = Stile.bottone(this, "Cartella superiore", Stile.SECONDARIO, Stile.TESTO) { vaiSu() }
         bottoni.addView(su, LinearLayout.LayoutParams(0, dp(48), 1f).apply { rightMargin = dp(8) })
-        bottoni.addView(Stile.bottone(this, "Nuova cartella", Stile.ORO, Stile.FONDO) { nuovaCartella() },
+        bottoni.addView(Stile.bottone(this, "Nuova cartella", Stile.ORO, Stile.SU_ORO) { nuovaCartella() },
             LinearLayout.LayoutParams(0, dp(48), 1f).apply { leftMargin = dp(8) })
         radice.addView(bottoni, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
         mostra(radice)
@@ -222,10 +222,10 @@ class FileActivity : SchermataSofiOS() {
             setPadding(dp(20), dp(18), dp(20), dp(18))
         }
         val testa = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
-        testa.addView(Stile.testo(this, titolo, 18f, Stile.BIANCO, true).apply {
+        testa.addView(Stile.testo(this, titolo, 18f, Stile.TESTO, true).apply {
             maxLines = 1; ellipsize = TextUtils.TruncateAt.END
         }, LinearLayout.LayoutParams(0, -2, 1f))
-        testa.addView(Stile.bottone(this, "Chiudi", Stile.ORO, Stile.FONDO) { d.dismiss() }, LinearLayout.LayoutParams(-2, dp(48)))
+        testa.addView(Stile.bottone(this, "Chiudi", Stile.ORO, Stile.SU_ORO) { d.dismiss() }, LinearLayout.LayoutParams(-2, dp(48)))
         colonna.addView(testa)
         colonna.addView(corpo, LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(12) })
         d.setContentView(colonna)

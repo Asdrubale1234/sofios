@@ -67,16 +67,16 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             setPadding(dp(20), dp(16), dp(20), dp(18)); isClickable = true
             val r = dp(30).toFloat()
             background = GradientDrawable().apply {
-                setColor(0xF00B2740.toInt()); setStroke(dp(1), 0x33FFFFFF)
+                setColor(if (Stile.chiaro) 0xF2F2F2F7.toInt() else 0xF00B2740.toInt()); setStroke(dp(1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF)
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
         }
-        scheda.addView(Stile.testo(att, "Cosa vuoi fare?", 20f, Stile.BIANCO, true))
+        scheda.addView(Stile.testo(att, "Cosa vuoi fare?", 20f, Stile.TESTO, true))
         scheda.addView(Stile.testo(att, "Scrivi, per esempio: «apri note», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco.",
             13f, Stile.PICCOLO).apply { setPadding(0, dp(4), 0, dp(10)) })
         campo.apply {
             hint = "Scrivi qui e premi Invio…"; contentDescription = "Scrivi a Sofi"
-            setHintTextColor(0xFF8FB0CC.toInt()); setTextColor(Stile.TESTO); textSize = 18f
+            setHintTextColor(Stile.PICCOLO); setTextColor(Stile.TESTO); textSize = 18f
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             imeOptions = EditorInfo.IME_ACTION_SEND
             setSingleLine()
@@ -93,7 +93,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         risposta.apply { textSize = 16f; setTextColor(Stile.TESTO); contentDescription = "Risposta di Sofi"; setPadding(0, dp(12), 0, 0) }
         scheda.addView(risposta)
         conferma.visibility = View.GONE
-        conferma.addView(Stile.bottone(att, "Sì", Stile.ORO, Stile.FONDO) { risolvi(true) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { rightMargin = dp(6) })
+        conferma.addView(Stile.bottone(att, "Sì", Stile.ORO, Stile.SU_ORO) { risolvi(true) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { rightMargin = dp(6) })
         conferma.addView(Stile.bottone(att, "No", Stile.SELEZ, Stile.BIANCO) { risolvi(false) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { leftMargin = dp(6) })
         scheda.addView(conferma, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
         scheda.addView(ScrollView(att).apply { addView(elenco) }, LinearLayout.LayoutParams(-1, -2))
@@ -144,7 +144,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         if (si && a != null) a() else di("Va bene, non ho fatto niente.")
     }
 
-    private fun voce(testo: String, azione: () -> Unit) = Stile.bottone(att, testo, Stile.SECONDARIO, Stile.BIANCO) {
+    private fun voce(testo: String, azione: () -> Unit) = Stile.bottone(att, testo, Stile.SECONDARIO, Stile.TESTO) {
         pulisci(); azione()
     }.also { elenco.addView(it, LinearLayout.LayoutParams(-1, dp(52)).apply { topMargin = dp(8) }) }
 
@@ -165,7 +165,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             "cerca-web" -> faCercaWeb(f.arg as String)
             "volume" -> faVolume(f.arg as Pair<*, *>)
             "luminosita" -> faLuminosita(f.arg as Pair<*, *>)
-            "tema" -> di("Per ora SofiOS sul tablet ha solo il tema scuro: il tema chiaro non c'è ancora.", "preoccupata")
+            "tema" -> faTema(f.arg as String)
             "schermata" -> faSchermata()
         }
     }
@@ -346,6 +346,14 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             Settings.System.putInt(att.contentResolver, Settings.System.SCREEN_BRIGHTNESS, nuovo)
             di("Fatto.", "felice")
         } catch (e: SecurityException) { di("Questo schermo non si regola da qui.", "preoccupata") }
+    }
+
+    private fun faTema(quale: String) {
+        val chiaro = quale == "chiaro"
+        if (Stile.chiaro == chiaro) { di("Il tema ${if (chiaro) "chiaro" else "scuro"} è già attivo.", "felice"); return }
+        Stile.imposta(att, chiaro)
+        di("Metto il tema ${if (chiaro) "chiaro" else "scuro"}.", "felice")
+        postDelayed({ att.recreate() }, 500)
     }
 
     private fun faSchermata() {

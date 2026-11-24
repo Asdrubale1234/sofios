@@ -55,52 +55,52 @@ class NoteActivity : SchermataSofiOS() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = FONDO
-        window.navigationBarColor = FONDO
+        window.statusBarColor = Stile.FONDO
+        window.navigationBarColor = Stile.FONDO
         cartella = Cartella.note(this)
         stretto = resources.configuration.screenWidthDp < 600
 
         val radice = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
-            setBackgroundColor(FONDO)
+            setBackgroundColor(Stile.FONDO)
             setPadding(dp(20), dp(18), dp(20), dp(18))
         }
 
         // Colonna dell'elenco
         colonnaElenco = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         colonnaElenco.addView(TextView(this).apply {
-            text = "Note"; textSize = 22f; setTextColor(0xFFFFFFFF.toInt()); typeface = Typeface.DEFAULT_BOLD
+            text = "Note"; textSize = 22f; setTextColor(Stile.TESTO); typeface = Typeface.DEFAULT_BOLD
             setPadding(0, 0, 0, dp(10))
         })
         elenco = ListView(this).apply {
             adapter = adattatore
             divider = null; dividerHeight = 0
-            background = riquadro(PANNELLO, 12)
+            background = riquadro(Stile.PANNELLO, 12)
             setPadding(dp(6), dp(6), dp(6), dp(6)); clipToPadding = false
             setOnItemClickListener { _, _, i, _ -> apri(note[i], vaiAlTesto = true) }
         }
         colonnaElenco.addView(elenco, LinearLayout.LayoutParams(-1, 0, 1f))
-        colonnaElenco.addView(bottone("Nuova nota", ORO, FONDO) { nuova() }, voceBottone())
-        colonnaElenco.addView(bottone("Elimina nota", SELEZ, 0xFFFFFFFF.toInt()) { elimina() }, voceBottone())
+        colonnaElenco.addView(bottone("Nuova nota", Stile.ORO, Stile.SU_ORO) { nuova() }, voceBottone())
+        colonnaElenco.addView(bottone("Elimina nota", Stile.SELEZ, Stile.BIANCO) { elimina() }, voceBottone())
 
         // Colonna del testo
         colonnaTesto = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         if (stretto) {
             colonnaTesto.addView(TextView(this).apply {
-                text = "‹ Note"; textSize = 20f; setTextColor(ORO); typeface = Typeface.DEFAULT_BOLD
+                text = "‹ Note"; textSize = 20f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
                 setPadding(0, 0, 0, dp(10))
                 setOnClickListener { mostraElenco() }
             })
         }
         testo = EditText(this).apply {
             hint = "Scrivi qui la tua nota…"
-            setHintTextColor(0xFF8FB0CC.toInt())
-            setTextColor(TESTO)
+            setHintTextColor(Stile.PICCOLO)
+            setTextColor(Stile.TESTO)
             textSize = 17f
             gravity = Gravity.TOP or Gravity.START
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            background = riquadro(PANNELLO, 12)
+            background = riquadro(Stile.PANNELLO, 12)
             setPadding(dp(14), dp(14), dp(14), dp(14))
             addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
@@ -115,7 +115,7 @@ class NoteActivity : SchermataSofiOS() {
         banner = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; visibility = View.GONE
             setPadding(dp(14), dp(12), dp(14), dp(12))
-            background = riquadro(0xFF1E4F7C.toInt(), 12)
+            background = riquadro(Stile.SECONDARIO, 12)
             contentDescription = "Due versioni"
         }
         colonnaTesto.addView(banner, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(10) })
@@ -181,14 +181,14 @@ class NoteActivity : SchermataSofiOS() {
         banner.visibility = View.VISIBLE
         val altra = leggi(c)
         banner.addView(TextView(this).apply {
-            text = "Ci sono due versioni di questa nota"; textSize = 17f; setTextColor(ORO); typeface = Typeface.DEFAULT_BOLD
+            text = "Ci sono due versioni di questa nota"; textSize = 17f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
         })
         banner.addView(TextView(this).apply {
-            text = "L'altra versione, arrivata da un altro dispositivo, dice:"; textSize = 13f; setTextColor(0xFF8FB3D4.toInt())
+            text = "L'altra versione, arrivata da un altro dispositivo, dice:"; textSize = 13f; setTextColor(Stile.PICCOLO)
             setPadding(0, dp(4), 0, 0)
         })
         banner.addView(TextView(this).apply {
-            text = altra.take(300) + if (altra.length > 300) "…" else ""; textSize = 15f; setTextColor(TESTO)
+            text = altra.take(300) + if (altra.length > 300) "…" else ""; textSize = 15f; setTextColor(Stile.TESTO)
             contentDescription = "Altra versione"; setPadding(0, dp(4), 0, dp(10))
         })
         val riga = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -196,11 +196,11 @@ class NoteActivity : SchermataSofiOS() {
             riga.addView(Stile.bottone(this, nome, sfondo, colore, azione).apply { textSize = 14f },
                 LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(dp(3), 0, dp(3), 0) })
         }
-        pulsante("Tieni questa", Stile.SELEZ, 0xFFFFFFFF.toInt()) { mettiDaParte(c); aggiornaBanner() }
-        pulsante("Tieni l'altra", Stile.SELEZ, 0xFFFFFFFF.toInt()) {
+        pulsante("Tieni questa", Stile.SELEZ, Stile.BIANCO) { mettiDaParte(c); aggiornaBanner() }
+        pulsante("Tieni l'altra", Stile.SELEZ, Stile.BIANCO) {
             testo.setText(altra); salva(); mettiDaParte(c); aggiornaBanner()
         }
-        pulsante("Tieni tutte e due", ORO, FONDO) {
+        pulsante("Tieni tutte e due", Stile.ORO, Stile.SU_ORO) {
             // l'altra versione diventa una nota a parte
             var n = 0; var nuova: File
             val base = "nota-" + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(Date())
@@ -310,11 +310,11 @@ class NoteActivity : SchermataSofiOS() {
         override fun getItemId(i: Int) = i.toLong()
         override fun getView(i: Int, v: View?, p: ViewGroup?): View {
             val t = (v as? TextView) ?: TextView(this@NoteActivity).apply {
-                textSize = 16f; setTextColor(TESTO); maxLines = 1; ellipsize = TextUtils.TruncateAt.END
+                textSize = 16f; setTextColor(Stile.TESTO); maxLines = 1; ellipsize = TextUtils.TruncateAt.END
                 setPadding(dp(12), dp(14), dp(12), dp(14))
             }
             t.text = titoli.getOrElse(i) { "" }
-            t.background = if (note[i] == corrente) riquadro(SELEZ, 8) else null
+            t.background = if (note[i] == corrente) riquadro(Stile.SCELTA, 8) else null
             return t
         }
     }
@@ -337,10 +337,5 @@ class NoteActivity : SchermataSofiOS() {
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
 
     companion object {
-        private const val FONDO = 0xFF0B2740.toInt()
-        private const val PANNELLO = 0xFF12365A.toInt()
-        private const val TESTO = 0xFFE6F1FF.toInt()
-        private const val SELEZ = 0xFF1E6FA8.toInt()
-        private const val ORO = 0xFFFFD479.toInt()
     }
 }

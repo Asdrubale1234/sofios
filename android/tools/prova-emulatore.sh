@@ -304,6 +304,19 @@ scrivi "luminosità dopo «luminosità 70»: $LUM (attesa 178)"
 comando "metti%sil%stema%schiaro"
 scrivi "Sofi dice: $(risposta_sofi)"
 foto_subito S3-tema
+# giro in tema chiaro: schermata iniziale, Note, Impostazioni (la casella si chiude da sola quando il tema cambia)
+sleep 3; foto T1-casa-tema-chiaro
+tocca_testo "Note"; sleep 3; foto T2-note-tema-chiaro
+adb shell input keyevent 3; sleep 2
+tocca_testo "Impostazioni"; sleep 3; foto T3-impostazioni-tema-chiaro
+adb shell input keyevent 3; sleep 2
+tocca_testo "Cassaforte"; sleep 3; foto T4-cassaforte-tema-chiaro
+adb shell input keyevent 3; sleep 2
+apri_sofi
+comando "metti%sil%stema%sscuro"
+scrivi "Sofi dice: $(risposta_sofi)"
+sleep 3; foto T5-casa-tornata-scura
+apri_sofi
 comando "cosa%sfa%squesto"
 scrivi "Sofi dice: $(risposta_sofi)"
 adb shell "echo 'Ciao, questa e una fattura di prova' > $CART/fattura-prova.txt"
