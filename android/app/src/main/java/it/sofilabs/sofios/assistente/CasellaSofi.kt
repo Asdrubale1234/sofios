@@ -122,6 +122,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         visibility = View.GONE
         pulisci()
         sofi.posa("neutra")
+        sofi.mostraX(2500)
     }
 
     // ---------- risposte e conferme ----------
@@ -285,7 +286,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         Thread {
             val trovati = ArrayList<File>()
             val fine = System.currentTimeMillis() + 8000
-            radice.walkTopDown().onEnter { System.currentTimeMillis() < fine && !it.name.startsWith(".") }.forEach { f ->
+            radice.walkTopDown().onEnter { System.currentTimeMillis() < fine && !it.name.startsWith(".") && !(it.parentFile == radice && it.name in FileActivity.NASCOSTE) }.forEach { f ->
                 if (f.isFile && !f.name.startsWith(".")) {
                     val n = Comandi.norm(f.name)
                     if (nomi.all { it in n } && (estensioni == null || f.extension.lowercase(Locale.ROOT) in estensioni)) trovati.add(f)

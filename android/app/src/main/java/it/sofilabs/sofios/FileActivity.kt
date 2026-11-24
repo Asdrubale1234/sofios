@@ -91,7 +91,7 @@ class FileActivity : SchermataSofiOS() {
     }
 
     private fun aggiorna() {
-        voci = (corrente.listFiles { f -> !f.name.startsWith(".") && !f.name.endsWith(".tmp") }?.toList() ?: emptyList())
+        voci = (corrente.listFiles { f -> !f.name.startsWith(".") && !f.name.endsWith(".tmp") && !(corrente == radiceCartella && f.name in NASCOSTE) }?.toList() ?: emptyList())
             .sortedWith(compareBy<File>({ !it.isDirectory }, { it.name.lowercase(Locale.ROOT) }))
         val rel = corrente.relativeTo(radiceCartella).path
         percorso.text = "Cartella SofiOS" + if (rel.isEmpty()) "" else " / " + rel.replace("/", " / ")
@@ -256,5 +256,9 @@ class FileActivity : SchermataSofiOS() {
 
     private fun dp(v: Int) = Stile.dp(this, v)
 
-    companion object { const val EXTRA_PERCORSO = "percorso" }
+    companion object {
+        const val EXTRA_PERCORSO = "percorso"
+        /** Gestite dalle loro app (Note, Cassaforte): non si mostrano tra i file. */
+        val NASCOSTE = setOf("Note", "Password")
+    }
 }

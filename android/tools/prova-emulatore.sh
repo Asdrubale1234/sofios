@@ -149,7 +149,11 @@ sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto B-schermata-iniziale
 
-scrivi "== B2. Sofi: la X la toglie, l'icona nella barra la rimette"
+scrivi "== B2. Sofi: un tocco fa comparire la X (e apre la casella); la X la toglie, l'icona nella barra la rimette"
+[ -z "$(limiti_di "Nascondi Sofi")" ] || scrivi "ATTENZIONE: la X di Sofi è visibile senza toccarla"
+tocca_testo "Sofi"; sleep 1
+attendi "Nascondi Sofi" 10 || scrivi "ATTENZIONE: la X non è comparsa dopo il tocco su Sofi"
+foto_subito B2-sofi-con-x
 tocca_testo "Nascondi Sofi"; sleep 1
 foto_subito B3-sofi-tolta
 tocca_testo "Mostra o nascondi Sofi"; sleep 1
@@ -232,6 +236,7 @@ aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a
 
 scrivi "== F. File: la Cartella SofiOS"
 tocca_testo "File"; sleep 3
+scrivi "cartelle viste nell'app File: (Note e Password devono mancare)"
 foto F1-file-vuota
 adb shell input keyevent KEYCODE_HOME; sleep 2
 CART=/sdcard/SofiOS

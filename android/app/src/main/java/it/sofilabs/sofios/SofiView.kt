@@ -24,6 +24,8 @@ class SofiView(context: Context) : FrameLayout(context) {
     var posaCorrente = "neutra"
         private set
     private var ondeggio: ObjectAnimator? = null
+    private lateinit var tastoX: TextView
+    private val nascondiX = Runnable { tastoX.visibility = View.GONE }
     var alToccare: () -> Unit = {}
     var alNascondere: () -> Unit = {}
 
@@ -45,17 +47,30 @@ class SofiView(context: Context) : FrameLayout(context) {
 
         // la piccola X per nasconderla (sempre visibile: sul tablet non c'è il passaggio del mouse)
         val d = Stile.dp(context, 1)
-        val x = TextView(context).apply {
+        tastoX = TextView(context).apply {
             text = "✕"; textSize = 13f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             contentDescription = "Nascondi Sofi"
             background = GradientDrawable().apply { setColor(0xAA0B2740.toInt()); shape = GradientDrawable.OVAL; setStroke(d, 0x66FFFFFF) }
             setOnClickListener { alNascondere() }
+            visibility = View.GONE
         }
-        addView(x, LayoutParams(Stile.dp(context, 32), Stile.dp(context, 32), Gravity.TOP or Gravity.END).apply {
+        addView(tastoX, LayoutParams(Stile.dp(context, 32), Stile.dp(context, 32), Gravity.TOP or Gravity.END).apply {
             topMargin = Stile.dp(context, 4); rightMargin = Stile.dp(context, 4)
         })
     }
+
+    /**
+     * La X compare quando si tocca Sofi (sul computer compare passandoci sopra con il mouse).
+     * `per` = per quanti millisecondi resta; 0 = resta finché non la si nasconde.
+     */
+    fun mostraX(per: Long = 6000) {
+        tastoX.visibility = View.VISIBLE
+        removeCallbacks(nascondiX)
+        if (per > 0) postDelayed(nascondiX, per)
+    }
+
+    fun nascondiX() { removeCallbacks(nascondiX); tastoX.visibility = View.GONE }
 
     /** Cambia posa con una dissolvenza di circa un quarto di secondo. */
     fun posa(nome: String) {

@@ -54,17 +54,18 @@ class MainActivity : SchermataSofiOS() {
         })
         radice.addView(orologio, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START))
 
-        // Sofi, la mascotte: sta sul fondo a destra. Un tocco apre la casella dove si scrive un comando.
+        // Sofi, la mascotte: sta sul fondo a destra. Un tocco fa comparire la X e apre la casella dove si scrive un comando.
         sofi = SofiView(this).apply {
-            alToccare = { chiudiPannelloSeAperto(); casella.apri() }
+            alToccare = { chiudiPannelloSeAperto(); mostraX(0); casella.apri() }
             alNascondere = { impostaMascotte(false) }
         }
-        radice.addView(sofi, FrameLayout.LayoutParams(dp(200), dp(255), Gravity.BOTTOM or Gravity.END).apply {
-            bottomMargin = dp(140); rightMargin = dp(56)
-        })
         sofi.visibility = if (mascotteVisibile()) View.VISIBLE else View.GONE
         casella = CasellaSofi(this, sofi)
         radice.addView(casella, FrameLayout.LayoutParams(-1, -1))
+        // Sofi sta SOPRA la casella: resta luminosa e la sua X si può toccare
+        radice.addView(sofi, FrameLayout.LayoutParams(dp(200), dp(255), Gravity.BOTTOM or Gravity.END).apply {
+            bottomMargin = dp(140); rightMargin = dp(56)
+        })
 
         // Barra in basso, come sul computer: icone tonde colorate.
         val barra = LinearLayout(this).apply {
@@ -172,7 +173,7 @@ class MainActivity : SchermataSofiOS() {
     private fun impostaMascotte(visibile: Boolean) {
         memoria().edit().putBoolean("mascotte", visibile).apply()
         sofi.visibility = if (visibile) View.VISIBLE else View.GONE
-        if (visibile) sofi.ondeggia(true) else { sofi.ondeggia(false); casella.chiudi() }
+        if (visibile) sofi.ondeggia(true) else { sofi.nascondiX(); sofi.ondeggia(false); casella.chiudi() }
     }
 
     /** Vero solo la prima volta dopo ogni accensione del dispositivo. */

@@ -41,3 +41,13 @@ Quando arriva il via: riportare le novità dal PC, identiche nell'aspetto e nei 
 - Nell'app oggi c'è la mascotte attuale (faro con la X e icona nella barra): verrà sostituita da Sofi con le pose.
 - Stato: Sofi, casella dei comandi e assistenti online portati sul tablet (da provare sul T40HD).
 - Icone assistenti: Claude ha l'icona originale; per le altre servono i file (ass_<id>.png in res/drawable-nodpi).
+
+## Cosa vale sul PC e cosa solo sul tablet (deciso da Luca, dalla chat del PC)
+- Solo tablet: orologio grande sullo sfondo (sul PC l'orologio sta nella barra in alto); nomi sotto le icone del dock
+  (sul PC solo il suggerimento col mouse); effetto di pressione del dito al 95%; barra in alto con pannello a scorrimento.
+- La X di Sofi: PC = compare passandoci sopra col mouse; tablet = compare quando si tocca Sofi (non sempre visibile).
+- Icone degli assistenti: le fornisce Luca e stanno nel repository del PC in docs/assets/assistenti/; il tablet le riprende da lì.
+- Regola: se una richiesta di Luca sembra pensata per il PC e non per il tablet (o il contrario), dirglielo e proporre
+  come adattarla, senza prenderla alla lettera.
+- Cartella SofiOS: le note e le password sono nelle loro app; le cartelle Note e Password sono solo il «trasporto»
+  della sincronizzazione e non si mostrano nell'app File.
