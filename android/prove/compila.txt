@@ -33,11 +33,11 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugJniLibFolders
 > Task :app:checkDebugDuplicateClasses
 > Task :app:mergeDebugNativeLibs NO-SOURCE
-> Task :app:mergeLibDexDebug
-> Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:mergeDebugJavaResource
+> Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
+> Task :app:mergeLibDexDebug
 > Task :app:writeDebugSigningConfigVersions
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
@@ -47,8 +47,8 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:generateDebugResValues UP-TO-DATE
 > Task :finto-fully:mapDebugSourceSetPaths UP-TO-DATE
 > Task :finto-fully:generateDebugResources UP-TO-DATE
-> Task :app:mergeProjectDexDebug
 > Task :finto-fully:mergeDebugResources UP-TO-DATE
+> Task :app:mergeProjectDexDebug
 > Task :finto-fully:packageDebugResources UP-TO-DATE
 > Task :finto-fully:parseDebugLocalResources UP-TO-DATE
 > Task :finto-fully:createDebugCompatibleScreenManifests UP-TO-DATE
@@ -73,22 +73,22 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugStartupProfile
 > Task :finto-fully:mergeDebugJavaResource
 > Task :finto-fully:mergeLibDexDebug
-> Task :finto-fully:mergeProjectDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
 > Task :finto-fully:stripDebugDebugSymbols NO-SOURCE
+> Task :finto-fully:mergeProjectDexDebug
 > Task :app:mergeExtDexDebug
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:validateSigningDebug
 > Task :finto-fully:writeDebugAppMetadata
 > Task :finto-fully:writeDebugSigningConfigVersions
+> Task :finto-fully:packageDebug
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
-> Task :finto-fully:packageDebug
 > Task :app:assembleDebug
 > Task :finto-fully:createDebugApkListingFileRedirect
 > Task :finto-fully:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795518756738.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795521155389.json
 
-BUILD SUCCESSFUL in 18s
+BUILD SUCCESSFUL in 25s
 70 actionable tasks: 38 executed, 32 up-to-date
