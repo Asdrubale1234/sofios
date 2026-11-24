@@ -40,3 +40,4 @@ Quando arriva il via: riportare le novità dal PC, identiche nell'aspetto e nei 
   Provare una funzione alla volta e dire a Luca cosa funziona e cosa no.
 - Nell'app oggi c'è la mascotte attuale (faro con la X e icona nella barra): verrà sostituita da Sofi con le pose.
 - Stato: Sofi, casella dei comandi e assistenti online portati sul tablet (da provare sul T40HD).
+- Icone assistenti: Claude ha l'icona originale; per le altre servono i file (ass_<id>.png in res/drawable-nodpi).
