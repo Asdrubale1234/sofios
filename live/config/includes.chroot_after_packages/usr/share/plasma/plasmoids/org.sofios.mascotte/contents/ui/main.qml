@@ -21,6 +21,20 @@ PlasmoidItem {
         onNewData: (sorgente) => disconnectSource(sorgente)
     }
 
+    // lo stato di Sofi: neutra, saluta, parla, ascolta, pensa, felice, concentrata, preoccupata
+    property string stato: "neutra"
+    P5Support.DataSource {
+        id: lettore
+        engine: "executable"
+        interval: 400
+        connectedSources: ["cat $HOME/.cache/sofios/sofi-stato 2>/dev/null"]
+        onNewData: (sorgente, dati) => {
+            var v = (dati["stdout"] || "").trim()
+            if (["neutra", "saluta", "parla", "ascolta", "pensa", "felice", "concentrata", "preoccupata"].indexOf(v) < 0) v = "neutra"
+            if (v !== root.stato) root.stato = v
+        }
+    }
+
     fullRepresentation: Item {
         id: scena
         implicitWidth: 180
@@ -30,12 +44,39 @@ PlasmoidItem {
 
         HoverHandler { id: sopra }
 
-        Image {
+        // Sofi: la posa cambia con lo stato (scritto da sofios-mascotte in ~/.cache/sofios/sofi-stato) e ondeggia piano
+        Item {
+            id: corpo
             anchors.fill: parent
-            source: Qt.resolvedUrl("../images/mascotte.png")
-            fillMode: Image.PreserveAspectFit
-            smooth: true
-            mipmap: true
+            property bool davanti: true
+            property string posa: root.stato
+            onPosaChanged: {
+                var src = Qt.resolvedUrl("../images/sofi-" + posa + ".png")
+                if (davanti) { immB.source = src; immB.opacity = 1; immA.opacity = 0 }
+                else { immA.source = src; immA.opacity = 1; immB.opacity = 0 }
+                davanti = !davanti
+            }
+            SequentialAnimation on y {
+                loops: Animation.Infinite
+                NumberAnimation { to: -5; duration: 1700; easing.type: Easing.InOutSine }
+                NumberAnimation { to: 0; duration: 1700; easing.type: Easing.InOutSine }
+            }
+            Image {
+                id: immA
+                anchors.fill: parent
+                source: Qt.resolvedUrl("../images/sofi-neutra.png")
+                fillMode: Image.PreserveAspectFit
+                smooth: true; mipmap: true
+                Behavior on opacity { NumberAnimation { duration: 240 } }
+            }
+            Image {
+                id: immB
+                anchors.fill: parent
+                opacity: 0
+                fillMode: Image.PreserveAspectFit
+                smooth: true; mipmap: true
+                Behavior on opacity { NumberAnimation { duration: 240 } }
+            }
         }
 
         // un clic sul faro apre la casella dove scrivere cosa fare

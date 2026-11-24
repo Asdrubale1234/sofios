@@ -13,6 +13,16 @@ import tema_app
 CATALOGHI = (os.environ.get("SOFIOS_CATALOGO", ""), os.path.expanduser("~/.local/share/sofios/store/catalogo.json"), "/usr/share/sofios/store/catalogo.json")
 ELENCO_MIEI = os.path.expanduser("~/.local/share/sofios/store/miei.json")
 NOME_SERVER = "sofios-mascotte"
+STATO_SOFI = os.path.expanduser("~/.cache/sofios/sofi-stato")
+
+def scrivi_stato(v):
+    """dice al widget della mascotte che posa fare (neutra, saluta, parla, ascolta, pensa, felice, concentrata, preoccupata)"""
+    try:
+        os.makedirs(os.path.dirname(STATO_SOFI), exist_ok=True)
+        with open(STATO_SOFI + ".tmp", "w") as f: f.write(v)
+        os.replace(STATO_SOFI + ".tmp", STATO_SOFI)
+    except OSError: pass
+
 STILE = """
 QWidget#finestra { background: #0b2740; }
 QLabel { color: #e6f1ff; font-size: 13px; }
@@ -67,10 +77,22 @@ class Finestra(QWidget):
         h.addWidget(self.si); h.addWidget(self.no); h.addStretch(1); self.conferma.hide(); v.addWidget(self.conferma)
         v.addStretch(0)
         self.riga.setFocus()
+        self.t_stato = QTimer(self); self.t_stato.setSingleShot(True); self.t_stato.timeout.connect(lambda: scrivi_stato("ascolta"))
+        scrivi_stato("saluta"); self.t_stato.start(1800)
+
+    def sofi(self, v, poi=2500):
+        scrivi_stato(v); self.t_stato.start(poi)
+
+    def closeEvent(self, e):
+        scrivi_stato("neutra"); super().closeEvent(e)
 
     # -------------------------------------------------- utilita'
     def di(self, testo):
         self.risposta.setText(testo)
+        if testo.startswith(("Non ", "Questo schermo", "Su questo")): self.sofi("preoccupata", 3000)
+        elif testo.startswith(("Apro", "Ho chiuso", "Fatto", "Tema", "Ho aperto")) or "è installato" in testo or "disinstallato" in testo: self.sofi("felice", 2800)
+        elif testo.startswith(("Cerco", "Installo", "Disinstallo")): scrivi_stato("concentrata")
+        else: self.sofi("parla", 3000)
 
     def pulisci(self):
         self.elenco.clear(); self.elenco.hide(); self.conferma.hide(); self.in_attesa = None
@@ -90,7 +112,7 @@ class Finestra(QWidget):
 
     # -------------------------------------------------- comandi
     def invia(self):
-        frase = self.riga.text().strip(); self.riga.clear(); self.pulisci()
+        frase = self.riga.text().strip(); self.riga.clear(); self.pulisci(); scrivi_stato("pensa")
         azione, arg = C.interpreta(frase)
         if azione == "niente": self.di("Non ho capito. Scrivi «aiuto» per vedere cosa so fare."); return
         if azione == "aiuto": self.di(C.AIUTO); return
