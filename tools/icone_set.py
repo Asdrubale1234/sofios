@@ -52,7 +52,6 @@ COLORATE = {
  "preferences-system-vpn network-vpn": ("shield", "azzurro"), "preferences-system-online-accounts preferences-system-network-account": ("at-sign", "blu"),
  "preferences-desktop-remote-desktop krfb krdc": ("monitor-smartphone", "azzurro"), "kdeconnect preferences-system-kdeconnect": ("smartphone", "verde"),
  # assistenti online (un'icona nostra per ciascuno)
- "sofios-assistente-claude": ("sparkles", "arancio"), "sofios-assistente-chatgpt": ("message-circle", "verde"), "sofios-assistente-gemini": ("gem", "viola"),
  "sofios-assistente-copilot": ("bot", "blu"), "sofios-assistente-deepseek": ("telescope", "azzurro"), "sofios-assistente-mistral": ("wind", "rosso"),
  "sofios-assistente-perplexity": ("search", "petrolio"), "sofios-mascotte": ("lightbulb", "arancio"), "sofios-dispositivi": ("monitor-smartphone", "azzurro"),
  # emersi dalla diagnosi sulla ISO

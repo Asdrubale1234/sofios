@@ -779,6 +779,18 @@ class SoStore(QWidget):
         ("perplexity", "Perplexity", "https://www.perplexity.ai", "Cerca sul web e risponde indicando le fonti. Ha una parte gratuita, anche senza account."),
     ]
 
+    def icona_assistente(self, chiave, lato=56):
+        """l'icona originale dell'assistente (in /usr/share/sofios/assistenti), con gli angoli arrotondati"""
+        from PyQt6.QtGui import QPixmap, QPainter, QPainterPath
+        f = os.path.join(os.environ.get("SOFIOS_ASSISTENTI", "/usr/share/sofios/assistenti"), chiave + ".png")
+        src = QPixmap(f)
+        if src.isNull(): return None
+        src = src.scaled(lato * 2, lato * 2, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        out = QPixmap(lato * 2, lato * 2); out.fill(Qt.GlobalColor.transparent)
+        p = QPainter(out); p.setRenderHint(QPainter.RenderHint.Antialiasing); pa = QPainterPath(); pa.addRoundedRect(0, 0, lato * 2, lato * 2, lato * 0.46, lato * 0.46)
+        p.setClipPath(pa); p.drawPixmap(0, 0, src); p.end()
+        return out.scaled(lato, lato, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+
     def voce_assistente(self, chiave):
         dati = os.environ.get("XDG_DATA_HOME") or os.path.expanduser("~/.local/share")
         return os.path.join(dati, "applications", "sofios-web-%s.desktop" % chiave)
@@ -790,7 +802,7 @@ class SoStore(QWidget):
             os.makedirs(os.path.dirname(f), exist_ok=True)
             with open(f, "w", encoding="utf-8") as h:
                 h.write("[Desktop Entry]\nType=Application\nName=%s\nComment=Assistente online nel Browser\nExec=firefox-esr --new-window %s\n"
-                        "Icon=sofios-assistente-%s\nCategories=Network;\nStartupNotify=true\n" % (nome, url, chiave))
+                        "Icon=%s\nCategories=Network;\nStartupNotify=true\n" % (nome, url, os.path.join(os.environ.get("SOFIOS_ASSISTENTI", "/usr/share/sofios/assistenti"), chiave + ".png")))
         except OSError as e:
             self.stato.setText("Non riesco ad aggiungere «%s»: %s" % (nome, e)); return
         self.stato.setText("«%s» è nel menu, nella sezione Internet." % nome); self.vai("assistenti")
@@ -802,6 +814,9 @@ class SoStore(QWidget):
         i.setObjectName("testo"); i.setWordWrap(True); v.addWidget(i)
         for chiave, nome, url, descr in self.ASSISTENTI:
             r = QHBoxLayout(); l = QVBoxLayout()
+            ic = self.icona_assistente(chiave)
+            if ic is not None:
+                li = QLabel(); li.setPixmap(ic); li.setFixedSize(60, 60); r.addWidget(li, alignment=Qt.AlignmentFlag.AlignTop)
             a = QLabel(nome); a.setObjectName("sezione"); l.addWidget(a)
             d = QLabel(descr); d.setObjectName("descr"); d.setWordWrap(True); l.addWidget(d)
             r.addLayout(l, 1)
