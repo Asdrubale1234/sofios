@@ -61,12 +61,12 @@ class Ponte(QObject):
 class Finestra(QWidget):
     def __init__(self):
         super().__init__()
-        self.setObjectName("finestra"); self.setWindowTitle("Assistente SofiOS"); self.setWindowIcon(QIcon.fromTheme("sofios-mascotte"))
+        self.setObjectName("finestra"); self.setWindowTitle("Luma"); self.setWindowIcon(QIcon.fromTheme("sofios-mascotte"))
         self.resize(460, 520)
         self.in_attesa = None          # funzione da eseguire se l'utente conferma
         self.ponte = Ponte(); self.ponte.risultati.connect(self.mostra_file)
         v = QVBoxLayout(self); v.setContentsMargins(18, 16, 18, 16); v.setSpacing(10)
-        t = QLabel("Cosa vuoi fare?"); t.setObjectName("titolo"); v.addWidget(t)
+        t = QLabel("Ciao, sono Luma. Cosa vuoi fare?"); t.setObjectName("titolo"); v.addWidget(t)
         n = QLabel("Scrivi, per esempio: «apri il browser», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco."); n.setObjectName("nota"); n.setWordWrap(True); v.addWidget(n)
         self.riga = QLineEdit(); self.riga.setPlaceholderText("Scrivi qui e premi Invio…"); self.riga.returnPressed.connect(self.invia); self.riga.textEdited.connect(lambda _: scrivi_stato("ascolta")); v.addWidget(self.riga)
         self.risposta = QLabel(""); self.risposta.setWordWrap(True); self.risposta.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); v.addWidget(self.risposta)

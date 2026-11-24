@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sofi, la mascotte di SofiOS: sei proposte strutturalmente diverse della Lanterna-robot. Disegni vettoriali (SVG).
+"""Luma, la mascotte di SofiOS: sei proposte strutturalmente diverse della Lanterna-robot. Disegni vettoriali (SVG).
 Uso: mascotte_sofi.py CARTELLA_USCITA"""
 import os, sys
 import cairosvg
@@ -101,7 +101,7 @@ CONSIGLIATA = 1
 def tavola(out):
     W, H = 2600, 2100
     s = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d" font-family="Inter, Helvetica, Arial, sans-serif">' % (W, H, W, H), "<defs>", DEFS, "</defs>", '<rect width="%d" height="%d" fill="#eef1f5"/>' % (W, H),
-         '<text x="60" y="70" font-size="44" font-weight="700" fill="#1b2330">Sofi · sei proposte</text><text x="60" y="108" font-size="22" fill="#5b6573">Davanti, di profilo, volto con sei espressioni, e la luce che cambia con lo stato (parla · ascolta · pensa)</text>']
+         '<text x="60" y="70" font-size="44" font-weight="700" fill="#1b2330">Luma · sei proposte</text><text x="60" y="108" font-size="22" fill="#5b6573">Davanti, di profilo, volto con sei espressioni, e la luce che cambia con lo stato (parla · ascolta · pensa)</text>']
     for i in range(6):
         n = i + 1; col, riga = i % 3, i // 3
         x0 = 40 + col * 850; y0 = 140 + riga * 960

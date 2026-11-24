@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=Assistente
+Name=Luma
 Comment=Scrivi cosa vuoi: apri, chiudi, installa, cerca file, volume…
 Exec=/usr/local/bin/sofios-mascotte
 Icon=sofios-mascotte

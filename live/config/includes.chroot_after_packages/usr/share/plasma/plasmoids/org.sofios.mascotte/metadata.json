@@ -1,8 +1,8 @@
 {
     "KPlugin": {
         "Id": "org.sofios.mascotte",
-        "Name": "Mascotte SofiOS",
-        "Name[it]": "Mascotte SofiOS",
+        "Name": "Luma, la mascotte di SofiOS",
+        "Name[it]": "Luma, la mascotte di SofiOS",
         "Description": "L'aiutante di SofiOS: un faro simpatico sulla scrivania",
         "Description[it]": "L'aiutante di SofiOS: un faro simpatico sulla scrivania",
         "Icon": "sofios-logo",

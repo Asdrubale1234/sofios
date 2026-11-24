@@ -21,7 +21,7 @@ PlasmoidItem {
         onNewData: (sorgente) => disconnectSource(sorgente)
     }
 
-    // lo stato di Sofi: neutra, saluta, parla, ascolta, pensa, felice, concentrata, preoccupata
+    // lo stato di Luma: neutra, saluta, parla, ascolta, pensa, felice, concentrata, preoccupata
     property string stato: "neutra"
     P5Support.DataSource {
         id: lettore
@@ -44,7 +44,7 @@ PlasmoidItem {
 
         HoverHandler { id: sopra }
 
-        // Sofi: la posa cambia con lo stato (scritto da sofios-mascotte in ~/.cache/sofios/sofi-stato) e ondeggia piano
+        // Luma: la posa cambia con lo stato (scritto da sofios-mascotte in ~/.cache/sofios/sofi-stato) e ondeggia piano
         Item {
             id: corpo
             anchors.fill: parent
