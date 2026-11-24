@@ -438,6 +438,11 @@ aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: SofiOS non è to
 sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto F-dopo-riavvio-schermata-iniziale
+if [ -n "$(limiti_di "Più tardi")" ]; then
+  scrivi "dopo il riavvio il simulatore ha perso il permesso ai file (su un tablet vero resta): l'app lo ha chiesto una volta sola, tocco «Più tardi»"
+  tocca_testo "Più tardi"; sleep 1
+fi
+adb shell appops set $PKG MANAGE_EXTERNAL_STORAGE allow
 
 scrivi "== G. Tengo premuto su Casa: Fully non deve più partire da solo"
 tocca_a_lungo "Casa"; sleep 1
