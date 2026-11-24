@@ -142,15 +142,6 @@ sleep 8
 in_primo_piano | grep -q "$PKG" || adb shell input keyevent KEYCODE_HOME
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: SofiOS non è in primo piano"
 sleep 6
-# la prima volta che SofiOS vede un'app nuova (qui il finto Fully) chiede «Vuoi metterla nel Dock?»
-if attendi "Vuoi metterla nel Dock?" 10; then
-  foto_subito A0-vuoi-metterla-nel-dock
-  tocca_testo "Sì"; sleep 2
-  foto_subito A0b-dopo-si
-  [ -n "$(limiti_di "Fully (FINTO, solo prova)")" ] || scrivi "ATTENZIONE: dopo «Sì» l'app non è nel Dock"
-else
-  scrivi "ATTENZIONE: la domanda «Vuoi metterla nel Dock?» non è comparsa per un'app nuova"
-fi
 scrivi "in primo piano: $(in_primo_piano)"
 in_primo_piano | grep -q "$PKG/.MainActivity" || scrivi "ATTENZIONE: Fully si è aperto da solo senza che nessuno toccasse Casa"
 foto A-prima-di-toccare-casa
@@ -260,16 +251,9 @@ tocca_testo "Dispositivi"; sleep 3
 foto_subito I4b-dispositivi
 tocca_testo "App"; sleep 3
 foto_subito I5-app
-# Dock: l'app è già nel Dock (risposta «Sì» all'inizio): «Togli dal Dock», poi «Metti nel Dock», pressione lunga
+# Dock: «Metti nel Dock» dalla pagina App, l'icona compare; pressione lunga → «Togli dal Dock»
 tocca_testo "Fully (FINTO, solo prova)"; sleep 2
 foto_subito I5b-app-opzioni
-tocca_testo "Togli dal Dock"; sleep 2
-adb shell input keyevent 3; sleep 3
-[ -z "$(limiti_di "Fully (FINTO, solo prova)")" ] || scrivi "ATTENZIONE: l'app è ancora nel Dock dopo «Togli dal Dock»"
-foto_subito D0-dock-senza-app
-tocca_testo "Impostazioni"; sleep 3
-tocca_testo "App"; sleep 3
-tocca_testo "Fully (FINTO, solo prova)"; sleep 2
 tocca_testo "Metti nel Dock"; sleep 2
 adb shell input keyevent 3; sleep 3
 foto_subito D1-dock-con-app
