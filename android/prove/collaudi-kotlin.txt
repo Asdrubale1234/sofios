@@ -15,24 +15,24 @@ Daemon will be stopped at the end of the build
 > Task :app:checkKotlinGradlePluginConfigurationErrors
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
-> Task :app:checkDebugAarMetadata
 > Task :app:generateDebugResValues
+> Task :app:checkDebugAarMetadata
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
-> Task :app:mergeDebugResources
 > Task :app:packageDebugResources
+> Task :app:mergeDebugResources
 > Task :app:createDebugCompatibleScreenManifests
 > Task :app:extractDeepLinksDebug
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
-> Task :app:javaPreCompileDebug
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest
+> Task :app:javaPreCompileDebug
+> Task :app:processDebugManifestForPackage
 > Task :finto-fully:checkDebugAarMetadata
 > Task :finto-fully:generateDebugResValues
 > Task :finto-fully:mapDebugSourceSetPaths
@@ -40,22 +40,44 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:extractDeepLinksDebug
+> Task :finto-fully:parseDebugLocalResources
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebug
 > Task :finto-fully:javaPreCompileDebugUnitTest
+> Task :finto-fully:processDebugManifestForPackage
 > Task :app:processDebugResources
 > Task :finto-fully:processDebugResources
 > Task :finto-fully:compileDebugKotlin
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
-> Task :finto-fully:bundleDebugClassesToCompileJar
 > Task :finto-fully:bundleDebugClassesToRuntimeJar
+> Task :finto-fully:bundleDebugClassesToCompileJar
 > Task :finto-fully:processDebugJavaRes
 > Task :finto-fully:compileDebugUnitTestKotlin NO-SOURCE
 > Task :finto-fully:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :finto-fully:processDebugUnitTestJavaRes NO-SOURCE
 > Task :finto-fully:testDebugUnitTest NO-SOURCE
+
+> Task :app:compileDebugKotlin
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:413:80 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/CassaforteActivity.kt:519:63 'SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/FileActivity.kt:110:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:140:22 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/ImpostazioniActivity.kt:148:50 Parameter 'ultimo' is never used
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/NoteActivity.kt:297:60 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/SchermataSofiOS.kt:102:46 'onBackPressed(): Unit' is deprecated. Deprecated in Java
+
+> Task :app:compileDebugJavaWithJavac NO-SOURCE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:processDebugJavaRes
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes
+> Task :app:testDebugUnitTest
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795556486165.json
+
+BUILD SUCCESSFUL in 1m 54s
+43 actionable tasks: 43 executed

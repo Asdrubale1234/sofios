@@ -1,0 +1,70 @@
+[start] 2026/11/24 21:41:17 INFO: syncthing v1.29.5 "Gold Grasshopper" (go1.25.0 linux-amd64) debian@debian 2025-11-29 20:48:58 UTC
+[6ZSKE] 2026/11/24 21:41:17 INFO: My ID: 6ZSKERZ-N3Q2OZE-S6J3J47-EQHEFJT-NTEPXM6-C454IQG-BJRT2CU-AV3RPQY
+[6ZSKE] 2026/11/24 21:41:17 INFO: Hashing performance is 168.88 MB/s
+[6ZSKE] 2026/11/24 21:41:17 INFO: Running database migration 14...
+[6ZSKE] 2026/11/24 21:41:17 INFO: Running database migration 16...
+[6ZSKE] 2026/11/24 21:41:17 INFO: Running database migration 17...
+[6ZSKE] 2026/11/24 21:41:17 INFO: Running database migration 19...
+[6ZSKE] 2026/11/24 21:41:17 INFO: Running database migration 20...
+[6ZSKE] 2026/11/24 21:41:17 INFO: Compacting database after migration...
+[6ZSKE] 2026/11/24 21:41:17 INFO: Overall send rate is unlimited, receive rate is unlimited
+[6ZSKE] 2026/11/24 21:41:17 INFO: Using discovery mechanism: global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
+[6ZSKE] 2026/11/24 21:41:17 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
+[6ZSKE] 2026/11/24 21:41:17 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
+[6ZSKE] 2026/11/24 21:41:17 INFO: Using discovery mechanism: IPv4 local broadcast discovery on port 21027
+[6ZSKE] 2026/11/24 21:41:17 INFO: Using discovery mechanism: IPv6 local multicast discovery on address [ff12::8384]:21027
+[6ZSKE] 2026/11/24 21:41:17 INFO: Loading HTTPS certificate: open /tmp/st/https-cert.pem: no such file or directory
+[6ZSKE] 2026/11/24 21:41:17 INFO: Creating new HTTPS certificate
+[6ZSKE] 2026/11/24 21:41:17 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) starting
+[6ZSKE] 2026/11/24 21:41:17 INFO: TCP listener ([::]:22000) starting
+[6ZSKE] 2026/11/24 21:41:17 INFO: QUIC listener ([::]:22000) starting
+2026/11/24 21:41:17 failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+[6ZSKE] 2026/11/24 21:41:17 INFO: GUI and API listening on 127.0.0.1:8384
+[6ZSKE] 2026/11/24 21:41:17 INFO: Access the GUI via the following URL: http://127.0.0.1:8384/
+[6ZSKE] 2026/11/24 21:41:17 INFO: My name is "runnervm0hi8g"
+[6ZSKE] 2026/11/24 21:41:30 INFO: Joined relay relay://184.171.211.6:22067
+[6ZSKE] 2026/11/24 21:41:37 INFO: Detected 0 NAT services
+[6ZSKE] 2026/11/24 21:43:11 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) shutting down
+[6ZSKE] 2026/11/24 21:43:11 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
+[6ZSKE] 2026/11/24 21:43:11 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
+[6ZSKE] 2026/11/24 21:43:11 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
+[6ZSKE] 2026/11/24 21:43:11 INFO: Adding folder "Note" (sofios-note)
+[6ZSKE] 2026/11/24 21:43:11 INFO: No stored folder metadata for "sofios-note"; recalculating
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Adding folder "Password" (sofios-password)
+[6ZSKE] 2026/11/24 21:43:11 INFO: No stored folder metadata for "sofios-password"; recalculating
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Adding folder "Foto" (sofios-foto)
+[6ZSKE] 2026/11/24 21:43:11 INFO: No stored folder metadata for "sofios-foto"; recalculating
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Adding folder "File" (sofios-file)
+[6ZSKE] 2026/11/24 21:43:11 INFO: No stored folder metadata for "sofios-file"; recalculating
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Restarted folder "File" (sofios-file) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:11 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Restarted folder "File" (sofios-file) (sendreceive)
+[6ZSKE] 2026/11/24 21:43:12 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
