@@ -15,8 +15,8 @@ Daemon will be stopped at the end of the build
 > Task :app:checkKotlinGradlePluginConfigurationErrors
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
-> Task :app:generateDebugResValues
 > Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
@@ -26,13 +26,13 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:javaPreCompileDebug
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
-> Task :app:javaPreCompileDebugUnitTest
-> Task :app:javaPreCompileDebug
-> Task :app:processDebugManifestForPackage
 > Task :finto-fully:checkDebugAarMetadata
 > Task :finto-fully:generateDebugResValues
 > Task :finto-fully:mapDebugSourceSetPaths
@@ -40,14 +40,14 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:parseDebugLocalResources
+> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebug
-> Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :finto-fully:processDebugManifestForPackage
+> Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
+> Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :app:processDebugResources
 > Task :finto-fully:processDebugResources
 > Task :finto-fully:compileDebugKotlin
@@ -70,14 +70,14 @@ w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/
 w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/sofios/SchermataSofiOS.kt:102:46 'onBackPressed(): Unit' is deprecated. Deprecated in Java
 
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
-> Task :app:bundleDebugClassesToRuntimeJar
-> Task :app:bundleDebugClassesToCompileJar
 > Task :app:processDebugJavaRes
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795556486165.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795560097018.json
 
-BUILD SUCCESSFUL in 1m 54s
+BUILD SUCCESSFUL in 2m
 43 actionable tasks: 43 executed
