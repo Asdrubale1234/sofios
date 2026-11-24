@@ -221,7 +221,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         sofi.posa("concentrata")
         try {
             (att.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).killBackgroundProcesses(v.id)
-            di("Ho chiesto ad Android di chiudere «${v.nome}». Funziona se il programma è in secondo piano.", "felice")
+            di("Ho chiesto ad Android di chiudere «${v.nome}». Non posso controllare se l'ha fatto: lo decide Android, di solito solo per i programmi in secondo piano.", "parla")
         } catch (e: SecurityException) { di("Android non mi lascia chiudere «${v.nome}».", "preoccupata") }
     }
 

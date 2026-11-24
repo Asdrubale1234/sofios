@@ -306,7 +306,13 @@ comando "chiudi%sfully"
 sleep 3
 scrivi "Sofi dice: $(risposta_sofi)"
 PID=$(adb shell pidof de.ozerov.fully | tr -d '\r')
-[ -z "$PID" ] && scrivi "«chiudi fully»: il programma è stato chiuso" || scrivi "ATTENZIONE: «chiudi fully» non ha chiuso il programma (processo $PID)"
+if [ -z "$PID" ]; then scrivi "«chiudi fully»: il programma è stato chiuso"
+else
+  scrivi "NOTA: Android non ha chiuso il programma (processo $PID). Controllo cosa dice il sistema:"
+  adb shell dumpsys activity processes | grep -B1 -A4 "ProcessRecord.*de.ozerov.fully" | head -14 | tee -a "$LOG"
+  adb shell am kill de.ozerov.fully; sleep 2
+  scrivi "dopo il comando «am kill» del sistema il processo è: '$(adb shell pidof de.ozerov.fully | tr -d '\r')' (vuoto = chiuso)"
+fi
 foto_subito S7-chiudi
 
 # disinstallare e installare chiedono sempre conferma

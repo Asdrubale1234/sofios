@@ -146,7 +146,7 @@ object Comandi {
 
     const val AIUTO = "Posso fare queste cose:\n" +
         "• aprire un programma: «apri il browser», «apri note», «apri la cassaforte»\n" +
-        "• chiudere un programma che è in secondo piano: «chiudi il browser»\n" +
+        "• chiedere ad Android di chiudere un programma in secondo piano: «chiudi il browser» (lo decide Android)\n" +
         "• disinstallare (ti chiedo sempre conferma): «disinstalla Gmail»\n" +
         "• installare: «installa GIMP» ti porta allo store, dove Android chiede l'ultima conferma\n" +
         "• cercare i file della Cartella SofiOS: «cerca fattura», «cerca foto mare»\n" +
