@@ -37,6 +37,9 @@ object Cartella {
         r.mkdirs()
         migra(c, r)
         for (n in listOf("Note", "Password", "Foto", "File")) File(r, n).mkdirs()
+        // i file temporanei e le copie dei conflitti messe da parte non si sincronizzano
+        val ignora = File(r, ".stignore")
+        if (!ignora.exists()) try { ignora.writeText("*.tmp\n.conflitti\n") } catch (e: java.io.IOException) { }
         return r
     }
 

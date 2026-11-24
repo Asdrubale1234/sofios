@@ -198,6 +198,19 @@ scrivi "file sul tablet dopo l'eliminazione:"; contenuto_note
 adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: dalle Note il tasto Home non torna a SofiOS"
 
+scrivi "== N2. Due versioni di una nota (la sincronizzazione lascia una copia «sync-conflict»)"
+NOTA=$(adb shell ls /sdcard/SofiOS/Note | tr -d '\r' | grep -E '^nota-[0-9-]+\.txt$' | head -1)
+adb shell "echo 'Versione arrivata da un altro dispositivo' > /sdcard/SofiOS/Note/${NOTA%.txt}.sync-conflict-20261124-101500-ABCDEFG.txt"
+tocca_testo "Note"; sleep 3
+attendi "Due versioni" 15 || scrivi "ATTENZIONE: non compare l'avviso «due versioni»"
+foto_subito N8-due-versioni
+[ -n "$(limiti_di "Tieni tutte e due")" ] || scrivi "ATTENZIONE: manca il pulsante «Tieni tutte e due»"
+tocca_testo "Tieni tutte e due"; sleep 2
+foto_subito N9-tenute-tutte-e-due
+scrivi "note dopo «Tieni tutte e due»:"; contenuto_note
+adb shell ls -a /sdcard/SofiOS/Note | tr -d '\r' | grep -q "sync-conflict" && scrivi "ATTENZIONE: la copia in conflitto è ancora nella cartella"
+adb shell input keyevent KEYCODE_HOME; sleep 3
+
 scrivi "== P. Pannello SofiOS (si apre dalla barra in alto)"
 adb shell appops set $PKG WRITE_SETTINGS allow
 adb shell settings put system screen_brightness 40
@@ -416,6 +429,26 @@ if [ -n "$FIXTURE" ] && [ -f "$FIXTURE" ]; then
   foto C9-cassaforte-del-computer
   tocca_testo "Sito di prova"; sleep 2
   foto_subito C10-voce-del-computer
+  adb shell input keyevent KEYCODE_HOME; sleep 3
+fi
+
+
+FX=$(dirname "${FIXTURE:-/nonesiste/x}")
+if [ -f "$FX/unione-A.kdbx" ] && [ -f "$FX/unione-B.kdbx" ]; then
+  scrivi "-- unione: la cassaforte A è quella in uso, la B è arrivata da un altro dispositivo come copia in conflitto"
+  adb shell am force-stop $PKG; sleep 1
+  adb push "$FX/unione-A.kdbx" /sdcard/SofiOS/Password/cassaforte.kdbx >/dev/null
+  adb push "$FX/unione-B.kdbx" /sdcard/SofiOS/Password/cassaforte.sync-conflict-20261124-101500-ABCDEFG.kdbx >/dev/null
+  adb shell rm -f /sdcard/SofiOS/Password/cassaforte.kdbx.bak
+  adb shell input keyevent KEYCODE_HOME; sleep 4
+  tocca_testo "Cassaforte"; sleep 3
+  tocca_testo "Password principale"; adb shell input text "provaprova"; adb shell input keyevent KEYCODE_ENTER
+  attendi "SoloB" 150 || scrivi "ATTENZIONE: l'unione non ha portato la voce dell'altro dispositivo (SoloB)"
+  foto C11-unione-dei-due-dispositivi
+  for v in SoloA SoloB ContoNuovo Posta; do [ -n "$(limiti_di "$v")" ] || scrivi "ATTENZIONE: nella cassaforte unita manca «$v»"; done
+  [ -z "$(limiti_di "DaCancellare")" ] || scrivi "ATTENZIONE: «DaCancellare» è tornata, ma era stata eliminata"
+  scrivi "cartella Password dopo l'unione: $(adb shell ls -a /sdcard/SofiOS/Password | tr '\r\n' '  ')"
+  adb shell ls /sdcard/SofiOS/Password | grep -q "sync-conflict" && scrivi "ATTENZIONE: la copia in conflitto è ancora lì"
   adb shell input keyevent KEYCODE_HOME; sleep 3
 fi
 

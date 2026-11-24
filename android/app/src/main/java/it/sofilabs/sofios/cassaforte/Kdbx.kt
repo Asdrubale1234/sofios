@@ -147,6 +147,170 @@ class Kdbx private constructor(
     fun elimina(id: String) {
         val e = trova(id) ?: return
         e.parentNode.removeChild(e)
+        ricordaEliminata(id, adesso())      // senza questo l'unione con un altro dispositivo non sa che è stata tolta
+    }
+
+    // ---------- unione di due cassaforti (stessa regola del computer: cassaforte_unione.py) ----------
+
+    private fun adesso() = System.currentTimeMillis() / 1000 + 62135596800L
+
+    private fun codificaTempo(secondi: Long): String =
+        Base64.getEncoder().encodeToString(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(secondi).array())
+
+    /** Secondi dall'anno 1: legge sia il formato di KeePass 4 (base64) sia quello con data e ora scritte. */
+    private fun decodificaTempo(testo: String?): Long? {
+        if (testo.isNullOrBlank()) return null
+        return try {
+            val b = Base64.getDecoder().decode(testo.trim())
+            if (b.size == 8) ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).long else null
+        } catch (e: IllegalArgumentException) {
+            try { java.time.Instant.parse(testo.trim()).epochSecond + 62135596800L } catch (e2: Exception) { null }
+        }
+    }
+
+    private fun nodoEliminate(crea: Boolean): Element? {
+        val root = doc.documentElement.getElementsByTagName("Root").item(0) as Element
+        figli(root, "DeletedObjects").firstOrNull()?.let { return it }
+        if (!crea) return null
+        return doc.createElement("DeletedObjects").also { root.appendChild(it) }
+    }
+
+    private fun eliminate(): MutableMap<String, Long?> {
+        val m = LinkedHashMap<String, Long?>()
+        val n = nodoEliminate(false) ?: return m
+        for (d in figli(n, "DeletedObject")) m[testoFiglio(d, "UUID")] = decodificaTempo(testoFiglio(d, "DeletionTime"))
+        return m
+    }
+
+    private fun ricordaEliminata(id: String, secondi: Long) {
+        val n = nodoEliminate(true)!!
+        for (x in figli(n, "DeletedObject")) if (testoFiglio(x, "UUID") == id) n.removeChild(x)
+        val x = doc.createElement("DeletedObject")
+        x.appendChild(doc.createElement("UUID").also { it.textContent = id })
+        x.appendChild(doc.createElement("DeletionTime").also { it.textContent = codificaTempo(secondi) })
+        n.appendChild(x)
+    }
+
+    /** Tutte le voci (anche nel cestino), con il percorso dei gruppi che le contengono (senza il gruppo principale). */
+    private fun vociConPercorso(): Map<String, Pair<Element, List<String>>> {
+        val m = LinkedHashMap<String, Pair<Element, List<String>>>()
+        fun giro(g: Element, percorso: List<String>) {
+            for (e in figli(g, "Entry")) m[testoFiglio(e, "UUID")] = e to percorso
+            for (s in figli(g, "Group")) giro(s, percorso + testoFiglio(s, "Name"))
+        }
+        giro(radice(), emptyList())
+        return m
+    }
+
+    private fun gruppoDi(percorso: List<String>): Element {
+        var g = radice()
+        for (nome in percorso) {
+            g = figli(g, "Group").firstOrNull { testoFiglio(it, "Name") == nome } ?: run {
+                val n = doc.createElement("Group")
+                n.appendChild(doc.createElement("UUID").also { it.textContent = nuovoUuid() })
+                n.appendChild(doc.createElement("Name").also { it.textContent = nome })
+                n.appendChild(doc.createElement("IconID").also { it.textContent = "48" })
+                n.appendChild(tempi())
+                n.appendChild(doc.createElement("IsExpanded").also { it.textContent = "True" })
+                n.appendChild(doc.createElement("DefaultAutoTypeSequence"))
+                n.appendChild(doc.createElement("EnableAutoType").also { it.textContent = "null" })
+                n.appendChild(doc.createElement("EnableSearching").also { it.textContent = "null" })
+                n.appendChild(doc.createElement("LastTopVisibleEntry").also { it.textContent = "AAAAAAAAAAAAAAAAAAAAAA==" })
+                g.appendChild(n); n
+            }
+        }
+        return g
+    }
+
+    private fun tempoVoce(e: Element): Long? =
+        figli(e, "Times").firstOrNull()?.let { decodificaTempo(testoFiglio(it, "LastModificationTime")) }
+
+    private fun testoTempoVoce(e: Element): String? =
+        figli(e, "Times").firstOrNull()?.let { testoFiglio(it, "LastModificationTime") }
+
+    private fun versioni(e: Element): List<Element> = figli(e, "History").firstOrNull()?.let { figli(it, "Entry") } ?: emptyList()
+
+    /** Copia della voce vincente con, nella cronologia, la sua storia più la versione che ha perso. */
+    private fun conCronologia(vincente: Element, perdente: Element): Element {
+        val nuovo = doc.importNode(vincente, true) as Element
+        val h = figli(nuovo, "History").firstOrNull() ?: doc.createElement("History").also { nuovo.appendChild(it) }
+        val presenti = HashSet<String?>(figli(h, "Entry").map { testoTempoVoce(it) })
+        val vecchia = doc.importNode(perdente, true) as Element
+        figli(vecchia, "History").forEach { vecchia.removeChild(it) }
+        for (v in listOf(vecchia) + versioni(perdente)) {
+            val t = testoTempoVoce(v)
+            if (t !in presenti && t != testoTempoVoce(nuovo)) { h.appendChild(doc.importNode(v, true)); presenti.add(t) }
+        }
+        return nuovo
+    }
+
+    /**
+     * Unisce la cassaforte `altra` dentro questa. Regola (uguale a quella del computer):
+     * 1. per voce, riconosciuta dal codice unico (UUID); 2. una voce che c'è solo da una parte si aggiunge, a meno che
+     * l'altra non l'abbia eliminata dopo l'ultima modifica; 3. se è in tutte e due vince l'ultima modifica e la versione
+     * persa finisce nella cronologia; 4. le eliminate restano eliminate, ma una voce modificata dopo l'eliminazione
+     * torna in vita; 5. nel dubbio si tiene. Ritorna quante voci sono state aggiunte, rimosse, vinte dall'altra, tenute.
+     */
+    fun unisci(altra: Kdbx): Map<String, Int> {
+        val elL = vociConPercorso(); val elR = altra.vociConPercorso()
+        val delL = eliminate(); val delR = altra.eliminate()
+        var agg = 0; var rim = 0; var vinte = 0; var tenute = 0
+        for ((u, coppiaR) in elR) {
+            val (er, percorsoR) = coppiaR
+            val coppiaL = elL[u]
+            if (coppiaL == null) {
+                val d = delL[u]; val tr = tempoVoce(er)
+                if (d != null && tr != null && d >= tr) continue            // eliminata qui dopo l'ultima modifica
+                gruppoDi(percorsoR).appendChild(doc.importNode(er, true)); agg++
+                delL.remove(u)
+            } else {
+                val el = coppiaL.first
+                val tl = tempoVoce(el); val tr = tempoVoce(er)
+                if (tr != null && tl != null && tr > tl) {                   // vince quella dell'altra
+                    val nuovo = conCronologia(er, el)
+                    el.parentNode.removeChild(el); gruppoDi(percorsoR).appendChild(nuovo); vinte++
+                } else {                                                      // vince la nostra, ma l'altra resta in cronologia
+                    if (tr != null && tl != null && tr < tl) {
+                        val nuovo = conCronologia(el, er)
+                        if (versioni(nuovo).size != versioni(el).size) el.parentNode.replaceChild(nuovo, el)
+                    }
+                    tenute++
+                }
+            }
+        }
+        for ((u, coppiaL) in elL.entries.toList()) {
+            if (u !in elR) {
+                val d = delR[u]; val tl = tempoVoce(coppiaL.first)
+                if (d != null && tl != null && d >= tl) { coppiaL.first.parentNode.removeChild(coppiaL.first); rim++ }
+            }
+        }
+        // elenco delle eliminate: unione, senza le voci tornate in vita
+        val vive = vociConPercorso().keys
+        val tutte = LinkedHashMap<String, Long?>(delR)
+        for ((k, v) in delL) if (v != null && (tutte[k] == null || v > tutte[k]!!)) tutte[k] = v
+        val nodo = nodoEliminate(true)!!
+        for (d in figli(nodo, "DeletedObject")) nodo.removeChild(d)
+        for ((u, t) in tutte) {
+            if (u in vive) continue
+            val x = doc.createElement("DeletedObject")
+            x.appendChild(doc.createElement("UUID").also { it.textContent = u })
+            x.appendChild(doc.createElement("DeletionTime").also { it.textContent = if (t != null) codificaTempo(t) else "" })
+            nodo.appendChild(x)
+        }
+        return mapOf("aggiunte" to agg, "rimosse" to rim, "vinte_dall_altra" to vinte, "tenute_nostre" to tenute)
+    }
+
+    /** Riassunto stabile del contenuto, per confrontare due cassaforti (nei collaudi). */
+    fun istantanea(): List<String> {
+        val righe = ArrayList<String>()
+        for ((_, c) in vociConPercorso()) {
+            val e = c.first
+            val storia = versioni(e).map { campo(it, "Password") }.sorted().joinToString(",")
+            righe.add(listOf(c.second.joinToString("/"), campo(e, "Title"), campo(e, "UserName"), campo(e, "Password"),
+                campo(e, "URL"), campo(e, "Notes"), storia).joinToString("|"))
+        }
+        for ((u, _) in eliminate()) righe.add("ELIMINATA|$u")
+        return righe.sorted()
     }
 
     private fun nuovoUuid(): String {

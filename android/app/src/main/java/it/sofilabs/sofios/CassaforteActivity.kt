@@ -175,12 +175,14 @@ class CassaforteActivity : SchermataSofiOS() {
         Thread {
             var k: Kdbx? = null
             var errore = ""
+            var messaggio = ""
             try {
                 if (nuovo) {
                     k = Kdbx.crea(pw)
                     scrivi(k.salva())
                 } else {
                     k = Kdbx.apri(file.readBytes(), pw)
+                    messaggio = unisciConflitti(k, pw)
                 }
             } catch (e: PasswordSbagliata) { errore = "Password sbagliata." }
             catch (e: FormatoNonSupportato) { errore = e.message ?: "Formato non supportato." }
@@ -199,10 +201,40 @@ class CassaforteActivity : SchermataSofiOS() {
                     paginaSblocco.visibility = View.GONE; paginaPrincipale.visibility = View.VISIBLE
                     nascondiTastiera()
                     carica(null)
+                    if (messaggio.isNotEmpty()) Toast.makeText(this, messaggio, Toast.LENGTH_LONG).show()
                     riavviaBlocco()
                 }
             }
         }.start()
+    }
+
+    /**
+     * Se un altro dispositivo ha cambiato la cassaforte mentre questa era cambiata qui, la sincronizzazione lascia una
+     * copia «cassaforte.sync-conflict-….kdbx». Qui si uniscono (stessa regola del computer) e la copia si mette da parte.
+     */
+    private fun unisciConflitti(k: Kdbx, password: String): String {
+        val cartella = file.parentFile ?: return ""
+        val copie = (cartella.listFiles { f -> f.name.startsWith("cassaforte.sync-conflict-") && f.name.endsWith(".kdbx") }
+            ?.sortedBy { it.name }) ?: return ""
+        var unite = 0; var altraPassword = 0
+        for (f in copie) {
+            try {
+                k.unisci(Kdbx.apri(f.readBytes(), password))
+                val da = File(cartella, ".conflitti").apply { mkdirs() }
+                if (!f.renameTo(File(da, f.name))) f.delete()
+                unite++
+            } catch (e: PasswordSbagliata) { altraPassword++ }
+            catch (e: FileDanneggiato) { /* si lascia dov'è: potrebbe essere ancora in arrivo */ }
+            catch (e: FormatoNonSupportato) { }
+        }
+        if (unite > 0) { try { scrivi(k.salva()) } catch (e: IOException) { return "Non riesco a salvare la cassaforte unita." } }
+        return when {
+            unite > 0 && altraPassword > 0 -> "Ho unito $unite versioni. Un'altra ha una password diversa e l'ho lasciata da parte."
+            unite > 0 -> if (unite == 1) "Ho unito una versione della cassaforte arrivata da un altro dispositivo."
+                         else "Ho unito $unite versioni della cassaforte arrivate da altri dispositivi."
+            altraPassword > 0 -> "Una versione della cassaforte arrivata da un altro dispositivo ha una password diversa: non l'ho unita."
+            else -> ""
+        }
     }
 
     private fun nascondiTastiera() {

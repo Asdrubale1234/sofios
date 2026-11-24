@@ -48,6 +48,7 @@ class NoteActivity : SchermataSofiOS() {
     private lateinit var testo: EditText
     private lateinit var colonnaElenco: LinearLayout
     private lateinit var colonnaTesto: LinearLayout
+    private lateinit var banner: LinearLayout
     private val adattatore = Adattatore()
     private val ritardo = Handler(Looper.getMainLooper())
     private val salvaDopo = Runnable { salva() }
@@ -111,6 +112,13 @@ class NoteActivity : SchermataSofiOS() {
                 }
             })
         }
+        banner = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; visibility = View.GONE
+            setPadding(dp(14), dp(12), dp(14), dp(12))
+            background = riquadro(0xFF1E4F7C.toInt(), 12)
+            contentDescription = "Due versioni"
+        }
+        colonnaTesto.addView(banner, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(10) })
         colonnaTesto.addView(testo, LinearLayout.LayoutParams(-1, 0, 1f))
 
         if (stretto) {
@@ -129,7 +137,7 @@ class NoteActivity : SchermataSofiOS() {
     // ---- elenco e file ----
 
     private fun carica(scegli: File?, vaiAlTesto: Boolean) {
-        note = (cartella.listFiles { f -> f.name.endsWith(".txt") }?.toList() ?: emptyList())
+        note = (cartella.listFiles { f -> f.name.endsWith(".txt") && !f.name.contains(".sync-conflict-") }?.toList() ?: emptyList())
             .sortedByDescending { it.lastModified() }
         titoli = note.map { titoloDi(leggi(it)) }
         adattatore.notifyDataSetChanged()
@@ -148,7 +156,59 @@ class NoteActivity : SchermataSofiOS() {
         testo.setSelection(testo.text.length)
         caricando = false
         adattatore.notifyDataSetChanged()
+        aggiornaBanner()
         if (stretto) { if (vaiAlTesto) mostraTesto() else mostraElenco() }
+    }
+
+    // ---- due versioni della stessa nota (la sincronizzazione lascia «….sync-conflict-….txt») ----
+
+    private fun conflittiDi(f: File): List<File> {
+        val base = f.name.removeSuffix(".txt")
+        return (cartella.listFiles { x -> x.name.startsWith("$base.sync-conflict-") && x.name.endsWith(".txt") }
+            ?.sortedBy { it.name }) ?: emptyList()
+    }
+
+    private fun mettiDaParte(c: File) {
+        val da = File(cartella, ".conflitti").apply { mkdirs() }
+        if (!c.renameTo(File(da, c.name))) c.delete()
+    }
+
+    private fun aggiornaBanner() {
+        val f = corrente
+        val c = if (f != null) conflittiDi(f).firstOrNull() else null
+        banner.removeAllViews()
+        if (c == null) { banner.visibility = View.GONE; return }
+        banner.visibility = View.VISIBLE
+        val altra = leggi(c)
+        banner.addView(TextView(this).apply {
+            text = "Ci sono due versioni di questa nota"; textSize = 17f; setTextColor(ORO); typeface = Typeface.DEFAULT_BOLD
+        })
+        banner.addView(TextView(this).apply {
+            text = "L'altra versione, arrivata da un altro dispositivo, dice:"; textSize = 13f; setTextColor(0xFF8FB3D4.toInt())
+            setPadding(0, dp(4), 0, 0)
+        })
+        banner.addView(TextView(this).apply {
+            text = altra.take(300) + if (altra.length > 300) "…" else ""; textSize = 15f; setTextColor(TESTO)
+            contentDescription = "Altra versione"; setPadding(0, dp(4), 0, dp(10))
+        })
+        val riga = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        fun pulsante(nome: String, sfondo: Int, colore: Int, azione: () -> Unit) {
+            riga.addView(Stile.bottone(this, nome, sfondo, colore, azione).apply { textSize = 14f },
+                LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(dp(3), 0, dp(3), 0) })
+        }
+        pulsante("Tieni questa", Stile.SELEZ, 0xFFFFFFFF.toInt()) { mettiDaParte(c); aggiornaBanner() }
+        pulsante("Tieni l'altra", Stile.SELEZ, 0xFFFFFFFF.toInt()) {
+            testo.setText(altra); salva(); mettiDaParte(c); aggiornaBanner()
+        }
+        pulsante("Tieni tutte e due", ORO, FONDO) {
+            // l'altra versione diventa una nota a parte
+            var n = 0; var nuova: File
+            val base = "nota-" + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(Date())
+            do { nuova = File(cartella, base + (if (n == 0) "" else "-$n") + ".txt"); n++ } while (nuova.exists())
+            if (!c.renameTo(nuova)) { try { c.copyTo(nuova); c.delete() } catch (e: IOException) { } }
+            carica(corrente, vaiAlTesto = false)
+        }
+        banner.addView(riga)
     }
 
     private fun leggi(f: File): String = try { f.readText() } catch (e: IOException) { "" }
