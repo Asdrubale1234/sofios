@@ -31,7 +31,10 @@ object Sincronizza {
     /** Mette a posto le impostazioni, il nome del dispositivo e le cartelle. Si può ripetere senza danni. */
     fun prepara(st: Syncthing, nomeDispositivo: String, cartelle: List<CartellaSync>) {
         val io = miaChiave(st)
-        st.modifica("config/options", OPZIONI)
+        // HttpURLConnection non conosce PATCH: si legge tutto, si cambia e si rimette (PUT)
+        val opzioni = mappa(st.leggi("config/options")).toMutableMap()
+        opzioni.putAll(OPZIONI)
+        st.metti("config/options", opzioni)
         val me = mappa(st.leggi("config/devices/$io")).toMutableMap()
         if (me["name"] != nomeDispositivo) { me["name"] = nomeDispositivo; st.metti("config/devices/$io", me) }
         for (c in cartelle) {

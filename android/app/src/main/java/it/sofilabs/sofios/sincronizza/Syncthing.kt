@@ -85,6 +85,5 @@ class Syncthing(private val porta: Int, private val chiave: String, private val 
 
     fun leggi(percorso: String) = chiama("GET", percorso)
     fun metti(percorso: String, corpo: Any?) = chiama("PUT", percorso, corpo)
-    fun modifica(percorso: String, corpo: Any?) = chiama("PATCH", percorso, corpo)
     fun cancella(percorso: String) = chiama("DELETE", percorso)
 }
