@@ -200,7 +200,12 @@ class MainActivity : SchermataSofiOS() {
 
     override fun onPause() {
         if (::sofi.isInitialized) sofi.ondeggia(false)
+        if (::casella.isInitialized && casella.aperta()) casella.chiudi()
         super.onPause()
+    }
+
+    override fun alAprirePannello() {
+        if (::casella.isInitialized && casella.aperta()) casella.chiudi()
     }
 
     // Scorciatoie del pannello SofiOS, quando si è nella schermata iniziale.

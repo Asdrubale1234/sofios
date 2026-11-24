@@ -22,6 +22,7 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextClock
 import android.widget.TextView
 import android.media.AudioManager
@@ -79,6 +80,9 @@ open class SchermataSofiOS : Activity() {
         Scorciatoia("Cassaforte") { startActivity(Intent(this, CassaforteActivity::class.java)) },
         Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) },
     ) + scorciatoieAssistenti()
+
+    /** Chiamato quando si apre il pannello: le schermate possono chiudere altro (es. la casella di Sofi). */
+    open fun alAprirePannello() {}
 
     protected fun chiudiPannelloSeAperto(): Boolean {
         val p = pannello ?: return false
@@ -182,7 +186,8 @@ open class SchermataSofiOS : Activity() {
 /** Il pannello rapido SofiOS: luminosità, volume, rete e scorciatoie, con i colori del computer. */
 class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
 
-    private val scheda = LinearLayout(att).apply { orientation = LinearLayout.VERTICAL }
+    private val contenuto = LinearLayout(att).apply { orientation = LinearLayout.VERTICAL }
+    private val scheda = ScrollView(att)
 
     init {
         visibility = View.GONE
@@ -191,15 +196,18 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
             setOnClickListener { chiudi() }
         }, LayoutParams(-1, -1))
         val larghezza = minOf(att.resources.displayMetrics.widthPixels, Stile.dp(att, 460))
-        scheda.apply {
+        contenuto.apply {
             setPadding(Stile.dp(att, 20), Stile.dp(att, 16), Stile.dp(att, 20), Stile.dp(att, 18))
             contentDescription = "Pannello SofiOS"
+        }
+        scheda.apply {
+            addView(contenuto)
+            isClickable = true; overScrollMode = View.OVER_SCROLL_NEVER
             val r = Stile.dp(att, 22).toFloat()
             background = GradientDrawable().apply {
                 setColor(0xF20B2740.toInt())
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
-            isClickable = true
         }
         addView(scheda, LayoutParams(larghezza, -2, Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
             topMargin = Stile.dp(att, SchermataSofiOS.ALTEZZA_BARRA)
@@ -211,11 +219,12 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
     fun alterna() { if (aperto()) chiudi() else apri() }
 
     private fun apri() {
-        scheda.removeAllViews()
-        scheda.addView(Stile.testo(att, "Pannello SofiOS", 18f, Stile.BIANCO, true))
-        scheda.addView(Controlli.luminosita(att))
-        scheda.addView(Controlli.volume(att, AudioManager.STREAM_MUSIC, "Volume"))
-        scheda.addView(Controlli.rotazione(att), voce())
+        att.alAprirePannello()
+        contenuto.removeAllViews()
+        contenuto.addView(Stile.testo(att, "Pannello SofiOS", 18f, Stile.BIANCO, true))
+        contenuto.addView(Controlli.luminosita(att))
+        contenuto.addView(Controlli.volume(att, AudioManager.STREAM_MUSIC, "Volume"))
+        contenuto.addView(Controlli.rotazione(att), voce())
         val reti = LinearLayout(att).apply { orientation = LinearLayout.HORIZONTAL }
         reti.addView(tessera("Wi-Fi") {
             val i = if (Build.VERSION.SDK_INT >= 29) Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
@@ -223,7 +232,7 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
             Controlli.apri(att, i)
         }, peso())
         reti.addView(tessera("Bluetooth") { Controlli.apri(att, Intent(Settings.ACTION_BLUETOOTH_SETTINGS)) }, peso())
-        scheda.addView(reti, voce())
+        contenuto.addView(reti, voce())
         val s = att.scorciatoie()
         var i = 0
         while (i < s.size) {
@@ -231,7 +240,7 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
             for (k in i until minOf(i + 3, s.size)) {
                 r.addView(tessera(s[k].nome) { chiudi(); s[k].azione() }, peso())
             }
-            scheda.addView(r, voce())
+            contenuto.addView(r, voce())
             i += 3
         }
         visibility = View.VISIBLE
