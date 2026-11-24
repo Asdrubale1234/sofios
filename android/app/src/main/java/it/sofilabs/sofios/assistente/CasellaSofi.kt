@@ -44,7 +44,7 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * La casella di Sofi: si scrive un comando e lo fa. Senza internet e senza intelligenza artificiale:
+ * La casella di Luma: si scrive un comando e lo fa. Senza internet e senza intelligenza artificiale:
  * nulla esce dal tablet. Prima di cambiare o togliere qualcosa chiede sempre conferma.
  */
 class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) : FrameLayout(att) {
@@ -63,7 +63,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         addView(View(att).apply { setBackgroundColor(0x66000000); setOnClickListener { chiudi() } }, LayoutParams(-1, -1))
         val larghezza = minOf(att.resources.displayMetrics.widthPixels - dp(24), dp(520))
         scheda.apply {
-            contentDescription = "Casella di Sofi"
+            contentDescription = "Casella di Luma"
             setPadding(dp(20), dp(16), dp(20), dp(18)); isClickable = true
             val r = dp(30).toFloat()
             background = GradientDrawable().apply {
@@ -71,11 +71,11 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
         }
-        scheda.addView(Stile.testo(att, "Cosa vuoi fare?", 20f, Stile.TESTO, true))
+        scheda.addView(Stile.testo(att, "Ciao, sono Luma. Cosa vuoi fare?", 20f, Stile.TESTO, true))
         scheda.addView(Stile.testo(att, "Scrivi, per esempio: «apri note», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco.",
             13f, Stile.PICCOLO).apply { setPadding(0, dp(4), 0, dp(10)) })
         campo.apply {
-            hint = "Scrivi qui e premi Invio…"; contentDescription = "Scrivi a Sofi"
+            hint = "Scrivi qui e premi Invio…"; contentDescription = "Scrivi a Luma"
             setHintTextColor(Stile.PICCOLO); setTextColor(Stile.TESTO); textSize = 18f
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             imeOptions = EditorInfo.IME_ACTION_SEND
@@ -90,7 +90,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             })
         }
         scheda.addView(campo, LinearLayout.LayoutParams(-1, dp(52)))
-        risposta.apply { textSize = 16f; setTextColor(Stile.TESTO); contentDescription = "Risposta di Sofi"; setPadding(0, dp(12), 0, 0) }
+        risposta.apply { textSize = 16f; setTextColor(Stile.TESTO); contentDescription = "Risposta di Luma"; setPadding(0, dp(12), 0, 0) }
         scheda.addView(risposta)
         conferma.visibility = View.GONE
         conferma.addView(Stile.bottone(att, "Sì", Stile.ORO, Stile.SU_ORO) { risolvi(true) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { rightMargin = dp(6) })
@@ -170,7 +170,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         }
     }
 
-    // elenco dei programmi che Sofi conosce: quelli del tablet, le app di SofiOS e gli assistenti scelti
+    // elenco dei programmi che Luma conosce: quelli del tablet, le app di SofiOS e gli assistenti scelti
     private fun programmi(): List<Voce> {
         val pm = att.packageManager
         val l = ArrayList<Voce>()

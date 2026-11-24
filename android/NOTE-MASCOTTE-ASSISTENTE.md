@@ -23,9 +23,9 @@ Quando arriva il via: riportare le novità dal PC, identiche nell'aspetto e nei 
 - Cartelle di rete: da valutare.
 - Voce: di solito passa dai servizi del produttore o di Google; da verificare che non esca nulla dal dispositivo.
 
-## Novità dal PC: la mascotte si chiama Sofi (da portare SOLO quando Luca scrive «aggiorna il tablet Android»)
+## Novità dal PC: la mascotte si chiama Luma (da portare SOLO quando Luca scrive «aggiorna il tablet Android»)
 - Logo ufficiale: resta il faro su mare azzurro in un quadrato arrotondato, con la S nell'onda.
-- Sofi: faro di pietra con la faccia, illustrazione 3D morbida, sempre stesse proporzioni, colori e faccia.
+- Luma: faro di pietra con la faccia, illustrazione 3D morbida, sempre stesse proporzioni, colori e faccia.
 - File: repository asdrubale1234/sofios, ramo `claude/jolly-davinci-ltzvwz` (finché Luca non li porta su main),
   cartella `docs/assets/sofi/`: 8 pose intere (neutra, parla, ascolta, pensa, felice, concentrata, preoccupata, saluta)
   e 6 volti (volto-felice…).
@@ -34,18 +34,18 @@ Quando arriva il via: riportare le novità dal PC, identiche nell'aspetto e nei 
   mentre lavora: pensa o si concentra; se va bene: felice; se non capisce o c'è un errore: preoccupata; quando risponde: parla.
 - Comandi senza internet e senza intelligenza artificiale, nulla esce dal dispositivo: apri/chiudi programmi, installa/
   disinstalla (sempre con conferma), cerca file, volume, luminosità, tema.
-- Sul tablet: casella e pulsanti grandi, tastiera automatica, magari la voce; Sofi non copre pulsanti né gesti di sistema
+- Sul tablet: casella e pulsanti grandi, tastiera automatica, magari la voce; Luma non copre pulsanti né gesti di sistema
   e resta dentro lo schermo quando si ruota.
 - Android limita: chiudere altre app, installare/disinstallare in silenzio, volume, luminosità, cercare file ovunque.
   Provare una funzione alla volta e dire a Luca cosa funziona e cosa no.
-- Nell'app oggi c'è la mascotte attuale (faro con la X e icona nella barra): verrà sostituita da Sofi con le pose.
-- Stato: Sofi, casella dei comandi e assistenti online portati sul tablet (da provare sul T40HD).
+- Nell'app oggi c'è la mascotte attuale (faro con la X e icona nella barra): verrà sostituita da Luma con le pose.
+- Stato: Luma, casella dei comandi e assistenti online portati sul tablet (da provare sul T40HD).
 - Icone assistenti: Claude ha l'icona originale; per le altre servono i file (ass_<id>.png in res/drawable-nodpi).
 
 ## Cosa vale sul PC e cosa solo sul tablet (deciso da Luca, dalla chat del PC)
 - Solo tablet: orologio grande sullo sfondo (sul PC l'orologio sta nella barra in alto); nomi sotto le icone del dock
   (sul PC solo il suggerimento col mouse); effetto di pressione del dito al 95%; barra in alto con pannello a scorrimento.
-- La X di Sofi: PC = compare passandoci sopra col mouse; tablet = compare quando si tocca Sofi (non sempre visibile).
+- La X di Luma: PC = compare passandoci sopra col mouse; tablet = compare quando si tocca Luma (non sempre visibile).
 - Icone degli assistenti: le fornisce Luca e stanno nel repository del PC in docs/assets/assistenti/; il tablet le riprende da lì.
 - Regola: se una richiesta di Luca sembra pensata per il PC e non per il tablet (o il contrario), dirglielo e proporre
   come adattarla, senza prenderla alla lettera.

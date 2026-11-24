@@ -3,7 +3,7 @@ package it.sofilabs.sofios.assistente
 import java.text.Normalizer
 import java.util.Locale
 
-/** Cosa ha capito Sofi: un'azione e un argomento. Le azioni sono le stesse del computer. */
+/** Cosa ha capito Luma: un'azione e un argomento. Le azioni sono le stesse del computer. */
 data class Frase(val azione: String, val arg: Any? = null) {
     /** Testo stabile usato dai collaudi per confrontare con il programma del computer. */
     fun testo(): String = when (arg) {
@@ -13,11 +13,11 @@ data class Frase(val azione: String, val arg: Any? = null) {
     }
 }
 
-/** Un programma che Sofi può aprire, chiudere o disinstallare. */
+/** Un programma che Luma può aprire, chiudere o disinstallare. */
 class Voce(val nome: String, val id: String)
 
 /**
- * Comandi semplici di Sofi, portati da quelli del computer (mascotte_comandi.py): regole sul testo,
+ * Comandi semplici di Luma, portati da quelli del computer (mascotte_comandi.py): regole sul testo,
  * nessuna intelligenza artificiale e nessun invio all'esterno.
  */
 object Comandi {

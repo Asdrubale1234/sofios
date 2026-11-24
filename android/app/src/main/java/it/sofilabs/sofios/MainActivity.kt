@@ -54,7 +54,7 @@ class MainActivity : SchermataSofiOS() {
         })
         radice.addView(orologio, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START))
 
-        // Sofi, la mascotte: sta sul fondo a destra. Un tocco fa comparire la X e apre la casella dove si scrive un comando.
+        // Luma, la mascotte: sta sul fondo a destra. Un tocco fa comparire la X e apre la casella dove si scrive un comando.
         sofi = SofiView(this).apply {
             alToccare = { chiudiPannelloSeAperto(); mostraX(0); casella.apri() }
             alNascondere = { impostaMascotte(false) }
@@ -62,7 +62,7 @@ class MainActivity : SchermataSofiOS() {
         sofi.visibility = if (mascotteVisibile()) View.VISIBLE else View.GONE
         casella = CasellaSofi(this, sofi)
         radice.addView(casella, FrameLayout.LayoutParams(-1, -1))
-        // Sofi sta SOPRA la casella: resta luminosa e la sua X si può toccare
+        // Luma sta SOPRA la casella: resta luminosa e la sua X si può toccare
         radice.addView(sofi, FrameLayout.LayoutParams(dp(200), dp(255), Gravity.BOTTOM or Gravity.END).apply {
             bottomMargin = dp(140); rightMargin = dp(56)
         })
@@ -108,8 +108,8 @@ class MainActivity : SchermataSofiOS() {
         barra.addView(icona("Cassaforte", R.drawable.ic_password, TURCHESE, TURCHESE_SCURO, piena = true) {
             startActivity(Intent(this, CassaforteActivity::class.java))
         })
-        // Icona di Sofi: la toglie o la rimette (sul computer è «Aggiungi widget»).
-        barra.addView(icona("Mostra o nascondi Sofi", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true, etichetta = "Sofi") {
+        // Icona di Luma: la toglie o la rimette (sul computer è «Aggiungi widget»).
+        barra.addView(icona("Mostra o nascondi Luma", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true, etichetta = "Luma") {
             impostaMascotte(!mascotteVisibile())
         })
         radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
@@ -245,7 +245,7 @@ class MainActivity : SchermataSofiOS() {
     override fun scorciatoie(): List<Scorciatoia> {
         val l = mutableListOf<Scorciatoia>()
         if (fullyInstallato()) l.add(Scorciatoia("Casa") { tocchiCasa() })
-        l.add(Scorciatoia("Sofi") { if (!mascotteVisibile()) impostaMascotte(true); casella.apri() })
+        l.add(Scorciatoia("Luma") { if (!mascotteVisibile()) impostaMascotte(true); casella.apri() })
         l.add(Scorciatoia("Note") { startActivity(Intent(this, NoteActivity::class.java)) })
         l.add(Scorciatoia("File") { startActivity(Intent(this, FileActivity::class.java)) })
         l.add(Scorciatoia("Cassaforte") { startActivity(Intent(this, CassaforteActivity::class.java)) })

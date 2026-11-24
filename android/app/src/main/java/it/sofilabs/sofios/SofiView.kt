@@ -13,7 +13,7 @@ import android.widget.TextView
 import android.graphics.drawable.GradientDrawable
 
 /**
- * Sofi, la mascotte di SofiOS: un faro di pietra con la faccia. Ha otto pose che cambiano con una
+ * Luma, la mascotte di SofiOS: un faro di pietra con la faccia. Ha otto pose che cambiano con una
  * dissolvenza di un quarto di secondo, ondeggia piano da ferma e ha una piccola X per nasconderla.
  */
 class SofiView(context: Context) : FrameLayout(context) {
@@ -41,7 +41,7 @@ class SofiView(context: Context) : FrameLayout(context) {
         }
         a.setImageResource(R.drawable.sofi_neutra)
         b.alpha = 0f
-        contentDescription = "Sofi"
+        contentDescription = "Luma"
         isClickable = true
         setOnClickListener { alToccare() }
 
@@ -50,7 +50,7 @@ class SofiView(context: Context) : FrameLayout(context) {
         tastoX = TextView(context).apply {
             text = "✕"; textSize = 13f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
             typeface = android.graphics.Typeface.DEFAULT_BOLD
-            contentDescription = "Nascondi Sofi"
+            contentDescription = "Nascondi Luma"
             background = GradientDrawable().apply { setColor(0xAA0B2740.toInt()); shape = GradientDrawable.OVAL; setStroke(d, 0x66FFFFFF) }
             setOnClickListener { alNascondere() }
             visibility = View.GONE
@@ -61,7 +61,7 @@ class SofiView(context: Context) : FrameLayout(context) {
     }
 
     /**
-     * La X compare quando si tocca Sofi (sul computer compare passandoci sopra con il mouse).
+     * La X compare quando si tocca Luma (sul computer compare passandoci sopra con il mouse).
      * `per` = per quanti millisecondi resta; 0 = resta finché non la si nasconde.
      */
     fun mostraX(per: Long = 6000) {

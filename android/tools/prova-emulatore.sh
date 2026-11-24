@@ -149,14 +149,14 @@ sleep 2
 scrivi "in primo piano: $(in_primo_piano)"
 foto B-schermata-iniziale
 
-scrivi "== B2. Sofi: un tocco fa comparire la X (e apre la casella); la X la toglie, l'icona nella barra la rimette"
-[ -z "$(limiti_di "Nascondi Sofi")" ] || scrivi "ATTENZIONE: la X di Sofi è visibile senza toccarla"
-tocca_testo "Sofi"; sleep 1
-attendi "Nascondi Sofi" 10 || scrivi "ATTENZIONE: la X non è comparsa dopo il tocco su Sofi"
+scrivi "== B2. Luma: un tocco fa comparire la X (e apre la casella); la X la toglie, l'icona nella barra la rimette"
+[ -z "$(limiti_di "Nascondi Luma")" ] || scrivi "ATTENZIONE: la X di Luma è visibile senza toccarla"
+tocca_testo "Luma"; sleep 1
+attendi "Nascondi Luma" 10 || scrivi "ATTENZIONE: la X non è comparsa dopo il tocco su Luma"
 foto_subito B2-sofi-con-x
-tocca_testo "Nascondi Sofi"; sleep 1
+tocca_testo "Nascondi Luma"; sleep 1
 foto_subito B3-sofi-tolta
-tocca_testo "Mostra o nascondi Sofi"; sleep 1
+tocca_testo "Mostra o nascondi Luma"; sleep 1
 foto B5-sofi-rimessa
 
 scrivi "== C. Tasto Home non riapre Casa"
@@ -276,14 +276,14 @@ scrivi "cartella dopo eliminazione: $(adb shell ls $CART | tr '\r\n' '  ')"
 adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
 
-scrivi "== S. Sofi: la casella dei comandi"
+scrivi "== S. Luma: la casella dei comandi"
 adb shell appops set $PKG WRITE_SETTINGS allow
 CART=/sdcard/SofiOS
-risposta_sofi() { testo_di "Risposta di Sofi"; }
-comando() {  # scrive un comando nella casella di Sofi e preme Invio
+risposta_sofi() { testo_di "Risposta di Luma"; }
+comando() {  # scrive un comando nella casella di Luma e preme Invio
   adb shell input text "$1"; sleep 1; adb shell input keyevent KEYCODE_ENTER; sleep 2
 }
-apri_sofi() { tocca_testo "Sofi"; attendi "Casella di Sofi" 15 || scrivi "ATTENZIONE: la casella di Sofi non si è aperta"; sleep 1; }
+apri_sofi() { tocca_testo "Luma"; attendi "Casella di Luma" 15 || scrivi "ATTENZIONE: la casella di Luma non si è aperta"; sleep 1; }
 apri_sofi
 foto_subito S1-casella-aperta
 comando "aiuto"
@@ -304,7 +304,7 @@ LUM=$(adb shell settings get system screen_brightness | tr -d '\r')
 scrivi "luminosità dopo «luminosità 70»: $LUM (attesa 178)"
 [ "$LUM" -ge 175 ] && [ "$LUM" -le 181 ] || scrivi "ATTENZIONE: la luminosità non è al 70%"
 comando "metti%sil%stema%schiaro"
-scrivi "Sofi dice: $(risposta_sofi)"
+scrivi "Luma dice: $(risposta_sofi)"
 foto_subito S3-tema
 # giro in tema chiaro: schermata iniziale, Note, Impostazioni (la casella si chiude da sola quando il tema cambia)
 sleep 3; foto T1-casa-tema-chiaro
@@ -321,14 +321,14 @@ adb shell input keyevent 3; sleep 2
 apri_sofi
 foto_subito T4b-casella-tema-chiaro
 comando "metti%sil%stema%sscuro"
-scrivi "Sofi dice: $(risposta_sofi)"
+scrivi "Luma dice: $(risposta_sofi)"
 sleep 3; foto T5-casa-tornata-scura
 apri_sofi
 comando "cosa%sfa%squesto"
-scrivi "Sofi dice: $(risposta_sofi)"
+scrivi "Luma dice: $(risposta_sofi)"
 adb shell "echo 'Ciao, questa e una fattura di prova' > $CART/fattura-prova.txt"
 comando "cerca%sfattura"
-attendi "📄  fattura-prova.txt" 20 || scrivi "ATTENZIONE: Sofi non ha trovato il file"
+attendi "📄  fattura-prova.txt" 20 || scrivi "ATTENZIONE: Luma non ha trovato il file"
 foto_subito S4-trovato-il-file
 tocca_testo "📄  fattura-prova.txt"; sleep 3
 foto_subito S5-file-aperto
@@ -352,7 +352,7 @@ scrivi "processo del finto Fully prima di «chiudi»: $(adb shell pidof de.ozero
 apri_sofi
 comando "chiudi%sfully"
 sleep 3
-scrivi "Sofi dice: $(risposta_sofi)"
+scrivi "Luma dice: $(risposta_sofi)"
 PID=$(adb shell pidof de.ozerov.fully | tr -d '\r')
 if [ -z "$PID" ]; then scrivi "«chiudi fully»: il programma è stato chiuso"
 else
@@ -366,12 +366,12 @@ foto_subito S7-chiudi
 # disinstallare e installare chiedono sempre conferma
 comando "disinstalla%sfully"
 foto_subito S8-conferma-disinstalla
-scrivi "Sofi dice: $(risposta_sofi)"
+scrivi "Luma dice: $(risposta_sofi)"
 tocca_ultimo "No"; sleep 1
-scrivi "Sofi dice dopo «No»: $(risposta_sofi)"
+scrivi "Luma dice dopo «No»: $(risposta_sofi)"
 adb shell pm list packages | grep -q de.ozerov.fully && scrivi "il finto Fully è ancora installato (giusto)" || scrivi "ATTENZIONE: il finto Fully è sparito senza conferma"
 comando "installa%sgimp"
-scrivi "Sofi dice: $(risposta_sofi)"
+scrivi "Luma dice: $(risposta_sofi)"
 foto_subito S9-conferma-installa
 tocca_ultimo "No"; sleep 1
 adb shell input keyevent KEYCODE_BACK; sleep 1

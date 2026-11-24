@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Confronto dei comandi di Sofi: esegue il programma del computer (mascotte_comandi.py) su molte frasi
+"""Confronto dei comandi di Luma: esegue il programma del computer (mascotte_comandi.py) su molte frasi
 e scrive cosa ha capito. Il collaudo di Android deve dare le stesse risposte. Uso: fixture-comandi.py <mascotte_comandi.py> <uscita>"""
 import importlib.util, sys
 spec = importlib.util.spec_from_file_location("mascotte_comandi", sys.argv[1])

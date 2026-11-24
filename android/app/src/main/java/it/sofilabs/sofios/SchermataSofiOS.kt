@@ -88,7 +88,7 @@ open class SchermataSofiOS : Activity() {
         Scorciatoia("Impostazioni") { startActivity(Intent(this, ImpostazioniActivity::class.java)) },
     ) + scorciatoieAssistenti()
 
-    /** Chiamato quando si apre il pannello: le schermate possono chiudere altro (es. la casella di Sofi). */
+    /** Chiamato quando si apre il pannello: le schermate possono chiudere altro (es. la casella di Luma). */
     open fun alAprirePannello() {}
 
     protected fun chiudiPannelloSeAperto(): Boolean {
