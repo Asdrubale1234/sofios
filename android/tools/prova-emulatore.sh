@@ -123,6 +123,7 @@ scrivi "== Installazione (SofiOS e un FINTO Fully, solo per la prova)"
 adb install -r "$APK" 2>&1 | tee -a "$LOG"
 adb install -r "$FINTO" 2>&1 | tee -a "$LOG"
 
+adb shell appops set $PKG MANAGE_EXTERNAL_STORAGE allow   # accesso ai file: la Cartella SofiOS sta nella memoria del tablet
 scrivi "== Imposto SofiOS come schermata iniziale"
 adb shell cmd role add-role-holder android.app.role.HOME $PKG 2>&1 | tee -a "$LOG"
 scrivi "schermata iniziale scelta: $(adb shell cmd role get-role-holders android.app.role.HOME | tr -d '\r')"
@@ -159,8 +160,17 @@ adb shell input keyevent KEYCODE_HOME; sleep 3
 scrivi "in primo piano: $(in_primo_piano)"
 foto C-tasto-home
 
+scrivi "== M. Migrazione: una nota della versione 0.1 deve finire nella Cartella SofiOS comune"
+adb shell "run-as $PKG sh -c 'mkdir -p files/Note; echo Nota-della-versione-0-1 > files/Note/nota-vecchia.txt'"
+tocca_testo "Note"; sleep 3
+adb shell ls /sdcard/SofiOS/Note | grep -q nota-vecchia.txt && scrivi "migrazione: la nota vecchia è nella Cartella SofiOS (e l'originale è rimasto)" || scrivi "ATTENZIONE: la nota della versione 0.1 non è stata copiata"
+adb shell "run-as $PKG ls files/Note" | grep -q nota-vecchia.txt || scrivi "ATTENZIONE: la nota originale è sparita"
+foto_subito M1-nota-migrata
+adb shell input keyevent KEYCODE_HOME; sleep 3
+adb shell rm -f /sdcard/SofiOS/Note/nota-vecchia.txt
+
 scrivi "== N. Note: scrivo, seconda nota, chiudo e riapro, elimino"
-contenuto_note() { adb shell "run-as $PKG sh -c 'for f in files/Note/*.txt; do echo \"\$f: \$(cat \$f)\"; done'" 2>&1 | tr -d '\r' | tee -a "$LOG"; }
+contenuto_note() { adb shell 'for f in /sdcard/SofiOS/Note/*.txt; do echo "$f: $(cat $f)"; done' 2>&1 | tr -d '\r' | tee -a "$LOG"; }
 tocca_testo "Note"; sleep 3
 foto N1-note-vuota
 adb shell input text "Spesa%sdel%ssabato"; sleep 2
@@ -224,7 +234,7 @@ scrivi "== F. File: la Cartella SofiOS"
 tocca_testo "File"; sleep 3
 foto F1-file-vuota
 adb shell input keyevent KEYCODE_HOME; sleep 2
-CART=/sdcard/Android/data/$PKG/files/SofiOS
+CART=/sdcard/SofiOS
 adb shell "echo 'Ciao dal Mac di Luca' > $CART/prova.txt; mkdir -p $CART/Documenti"
 scrivi "creato un file di prova e una cartella con adb"
 tocca_testo "File"; sleep 3
@@ -233,7 +243,7 @@ tocca_testo "📄  prova.txt"; sleep 2
 foto_subito F3-file-aperto
 tocca_testo "Chiudi"; sleep 1
 tocca_testo "Nuova cartella"; sleep 1
-adb shell input text "Foto"; sleep 1
+adb shell input text "Archivio"; sleep 1
 tocca_testo "Crea"; sleep 2
 foto_subito F4-nuova-cartella
 scrivi "cartella sul tablet: $(adb shell ls $CART | tr '\r\n' '  ')"
@@ -248,7 +258,7 @@ aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a
 
 scrivi "== S. Sofi: la casella dei comandi"
 adb shell appops set $PKG WRITE_SETTINGS allow
-CART=/sdcard/Android/data/$PKG/files/SofiOS
+CART=/sdcard/SofiOS
 risposta_sofi() { testo_di "Risposta di Sofi"; }
 comando() {  # scrive un comando nella casella di Sofi e preme Invio
   adb shell input text "$1"; sleep 1; adb shell input keyevent KEYCODE_ENTER; sleep 2
@@ -386,14 +396,14 @@ for _ in $(seq 1 20); do adb shell input keyevent KEYCODE_DEL; done
 adb shell input text "prova-android-1"; adb shell input keyevent KEYCODE_ENTER
 attendi "Nuova password" 90 || scrivi "ATTENZIONE: non si è sbloccata con la password giusta"
 foto C8-sbloccata-di-nuovo
-adb exec-out run-as $PKG cat files/Password/cassaforte.kdbx > "$OUT/cassaforte-da-android.kdbx"
+adb exec-out cat /sdcard/SofiOS/Password/cassaforte.kdbx > "$OUT/cassaforte-da-android.kdbx"
 scrivi "file della cassaforte fatto da Android: $(wc -c < "$OUT/cassaforte-da-android.kdbx") byte"
 adb shell input keyevent KEYCODE_HOME; sleep 3
 aspetta_primo_piano "$PKG/.MainActivity" || scrivi "ATTENZIONE: Home non torna a SofiOS"
 if [ -n "$FIXTURE" ] && [ -f "$FIXTURE" ]; then
   scrivi "-- cassaforte fatta dal programma del computer, aperta su Android"
   adb shell am force-stop $PKG; sleep 1
-  adb shell "run-as $PKG sh -c 'cat > files/Password/cassaforte.kdbx'" < "$FIXTURE"
+  adb push "$FIXTURE" /sdcard/SofiOS/Password/cassaforte.kdbx >/dev/null; adb shell rm -f /sdcard/SofiOS/Password/cassaforte.kdbx.bak
   adb shell input keyevent KEYCODE_HOME; sleep 4
   tocca_testo "Cassaforte"; sleep 3
   tocca_testo "Password principale"; adb shell input text "pc-password-1"; adb shell input keyevent KEYCODE_ENTER

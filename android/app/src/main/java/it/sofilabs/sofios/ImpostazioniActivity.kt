@@ -36,7 +36,7 @@ import java.util.Locale
  */
 class ImpostazioniActivity : SchermataSofiOS() {
 
-    private val voci = listOf("Schermo", "Suono", "Batteria", "Spazio", "App", "Assistenti online", "Altre impostazioni", "Informazioni")
+    private val voci = listOf("Schermo", "Suono", "Batteria", "Spazio", "Cartella SofiOS", "App", "Assistenti online", "Altre impostazioni", "Informazioni")
     private var stretto = false
     private var nelContenuto = false
     private var scelta = 0
@@ -107,6 +107,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
                 Controlli.volume(this, AudioManager.STREAM_ALARM, "Volume della sveglia"))
             "Batteria" -> pagina("Batteria", *batteria())
             "Spazio" -> pagina("Spazio", *spazio())
+            "Cartella SofiOS" -> pagina("Cartella SofiOS", *cartellaSofios())
             "App" -> paginaApp()
             "Assistenti online" -> pagina("Assistenti online", *assistenti())
             "Altre impostazioni" -> pagina("Altre impostazioni di Android", *altre())
@@ -161,6 +162,20 @@ class ImpostazioniActivity : SchermataSofiOS() {
         }
         val t = if (temp > 0) String.format(Locale.ITALY, "%.1f °C", temp / 10.0) else "non disponibile"
         return arrayOf(riga("Livello", pct), riga("Stato", s), riga("Temperatura", t))
+    }
+
+    private fun cartellaSofios(): Array<View> {
+        val ok = Cartella.permesso(this)
+        val l = ArrayList<View>()
+        l.add(Stile.testo(this, "Una sola cartella con Note, Password, Foto e File, uguale su tutti i tuoi dispositivi SofiOS.", 13f, Stile.PICCOLO))
+        l.add(riga("Posizione", if (ok) "Memoria del tablet, cartella «SofiOS»" else "Privata, dentro l'app"))
+        l.add(riga("Accesso ai file", if (ok) "Concesso" else "Non concesso"))
+        if (!ok) {
+            l.add(Stile.testo(this, "Senza l'accesso ai file la cartella resta privata e gli altri dispositivi non possono sincronizzarla.", 13f, Stile.PICCOLO))
+            l.add(Stile.bottone(this, "Consenti accesso ai file", Stile.ORO, Stile.FONDO) { Controlli.apri(this, Cartella.richiestaPermesso(this)) })
+        }
+        l.add(Stile.testo(this, "La sincronizzazione con gli altri dispositivi non è ancora attiva.", 13f, Stile.PICCOLO))
+        return l.toTypedArray()
     }
 
     private fun gb(b: Long) = String.format(Locale.ITALY, "%.1f GB", b / 1_000_000_000.0)

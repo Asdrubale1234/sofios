@@ -56,7 +56,7 @@ class NoteActivity : SchermataSofiOS() {
         super.onCreate(savedInstanceState)
         window.statusBarColor = FONDO
         window.navigationBarColor = FONDO
-        cartella = File(filesDir, "Note").apply { mkdirs() }
+        cartella = Cartella.note(this)
         stretto = resources.configuration.screenWidthDp < 600
 
         val radice = LinearLayout(this).apply {

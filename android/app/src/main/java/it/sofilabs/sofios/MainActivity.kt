@@ -126,6 +126,21 @@ class MainActivity : SchermataSofiOS() {
         super.onResume()
         sofi.ondeggia(mascotteVisibile())
         aggiornaCasa()
+        if (!Cartella.permesso(this) && !memoria().getBoolean("cartella_chiesta", false)) avvisoCartella()
+    }
+
+    /** Una sola volta: spiega perché serve l'accesso ai file (Cartella SofiOS comune ai dispositivi). */
+    private fun avvisoCartella() {
+        memoria().edit().putBoolean("cartella_chiesta", true).apply()
+        val d = android.app.AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setTitle("Cartella SofiOS")
+            .setMessage("Per tenere note, password e foto uguali sugli altri tuoi dispositivi, SofiOS ha bisogno dell'accesso ai file. " +
+                "Ti porto alla pagina di Android dove si concede. Puoi farlo anche più tardi da Impostazioni, «Cartella SofiOS».")
+            .setPositiveButton("Consenti") { _, _ -> Controlli.apri(this, Cartella.richiestaPermesso(this)) }
+            .setNegativeButton("Più tardi", null)
+            .show()
+        d.getButton(android.content.DialogInterface.BUTTON_POSITIVE).isAllCaps = false
+        d.getButton(android.content.DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
     }
 
     /** Cerca Fully tra i programmi che si possono aprire: per nome del pacchetto, oppure per nome «Fully». */

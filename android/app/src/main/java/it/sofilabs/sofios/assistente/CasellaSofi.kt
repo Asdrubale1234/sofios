@@ -27,6 +27,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import it.sofilabs.sofios.Cartella
 import it.sofilabs.sofios.CassaforteActivity
 import it.sofilabs.sofios.Controlli
 import it.sofilabs.sofios.FileActivity
@@ -280,7 +281,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         }
         if (nomi.isEmpty() && estensioni == null) { di("Dimmi che file cerchi, per esempio «cerca fattura».", "preoccupata"); return }
         sofi.posa("concentrata"); risposta.text = "Cerco…"
-        val radice = File(att.getExternalFilesDir(null) ?: att.filesDir, "SofiOS")
+        val radice = Cartella.radice(att)
         Thread {
             val trovati = ArrayList<File>()
             val fine = System.currentTimeMillis() + 8000
@@ -349,7 +350,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
     private fun faSchermata() {
         sofi.posa("concentrata")
         try {
-            val cartella = File(File(att.getExternalFilesDir(null) ?: att.filesDir, "SofiOS"), "Schermate").apply { mkdirs() }
+            val cartella = File(Cartella.radice(att), "File/Schermate").apply { mkdirs() }
             val vista = att.window.decorView
             val prima = visibility
             visibility = View.INVISIBLE
@@ -358,7 +359,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             visibility = prima
             val f = File(cartella, "schermata-" + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(Date()) + ".png")
             FileOutputStream(f).use { bm.compress(Bitmap.CompressFormat.PNG, 100, it) }
-            di("Ho salvato la schermata di SofiOS nella Cartella SofiOS, dentro «Schermate».", "felice")
+            di("Ho salvato la schermata di SofiOS nella Cartella SofiOS, in «File», dentro «Schermate».", "felice")
         } catch (e: IOException) { di("Non riesco a salvare la schermata. Controlla lo spazio.", "preoccupata") }
     }
 }

@@ -94,7 +94,7 @@ class CassaforteActivity : SchermataSofiOS() {
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         }
         stretto = resources.configuration.screenWidthDp < 600
-        file = File(File(filesDir, "Password").apply { mkdirs() }, "cassaforte.kdbx")
+        file = File(Cartella.password(this), "cassaforte.kdbx")
         contenitore = FrameLayout(this).apply { setBackgroundColor(Stile.FONDO) }
         paginaSblocco = creaSblocco()
         paginaPrincipale = creaPrincipale()

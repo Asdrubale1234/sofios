@@ -44,7 +44,7 @@ class FileActivity : SchermataSofiOS() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        radiceCartella = File(getExternalFilesDir(null) ?: filesDir, "SofiOS").apply { mkdirs() }
+        radiceCartella = Cartella.radice(this)
         corrente = radiceCartella
         intent.getStringExtra(EXTRA_PERCORSO)?.let { p ->
             val f = File(p)
@@ -91,7 +91,7 @@ class FileActivity : SchermataSofiOS() {
     }
 
     private fun aggiorna() {
-        voci = (corrente.listFiles { f -> !f.name.startsWith(".") }?.toList() ?: emptyList())
+        voci = (corrente.listFiles { f -> !f.name.startsWith(".") && !f.name.endsWith(".tmp") }?.toList() ?: emptyList())
             .sortedWith(compareBy<File>({ !it.isDirectory }, { it.name.lowercase(Locale.ROOT) }))
         val rel = corrente.relativeTo(radiceCartella).path
         percorso.text = "Cartella SofiOS" + if (rel.isEmpty()) "" else " / " + rel.replace("/", " / ")
