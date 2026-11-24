@@ -6,7 +6,9 @@ desktops().forEach(function (d) {
     // la mascotte (un widget: ha la sua X per toglierla), in basso a destra sopra il dock
     var gs = {width: 1280, height: 800};
     try { gs = screenGeometry(d.screen); } catch (e) {}
-    d.addWidget("org.sofios.mascotte", Math.max(0, gs.width - 180 - 50), Math.max(0, gs.height - 284 - 110), 180, 284);
+    // Luma: alta circa un quarto dello schermo (mai troppo grande rispetto allo sfondo), in basso a destra sopra il Dock
+    var hl = Math.round(gs.height * 0.26), wl = Math.round(hl * 0.64);
+    d.addWidget("org.sofios.mascotte", Math.max(0, gs.width - wl - 50), Math.max(0, gs.height - hl - 110), wl, hl);
 });
 
 // --- Barra in alto ---
