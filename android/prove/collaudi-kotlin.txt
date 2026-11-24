@@ -26,11 +26,10 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
-> Task :app:javaPreCompileDebug
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
-> Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
+> Task :app:javaPreCompileDebug
 > Task :app:javaPreCompileDebugUnitTest
+> Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
 > Task :finto-fully:checkDebugAarMetadata
@@ -40,12 +39,13 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:extractDeepLinksDebug
+> Task :app:processDebugManifestForPackage
 > Task :finto-fully:parseDebugLocalResources
+> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
-> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:javaPreCompileDebug
+> Task :finto-fully:processDebugManifestForPackage
 > Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :app:processDebugResources
@@ -77,7 +77,7 @@ w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795541825568.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795542931626.json
 
-BUILD SUCCESSFUL in 1m 58s
+BUILD SUCCESSFUL in 1m 21s
 43 actionable tasks: 43 executed
