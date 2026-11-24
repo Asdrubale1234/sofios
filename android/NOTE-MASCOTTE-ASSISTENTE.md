@@ -39,3 +39,4 @@ Quando arriva il via: riportare le novità dal PC, identiche nell'aspetto e nei 
 - Android limita: chiudere altre app, installare/disinstallare in silenzio, volume, luminosità, cercare file ovunque.
   Provare una funzione alla volta e dire a Luca cosa funziona e cosa no.
 - Nell'app oggi c'è la mascotte attuale (faro con la X e icona nella barra): verrà sostituita da Sofi con le pose.
+- Stato: Sofi, casella dei comandi e assistenti online portati sul tablet (da provare sul T40HD).
