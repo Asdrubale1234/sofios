@@ -238,6 +238,8 @@ tocca_testo "Batteria"; sleep 2
 foto_subito I3-batteria
 tocca_testo "Spazio"; sleep 2
 foto_subito I4-spazio
+tocca_testo "Dispositivi"; sleep 3
+foto_subito I4b-dispositivi
 tocca_testo "App"; sleep 3
 foto_subito I5-app
 tocca_testo "Informazioni"; sleep 2
