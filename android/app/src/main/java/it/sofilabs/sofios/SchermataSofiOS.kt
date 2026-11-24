@@ -108,13 +108,13 @@ open class SchermataSofiOS : Activity() {
         val b = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundColor(if (sovrapposta) (if (Stile.chiaro) 0x99F2F2F7.toInt() else 0x990B2740.toInt()) else Stile.FONDO)
+            setBackgroundColor(if (sovrapposta) (if (Stile.chiaro) 0x99F2F2F7.toInt() else 0x991C1C1E.toInt()) else Stile.FONDO)
             setPadding(Stile.dp(context, 16), 0, Stile.dp(context, 16), 0)
             contentDescription = "Barra SofiOS"
             isClickable = true
         }
         b.addView(TextView(this).apply {
-            text = "SofiOS ▾"; textSize = 14f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
+            text = "SofiOS ▾"; textSize = 14f; setTextColor(Stile.ORO_TESTO); typeface = Typeface.DEFAULT_BOLD
         }, LinearLayout.LayoutParams(0, -2, 1f))
         val tb = Stile.TESTO
         barraInfo = TextView(this).apply { textSize = 14f; setTextColor(tb) }
@@ -215,7 +215,7 @@ class PannelloRapido(private val att: SchermataSofiOS) : FrameLayout(att) {
             isClickable = true; overScrollMode = View.OVER_SCROLL_NEVER
             val r = Stile.dp(att, 30).toFloat()
             background = GradientDrawable().apply {
-                setColor(if (Stile.chiaro) 0xEEF2F2F7.toInt() else 0xEE0B2740.toInt()); setStroke(Stile.dp(att, 1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF)
+                setColor(if (Stile.chiaro) 0xEEF2F2F7.toInt() else 0xEE2C2C2E.toInt()); setStroke(Stile.dp(att, 1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF)
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
         }

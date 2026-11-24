@@ -70,7 +70,9 @@ class ImpostazioniActivity : SchermataSofiOS() {
                     textSize = 17f; setTextColor(Stile.TESTO); setPadding(dp(14), dp(16), dp(14), dp(16))
                 }
                 t.text = voci[i]
-                t.background = if (i == scelta && !stretto) Stile.riquadro(this@ImpostazioniActivity, Stile.SCELTA, 8) else null
+                val sel = i == scelta && !stretto
+                t.background = if (sel) Stile.riquadro(this@ImpostazioniActivity, Stile.SCELTA, 8) else null
+                t.setTextColor(if (sel) Stile.BIANCO else Stile.TESTO)
                 return t
             }
         }
@@ -159,7 +161,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(24), dp(20), dp(24), dp(20))
         }
-        colonna.addView(Stile.testo(this, titolo, 22f, Stile.TESTO, true).apply { setPadding(0, 0, 0, dp(12)) })
+        colonna.addView(Stile.testo(this, titolo, 28f, Stile.TESTO, true).apply { setPadding(0, 0, 0, dp(12)) })
         for (v in corpo) colonna.addView(v, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         return ScrollView(this).apply { addView(colonna) }
     }
@@ -246,7 +248,9 @@ class ImpostazioniActivity : SchermataSofiOS() {
         aggiungi(c, testoSync("Per avere le stesse note, password, foto e file sul computer e sugli altri tablet, SofiOS usa un'app a parte che sincronizza soltanto dentro casa. Non passa da nessun server."))
         if (!appSyncInstallata()) {
             aggiungi(c, riga("Stato", "L'app di sincronizzazione non è installata"))
-            aggiungi(c, Stile.bottone(this, "Installa l'app di sincronizzazione", Stile.ORO, Stile.SU_ORO) { installaAppSync() })
+            aggiungi(c, Stile.bottone(this, "Installa l'app di sincronizzazione", Stile.ORO, Stile.SU_ORO) { installaAppSync() }.apply {
+                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_download, 0, 0, 0); compoundDrawablePadding = dp(10)
+            })
             aggiungi(c, Stile.bottone(this, "Ricontrolla", Stile.SECONDARIO, Stile.TESTO) { riempiDispositivi(c) })
             return
         }
@@ -325,7 +329,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
                 background = Stile.riquadro(this@ImpostazioniActivity, Stile.SECONDARIO, 12)
             }
             riga.addView(Stile.testo(this, d.nome, 17f, Stile.TESTO, true), LinearLayout.LayoutParams(0, -2, 1f))
-            riga.addView(Stile.testo(this, if (d.collegato) "Collegato" else "Non in casa", 14f, if (d.collegato) Stile.ORO else Stile.PICCOLO))
+            riga.addView(Stile.testo(this, if (d.collegato) "Collegato" else "Non in casa", 14f, if (d.collegato) Stile.ORO_TESTO else Stile.PICCOLO))
             aggiungi(c, riga)
             aggiungi(c, Stile.bottone(this, "Rimuovi ${d.nome}", Stile.SECONDARIO, Stile.TESTO) {
                 AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
@@ -399,9 +403,9 @@ class ImpostazioniActivity : SchermataSofiOS() {
                         android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(a.chiaro, a.scuro)).apply { cornerRadius = dp(12).toFloat() }
                 }
             }, LinearLayout.LayoutParams(dp(48), dp(48)))
-            riga.addView(Stile.testo(this, a.nome, 18f, Stile.TESTO, true).apply { setPadding(dp(14), 0, 0, 0) },
+            riga.addView(Stile.testo(this, a.nome, 18f, if (acceso) Stile.BIANCO else Stile.TESTO, true).apply { setPadding(dp(14), 0, 0, 0) },
                 LinearLayout.LayoutParams(0, -2, 1f))
-            riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.ORO else Stile.PICCOLO))
+            riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.BIANCO else Stile.PICCOLO))
             l.add(riga)
         }
         return l.toTypedArray()

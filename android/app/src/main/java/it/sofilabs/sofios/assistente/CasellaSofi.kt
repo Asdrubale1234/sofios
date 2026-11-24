@@ -67,7 +67,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             setPadding(dp(20), dp(16), dp(20), dp(18)); isClickable = true
             val r = dp(30).toFloat()
             background = GradientDrawable().apply {
-                setColor(if (Stile.chiaro) 0xF2F2F2F7.toInt() else 0xF00B2740.toInt()); setStroke(dp(1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF)
+                setColor(if (Stile.chiaro) 0xF2F2F2F7.toInt() else 0xF02C2C2E.toInt()); setStroke(dp(1), if (Stile.chiaro) 0x22000000 else 0x33FFFFFF)
                 cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r)
             }
         }
@@ -94,7 +94,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         scheda.addView(risposta)
         conferma.visibility = View.GONE
         conferma.addView(Stile.bottone(att, "Sì", Stile.ORO, Stile.SU_ORO) { risolvi(true) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { rightMargin = dp(6) })
-        conferma.addView(Stile.bottone(att, "No", Stile.SELEZ, Stile.BIANCO) { risolvi(false) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { leftMargin = dp(6) })
+        conferma.addView(Stile.bottone(att, "No", Stile.SECONDARIO, Stile.TESTO) { risolvi(false) }, LinearLayout.LayoutParams(0, dp(52), 1f).apply { leftMargin = dp(6) })
         scheda.addView(conferma, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
         scheda.addView(ScrollView(att).apply { addView(elenco) }, LinearLayout.LayoutParams(-1, -2))
         addView(scheda, LayoutParams(larghezza, -2, Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(SchermataSofiOS.ALTEZZA_BARRA) })

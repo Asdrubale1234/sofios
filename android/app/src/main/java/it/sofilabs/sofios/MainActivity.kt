@@ -51,7 +51,7 @@ class MainActivity : SchermataSofiOS() {
         orologio.addView(TextClock(this).apply {
             format24Hour = "EEEE d MMMM"; format12Hour = "EEEE d MMMM"
             textSize = 20f
-            setTextColor(Stile.ORO)
+            setTextColor(Stile.ORO_TESTO)
         })
         radice.addView(orologio, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START))
 
@@ -64,7 +64,8 @@ class MainActivity : SchermataSofiOS() {
         casella = CasellaSofi(this, sofi)
         radice.addView(casella, FrameLayout.LayoutParams(-1, -1))
         // Luma sta SOPRA la casella: resta luminosa e la sua X si può toccare
-        radice.addView(sofi, FrameLayout.LayoutParams(dp(200), dp(255), Gravity.BOTTOM or Gravity.END).apply {
+        val altezzaLuma = (resources.displayMetrics.heightPixels * 0.26f).toInt()   // come sul computer: circa un quarto dello schermo
+        radice.addView(sofi, FrameLayout.LayoutParams(altezzaLuma * 440 / 560, altezzaLuma, Gravity.BOTTOM or Gravity.END).apply {
             bottomMargin = dp(140); rightMargin = dp(56)
         })
 
@@ -129,6 +130,37 @@ class MainActivity : SchermataSofiOS() {
 
     private lateinit var zonaApp: LinearLayout
 
+    /** Primo avvio: scuro o chiaro, con l'anteprima dello sfondo (come nell'installazione del computer). */
+    private fun sceltaTema() {
+        var d: AlertDialog? = null
+        fun carta(nome: String, sfondo: Int, chiaro: Boolean): View = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
+            contentDescription = nome; isClickable = true
+            setPadding(dp(8), dp(8), dp(8), dp(8))
+            addView(ImageView(this@MainActivity).apply {
+                setImageResource(sfondo); scaleType = ImageView.ScaleType.CENTER_CROP
+                outlineProvider = object : android.view.ViewOutlineProvider() {
+                    override fun getOutline(v: View, o: android.graphics.Outline) { o.setRoundRect(0, 0, v.width, v.height, dp(14).toFloat()) }
+                }
+                clipToOutline = true
+            }, LinearLayout.LayoutParams(dp(190), dp(110)))
+            addView(TextView(this@MainActivity).apply {
+                text = nome; textSize = 16f; setTextColor(0xFFF2F2F7.toInt()); gravity = Gravity.CENTER
+                typeface = Typeface.DEFAULT_BOLD; setPadding(0, dp(8), 0, 0)
+            })
+            setOnClickListener {
+                memoria().edit().putBoolean("tema_scelto", true).apply()
+                d?.dismiss()
+                if (Stile.chiaro != chiaro) { Stile.imposta(this@MainActivity, chiaro); recreate() }
+                else Dock.chiediPerLeNuove(this@MainActivity) { riempiApp() }
+            }
+        }
+        val riga = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(8)) }
+        riga.addView(carta("Scuro", R.drawable.sfondo, false)); riga.addView(carta("Chiaro", R.drawable.sfondo_chiaro, true))
+        d = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setTitle("Che aspetto preferisci?").setView(riga).setCancelable(false).show()
+    }
+
     /** Le app che l'utente ha messo nel Dock (si toglie con una pressione lunga). */
     private fun riempiApp() {
         zonaApp.removeAllViews()
@@ -169,7 +201,7 @@ class MainActivity : SchermataSofiOS() {
     override fun onResume() {
         super.onResume()
         riempiApp()
-        Dock.chiediPerLeNuove(this) { riempiApp() }
+        if (!memoria().getBoolean("tema_scelto", false)) sceltaTema() else Dock.chiediPerLeNuove(this) { riempiApp() }
         sofi.ondeggia(mascotteVisibile())
         aggiornaCasa()
         if (!Cartella.permesso(this) && !memoria().getBoolean("cartella_chiesta", false)) avvisoCartella()
@@ -306,8 +338,8 @@ class MainActivity : SchermataSofiOS() {
     }
 
     companion object {
-        private const val FONDO = 0xFF0B1F33.toInt()       // blu notte del computer
-        private const val BARRA = 0xB30B1F33.toInt()
+        private const val FONDO = 0xFF1C1C1E.toInt()
+        private const val BARRA = 0xB32C2C2E.toInt()
         private const val TESTO = 0xFFE8F1F8.toInt()
         private const val ORO = 0xFFFFD479.toInt()
         private const val ORO_SCURO = 0xFFE0A93C.toInt()

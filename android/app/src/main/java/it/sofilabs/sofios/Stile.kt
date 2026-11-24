@@ -10,24 +10,29 @@ import android.widget.TextView
 
 /** Colori e piccoli pezzi comuni a tutte le app SofiOS (stessi colori del computer). */
 object Stile {
-    /** Tema scelto: false = scuro (blu notte), true = chiaro (come SofiOSChiaro del computer). */
+    /** Tema scelto: false = scuro, true = chiaro. Colori nello stile «Apple» (stessi del computer). */
     var chiaro = false
 
-    val FONDO get() = if (chiaro) 0xFFF2F2F7.toInt() else 0xFF0B2740.toInt()
-    val PANNELLO get() = if (chiaro) 0xFFFFFFFF.toInt() else 0xFF12365A.toInt()
-    val TESTO get() = if (chiaro) 0xFF1C1C1E.toInt() else 0xFFE6F1FF.toInt()
-    val PICCOLO get() = if (chiaro) 0xFF6E6E76.toInt() else 0xFF8FB3D4.toInt()
-    val SELEZ get() = if (chiaro) 0xFF0A6EDC.toInt() else 0xFF1E6FA8.toInt()
-    val SECONDARIO get() = if (chiaro) 0xFFE2E2EA.toInt() else 0xFF1E4F7C.toInt()
-    /** Riga scelta in un elenco (testo normale sopra). */
-    val SCELTA get() = if (chiaro) 0xFFD2E4FA.toInt() else 0xFF1E6FA8.toInt()
-    /** Oro: nel tema chiaro è più scuro, per potersi leggere su sfondo bianco. */
-    val ORO get() = if (chiaro) 0xFFA66A00.toInt() else 0xFFFFD479.toInt()
-    /** Testo sopra l'oro e sopra il blu: sempre leggibile. */
-    val SU_ORO get() = if (chiaro) 0xFFFFFFFF.toInt() else 0xFF0B2740.toInt()
+    val FONDO get() = if (chiaro) 0xFFF2F2F7.toInt() else 0xFF1C1C1E.toInt()
+    val PANNELLO get() = if (chiaro) 0xFFFFFFFF.toInt() else 0xFF2C2C2E.toInt()
+    val BORDO get() = if (chiaro) 0xFFD1D1D6.toInt() else 0xFF3A3A3C.toInt()
+    val TESTO get() = if (chiaro) 0xFF1C1C1E.toInt() else 0xFFF2F2F7.toInt()
+    val PICCOLO get() = if (chiaro) 0xFF6E6E73.toInt() else 0xFF8E8E93.toInt()
+    /** Blu di sistema: selezione piena (testo bianco), link, pulsanti secondari. */
+    val BLU get() = if (chiaro) 0xFF007AFF.toInt() else 0xFF0A84FF.toInt()
+    val SELEZ get() = BLU
+    val SCELTA get() = BLU
+    /** Riempimento neutro (righe, campi di testo). I pulsanti passati con questo colore diventano «secondari» (blu trasparente). */
+    val SECONDARIO get() = if (chiaro) 0xFFE5E5EA.toInt() else 0xFF3A3A3C.toInt()
+    /** Arancione: pulsante principale (testo scuro sopra). */
+    val ORO get() = if (chiaro) 0xFFFF9500.toInt() else 0xFFFF9F0A.toInt()
+    /** Arancione per i testi: nel tema chiaro è più scuro, per leggersi sul bianco. */
+    val ORO_TESTO get() = if (chiaro) 0xFFC25E00.toInt() else 0xFFFF9F0A.toInt()
+    /** Testo sopra l'arancione. */
+    val SU_ORO get() = 0xFF1C1C1E.toInt()
     const val BIANCO = 0xFFFFFFFF.toInt()
-    /** Per le cose che stanno sempre su fondo notte (barra sopra lo sfondo, dock). */
-    const val TESTO_NOTTE = 0xFFE6F1FF.toInt()
+    /** Per le cose che stanno sempre su fondo notte. */
+    const val TESTO_NOTTE = 0xFFF2F2F7.toInt()
 
     private const val PREF = "sofios"
     fun carica(c: Context) {
@@ -57,11 +62,22 @@ object Stile {
     }
 
     fun bottone(c: Context, nome: String, sfondo: Int, colore: Int, azione: () -> Unit) = TextView(c).apply {
-        text = nome; textSize = 16f; setTextColor(colore); typeface = Typeface.DEFAULT_BOLD
+        text = nome; textSize = 16f; typeface = Typeface.DEFAULT_BOLD
         gravity = Gravity.CENTER
         minimumHeight = dp(c, 48)
         setPadding(dp(c, 16), 0, dp(c, 16), 0)
-        background = riquadro(c, sfondo, 10)
+        if (sfondo == SECONDARIO) {
+            // pulsante secondario: blu trasparente con bordo e testo blu
+            setTextColor(BLU)
+            background = GradientDrawable().apply {
+                setColor(if (chiaro) 0x1A007AFF else 0x2E0A84FF)
+                setStroke(dp(c, 1), if (chiaro) 0x73007AFF else 0xFF0A84FF.toInt())
+                cornerRadius = dp(c, 10 * 14 / 10).toFloat()
+            }
+        } else {
+            setTextColor(if (sfondo == ORO) SU_ORO else colore)
+            background = riquadro(c, sfondo, 10)
+        }
         setOnClickListener { azione() }
         premi(this)
     }

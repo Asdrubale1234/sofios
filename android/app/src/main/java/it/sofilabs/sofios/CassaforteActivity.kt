@@ -136,8 +136,8 @@ class CassaforteActivity : SchermataSofiOS() {
         campoPw2.setOnEditorActionListener { _, _, e ->
             if (e == null || e.action == android.view.KeyEvent.ACTION_DOWN) sblocca(); true
         }
-        avvisoSblocco = Stile.testo(this, "Se la dimentichi, nessuno può recuperare le tue password: nemmeno noi.", 13f, Stile.ORO)
-        erroreSblocco = Stile.testo(this, "", 14f, Stile.ORO).apply { gravity = Gravity.CENTER; contentDescription = "Errore" }
+        avvisoSblocco = Stile.testo(this, "Se la dimentichi, nessuno può recuperare le tue password: nemmeno noi.", 13f, Stile.ORO_TESTO)
+        erroreSblocco = Stile.testo(this, "", 14f, Stile.ORO_TESTO).apply { gravity = Gravity.CENTER; contentDescription = "Errore" }
         bottoneSblocco = Stile.bottone(this, "", Stile.ORO, Stile.SU_ORO) { sblocca() }
         colonna.addView(titoloSblocco, largo); colonna.addView(testoSblocco, largo)
         colonna.addView(campoPw, largo); colonna.addView(campoPw2, largo)
@@ -312,7 +312,7 @@ class CassaforteActivity : SchermataSofiOS() {
         colonnaElenco.addView(elenco, LinearLayout.LayoutParams(-1, 0, 1f))
         colonnaElenco.addView(Stile.bottone(this, "Nuova password", Stile.ORO, Stile.SU_ORO) { modificaVoce(null) },
             LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) })
-        colonnaElenco.addView(Stile.bottone(this, "Blocca", Stile.SELEZ, Stile.BIANCO) { blocca() },
+        colonnaElenco.addView(Stile.bottone(this, "Blocca", Stile.SECONDARIO, Stile.TESTO) { blocca() },
             LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) })
 
         colonnaDettaglio = FrameLayout(this)
@@ -340,7 +340,7 @@ class CassaforteActivity : SchermataSofiOS() {
             orientation = LinearLayout.VERTICAL; setPadding(dp(26), dp(22), dp(26), dp(20))
             background = Stile.riquadro(this@CassaforteActivity, Stile.PANNELLO, 14)
         }
-        if (stretto) colonna.addView(Stile.testo(this, "‹ Elenco", 16f, Stile.ORO, true).apply {
+        if (stretto) colonna.addView(Stile.testo(this, "‹ Elenco", 16f, Stile.ORO_TESTO, true).apply {
             setPadding(0, 0, 0, dp(8)); setOnClickListener { mostraElenco() }
         })
         dTitolo = Stile.testo(this, "", 24f, Stile.TESTO, true).apply { contentDescription = "Titolo della voce" }
@@ -362,13 +362,13 @@ class CassaforteActivity : SchermataSofiOS() {
         riga("Password", dPassword, dMostra, piccolo("Copia password") { copia(scelta?.password, true) })
         riga("Sito", dSito)
         riga("Note", dNote)
-        dAvviso = Stile.testo(this, "", 13f, Stile.ORO).apply { setPadding(0, dp(10), 0, 0) }
+        dAvviso = Stile.testo(this, "", 13f, Stile.ORO_TESTO).apply { setPadding(0, dp(10), 0, 0) }
         colonna.addView(dAvviso)
         colonna.addView(View(this), LinearLayout.LayoutParams(-1, 0, 1f))
         val b = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         b.addView(Stile.bottone(this, "Modifica", Stile.ORO, Stile.SU_ORO) { modificaVoce(scelta) },
             LinearLayout.LayoutParams(0, dp(48), 1f).apply { rightMargin = dp(8) })
-        b.addView(Stile.bottone(this, "Elimina", Stile.SELEZ, Stile.BIANCO) { eliminaVoce() },
+        b.addView(Stile.bottone(this, "Elimina", Stile.SECONDARIO, Stile.TESTO) { eliminaVoce() },
             LinearLayout.LayoutParams(0, dp(48), 1f).apply { leftMargin = dp(8) })
         colonna.addView(b)
         return colonna
@@ -427,7 +427,10 @@ class CassaforteActivity : SchermataSofiOS() {
             (r.getChildAt(0) as TextView).text = x.titolo.ifEmpty { "(senza nome)" }
             (r.getChildAt(1) as TextView).text = x.utente
             r.getChildAt(1).visibility = if (x.utente.isEmpty()) View.GONE else View.VISIBLE
-            r.background = if (x.id == scelta?.id && !stretto) Stile.riquadro(this@CassaforteActivity, Stile.SCELTA, 8) else null
+            val sel = x.id == scelta?.id && !stretto
+            r.background = if (sel) Stile.riquadro(this@CassaforteActivity, Stile.SCELTA, 8) else null
+            (r.getChildAt(0) as TextView).setTextColor(if (sel) Stile.BIANCO else Stile.TESTO)
+            (r.getChildAt(1) as TextView).setTextColor(if (sel) 0xCCFFFFFF.toInt() else Stile.PICCOLO)
             return r
         }
     }

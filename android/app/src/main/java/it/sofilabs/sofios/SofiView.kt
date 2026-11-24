@@ -51,7 +51,7 @@ class SofiView(context: Context) : FrameLayout(context) {
             text = "✕"; textSize = 13f; setTextColor(0xFFFFFFFF.toInt()); gravity = Gravity.CENTER
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             contentDescription = "Nascondi Luma"
-            background = GradientDrawable().apply { setColor(0xAA0B2740.toInt()); shape = GradientDrawable.OVAL; setStroke(d, 0x66FFFFFF) }
+            background = GradientDrawable().apply { setColor(0xAA1C1C1E.toInt()); shape = GradientDrawable.OVAL; setStroke(d, 0x66FFFFFF) }
             setOnClickListener { alNascondere() }
             visibility = View.GONE
         }

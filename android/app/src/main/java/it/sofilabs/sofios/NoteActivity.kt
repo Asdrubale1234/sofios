@@ -81,13 +81,13 @@ class NoteActivity : SchermataSofiOS() {
         }
         colonnaElenco.addView(elenco, LinearLayout.LayoutParams(-1, 0, 1f))
         colonnaElenco.addView(bottone("Nuova nota", Stile.ORO, Stile.SU_ORO) { nuova() }, voceBottone())
-        colonnaElenco.addView(bottone("Elimina nota", Stile.SELEZ, Stile.BIANCO) { elimina() }, voceBottone())
+        colonnaElenco.addView(bottone("Elimina nota", Stile.SECONDARIO, Stile.TESTO) { elimina() }, voceBottone())
 
         // Colonna del testo
         colonnaTesto = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         if (stretto) {
             colonnaTesto.addView(TextView(this).apply {
-                text = "‹ Note"; textSize = 20f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
+                text = "‹ Note"; textSize = 20f; setTextColor(Stile.ORO_TESTO); typeface = Typeface.DEFAULT_BOLD
                 setPadding(0, 0, 0, dp(10))
                 setOnClickListener { mostraElenco() }
             })
@@ -181,7 +181,7 @@ class NoteActivity : SchermataSofiOS() {
         banner.visibility = View.VISIBLE
         val altra = leggi(c)
         banner.addView(TextView(this).apply {
-            text = "Ci sono due versioni di questa nota"; textSize = 17f; setTextColor(Stile.ORO); typeface = Typeface.DEFAULT_BOLD
+            text = "Ci sono due versioni di questa nota"; textSize = 17f; setTextColor(Stile.ORO_TESTO); typeface = Typeface.DEFAULT_BOLD
         })
         banner.addView(TextView(this).apply {
             text = "L'altra versione, arrivata da un altro dispositivo, dice:"; textSize = 13f; setTextColor(Stile.PICCOLO)
@@ -196,8 +196,8 @@ class NoteActivity : SchermataSofiOS() {
             riga.addView(Stile.bottone(this, nome, sfondo, colore, azione).apply { textSize = 14f },
                 LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(dp(3), 0, dp(3), 0) })
         }
-        pulsante("Tieni questa", Stile.SELEZ, Stile.BIANCO) { mettiDaParte(c); aggiornaBanner() }
-        pulsante("Tieni l'altra", Stile.SELEZ, Stile.BIANCO) {
+        pulsante("Tieni questa", Stile.SECONDARIO, Stile.TESTO) { mettiDaParte(c); aggiornaBanner() }
+        pulsante("Tieni l'altra", Stile.SECONDARIO, Stile.TESTO) {
             testo.setText(altra); salva(); mettiDaParte(c); aggiornaBanner()
         }
         pulsante("Tieni tutte e due", Stile.ORO, Stile.SU_ORO) {
@@ -314,19 +314,14 @@ class NoteActivity : SchermataSofiOS() {
                 setPadding(dp(12), dp(14), dp(12), dp(14))
             }
             t.text = titoli.getOrElse(i) { "" }
-            t.background = if (note[i] == corrente) riquadro(Stile.SCELTA, 8) else null
+            val sel = note[i] == corrente
+            t.background = if (sel) riquadro(Stile.SCELTA, 8) else null
+            t.setTextColor(if (sel) Stile.BIANCO else Stile.TESTO)
             return t
         }
     }
 
-    private fun bottone(nome: String, sfondo: Int, colore: Int, azione: () -> Unit) =
-        TextView(this).apply {
-            text = nome; textSize = 16f; setTextColor(colore); typeface = Typeface.DEFAULT_BOLD
-            gravity = Gravity.CENTER
-            minimumHeight = dp(48)
-            background = riquadro(sfondo, 10)
-            setOnClickListener { azione() }
-        }
+    private fun bottone(nome: String, sfondo: Int, colore: Int, azione: () -> Unit) = Stile.bottone(this, nome, sfondo, colore, azione)
 
     private fun voceBottone() = LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) }
 
