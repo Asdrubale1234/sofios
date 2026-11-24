@@ -11,7 +11,7 @@ NOTE = os.environ.get("SOFIOS_NOTE", os.path.join(BASE, "Note"))
 PASSWORD_FILE = os.environ.get("SOFIOS_PASSWORD_FILE", os.path.join(BASE, "Password", "cassaforte.kdbx"))
 VECCHIE_NOTE = os.path.expanduser("~/Note")
 VECCHIA_PASSWORD = os.path.expanduser("~/Password/cassaforte.kdbx")
-STIGNORE = "// SofiOS: i file temporanei di salvataggio non si sincronizzano\n*.tmp\n"
+STIGNORE = "// SofiOS: i file temporanei di salvataggio e le copie delle versioni gia' risolte non si sincronizzano\n*.tmp\n.conflitti\n"
 
 def prepara():
     for sotto, modo in (("Note", 0o755), ("Password", 0o700), ("Foto", 0o755), ("File", 0o755), (os.path.join("File", "Schermate"), 0o755)):

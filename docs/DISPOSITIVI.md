@@ -46,8 +46,13 @@ Testi in italiano semplice. Mai nomi di Syncthing nell'interfaccia (solo in «Co
 **Impostazioni fisse:** scoperta globale, relay, attraversamento del router, statistiche d'uso e aggiornamenti da soli sono spenti. La pagina web interna ascolta solo su `127.0.0.1:8385`.
 **QR:** contiene il codice del dispositivo (il codice Syncthing di 56 caratteri); l'app del tablet può leggerlo direttamente.
 
+**Fatto dopo il confronto con la chat del tablet (24 novembre):**
+- `.stignore` ora ignora anche `.conflitti` (come sul tablet).
+- Cassaforte nuova: Argon2d 32 MiB, 4 passaggi, parallelismo 2 (`parametri_nuova()`), da usare uguale sul tablet per le casseforti nuove. Ogni dispositivo apre comunque le casseforti con altri parametri.
+- Note: avviso «Ci sono due versioni di questa nota» con Tieni questa / Tieni l'altra / Tieni tutte e due; le risolte vanno in `Note/.conflitti`.
+- Cassaforte: allo sblocco si uniscono da sole le copie `cassaforte.sync-conflict-*.kdbx` (copie unite in `Password/.conflitti`).
+- Collegamento: il QR contiene **solo il codice di 56 caratteri**, in maiuscolo con i trattini, senza nome. Il nome viaggia con il collegamento. Sul tablet l'app Syncthing-Fork legge il QR da sola o accetta il codice incollato. SofiOS Android non deve avere un lettore di QR.
+
 **Da fare, in ordine:**
 1. (fatto, vedi sopra)
-2. Avviso «due versioni» nelle Note.
-3. Unione automatica della cassaforte quando compare un file in conflitto.
 4. Foto sincronizzate in tutte e due le direzioni, con il cestino a 30 giorni.

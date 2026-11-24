@@ -58,6 +58,12 @@ def _con_cronologia(kp, vincente_el, perdente_el):
             h.append(copy.deepcopy(v)); presenti.add(t)
     return nuovo
 
+def parametri_nuova(kp):
+    """parametri di cifratura delle cassaforti NUOVE, uguali su PC e tablet: KDBX 4, AES-256, Argon2d 32 MiB / 4 passaggi / parallelismo 2, gzip.
+    Ogni dispositivo apre comunque le cassaforti con parametri diversi (sono scritti nel file)."""
+    p = kp.kdbx.header.value.dynamic_header.kdf_parameters.data.dict
+    p["M"].value = 32 * 1024 * 1024; p["I"].value = 4; p["P"].value = 2
+
 def elimina_voce(kp, voce):
     """elimina una voce e lo ricorda nell'elenco DeletedObjects, cosi' l'unione non la fa tornare dall'altro dispositivo"""
     import datetime, lxml.etree as E
@@ -116,3 +122,20 @@ def unisci(locale, remoto, password, uscita=None, keyfile=None):
     if os.path.exists(uscita): shutil.copy2(uscita, uscita + ".bak")
     tmp = uscita + ".tmp"; L.save(tmp); os.replace(tmp, uscita)
     return {"aggiunte": agg, "rimosse": rim, "vinte_dal_remoto": vinte, "tenute_locali": tenute}
+
+
+def unisci_conflitti(file, password):
+    """unisce le copie «cassaforte.sync-conflict-*.kdbx» create dalla sincronizzazione quando due dispositivi hanno salvato nello stesso momento.
+    Le copie unite vanno in Password/.conflitti. Se la password e' diversa, la copia resta dov'e'. Ritorna (unite, non_riuscite)."""
+    import glob
+    cartella = os.path.dirname(file); unite = non = 0
+    for c in sorted(glob.glob(os.path.join(cartella, "cassaforte.sync-conflict-*.kdbx"))):
+        try:
+            unisci(file, c, password)
+            d = os.path.join(cartella, ".conflitti"); os.makedirs(d, exist_ok=True)
+            dest = os.path.join(d, os.path.basename(c)); n = 1
+            while os.path.exists(dest): dest = os.path.join(d, "%d-%s" % (n, os.path.basename(c))); n += 1
+            shutil.move(c, dest); unite += 1
+        except Exception:
+            non += 1
+    return unite, non

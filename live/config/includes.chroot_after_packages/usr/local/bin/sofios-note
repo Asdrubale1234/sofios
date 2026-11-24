@@ -9,6 +9,7 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QApplication, QWidget, QListWidget, QListWidgetItem, QPlainTextEdit,
                              QPushButton, QHBoxLayout, QVBoxLayout, QLabel, QMessageBox)
 
+import glob, shutil
 import cartella_sofios as CS
 CARTELLA = CS.NOTE
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
@@ -44,7 +45,14 @@ class Note(QWidget):
         sx.addWidget(bottone_informazioni(self, "Note", "Le tue note, salvate da sole nella cartella Note."))
         radice.addLayout(sx)
         self.testo = QPlainTextEdit(); self.testo.setPlaceholderText("Scrivi qui la tua nota…")
-        radice.addWidget(self.testo, 1)
+        dx = QVBoxLayout(); dx.setSpacing(10)
+        self.avviso = QWidget(); self.avviso.setObjectName("scheda"); av = QVBoxLayout(self.avviso); av.setContentsMargins(14, 10, 14, 10)
+        self.avviso_t = QLabel(""); self.avviso_t.setWordWrap(True); av.addWidget(self.avviso_t)
+        rb = QHBoxLayout()
+        for testo, azione in (("Tieni questa", self.tieni_questa), ("Tieni l'altra", self.tieni_altra), ("Tieni tutte e due", self.tieni_entrambe)):
+            b = QPushButton(testo); b.clicked.connect(azione); rb.addWidget(b)
+        av.addLayout(rb); self.avviso.hide(); dx.addWidget(self.avviso); dx.addWidget(self.testo, 1)
+        radice.addLayout(dx, 1)
         self.salva_t = QTimer(self); self.salva_t.setSingleShot(True); self.salva_t.setInterval(600); self.salva_t.timeout.connect(self.salva)
         self.testo.textChanged.connect(self.salva_t.start)
         self.elenco.currentItemChanged.connect(self.apri)
@@ -52,7 +60,7 @@ class Note(QWidget):
         if self.elenco.count() == 0: self.nuova()
 
     def percorsi(self):
-        f = [os.path.join(CARTELLA, n) for n in os.listdir(CARTELLA) if n.endswith(".txt")]
+        f = [os.path.join(CARTELLA, n) for n in os.listdir(CARTELLA) if n.endswith(".txt") and ".sync-conflict-" not in n]
         return sorted(f, key=os.path.getmtime, reverse=True)
 
     def carica(self, scegli=None):
@@ -75,6 +83,56 @@ class Note(QWidget):
         try: self.salvato = open(self.corrente, encoding="utf-8").read()
         except OSError: self.salvato = ""
         self.testo.blockSignals(True); self.testo.setPlainText(self.salvato); self.testo.blockSignals(False)
+        self.controlla_conflitto()
+
+    # ---- due versioni della stessa nota (modificata su due dispositivi senza rete) ----
+    def conflitti_di(self, percorso):
+        base = os.path.basename(percorso)[:-4]
+        return sorted(glob.glob(os.path.join(CARTELLA, base + ".sync-conflict-*.txt")))
+
+    def controlla_conflitto(self):
+        self.altra = None
+        if self.corrente:
+            c = self.conflitti_di(self.corrente)
+            if c: self.altra = c[0]
+        if not self.altra: self.avviso.hide(); return
+        try: altro = open(self.altra, encoding="utf-8").read()
+        except OSError: self.avviso.hide(); return
+        anteprima = " ".join(altro.split())[:160]
+        self.avviso_t.setText("Ci sono due versioni di questa nota. L'altra dice: «%s…»" % anteprima); self.avviso.show()
+
+    def _metti_da_parte(self, percorso):
+        d = os.path.join(CARTELLA, ".conflitti"); os.makedirs(d, exist_ok=True)
+        dest = os.path.join(d, os.path.basename(percorso)); n = 1
+        while os.path.exists(dest): dest = os.path.join(d, "%d-%s" % (n, os.path.basename(percorso))); n += 1
+        shutil.move(percorso, dest)
+
+    def tieni_questa(self):
+        if self.altra: self._metti_da_parte(self.altra)
+        self.controlla_conflitto()
+
+    def tieni_altra(self):
+        if not self.altra: return
+        self.salva()
+        try:
+            nuovo = open(self.altra, encoding="utf-8").read()
+            vecchia = self.corrente + ".questa-versione"; shutil.copy2(self.corrente, vecchia); self._metti_da_parte(vecchia)
+            with open(self.corrente + ".tmp", "w", encoding="utf-8") as f: f.write(nuovo)
+            os.replace(self.corrente + ".tmp", self.corrente); self._metti_da_parte(self.altra)
+        except OSError:
+            QMessageBox.warning(self, "Note", "Non riesco a cambiare la nota."); return
+        self.carica(scegli=self.corrente)
+
+    def tieni_entrambe(self):
+        if not self.altra: return
+        self.salva(); base = time.strftime("nota-%Y%m%d-%H%M%S"); n = 1
+        while True:
+            dest = os.path.join(CARTELLA, base + ("" if n == 1 else "-%d" % n) + ".txt")
+            if not os.path.exists(dest): break
+            n += 1
+        try: os.replace(self.altra, dest)
+        except OSError: QMessageBox.warning(self, "Note", "Non riesco a tenere tutte e due."); return
+        self.carica(scegli=self.corrente)
 
     def voce_di(self, percorso):
         for i in range(self.elenco.count()):
