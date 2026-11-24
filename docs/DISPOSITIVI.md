@@ -17,7 +17,8 @@ SofiOS/
 ## 2. Come si sincronizza
 - **Syncthing** (programma aperto, dati cifrati, nessun nostro server). Solo **rete di casa**: scoperta locale sì; scoperta globale, relay e attraversamento del router **no**.
 - Sul PC Syncthing parte come servizio dell'utente, con la sua pagina web chiusa agli altri (solo `127.0.0.1`) e la chiave di accesso generata alla prima accensione. SofiOS lo guida e ne mostra lo stato; l'utente non vede mai Syncthing.
-- **Foto:** il tablet invia la cartella della fotocamera (DCIM) in sola spedizione; sul PC arriva in `SofiOS/Foto` in sola ricezione. Così cancellare una foto sul PC non la toglie dal tablet, e viceversa non si perde niente. (Proposta, da confermare con Luca.)
+- **Foto: tutto sincronizzato in tutte e due le direzioni, come iCloud Foto** (decisione di Luca). Una foto scattata sul tablet arriva sul PC e viceversa; se la **elimini su un dispositivo si elimina ovunque**. Sul tablet la cartella della fotocamera (DCIM) è collegata a `SofiOS/Foto` del PC.
+- **Rete di sicurezza proposta:** in tutte le cartelle si attiva il **cestino a tempo** di Syncthing (le copie eliminate restano 30 giorni in una cartella nascosta e si possono recuperare), così un'eliminazione per errore non è per sempre. Sul tablet l'eliminazione di un file della fotocamera chiede il permesso di Android (limite del sistema).
 
 ## 3. Pagina «Dispositivi» (nelle impostazioni di SofiOS)
 1. Elenco dei dispositivi collegati, con icona (computer, tablet, telefono, TV), nome («PC di Luca») e stato: *Collegato* · *Sincronizzo…* · *Non in casa*.
@@ -43,4 +44,4 @@ Testi in italiano semplice. Mai nomi di Syncthing nell'interfaccia (solo in «Co
 1. Pagina «Dispositivi» con il QR (serve il pacchetto Syncthing nella ISO e il servizio dell'utente, spento finché non si collega il primo dispositivo).
 2. Avviso «due versioni» nelle Note.
 3. Unione automatica della cassaforte quando compare un file in conflitto.
-4. Cartella Foto e foto del PC verso gli altri dispositivi, se Luca lo vorrà.
+4. Foto sincronizzate in tutte e due le direzioni, con il cestino a 30 giorni.
