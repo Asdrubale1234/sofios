@@ -384,8 +384,10 @@ foto C1-crea-cassaforte
 tocca_testo "Password principale"; adb shell input text "prova-android-1"; sleep 1
 tocca_testo "Ripeti la password principale"; adb shell input text "prova-android-1"; sleep 1
 foto_subito C1b-password-scritte
+T0=$(date +%s.%N)
 tocca_ultimo "Crea cassaforte"
 attendi "Nuova password" 90 || scrivi "ATTENZIONE: la cassaforte non si è aperta"
+scrivi "TEMPO creazione di una cassaforte nuova (Argon2d 32 MiB, 4 passaggi): circa $(python3 -c "import time; print(round(time.time()-$T0-3,1))") secondi, controllo ogni 3 s (simulatore, non è il T40HD)"
 foto C2-cassaforte-vuota
 scrivi "--- errori di Android durante la creazione (se ce ne sono):"
 adb logcat -d -b crash 2>&1 | head -60 | tee -a "$LOG"
@@ -411,8 +413,9 @@ foto_subito C7-password-sbagliata
 tocca_testo "Password principale"
 adb shell input keyevent KEYCODE_MOVE_END
 for _ in $(seq 1 20); do adb shell input keyevent KEYCODE_DEL; done
-adb shell input text "prova-android-1"; adb shell input keyevent KEYCODE_ENTER
+adb shell input text "prova-android-1"; T0=$(date +%s.%N); adb shell input keyevent KEYCODE_ENTER
 attendi "Nuova password" 90 || scrivi "ATTENZIONE: non si è sbloccata con la password giusta"
+scrivi "TEMPO sblocco della cassaforte fatta dal tablet: circa $(python3 -c "import time; print(round(time.time()-$T0-3,1))") secondi (simulatore)"
 foto C8-sbloccata-di-nuovo
 adb exec-out cat /sdcard/SofiOS/Password/cassaforte.kdbx > "$OUT/cassaforte-da-android.kdbx"
 scrivi "file della cassaforte fatto da Android: $(wc -c < "$OUT/cassaforte-da-android.kdbx") byte"
@@ -424,8 +427,9 @@ if [ -n "$FIXTURE" ] && [ -f "$FIXTURE" ]; then
   adb push "$FIXTURE" /sdcard/SofiOS/Password/cassaforte.kdbx >/dev/null; adb shell rm -f /sdcard/SofiOS/Password/cassaforte.kdbx.bak
   adb shell input keyevent KEYCODE_HOME; sleep 4
   tocca_testo "Cassaforte"; sleep 3
-  tocca_testo "Password principale"; adb shell input text "pc-password-1"; adb shell input keyevent KEYCODE_ENTER
+  tocca_testo "Password principale"; adb shell input text "pc-password-1"; T0=$(date +%s.%N); adb shell input keyevent KEYCODE_ENTER
   attendi "Sito di prova" 120 || scrivi "ATTENZIONE: la cassaforte del computer non si è aperta"
+  scrivi "TEMPO sblocco di una cassaforte fatta dal PC con le impostazioni di prima (Argon2d 64 MiB, 14 passaggi): circa $(python3 -c "import time; print(round(time.time()-$T0-3,1))") secondi (simulatore)"
   foto C9-cassaforte-del-computer
   tocca_testo "Sito di prova"; sleep 2
   foto_subito C10-voce-del-computer

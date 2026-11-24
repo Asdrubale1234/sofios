@@ -419,9 +419,10 @@ class Kdbx private constructor(
         private val KDF_ARGON2ID = hex("9E298B1956DB4773B23DFC3EC6F0A1E6")
         private val KDF_AES = hex("C9D9F39A628A4460BF740D08C18A4FEA")
 
-        // Impostazioni delle nuove cassaforti (più alte = più sicure ma più lente sui tablet modesti).
-        const val ARGON_MEMORIA_KIB = 19 * 1024
-        const val ARGON_ITERAZIONI = 2
+        // Impostazioni delle nuove cassaforti, uguali a quelle del computer (cassaforte_unione.parametri_nuova):
+        // Argon2d 32 MiB, 4 passaggi, parallelismo 2. Più alte = più sicure ma più lente sui tablet modesti.
+        const val ARGON_MEMORIA_KIB = 32 * 1024
+        const val ARGON_ITERAZIONI = 4
         const val ARGON_PARALLELISMO = 2
 
         fun hex(s: String) = ByteArray(s.length / 2) { s.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
