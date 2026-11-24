@@ -242,6 +242,20 @@ tocca_testo "Dispositivi"; sleep 3
 foto_subito I4b-dispositivi
 tocca_testo "App"; sleep 3
 foto_subito I5-app
+# Dock: mettere un'app nel Dock dalla pagina App (domanda «Metti nel Dock»), vederla, toglierla
+tocca_testo "Fully (FINTO, solo prova)"; sleep 2
+foto_subito I5b-app-opzioni
+tocca_testo "Metti nel Dock"; sleep 2
+adb shell input keyevent 3; sleep 3
+foto_subito D1-dock-con-app
+[ -n "$(limiti_di "Fully (FINTO, solo prova)")" ] || scrivi "ATTENZIONE: l'app messa nel Dock non compare"
+tocca_a_lungo "Fully (FINTO, solo prova)"; sleep 2
+foto_subito D2-togli-dal-dock
+tocca_testo "Togli dal Dock"; sleep 2
+[ -z "$(limiti_di "Fully (FINTO, solo prova)")" ] || scrivi "ATTENZIONE: l'app è ancora nel Dock dopo «Togli dal Dock»"
+foto_subito D3-dock-senza-app
+tocca_testo "Impostazioni"; sleep 3
+tocca_testo "App"; sleep 3
 tocca_testo "Informazioni"; sleep 2
 foto_subito I6-informazioni
 tocca_testo "Altre impostazioni"; sleep 2

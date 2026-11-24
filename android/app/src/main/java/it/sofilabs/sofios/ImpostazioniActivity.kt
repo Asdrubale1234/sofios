@@ -433,7 +433,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             setPadding(dp(24), dp(20), dp(24), dp(12))
         }
         colonna.addView(Stile.testo(this, "App", 22f, Stile.TESTO, true).apply { setPadding(0, 0, 0, dp(6)) })
-        colonna.addView(Stile.testo(this, "${app.size} app. Tocca un'app per aprirla o disinstallarla.", 13f, Stile.PICCOLO))
+        colonna.addView(Stile.testo(this, "${app.size} app. Tocca un'app per aprirla, metterla nel Dock o disinstallarla.", 13f, Stile.PICCOLO))
         colonna.addView(ListView(this).apply {
             divider = null; dividerHeight = 0
             adapter = object : BaseAdapter() {
@@ -463,12 +463,16 @@ class ImpostazioniActivity : SchermataSofiOS() {
         val pacchetto = r.activityInfo.packageName
         val nome = r.loadLabel(packageManager).toString()
         val diSistema = (r.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-        val scelte = if (diSistema) arrayOf("Apri", "Informazioni dell'app") else arrayOf("Apri", "Disinstalla", "Informazioni dell'app")
+        val inDock = Dock.inDock(this, pacchetto)
+        val dock = if (inDock) "Togli dal Dock" else "Metti nel Dock"
+        val scelte = if (diSistema) arrayOf("Apri", dock, "Informazioni dell'app") else arrayOf("Apri", dock, "Disinstalla", "Informazioni dell'app")
         AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
             .setTitle(nome)
             .setItems(scelte) { _, k ->
                 when (scelte[k]) {
                     "Apri" -> packageManager.getLaunchIntentForPackage(pacchetto)?.let { startActivity(it) }
+                    "Metti nel Dock" -> Dock.fissaConScelta(this, pacchetto) { }
+                    "Togli dal Dock" -> Dock.togli(this, pacchetto)
                     "Disinstalla" -> disinstalla(pacchetto, nome)
                     else -> Controlli.apri(this, Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$pacchetto")))
                 }

@@ -1,5 +1,6 @@
 package it.sofilabs.sofios
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
@@ -112,6 +113,9 @@ class MainActivity : SchermataSofiOS() {
         barra.addView(icona("Mostra o nascondi Luma", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true, etichetta = "Luma") {
             impostaMascotte(!mascotteVisibile())
         })
+        zonaApp = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        barra.addView(zonaApp)
+        riempiApp()
         radice.addView(barra, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
             bottomMargin = dp(16)
         })
@@ -123,8 +127,49 @@ class MainActivity : SchermataSofiOS() {
         if (primaVoltaDopoAccensione() && casaAuto() && fullyInstallato()) apriFully()
     }
 
+    private lateinit var zonaApp: LinearLayout
+
+    /** Le app che l'utente ha messo nel Dock (si toglie con una pressione lunga). */
+    private fun riempiApp() {
+        zonaApp.removeAllViews()
+        val pm = packageManager
+        for (p in Dock.daMostrare(this)) {
+            val nome = try { pm.getApplicationInfo(p, 0).loadLabel(pm).toString() } catch (e: Exception) { continue }
+            val icona = try { pm.getApplicationIcon(p) } catch (e: Exception) { continue }
+            val tessera = ImageView(this).apply {
+                setImageDrawable(icona); scaleType = ImageView.ScaleType.FIT_CENTER
+                outlineProvider = object : android.view.ViewOutlineProvider() {
+                    override fun getOutline(v: View, o: android.graphics.Outline) { o.setRoundRect(0, 0, v.width, v.height, dp(18).toFloat()) }
+                }
+                clipToOutline = true; elevation = dp(3).toFloat()
+            }
+            val etichetta = TextView(this).apply {
+                text = nome; textSize = 11.5f; setTextColor(Stile.TESTO); gravity = Gravity.CENTER
+                typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL); maxLines = 1
+                ellipsize = android.text.TextUtils.TruncateAt.END; setPadding(0, dp(6), 0, 0)
+            }
+            zonaApp.addView(LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
+                contentDescription = nome; isClickable = true
+                addView(tessera, LinearLayout.LayoutParams(dp(76), dp(76)))
+                addView(etichetta, LinearLayout.LayoutParams(dp(88), -2))
+                layoutParams = LinearLayout.LayoutParams(dp(92), -2).apply { setMargins(dp(4), 0, dp(4), 0) }
+                setOnClickListener { pm.getLaunchIntentForPackage(p)?.let { startActivity(it) } }
+                setOnLongClickListener {
+                    AlertDialog.Builder(this@MainActivity, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                        .setTitle(nome).setItems(arrayOf("Togli dal Dock")) { _, _ -> Dock.togli(this@MainActivity, p); riempiApp() }
+                        .setNegativeButton("Chiudi", null).show().getButton(android.content.DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
+                    true
+                }
+                Stile.premi(this)
+            })
+        }
+    }
+
     override fun onResume() {
         super.onResume()
+        riempiApp()
+        Dock.chiediPerLeNuove(this) { riempiApp() }
         sofi.ondeggia(mascotteVisibile())
         aggiornaCasa()
         if (!Cartella.permesso(this) && !memoria().getBoolean("cartella_chiesta", false)) avvisoCartella()
