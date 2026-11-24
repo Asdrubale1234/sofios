@@ -2,7 +2,7 @@
 desktops().forEach(function (d) {
     d.wallpaperPlugin = "org.kde.image";
     d.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
-    d.writeConfig("Image", "file:///usr/share/wallpapers/SofiOSArgento");
+    d.writeConfig("Image", "file:///usr/share/wallpapers/SofiOS");
     // la mascotte (un widget: ha la sua X per toglierla), in basso a destra sopra il dock
     var gs = {width: 1280, height: 800};
     try { gs = screenGeometry(d.screen); } catch (e) {}

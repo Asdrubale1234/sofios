@@ -28,9 +28,9 @@ for d in Scrivania Scaricati Modelli Pubblici Documenti Musica Immagini Video; d
 mkdir -p /etc/xdg
 kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key LookAndFeelPackage org.sofios.desktop 2>/dev/null || \
  printf '[KDE]\nLookAndFeelPackage=org.sofios.desktop\n' >> /etc/xdg/kdeglobals
-# "Impostazioni rapide" propone due temi (argento e grigio scuro): entrambi SofiOS, cosi' un clic non riporta l'aspetto di KDE
+# "Impostazioni rapide" propone due temi (chiaro e scuro): entrambi SofiOS, cosi' un clic non riporta l'aspetto di KDE
 for k in DefaultLightLookAndFeel DefaultDarkLookAndFeel; do
-  v=org.sofios.graphite; [ "$k" = DefaultLightLookAndFeel ] && v=org.sofios.desktop
+  v=org.sofios.desktop; [ "$k" = DefaultLightLookAndFeel ] && v=org.sofios.light
   kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key "$k" "$v" 2>/dev/null || \
    printf "[KDE]\n%s=%s\n" "$k" "$v" >> /etc/xdg/kdeglobals
 done
