@@ -308,13 +308,18 @@ scrivi "Sofi dice: $(risposta_sofi)"
 foto_subito S3-tema
 # giro in tema chiaro: schermata iniziale, Note, Impostazioni (la casella si chiude da sola quando il tema cambia)
 sleep 3; foto T1-casa-tema-chiaro
+tocca_testo "Barra SofiOS"; sleep 2; foto_subito T1b-pannello-tema-chiaro
+tocca_testo "Barra SofiOS"; sleep 1
 tocca_testo "Note"; sleep 3; foto T2-note-tema-chiaro
 adb shell input keyevent 3; sleep 2
 tocca_testo "Impostazioni"; sleep 3; foto T3-impostazioni-tema-chiaro
 adb shell input keyevent 3; sleep 2
+tocca_testo "File"; sleep 3; foto T3b-file-tema-chiaro
+adb shell input keyevent 3; sleep 2
 tocca_testo "Cassaforte"; sleep 3; foto T4-cassaforte-tema-chiaro
 adb shell input keyevent 3; sleep 2
 apri_sofi
+foto_subito T4b-casella-tema-chiaro
 comando "metti%sil%stema%sscuro"
 scrivi "Sofi dice: $(risposta_sofi)"
 sleep 3; foto T5-casa-tornata-scura
