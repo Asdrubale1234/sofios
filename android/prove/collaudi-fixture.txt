@@ -3,3 +3,4 @@ variante non disponibile: pc-chacha20.kdbx property 'encryption_algorithm' of 'P
 variante non disponibile: pc-argon2id.kdbx property 'kdf_algorithm' of 'PyKeePass' object has no setter
 variante non disponibile: pc-aeskdf.kdbx property 'kdf_algorithm' of 'PyKeePass' object has no setter
 10 righe di confronto in android/app/build/fixture
+72 frasi
