@@ -1,0 +1,146 @@
+#!/usr/bin/python3
+# Dispositivi SofiOS: collega il computer ai tuoi altri dispositivi (tablet, telefono) con un codice QR.
+# Note, password, foto e file si ritrovano uguali su tutti, sincronizzati solo sulla rete di casa. Nessun server nostro.
+import os, sys, io
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+import dispositivi as D
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QIcon, QPixmap, QImage
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QListWidget, QListWidgetItem, QDialog, QMessageBox, QStackedWidget)
+import tema_app
+
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+STILE = """
+QWidget#finestra, QDialog { background: #0b2740; }
+QLabel { color: #e6f1ff; font-size: 13px; }
+QLabel#titolo { color: #ffffff; font-size: 22px; font-weight: 700; }
+QLabel#sottotitolo { color: #8fb3d4; font-size: 13px; }
+QLabel#stato { color: #ffd479; font-size: 13px; font-weight: 600; }
+QLabel#codice { color: #e6f1ff; font-size: 12px; }
+QLineEdit { background: #12365a; border: 1px solid #1e4f7c; border-radius: 10px; color: #e6f1ff; font-size: 14px; padding: 9px 11px; }
+QLineEdit:focus { border: 1px solid #ffd479; }
+QListWidget { background: #12365a; border: none; border-radius: 12px; color: #e6f1ff; font-size: 14px; padding: 6px; outline: 0; }
+QListWidget::item { padding: 11px 10px; border-radius: 8px; }
+QListWidget::item:selected { background: #1e6fa8; color: #ffffff; }
+QPushButton { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 9px 16px; font-size: 13px; font-weight: 700; }
+QPushButton:hover { background: #ffe19e; }
+QPushButton#secondario { background: #1e6fa8; color: #ffffff; font-weight: 600; }
+QPushButton#secondario:hover { background: #2a82c2; }
+QWidget#scheda { background: #12365a; border-radius: 14px; }
+"""
+
+def qr_pixmap(testo, lato=260):
+    import qrcode
+    q = qrcode.QRCode(border=2, box_size=8); q.add_data(testo); q.make(fit=True)
+    img = q.make_image(fill_color="#0b2740", back_color="white").convert("RGB"); b = io.BytesIO(); img.save(b, "PNG")
+    p = QPixmap(); p.loadFromData(b.getvalue()); return p.scaled(lato, lato, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.FastTransformation)
+
+class Collega(QDialog):
+    """mostra il QR di questo computer e permette di scrivere il codice di un altro dispositivo"""
+    def __init__(self, parent):
+        super().__init__(parent); self.setWindowTitle("Collega un dispositivo"); self.setModal(True); self.resize(480, 640)
+        v = QVBoxLayout(self); v.setContentsMargins(22, 20, 22, 20); v.setSpacing(10)
+        t = QLabel("Collega un dispositivo"); t.setObjectName("titolo"); v.addWidget(t)
+        i = QLabel("Sull'altro dispositivo apri SofiOS, vai su «Dispositivi» e inquadra questo codice. Poi approva qui e là. Funziona solo sulla rete di casa.")
+        i.setObjectName("sottotitolo"); i.setWordWrap(True); v.addWidget(i)
+        q = QLabel(); q.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        try: q.setPixmap(qr_pixmap(D.il_mio_codice()))
+        except Exception: q.setText("Non riesco a disegnare il codice QR: usa il codice qui sotto.")
+        v.addWidget(q)
+        c = QLabel(D.il_mio_codice()); c.setObjectName("codice"); c.setWordWrap(True); c.setAlignment(Qt.AlignmentFlag.AlignCenter); c.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); v.addWidget(c)
+        v.addSpacing(8); a = QLabel("Oppure scrivi qui il codice dell'altro dispositivo:"); a.setObjectName("sottotitolo"); v.addWidget(a)
+        self.codice = QLineEdit(); self.codice.setPlaceholderText("Codice dell'altro dispositivo"); v.addWidget(self.codice)
+        self.nome = QLineEdit(); self.nome.setPlaceholderText("Nome, per esempio «Tablet di Luca»"); v.addWidget(self.nome)
+        self.err = QLabel(""); self.err.setObjectName("stato"); self.err.setWordWrap(True); v.addWidget(self.err)
+        r = QHBoxLayout(); ok = QPushButton("Collega"); ok.clicked.connect(self.collega); ch = QPushButton("Chiudi"); ch.setObjectName("secondario"); ch.clicked.connect(self.accept)
+        r.addWidget(ok); r.addWidget(ch); r.addStretch(1); v.addLayout(r)
+    def collega(self):
+        c = self.codice.text().strip().upper()
+        if not D.valido(c): self.err.setText("Il codice non sembra giusto: controlla di averlo copiato tutto."); return
+        try: D.fidati(c, self.nome.text().strip() or "Nuovo dispositivo")
+        except Exception: self.err.setText("Non riesco a collegarlo adesso. Riprova tra un momento."); return
+        self.err.setText("Fatto. Compare nell'elenco appena si vedono sulla rete di casa."); self.codice.clear(); self.nome.clear()
+
+class Finestra(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("finestra"); self.setWindowTitle("Dispositivi"); self.setWindowIcon(QIcon(LOGO)); self.resize(560, 620)
+        v = QVBoxLayout(self); v.setContentsMargins(26, 22, 26, 22); v.setSpacing(12)
+        t = QLabel("Dispositivi"); t.setObjectName("titolo"); v.addWidget(t)
+        s = QLabel("I tuoi dispositivi SofiOS: note, password, foto e file uguali su tutti, sincronizzati solo sulla rete di casa."); s.setObjectName("sottotitolo"); s.setWordWrap(True); v.addWidget(s)
+        riga = QHBoxLayout(); self.nome = QLineEdit(D.nome_dispositivo()); self.nome.setMaximumWidth(260); self.nome.editingFinished.connect(self.cambia_nome)
+        riga.addWidget(QLabel("Questo dispositivo:")); riga.addWidget(self.nome); riga.addStretch(1); v.addLayout(riga)
+        self.stato = QLabel(""); self.stato.setObjectName("stato"); self.stato.setWordWrap(True); v.addWidget(self.stato)
+        self.attesa = QWidget(); self.attesa.setObjectName("scheda"); ha = QHBoxLayout(self.attesa); ha.setContentsMargins(14, 10, 14, 10)
+        self.attesa_t = QLabel(""); self.attesa_t.setWordWrap(True); ha.addWidget(self.attesa_t, 1)
+        self.si = QPushButton("Mi fido"); self.si.clicked.connect(self.approva); self.no = QPushButton("No"); self.no.setObjectName("secondario"); self.no.clicked.connect(self.rifiuta)
+        ha.addWidget(self.si); ha.addWidget(self.no); self.attesa.hide(); v.addWidget(self.attesa)
+        self.elenco = QListWidget(); v.addWidget(self.elenco, 1)
+        r = QHBoxLayout(); self.b_collega = QPushButton("Collega un nuovo dispositivo"); self.b_collega.clicked.connect(self.collega)
+        self.b_togli = QPushButton("Rimuovi dispositivo"); self.b_togli.setObjectName("secondario"); self.b_togli.clicked.connect(self.togli)
+        r.addWidget(self.b_collega); r.addWidget(self.b_togli); r.addStretch(1); v.addLayout(r)
+        self.pending = None
+        self.t = QTimer(self); self.t.setInterval(3000); self.t.timeout.connect(self.aggiorna)
+        QTimer.singleShot(100, self.parti)
+
+    def parti(self):
+        try:
+            if not D.acceso(): D.avvia()
+        except Exception:
+            self.stato.setText("Non riesco ad avviare la sincronizzazione."); return
+        self.stato.setText("Avvio la sincronizzazione…"); QTimer.singleShot(2500, self.aggiorna); self.t.start()
+
+    def cambia_nome(self):
+        n = self.nome.text().strip()
+        if n: D.salva_nome(n)
+
+    def collega(self):
+        if not D.acceso(): self.stato.setText("La sincronizzazione sta partendo: riprova tra un momento."); return
+        Collega(self).exec(); self.aggiorna()
+
+    def aggiorna(self):
+        if not D.acceso(): self.stato.setText("La sincronizzazione non è attiva."); return
+        try:
+            elenco = D.collegati(); self.elenco.clear()
+            for cod, nome, st in elenco:
+                it = QListWidgetItem("%s   —   %s" % (nome, st)); it.setData(Qt.ItemDataRole.UserRole, cod); self.elenco.addItem(it)
+            if not elenco: self.stato.setText("Nessun dispositivo collegato. Premi «Collega un nuovo dispositivo».")
+            else:
+                p = D.sincronizzato()
+                self.stato.setText("Tutto aggiornato." if p is None or p >= 99.9 else "Sincronizzo… %d%%" % p if p is not None else "")
+            att = D.in_attesa()
+            if att: self.pending = att[0]; self.attesa_t.setText("«%s» vuole collegarsi a questo computer. Ti fidi?" % att[0][1]); self.attesa.show()
+            else: self.pending = None; self.attesa.hide()
+        except Exception:
+            self.stato.setText("Un attimo, sto controllando i dispositivi…")
+
+    def approva(self):
+        if self.pending:
+            try: D.fidati(*self.pending)
+            except Exception: pass
+        self.aggiorna()
+
+    def rifiuta(self):
+        self.pending = None; self.attesa.hide()
+
+    def togli(self):
+        it = self.elenco.currentItem()
+        if not it: QMessageBox.information(self, "Dispositivi", "Scegli prima un dispositivo dall'elenco."); return
+        if QMessageBox.question(self, "Dispositivi", "Vuoi smettere di sincronizzare con questo dispositivo? I file restano dove sono.") == QMessageBox.StandardButton.Yes:
+            try: D.rimuovi(it.data(Qt.ItemDataRole.UserRole))
+            except Exception: pass
+            self.aggiorna()
+
+def main():
+    app = QApplication(sys.argv); app.setApplicationName("Dispositivi"); app.setDesktopFileName("sofios-dispositivi")
+    w = Finestra(); w.setStyleSheet(tema_app.adatta(STILE))
+    if os.environ.get("SOFIOS_FOTO"):
+        w.show(); 
+        for _ in range(30): app.processEvents()
+        import time; time.sleep(4)
+        for _ in range(30): app.processEvents()
+        w.grab().save(os.environ["SOFIOS_FOTO"]); return 0
+    w.show(); return app.exec()
+
+if __name__ == "__main__":
+    sys.exit(main())

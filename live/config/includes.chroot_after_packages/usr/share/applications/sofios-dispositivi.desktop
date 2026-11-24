@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Dispositivi
+Comment=Collega il computer ai tuoi altri dispositivi
+Exec=/usr/local/bin/sofios-dispositivi
+Icon=sofios-dispositivi
+Categories=Utility;
+Keywords=dispositivi;tablet;telefono;sincronizza;collega;

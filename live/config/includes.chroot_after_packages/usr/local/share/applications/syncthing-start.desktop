@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=SofiOS
+NoDisplay=true
+Hidden=true
+Exec=/bin/true

@@ -23,5 +23,8 @@ Aspetto
 Installatore
   Calamares (GPL-3.0+)
 
+Sincronizzazione tra dispositivi
+  Syncthing (MPL-2.0)
+
 I testi completi delle licenze si trovano nella cartella /usr/share/doc del sistema.
 Tutti i nomi e i marchi appartengono ai rispettivi proprietari.

@@ -42,3 +42,4 @@ Versione pronta: ISO `iso-20261123-1246`, costruita da `main` (pagina dei rilasc
 
 - Sofi (mascotte, faro di pietra di Nano Banana): clic = casella dei comandi; pose che cambiano con lo stato; ondeggia piano. Stile «un po' più Apple»: angoli +40% nelle app (fatto), dock di vetro e finestre (da fare). Icone originali degli assistenti: decisione di Luca, file da fornire.
 - Ecosistema: la cartella SofiOS (Note, Password, Foto, File) sul PC è `~/SofiOS`, con copia (mai spostamento) di note e cassaforte di prima; regola di unione della cassaforte scritta e provata. Pagina «Dispositivi» con QR e Syncthing: solo progettata (`docs/DISPOSITIVI.md`).
+- Programma «Dispositivi» (QR, elenco, approvazione) con sincronizzazione solo in rete di casa: fatto e provato tra due istanze; da vedere in una ISO e su due dispositivi veri.

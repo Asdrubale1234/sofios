@@ -1,0 +1,11 @@
+[Unit]
+Description=Sincronizzazione della cartella SofiOS (solo rete di casa)
+ConditionPathExists=%h/.config/sofios/sincronizza/config.xml
+
+[Service]
+ExecStart=/usr/bin/syncthing serve --no-browser --no-upgrade --home=%h/.config/sofios/sincronizza
+Restart=on-failure
+Nice=10
+
+[Install]
+WantedBy=default.target

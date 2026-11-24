@@ -40,8 +40,14 @@ Testi in italiano semplice. Mai nomi di Syncthing nell'interfaccia (solo in «Co
 - **Importante per chi scrive le app:** ad ogni modifica di una voce va aggiornata la data di modifica (`entry.touch(modify=True)`) e ad ogni eliminazione va registrata in DeletedObjects (`elimina_voce`). Altrimenti l'unione non può decidere chi vince. Il PC lo fa già.
 - **Come collaudare insieme:** `python3 tools/prova_unione.py` (serve `pykeepass`). Il tablet deve implementare la stessa regola in Kotlin e confrontare il risultato con questo programma sugli stessi file: stesse voci, stesse password, stessa cronologia.
 
-## 5. Da fare sul PC (in ordine)
-1. Pagina «Dispositivi» con il QR (serve il pacchetto Syncthing nella ISO e il servizio dell'utente, spento finché non si collega il primo dispositivo).
+## 5. Fatto sul PC e da fare
+**Fatto (24 novembre):** programma «Dispositivi» (`sofios-dispositivi`) con QR, elenco, approvazione, rimozione; libreria `dispositivi.py`; servizio dell'utente `sofios-sincronizza.service` (si accende alla prima apertura di «Dispositivi»); Syncthing e `python3-qrcode` nella ISO. Provato con due istanze sulla stessa macchina: le note e le foto arrivano da una parte all'altra, un'eliminazione passa all'altra e la copia resta nel cestino a 30 giorni.
+**Identificatori delle cartelle (uguali su tutti i dispositivi):** `sofios-note` (Note), `sofios-password` (Password), `sofios-foto` (Foto), `sofios-file` (File). Il PC le condivide con ogni dispositivo che approva. Sul tablet vanno create con gli stessi identificatori (la fotocamera DCIM = `sofios-foto`).
+**Impostazioni fisse:** scoperta globale, relay, attraversamento del router, statistiche d'uso e aggiornamenti da soli sono spenti. La pagina web interna ascolta solo su `127.0.0.1:8385`.
+**QR:** contiene il codice del dispositivo (il codice Syncthing di 56 caratteri); l'app del tablet può leggerlo direttamente.
+
+**Da fare, in ordine:**
+1. (fatto, vedi sopra)
 2. Avviso «due versioni» nelle Note.
 3. Unione automatica della cassaforte quando compare un file in conflitto.
 4. Foto sincronizzate in tutte e due le direzioni, con il cestino a 30 giorni.
