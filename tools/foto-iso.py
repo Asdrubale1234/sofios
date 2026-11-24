@@ -292,6 +292,8 @@ try:
         except Exception as e:
             L("errore controlli a mano", repr(e))
     try:
+        L("prova del Dock (busctl verso la barra)")
+        esegui("sofios-prova-store dock"); time.sleep(12); foto("dock-prova")
         L("mascotte: clic, casella dei comandi")
         clic(1140, 520); time.sleep(5); foto("mascotte-casella")
         scrivi("aiuto"); tasti("ret"); time.sleep(2); foto("mascotte-aiuto")

@@ -5,6 +5,7 @@ Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il siste
 import json, os, re, shlex, shutil, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 import tema_app
+import dock as DOCK
 from sofios_info import bottone_informazioni
 import store_android as AND
 import store_windows as WIN
@@ -439,7 +440,8 @@ class SoStore(QWidget):
         c = QVBoxLayout(); n = QLabel(app["nome"]); n.setObjectName("grande"); c.addWidget(n)
         d = QLabel(app.get("descrizione", "")); d.setObjectName("testo"); d.setWordWrap(True); c.addWidget(d)
         bb = QHBoxLayout(); self.d_azione = QPushButton(); self.d_azione.setObjectName("azione"); self.d_azione.setFixedWidth(120); bb.addWidget(self.d_azione)
-        self.d_rimuovi = QPushButton("Rimuovi"); self.d_rimuovi.setObjectName("secondario"); self.d_rimuovi.setFixedWidth(120); bb.addWidget(self.d_rimuovi); bb.addStretch()
+        self.d_rimuovi = QPushButton("Rimuovi"); self.d_rimuovi.setObjectName("secondario"); self.d_rimuovi.setFixedWidth(120); bb.addWidget(self.d_rimuovi)
+        self.d_dock = QPushButton("Metti nel Dock"); self.d_dock.setObjectName("secondario"); self.d_dock.setFixedWidth(150); bb.addWidget(self.d_dock); bb.addStretch()
         c.addLayout(bb); self.d_barra = QProgressBar(); self.d_barra.setRange(0, 100); self.d_barra.setFixedWidth(300); self.d_barra.hide(); c.addWidget(self.d_barra)
         r.addLayout(c, 1); v.addLayout(r)
         lunga = app.get("lunga") or ("" if app.get("tipo") == "android" else (self.fonte.dettagli(app["pacchetto"]) or {}).get("lunga", ""))
@@ -452,6 +454,7 @@ class SoStore(QWidget):
         self.d_app = app
         self.d_azione.clicked.connect(lambda: self.apri(app) if self.e_installato(app) else self.installa(app))
         self.d_rimuovi.clicked.connect(lambda: self.rimuovi(app))
+        self.d_dock.clicked.connect(lambda: self.cambia_dock(app))
         self.aggiorna_dettaglio(); self.pagine.setCurrentIndex(1)
 
     def aggiorna_dettaglio(self):
@@ -460,6 +463,10 @@ class SoStore(QWidget):
         try:
             self.d_azione.setText("…" if occ else ("Apri" if ins else "Installa")); self.d_azione.setEnabled(not occ)
             self.d_rimuovi.setVisible(ins and not occ); self.d_barra.setVisible(bool(occ))
+            id_d = self.id_desktop(a)
+            self.d_dock.setVisible(bool(ins and not occ and id_d))
+            if id_d and ins and not occ and id_d not in self._nel_dock: self._nel_dock[id_d] = DOCK.nel_dock(id_d)
+            if id_d and ins and not occ: self.d_dock.setText("Togli dal Dock" if self._nel_dock.get(id_d) else "Metti nel Dock")
         except RuntimeError: pass
 
     def aggiorna_tutto(self):
@@ -467,6 +474,29 @@ class SoStore(QWidget):
             try: s.aggiorna()
             except RuntimeError: pass
         self.aggiorna_dettaglio()
+
+    # --- il Dock
+    _nel_dock = {}
+    def id_desktop(self, app):
+        if app.get("tipo") in ("android", "windows"): return None
+        d = file_desktop(app["pacchetto"], app.get("desktop"))
+        return os.path.basename(d) if d else None
+
+    def cambia_dock(self, app):
+        i = self.id_desktop(app)
+        if not i: return
+        ora = self._nel_dock.get(i, False)
+        ok = DOCK.togli(i) if ora else DOCK.metti(i)
+        if ok: self._nel_dock[i] = not ora; self.stato.setText("«%s» %s." % (app["nome"], "è nel Dock" if not ora else "non è più nel Dock"))
+        else: QMessageBox.information(self, "SoStore", "Non riesco a cambiare il Dock adesso. Puoi farlo da solo: clic destro sull'icona del programma e «Fissa».")
+        self.aggiorna_dettaglio()
+
+    def chiedi_dock(self, app):
+        i = self.id_desktop(app)
+        if not i: return
+        if QMessageBox.question(self, "SoStore", "Vuoi metterlo nel Dock, la barra in basso?") == QMessageBox.StandardButton.Yes:
+            if DOCK.metti(i): self._nel_dock[i] = True; self.stato.setText("«%s» è nel Dock." % app["nome"])
+            self.aggiorna_dettaglio()
 
     # --- azioni
     def e_installato(self, app):
@@ -519,7 +549,7 @@ class SoStore(QWidget):
         if app.get("tipo") == "android": self.installa_android(app); return
         if app.get("tipo") == "windows": self.installa_windows(app); return
         def ok():
-            if installato(app["pacchetto"]): segna_mio(app, True); return True
+            if installato(app["pacchetto"]): segna_mio(app, True); QTimer.singleShot(400, lambda: self.chiedi_dock(app)); return True
             return False
         self._esegui(app, ["install", "-y", "-p", app["pacchetto"]], "Installo", ok)
 
