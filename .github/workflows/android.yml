@@ -33,7 +33,23 @@ jobs:
           # l'unione delle cassaforti: il programma del computer e il tablet devono dare lo stesso risultato
           git show origin/claude/jolly-davinci-ltzvwz:live/config/includes.chroot_after_packages/usr/local/lib/sofios/cassaforte_unione.py > /tmp/pc/cassaforte_unione.py \
             && python3 android/tools/fixture-unione.py /tmp/pc/cassaforte_unione.py android/app/build/fixture 2>&1 | tee -a /tmp/prove/collaudi-fixture.txt || echo "senza confronto con l'unione del computer" | tee -a /tmp/prove/collaudi-fixture.txt
+          # un Syncthing vero, solo per provare il dialogo della pagina «Dispositivi» (in locale, porta 8384 senza TLS)
+          sudo apt-get install -y syncthing 2>&1 | tail -1
+          mkdir -p /tmp/st && syncthing generate --home=/tmp/st --no-default-folder 2>&1 | tail -2
+          python3 - <<'PY'
+import re
+p="/tmp/st/config.xml"; s=open(p).read()
+s=re.sub(r'<gui enabled="true" tls="(true|false)"', '<gui enabled="true" tls="false"', s)
+s=re.sub(r'<address>[^<]*</address>', '<address>127.0.0.1:8384</address>', s, count=1)
+open(p,"w").write(s)
+print(re.search(r'<apikey>([^<]*)</apikey>', s).group(1), file=open("/tmp/st/chiave","w"))
+PY
+          (nohup syncthing serve --home=/tmp/st --no-browser --no-upgrade > /tmp/st/log.txt 2>&1 &)
+          for i in $(seq 1 30); do curl -s -o /dev/null -H "X-API-Key: $(cat /tmp/st/chiave)" http://127.0.0.1:8384/rest/system/ping && break; sleep 1; done
+          export SOFIOS_SYNCTHING_PORTA=8384 SOFIOS_SYNCTHING_CHIAVE="$(cat /tmp/st/chiave)"
           cd android && ./gradlew --no-daemon testDebugUnitTest 2>&1 | tee /tmp/prove/collaudi-kotlin.txt
+          cp /tmp/st/log.txt /tmp/prove/syncthing-di-prova.txt 2>/dev/null || true
+          pkill syncthing || true
           cd .. && python3 android/tools/verifica-unione.py /tmp/pc/cassaforte_unione.py android/app/build/fixture 2>&1 | tee -a /tmp/prove/collaudi-python.txt
           for n in kotlin-nuovo kotlin-da-pc; do
             python3 android/tools/verifica-kdbx.py android/app/build/fixture/$n.kdbx "$(cat android/app/build/fixture/$n.kdbx.password)" android/app/build/fixture/$n.kdbx.attese.tsv 2>&1 | tee -a /tmp/prove/collaudi-python.txt

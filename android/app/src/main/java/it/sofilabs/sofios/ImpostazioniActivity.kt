@@ -14,6 +14,8 @@ import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.os.StatFs
 import android.provider.Settings
 import android.text.TextUtils
@@ -21,6 +23,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -28,6 +31,9 @@ import android.widget.ListView
 import android.widget.ScrollView
 import android.widget.TextView
 import it.sofilabs.sofios.assistente.Assistenti
+import it.sofilabs.sofios.sincronizza.CartellaSync
+import it.sofilabs.sofios.sincronizza.Sincronizza
+import it.sofilabs.sofios.sincronizza.Syncthing
 import java.util.Locale
 
 /**
@@ -36,7 +42,7 @@ import java.util.Locale
  */
 class ImpostazioniActivity : SchermataSofiOS() {
 
-    private val voci = listOf("Schermo", "Suono", "Batteria", "Spazio", "Cartella SofiOS", "App", "Assistenti online", "Altre impostazioni", "Informazioni")
+    private val voci = listOf("Schermo", "Suono", "Batteria", "Spazio", "Cartella SofiOS", "Dispositivi", "App", "Assistenti online", "Altre impostazioni", "Informazioni")
     private var stretto = false
     private var nelContenuto = false
     private var scelta = 0
@@ -91,6 +97,8 @@ class ImpostazioniActivity : SchermataSofiOS() {
         mostra(radice)
     }
 
+    override fun onPause() { rinfresca.removeCallbacksAndMessages(null); super.onPause() }
+
     override fun onResume() {
         super.onResume()
         if (!stretto || nelContenuto) apri(scelta)   // aggiorna dopo un permesso concesso
@@ -108,6 +116,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             "Batteria" -> pagina("Batteria", *batteria())
             "Spazio" -> pagina("Spazio", *spazio())
             "Cartella SofiOS" -> pagina("Cartella SofiOS", *cartellaSofios())
+            "Dispositivi" -> paginaDispositivi()
             "App" -> paginaApp()
             "Assistenti online" -> pagina("Assistenti online", *assistenti())
             "Altre impostazioni" -> pagina("Altre impostazioni di Android", *altre())
@@ -158,7 +167,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     private fun riga(nome: String, valore: String): View = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         addView(Stile.testo(context, nome, 13f, Stile.PICCOLO))
-        addView(Stile.testo(context, valore, 18f, Stile.BIANCO))
+        addView(Stile.testo(context, valore, 18f, Stile.TESTO))
     }
 
     private fun batteria(): Array<View> {
@@ -188,8 +197,148 @@ class ImpostazioniActivity : SchermataSofiOS() {
             l.add(Stile.testo(this, "Senza l'accesso ai file la cartella resta privata e gli altri dispositivi non possono sincronizzarla.", 13f, Stile.PICCOLO))
             l.add(Stile.bottone(this, "Consenti accesso ai file", Stile.ORO, Stile.SU_ORO) { Controlli.apri(this, Cartella.richiestaPermesso(this)) })
         }
-        l.add(Stile.testo(this, "La sincronizzazione con gli altri dispositivi non è ancora attiva.", 13f, Stile.PICCOLO))
+        l.add(Stile.testo(this, "La sincronizzazione con gli altri dispositivi si attiva dalla pagina «Dispositivi».", 13f, Stile.PICCOLO))
         return l.toTypedArray()
+    }
+
+    // ---- Dispositivi: sincronizzazione con PC e altri tablet (tramite l'app Syncthing-Fork, che resta un'app a parte) ----
+
+    private val rinfresca = Handler(Looper.getMainLooper())
+    private val APP_SYNC = "com.github.catfriend1.syncthingandroid"
+    private fun memoriaSync() = getSharedPreferences("sofios", Context.MODE_PRIVATE)
+
+    private fun cartelleSync(): List<CartellaSync> {
+        @Suppress("DEPRECATION")
+        val foto = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+        return listOf(
+            CartellaSync("sofios-note", "Note", Cartella.note(this).path),
+            CartellaSync("sofios-password", "Password", Cartella.password(this).path),
+            CartellaSync("sofios-foto", "Foto", foto.path),
+            CartellaSync("sofios-file", "File", java.io.File(Cartella.radice(this), "File").path)
+        )
+    }
+
+    private fun appSyncInstallata() = try { packageManager.getPackageInfo(APP_SYNC, 0); true } catch (e: PackageManager.NameNotFoundException) { false }
+
+    private fun apriAppSync() {
+        val i = packageManager.getLaunchIntentForPackage(APP_SYNC)
+        if (i != null) startActivity(i)
+    }
+
+    private fun installaAppSync() {
+        try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$APP_SYNC"))) }
+        catch (e: Exception) {
+            try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://f-droid.org/packages/$APP_SYNC/"))) } catch (x: Exception) { }
+        }
+    }
+
+    private fun paginaDispositivi(): View {
+        val contenitore = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; contentDescription = "Dispositivi" }
+        riempiDispositivi(contenitore)
+        return pagina("Dispositivi", contenitore)
+    }
+
+    private fun testoSync(t: String) = Stile.testo(this, t, 14f, Stile.PICCOLO)
+    private fun aggiungi(c: LinearLayout, v: View) = c.addView(v, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(10) })
+
+    private fun riempiDispositivi(c: LinearLayout) {
+        c.removeAllViews()
+        aggiungi(c, testoSync("Per avere le stesse note, password, foto e file sul computer e sugli altri tablet, SofiOS usa un'app a parte che sincronizza soltanto dentro casa. Non passa da nessun server."))
+        if (!appSyncInstallata()) {
+            aggiungi(c, riga("Stato", "L'app di sincronizzazione non è installata"))
+            aggiungi(c, Stile.bottone(this, "Installa l'app di sincronizzazione", Stile.ORO, Stile.SU_ORO) { installaAppSync() })
+            aggiungi(c, Stile.bottone(this, "Ricontrolla", Stile.SECONDARIO, Stile.TESTO) { riempiDispositivi(c) })
+            return
+        }
+        val chiave = memoriaSync().getString("sync_chiave", "") ?: ""
+        if (chiave.isEmpty()) { schermataChiave(c); return }
+        if (!Cartella.permesso(this)) {
+            aggiungi(c, riga("Stato", "Serve l'accesso ai file"))
+            aggiungi(c, testoSync("Senza l'accesso ai file, Note, Password e Foto non si possono sincronizzare."))
+            aggiungi(c, Stile.bottone(this, "Consenti accesso ai file", Stile.ORO, Stile.SU_ORO) { Controlli.apri(this, Cartella.richiestaPermesso(this)) })
+            return
+        }
+        aggiungi(c, riga("Stato", "Controllo…"))
+        val st = Syncthing(memoriaSync().getInt("sync_porta", 8384), chiave)
+        val nome = memoriaSync().getString("sync_nome", "Tablet di Luca") ?: "Tablet di Luca"
+        val cartelle = cartelleSync()
+        Thread {
+            val esito: Result<Triple<List<it.sofilabs.sofios.sincronizza.Dispositivo>, List<Pair<String, String>>, Double?>> = try {
+                Sincronizza.prepara(st, nome, cartelle)
+                Result.success(Triple(Sincronizza.dispositivi(st), Sincronizza.inAttesa(st), Sincronizza.completamento(st, cartelle)))
+            } catch (e: Exception) { Result.failure(e) }
+            runOnUiThread {
+                if (isFinishing || voci.getOrNull(scelta) != "Dispositivi") return@runOnUiThread
+                c.removeAllViews()
+                esito.onSuccess { (dispositivi, attesa, perc) -> mostraDispositivi(c, st, cartelle, dispositivi, attesa, perc) }
+                esito.onFailure { e -> nonRisponde(c, e) }
+            }
+        }.start()
+    }
+
+    private fun schermataChiave(c: LinearLayout) {
+        aggiungi(c, riga("Stato", "Manca il collegamento con l'app di sincronizzazione"))
+        aggiungi(c, testoSync("1. Apri l'app di sincronizzazione.\n2. Dal menu apri «Interfaccia web» → Azioni → Impostazioni.\n3. Copia la «Chiave API» e incollala qui sotto."))
+        aggiungi(c, Stile.bottone(this, "Apri l'app di sincronizzazione", Stile.SECONDARIO, Stile.TESTO) { apriAppSync() })
+        val campo = EditText(this).apply {
+            hint = "Incolla qui la chiave"; contentDescription = "Chiave dell'app di sincronizzazione"
+            setHintTextColor(Stile.PICCOLO); setTextColor(Stile.TESTO); textSize = 16f; setSingleLine()
+            background = Stile.riquadro(this@ImpostazioniActivity, Stile.SECONDARIO, 12); setPadding(dp(14), dp(12), dp(14), dp(12))
+        }
+        aggiungi(c, campo)
+        aggiungi(c, Stile.bottone(this, "Collega", Stile.ORO, Stile.SU_ORO) {
+            val k = campo.text.toString().trim()
+            if (k.length >= 8) { memoriaSync().edit().putString("sync_chiave", k).apply(); riempiDispositivi(c) }
+        })
+    }
+
+    private fun nonRisponde(c: LinearLayout, e: Throwable) {
+        aggiungi(c, riga("Stato", "L'app di sincronizzazione non risponde"))
+        aggiungi(c, testoSync("Aprila una volta e lascia che si avvii, poi tocca «Riprova». Se la chiave è cambiata, scrivila di nuovo."))
+        aggiungi(c, Stile.bottone(this, "Apri l'app di sincronizzazione", Stile.SECONDARIO, Stile.TESTO) { apriAppSync() })
+        aggiungi(c, Stile.bottone(this, "Riprova", Stile.ORO, Stile.SU_ORO) { riempiDispositivi(c) })
+        aggiungi(c, Stile.bottone(this, "Scrivi di nuovo la chiave", Stile.SECONDARIO, Stile.TESTO) { memoriaSync().edit().remove("sync_chiave").apply(); riempiDispositivi(c) })
+        aggiungi(c, testoSync("Dettaglio: " + (e.message ?: e.javaClass.simpleName).take(120)))
+    }
+
+    private fun mostraDispositivi(c: LinearLayout, st: Syncthing, cartelle: List<CartellaSync>,
+                                  dispositivi: List<it.sofilabs.sofios.sincronizza.Dispositivo>, attesa: List<Pair<String, String>>, perc: Double?) {
+        val stato = when {
+            dispositivi.none { it.collegato } -> if (dispositivi.isEmpty()) "Pronto: nessun dispositivo collegato" else "Nessun dispositivo in casa adesso"
+            perc != null && perc < 99.5 -> "Sincronizzo… ${perc.toInt()}%"
+            else -> "Tutto aggiornato"
+        }
+        aggiungi(c, riga("Stato", stato))
+        for ((codice, nome) in attesa) {
+            aggiungi(c, Stile.testo(this, "«$nome» vuole collegarsi. Vuoi fidarti?", 16f, Stile.TESTO, true))
+            aggiungi(c, Stile.bottone(this, "Mi fido di $nome", Stile.ORO, Stile.SU_ORO) {
+                Thread { try { Sincronizza.fidati(st, codice, nome, cartelle) } catch (e: Exception) { }; runOnUiThread { riempiDispositivi(c) } }.start()
+            })
+        }
+        if (dispositivi.isEmpty() && attesa.isEmpty()) {
+            aggiungi(c, testoSync("Per collegare il computer: sul computer apri «Dispositivi» e scegli «Collega un nuovo dispositivo»; poi, nell'app di sincronizzazione, tocca «+» e leggi il codice QR che compare sul computer. Torna qui e tocca «Mi fido» quando te lo chiede."))
+        }
+        for (d in dispositivi) {
+            val riga = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
+                setPadding(dp(12), dp(10), dp(12), dp(10)); contentDescription = d.nome
+                background = Stile.riquadro(this@ImpostazioniActivity, Stile.SECONDARIO, 12)
+            }
+            riga.addView(Stile.testo(this, d.nome, 17f, Stile.TESTO, true), LinearLayout.LayoutParams(0, -2, 1f))
+            riga.addView(Stile.testo(this, if (d.collegato) "Collegato" else "Non in casa", 14f, if (d.collegato) Stile.ORO else Stile.PICCOLO))
+            aggiungi(c, riga)
+            aggiungi(c, Stile.bottone(this, "Rimuovi ${d.nome}", Stile.SECONDARIO, Stile.TESTO) {
+                AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                    .setTitle("Rimuovere ${d.nome}?").setMessage("I file restano dove sono: smettono solo di sincronizzarsi.")
+                    .setPositiveButton("Rimuovi") { _, _ -> Thread { try { Sincronizza.rimuovi(st, d.id, cartelle) } catch (e: Exception) { }; runOnUiThread { riempiDispositivi(c) } }.start() }
+                    .setNegativeButton("Annulla", null).show()
+            }.apply { textSize = 13f; minimumHeight = dp(40) })
+        }
+        aggiungi(c, testoSync("Le foto del tablet (cartella Fotocamera) e quelle del computer si sincronizzano nei due sensi. Se elimini una foto su un dispositivo, sparisce da tutti; per 30 giorni resta una copia nel cestino della sincronizzazione."))
+        aggiungi(c, Stile.bottone(this, "Aggiorna", Stile.SECONDARIO, Stile.TESTO) { riempiDispositivi(c) })
+        // finché la pagina è aperta, ogni 8 secondi si aggiorna l'elenco (niente resta acceso a pagina chiusa)
+        rinfresca.removeCallbacksAndMessages(null)
+        rinfresca.postDelayed({ if (!isFinishing && voci.getOrNull(scelta) == "Dispositivi") riempiDispositivi(c) }, 8000)
     }
 
     private fun gb(b: Long) = String.format(Locale.ITALY, "%.1f GB", b / 1_000_000_000.0)

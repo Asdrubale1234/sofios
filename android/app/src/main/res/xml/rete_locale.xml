@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Il permesso internet serve SOLO per parlare con l'app di sincronizzazione che sta sul tablet stesso (127.0.0.1).
+     Il traffico in chiaro è ammesso solo verso quell'indirizzo; verso ogni altro è vietato. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+    </domain-config>
+</network-security-config>

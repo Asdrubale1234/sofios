@@ -353,10 +353,10 @@ class CassaforteActivity : SchermataSofiOS() {
             colonna.addView(r)
         }
         fun piccolo(t: String, a: () -> Unit) = Stile.bottone(this, t, Stile.SECONDARIO, Stile.TESTO, a).apply { textSize = 13f; minimumHeight = dp(40) }
-        dUtente = Stile.testo(this, "", 16f, Stile.BIANCO).apply { contentDescription = "Valore utente" }
-        dPassword = Stile.testo(this, "", 16f, Stile.BIANCO).apply { contentDescription = "Valore password" }
-        dSito = Stile.testo(this, "", 16f, Stile.BIANCO).apply { contentDescription = "Valore sito" }
-        dNote = Stile.testo(this, "", 16f, Stile.BIANCO).apply { contentDescription = "Valore note" }
+        dUtente = Stile.testo(this, "", 16f, Stile.TESTO).apply { contentDescription = "Valore utente" }
+        dPassword = Stile.testo(this, "", 16f, Stile.TESTO).apply { contentDescription = "Valore password" }
+        dSito = Stile.testo(this, "", 16f, Stile.TESTO).apply { contentDescription = "Valore sito" }
+        dNote = Stile.testo(this, "", 16f, Stile.TESTO).apply { contentDescription = "Valore note" }
         dMostra = piccolo("Mostra") { alternaPassword() }
         riga("Utente", dUtente, piccolo("Copia utente") { copia(scelta?.utente, false) })
         riga("Password", dPassword, dMostra, piccolo("Copia password") { copia(scelta?.password, true) })

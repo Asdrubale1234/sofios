@@ -62,3 +62,10 @@ Da costruire come pezzi comuni (vedi sezione 6): identità del dispositivo, scop
 Incolla questo come primo messaggio nella nuova conversazione:
 
 > Lavoriamo su SofiOS, il progetto di Sofi Labs. Questa conversazione è per il **[tablet / telefono / TV]**. Prima di tutto leggi `docs/ECOSISTEMA.md` nel repository `asdrubale1234/sofios` (ramo `main`) e segui le regole che trovi. Poi dimmi in italiano cosa hai capito e da dove proponi di partire.
+
+## 8. Android: permesso internet e sincronizzazione (24 novembre, approvato da Luca)
+- Sul tablet la sincronizzazione la fa **Syncthing-Fork**, un'app a parte (niente di sempre acceso dentro SofiOS). SofiOS ha la pagina **Impostazioni → Dispositivi**: installa/apre l'app, la configura (cartelle `sofios-note`, `sofios-password`, `sofios-foto` = DCIM, `sofios-file`; sendreceive; cestino 30 giorni; solo rete di casa; niente relay, scoperta globale, attraversamento del router, statistiche, aggiornamenti da soli) e mostra stato e dispositivi.
+- **Permesso «internet»**: SofiOS lo ha SOLO per parlare con quell'app sul tablet stesso, all'indirizzo **127.0.0.1**. Il codice (`sincronizza/Syncthing.kt`) rifiuta ogni altro indirizzo prima di aprire la connessione, e la configurazione di rete di Android (`res/xml/rete_locale.xml`) ammette il traffico in chiaro solo verso 127.0.0.1. Nessuna telemetria, nessun altro server. Il Play Store mostrerà «accesso a internet».
+- Collegamento col PC: il PC mostra il QR (o il codice di 56 caratteri); l'app Syncthing-Fork del tablet lo legge. SofiOS Android non ha un lettore di QR. Il tablet mostra «Mi fido di …» quando il PC chiede il collegamento e condivide le 4 cartelle.
+- Prova automatica: `SincronizzaTest` si collega a un Syncthing vero nella CI e controlla impostazioni, cartelle, cestino, aggiunta e rimozione di un dispositivo.
+- Non provato ancora: Syncthing-Fork vero sul T40HD (dove si trova la chiave, eliminazione delle foto su Android 11+, collegamento reale col PC).
