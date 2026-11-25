@@ -140,7 +140,7 @@ class CassaforteActivity : SchermataSofiOS() {
         erroreSblocco = Stile.testo(this, "", 14f, Stile.ORO_TESTO).apply { gravity = Gravity.CENTER; contentDescription = "Errore" }
         bottoneSblocco = Stile.bottone(this, "", Stile.ORO, Stile.SU_ORO) { sblocca() }
         // Luma sopra il titolo; sparisce quando si scrive (la tastiera ha bisogno dello spazio)
-        val lumaCassaforte = Stile.luma(this, "cassaforte", 150)
+        val lumaCassaforte = Stile.luma(this, "cassaforte")
         lumaCassaforte?.let { colonna.addView(it) }
         val seFuoco = View.OnFocusChangeListener { _, ha -> lumaCassaforte?.visibility = if (ha) View.GONE else View.VISIBLE }
         campoPw.onFocusChangeListener = seFuoco; campoPw2.onFocusChangeListener = seFuoco

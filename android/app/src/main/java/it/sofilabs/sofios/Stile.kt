@@ -43,13 +43,24 @@ object Stile {
         try { c.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putBoolean("tema_chiaro", vuoleChiaro).apply() } catch (e: Exception) {}
     }
 
-    /** Una posa di Luma come immagine (per le schermate vuote e simili); null se la posa non esiste. */
-    fun luma(c: Context, nome: String, altezzaDp: Int): android.widget.ImageView? {
+    /** Altezza di Luma dentro le pagine dei programmi: una sola per tutta l'app (come sul computer). */
+    const val ALTEZZA_LUMA_DP = 120
+
+    fun lumaNelleSchermate(c: Context): Boolean =
+        try { c.getSharedPreferences(PREF, Context.MODE_PRIVATE).getBoolean("luma_programmi", true) } catch (e: Exception) { true }
+
+    fun impostaLumaNelleSchermate(c: Context, si: Boolean) {
+        try { c.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putBoolean("luma_programmi", si).apply() } catch (e: Exception) {}
+    }
+
+    /** Una posa di Luma come immagine nelle pagine; null se la posa non esiste o l'utente ha scelto di non vederla. */
+    fun luma(c: Context, nome: String): android.widget.ImageView? {
+        if (!lumaNelleSchermate(c)) return null
         val id = c.resources.getIdentifier("luma_" + nome.replace('-', '_'), "drawable", c.packageName)
         if (id == 0) return null
         return android.widget.ImageView(c).apply {
             setImageResource(id); scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
-            layoutParams = android.widget.LinearLayout.LayoutParams(-2, dp(c, altezzaDp)).apply { gravity = Gravity.CENTER_HORIZONTAL }
+            layoutParams = android.widget.LinearLayout.LayoutParams(-2, dp(c, ALTEZZA_LUMA_DP)).apply { gravity = Gravity.CENTER_HORIZONTAL }
             adjustViewBounds = true
         }
     }

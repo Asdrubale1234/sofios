@@ -167,6 +167,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             "luminosita" -> faLuminosita(f.arg as Pair<*, *>)
             "tema" -> faTema(f.arg as String)
             "schermata" -> faSchermata()
+            "luma-programmi" -> { val si = f.arg == "si"; Stile.impostaLumaNelleSchermate(att, si); di(if (si) "Ora mi vedi nelle pagine dei programmi." else "Va bene, nelle pagine dei programmi non mi vedi più. Per rivedermi scrivi «mostra Luma».", "felice") }
         }
     }
 

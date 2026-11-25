@@ -100,6 +100,9 @@ object Comandi {
         val t = norm(frase)
         if (t.isEmpty()) return Frase("niente")
         if (ha(t, "\\b(aiuto|cosa sai fare|cosa puoi fare|che cosa sai fare|comandi)\\b")) return Frase("aiuto")
+        // «nascondi Luma» / «mostra Luma»: solo nelle pagine dei programmi (la Luma della schermata iniziale ha la sua X)
+        if (ha(t, "\\b(nascondi|togli|non mostrare|non voglio vedere)\\b.*\\bluma\\b")) return Frase("luma-programmi", "no")
+        if (ha(t, "\\b(mostra|fai vedere|rimetti|fammi vedere)\\b.*\\bluma\\b")) return Frase("luma-programmi", "si")
         if (ha(t, "\\b(schermata|screenshot|cattura (lo )?schermo|foto (allo )?schermo)\\b")) return Frase("schermata")
         if (ha(t, "\\btema\\b|\\bmodalita (chiara|scura)\\b|\\bmetti (chiaro|scuro)\\b") ||
             (ha(t, "\\b(chiaro|scuro)\\b") && ha(t, "\\b(metti|passa|cambia|usa|attiva)\\b"))) {
@@ -152,5 +155,6 @@ object Comandi {
         "• cercare i file della Cartella SofiOS: «cerca fattura», «cerca foto mare»\n" +
         "• volume: «volume al 40», «alza il volume», «muto»\n" +
         "• luminosità dello schermo: «luminosità 70», «abbassa la luminosità»\n" +
+        "• «nascondi Luma» / «mostra Luma»: la toglie o la rimette nelle pagine dei programmi\n" +
         "• «fai una schermata» salva la schermata di SofiOS; «cerca su internet…» apre il browser"
 }

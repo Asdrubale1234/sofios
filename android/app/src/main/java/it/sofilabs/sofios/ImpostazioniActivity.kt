@@ -111,7 +111,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
         adattatore.notifyDataSetChanged()
         colonnaContenuto.removeAllViews()
         val corpo = when (voci[i]) {
-            "Schermo" -> pagina("Schermo", temaScelta(), Controlli.luminosita(this), Controlli.rotazione(this))
+            "Schermo" -> pagina("Schermo", temaScelta(), lumaInterruttore(), Controlli.luminosita(this), Controlli.rotazione(this))
             "Suono" -> pagina("Suono",
                 Controlli.volume(this, AudioManager.STREAM_MUSIC, "Volume multimediale"),
                 Controlli.volume(this, AudioManager.STREAM_ALARM, "Volume della sveglia"))
@@ -154,6 +154,15 @@ class ImpostazioniActivity : SchermataSofiOS() {
         riga.addView(tasto("Tema scuro", false, false), LinearLayout.LayoutParams(0, -2, 1f).apply { rightMargin = dp(6) })
         riga.addView(tasto("Tema chiaro", true, true), LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(6) })
         return riga
+    }
+
+    /** «Mostra Luma nelle pagine dei programmi»: acceso di serie (non tocca la Luma della schermata iniziale). */
+    private fun lumaInterruttore(): View {
+        fun testo() = "Mostra Luma nelle pagine dei programmi: " + if (Stile.lumaNelleSchermate(this)) "sì" else "no"
+        val b = Stile.bottone(this, testo(), Stile.SECONDARIO, Stile.TESTO) {}
+        b.setOnClickListener { Stile.impostaLumaNelleSchermate(this, !Stile.lumaNelleSchermate(this)); b.text = testo() }
+        b.contentDescription = "Mostra Luma nelle pagine dei programmi"
+        return b
     }
 
     private fun pagina(titolo: String, vararg corpo: View): View {
@@ -240,8 +249,8 @@ class ImpostazioniActivity : SchermataSofiOS() {
         return pagina("Dispositivi", contenitore)
     }
 
-    private fun lumaDi(c: LinearLayout, nome: String, h: Int) {
-        Stile.luma(this, nome, h)?.let { c.addView(it, LinearLayout.LayoutParams(-2, dp(h)).apply { topMargin = dp(10); gravity = Gravity.CENTER_HORIZONTAL }) }
+    private fun lumaDi(c: LinearLayout, nome: String) {
+        Stile.luma(this, nome)?.let { c.addView(it, LinearLayout.LayoutParams(-2, dp(Stile.ALTEZZA_LUMA_DP)).apply { topMargin = dp(10); gravity = Gravity.CENTER_HORIZONTAL }) }
     }
 
     private fun testoSync(t: String) = Stile.testo(this, t, 14f, Stile.PICCOLO)
@@ -301,7 +310,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     }
 
     private fun nonRisponde(c: LinearLayout, e: Throwable) {
-        lumaDi(c, "offline", 130)
+        lumaDi(c, "offline")
         aggiungi(c, riga("Stato", "L'app di sincronizzazione non risponde"))
         aggiungi(c, testoSync("Aprila una volta e lascia che si avvii, poi tocca «Riprova». Se la chiave è cambiata, scrivila di nuovo."))
         aggiungi(c, Stile.bottone(this, "Apri l'app di sincronizzazione", Stile.SECONDARIO, Stile.TESTO) { apriAppSync() })
@@ -317,8 +326,8 @@ class ImpostazioniActivity : SchermataSofiOS() {
             perc != null && perc < 99.5 -> "Sincronizzo… ${perc.toInt()}%"
             else -> "Tutto aggiornato"
         }
-        if (dispositivi.isEmpty() && attesa.isEmpty()) lumaDi(c, "nessun_dispositivo", 130)
-        else if (stato == "Tutto aggiornato") lumaDi(c, "tutto_fatto", 100)
+        if (dispositivi.isEmpty() && attesa.isEmpty()) lumaDi(c, "nessun_dispositivo")
+        else if (stato == "Tutto aggiornato") lumaDi(c, "tutto_fatto")
         aggiungi(c, riga("Stato", stato))
         for ((codice, nome) in attesa) {
             aggiungi(c, Stile.testo(this, "«$nome» vuole collegarsi. Vuoi fidarti?", 16f, Stile.TESTO, true))

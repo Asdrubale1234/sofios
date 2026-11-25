@@ -73,7 +73,7 @@ class FileActivity : SchermataSofiOS() {
         corpo.addView(elenco, FrameLayout.LayoutParams(-1, -1))
         vuoto = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
-            Stile.luma(this@FileActivity, "nessun_risultato", 150)?.let { addView(it) }
+            Stile.luma(this@FileActivity, "nessun_risultato")?.let { addView(it) }
             addView(Stile.testo(this@FileActivity, "Questa cartella è vuota.", 16f, Stile.PICCOLO).apply { gravity = Gravity.CENTER; setPadding(0, dp(10), 0, 0) })
         }
         corpo.addView(vuoto, FrameLayout.LayoutParams(-1, -1))

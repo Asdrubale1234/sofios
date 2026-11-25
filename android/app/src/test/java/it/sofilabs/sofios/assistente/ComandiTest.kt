@@ -9,6 +9,13 @@ import java.io.File
 class ComandiTest {
     private fun f(t: String) = Comandi.interpreta(t)
 
+    @Test fun luma_nelle_pagine() {
+        assertEquals(Frase("luma-programmi", "no"), f("nascondi Luma"))
+        assertEquals(Frase("luma-programmi", "no"), f("togli Luma dalle pagine"))
+        assertEquals(Frase("luma-programmi", "si"), f("mostra Luma"))
+        assertEquals(Frase("luma-programmi", "si"), f("rimetti Luma"))
+    }
+
     @Test fun frasi_di_base() {
         assertEquals(Frase("apri", "il browser"), f("apri il browser"))   // come sul computer: gli articoli si tolgono dopo
         assertEquals(Frase("volume", "livello" to 40), f("volume al 40"))
