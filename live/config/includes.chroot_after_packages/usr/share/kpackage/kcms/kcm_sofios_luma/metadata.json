@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Authors": [{"Name": "SofiOS"}],
+        "Description": "Dove mostrare Luma, la mascotte di SofiOS",
+        "EnabledByDefault": true,
+        "Icon": "sofios-mascotte",
+        "Id": "kcm_sofios_luma",
+        "License": "GPL-2.0-or-later",
+        "Name": "Luma"
+    },
+    "KPackageStructure": "KCModule",
+    "X-KDE-ServiceTypes": ["KCModule"],
+    "X-KDE-System-Settings-Parent-Category": "appearance",
+    "X-KDE-Weight": 90,
+    "X-KDE-Keywords": "luma,mascotte,faro,assistente,nascondi,mostra"
+}

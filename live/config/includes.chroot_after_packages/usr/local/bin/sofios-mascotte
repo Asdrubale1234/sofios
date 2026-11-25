@@ -246,6 +246,11 @@ class Finestra(QWidget):
 def main():
     if "--nascondi-pagine" in sys.argv: luma.salva_attiva(False); return 0      # senza aprire la casella: dal menu «Luma»
     if "--mostra-pagine" in sys.argv: luma.salva_attiva(True); return 0
+    if "--pagine-stato" in sys.argv: print("si" if luma.attiva() else "no"); return 0
+    if any(a.startswith("--desktop-") for a in sys.argv):          # il widget sul desktop (usato dalla pagina «Luma» delle Impostazioni)
+        import luma_desktop as LD
+        a = [x for x in sys.argv if x.startswith("--desktop-")][0]
+        print({"--desktop-metti": LD.metti, "--desktop-togli": LD.togli}.get(a, LD.stato)() or "no"); return 0
     app = QApplication(sys.argv); app.setApplicationName("sofios-mascotte"); app.setDesktopFileName("sofios-mascotte")
     s = QLocalSocket(); s.connectToServer(NOME_SERVER)
     if s.waitForConnected(300):        # gia' aperta: un secondo clic sulla mascotte la richiude

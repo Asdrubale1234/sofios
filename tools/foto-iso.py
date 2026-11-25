@@ -299,6 +299,14 @@ try:
         except Exception as e:
             L("errore controlli a mano", repr(e))
     try:
+        L("Impostazioni: la pagina «Luma»")
+        esegui("systemsettings"); time.sleep(12); foto("impostazioni-aperte")
+        tasti("ctrl-f"); scrivi("luma"); time.sleep(4); foto("impostazioni-cerca-luma")
+        tasti("ret"); time.sleep(5); foto("impostazioni-luma-pagina")
+        tasti("alt-f4"); time.sleep(3)
+    except Exception as e:
+        L("errore pagina Luma nelle Impostazioni", repr(e))
+    try:
         L("prova del Dock (busctl verso la barra)")
         esegui("sofios-prova-store dock"); time.sleep(12); foto("dock-prova")
         L("mascotte: clic, casella dei comandi")
