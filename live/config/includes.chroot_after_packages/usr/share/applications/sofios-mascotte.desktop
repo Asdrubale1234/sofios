@@ -5,4 +5,13 @@ Comment=Scrivi cosa vuoi: apri, chiudi, installa, cerca file, volume…
 Exec=/usr/local/bin/sofios-mascotte
 Icon=sofios-mascotte
 Categories=Utility;
-Keywords=assistente;mascotte;comandi;aiuto;
+Keywords=assistente;mascotte;comandi;aiuto;luma;nascondi;mostra;impostazioni;
+Actions=Nascondi;Mostra;
+
+[Desktop Action Nascondi]
+Name=Nascondi Luma da tutte le pagine
+Exec=/usr/local/bin/sofios-mascotte --nascondi-pagine
+
+[Desktop Action Mostra]
+Name=Mostra Luma nelle pagine
+Exec=/usr/local/bin/sofios-mascotte --mostra-pagine

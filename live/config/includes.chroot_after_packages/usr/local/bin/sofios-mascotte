@@ -244,6 +244,8 @@ class Finestra(QWidget):
         else: self.di("Non trovo lo strumento per le schermate.")
 
 def main():
+    if "--nascondi-pagine" in sys.argv: luma.salva_attiva(False); return 0      # senza aprire la casella: dal menu «Luma»
+    if "--mostra-pagine" in sys.argv: luma.salva_attiva(True); return 0
     app = QApplication(sys.argv); app.setApplicationName("sofios-mascotte"); app.setDesktopFileName("sofios-mascotte")
     s = QLocalSocket(); s.connectToServer(NOME_SERVER)
     if s.waitForConnected(300):        # gia' aperta: un secondo clic sulla mascotte la richiude

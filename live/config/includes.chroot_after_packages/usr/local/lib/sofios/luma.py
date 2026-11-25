@@ -2,7 +2,7 @@
 import os, json
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QLabel
+from PyQt6.QtWidgets import QLabel, QMenu
 
 ALTEZZA = 140      # Luma ha la stessa altezza in tutti i programmi (tranne il Benvenuto)
 CARTELLA = os.environ.get("SOFIOS_POSE", "/usr/share/plasma/plasmoids/org.sofios.mascotte/contents/images")
@@ -33,9 +33,16 @@ def mostra_tutte(v):
         try: e.setVisible(bool(v))
         except RuntimeError: pass
 
+class _Luma(QLabel):
+    """Luma nelle pagine: tasto destro per non vederla piu' (si rimette dalla casella di Luma o dal menu «Luma»)"""
+    def contextMenuEvent(self, ev):
+        m = QMenu(self); a = m.addAction("Nascondi Luma da tutte le pagine"); b = m.addAction("Tienila")
+        if m.exec(ev.globalPos()) == a: salva_attiva(False); mostra_tutte(False)
+
 def etichetta(nome, altezza=None):
     """un QLabel trasparente con la posa; luma.imposta(et, 'nome') la cambia"""
-    e = QLabel(); e.setStyleSheet("background: transparent;"); e.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+    e = _Luma(); e.setStyleSheet("background: transparent;"); e.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+    e.setToolTip("Tasto destro: nascondi Luma da tutte le pagine")
     e._altezza = altezza or ALTEZZA; imposta(e, nome); LISTA.append(e); return e
 
 def imposta(e, nome):
