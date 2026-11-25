@@ -134,6 +134,8 @@ class Finestra(QWidget):
         f = frase.lower()
         if "luma" in f and any(k in f for k in ("nascondi", "togli", "disattiva", "non mostrare")): self.vedi.setChecked(False); return
         if "luma" in f and any(k in f for k in ("mostra", "attiva", "rimetti")): self.vedi.setChecked(True); return
+        if any(k in f for k in ("novità", "novita", "cosa c'è di nuovo", "cosa c e di nuovo")):
+            QProcess.startDetached("/usr/local/bin/sofios-novita", ["--sempre"]); self.sofi("festa", 3000); self.risposta.setText("Ti mostro le novità di SofiOS."); return
         azione, arg = C.interpreta(frase)
         if azione == "niente": self.di("Non ho capito. Scrivi «aiuto» per vedere cosa so fare."); return
         if azione == "aiuto": self.di(C.AIUTO); return

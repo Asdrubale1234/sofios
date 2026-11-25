@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Novità di SofiOS (dopo un aggiornamento)
+Exec=/usr/local/bin/sofios-novita
+Icon=sofios-logo
+NoDisplay=true
+X-KDE-autostart-phase=2
+X-KDE-autostart-after=panel

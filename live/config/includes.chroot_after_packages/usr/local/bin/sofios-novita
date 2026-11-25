@@ -1,0 +1,101 @@
+#!/usr/bin/python3
+# Novità di SofiOS: dopo un aggiornamento, al primo accesso compare una sola volta una schermata con cosa c'è di nuovo.
+# Ogni aggiornamento porta il suo file /usr/share/sofios/novita/NUMERO.json (NUMERO = la versione dell'aggiornamento).
+# Uso:  sofios-novita              (si apre solo se ci sono novità non ancora viste)
+#       sofios-novita --sempre     (mostra l'ultima, anche se gia' vista: dal menu «Novità di SofiOS»)
+import os, sys, json, glob
+sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QPixmap
+from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QScrollArea
+import tema_app, luma
+
+DATI = os.environ.get("SOFIOS_NOVITA", "/usr/share/sofios/novita")
+VERSIONE = os.environ.get("SOFIOS_VERSIONE", "/etc/sofios/versione")
+LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
+VISTA = os.path.join(os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")), "sofios", "novita-vista")
+LIVE = os.environ.get("SOFIOS_LIVE") == "1" if "SOFIOS_LIVE" in os.environ else \
+    ("boot=live" in open("/proc/cmdline").read() if os.path.exists("/proc/cmdline") else False)
+
+def numero(p, predefinito=0):
+    try: return int("".join(c for c in open(p).read() if c.isdigit()) or predefinito)
+    except (OSError, ValueError): return predefinito
+
+def scrivi_vista(n):
+    try:
+        os.makedirs(os.path.dirname(VISTA), exist_ok=True)
+        with open(VISTA + ".tmp", "w") as f: f.write(str(n))
+        os.replace(VISTA + ".tmp", VISTA)
+    except OSError: pass
+
+def carica(n):
+    try: return json.load(open(os.path.join(DATI, "%d.json" % n), encoding="utf-8"))
+    except (OSError, ValueError): return None
+
+def da_mostrare(corrente, vista, sempre=False):
+    """le novita' di tutte le versioni non ancora viste (se hai saltato degli aggiornamenti le vedi tutte), dalla piu' nuova"""
+    if sempre:
+        c = carica(corrente) or next((carica(n) for n in sorted((int(os.path.basename(f)[:-5]) for f in glob.glob(os.path.join(DATI, "*.json")) if os.path.basename(f)[:-5].isdigit()), reverse=True)), None)
+        return [c] if c else []
+    return [c for c in (carica(n) for n in range(corrente, vista, -1)) if c]
+
+STILE = """
+QWidget#finestra { background: #0b2740; }
+QLabel { color: #e6f1ff; }
+QLabel#titolo { font-size: 30px; font-weight: 700; color: #ffffff; }
+QLabel#sotto { font-size: 15px; color: #9fc2e4; }
+QLabel#versione { font-size: 12px; color: #9fc2e4; }
+QFrame#scheda { background: #12365a; border-radius: 14px; }
+QLabel#sch_t { font-size: 15px; font-weight: 700; color: #ffd479; }
+QLabel#sch_x { font-size: 13px; color: #d4e6f8; }
+QPushButton#primario { background: #ffd479; color: #0b2740; border: none; border-radius: 10px; padding: 10px 26px; font-size: 14px; font-weight: 700; }
+QPushButton#primario:hover { background: #ffe19e; }
+QScrollArea { background: transparent; border: none; }
+"""
+
+class Novita(QWidget):
+    def __init__(self, elenco, corrente):
+        super().__init__()
+        self.corrente = corrente
+        self.setObjectName("finestra"); self.setWindowTitle("Novità di SofiOS"); self.setWindowIcon(QIcon(LOGO))
+        self.setStyleSheet(tema_app.adatta(STILE)); self.resize(760, 560)
+        radice = QHBoxLayout(self); radice.setContentsMargins(28, 26, 28, 22); radice.setSpacing(24)
+        sx = QVBoxLayout(); sx.addWidget(luma.etichetta(elenco[0].get("pose", "festa"), 220), alignment=Qt.AlignmentFlag.AlignTop); sx.addStretch(); radice.addLayout(sx)
+        dx = QVBoxLayout(); dx.setSpacing(12)
+        t = QLabel(elenco[0].get("titolo", "Novità di SofiOS")); t.setObjectName("titolo"); dx.addWidget(t)
+        s = QLabel(elenco[0].get("sottotitolo", "Ecco cosa è cambiato.")); s.setObjectName("sotto"); s.setWordWrap(True); dx.addWidget(s)
+        area = QScrollArea(); area.setWidgetResizable(True); cont = QWidget(); v = QVBoxLayout(cont); v.setContentsMargins(0, 0, 6, 0); v.setSpacing(10)
+        for blocco in elenco:
+            if len(elenco) > 1:
+                e = QLabel("Versione %s" % blocco.get("versione", "")); e.setObjectName("versione"); v.addWidget(e)
+            for voce in blocco.get("voci", []):
+                f = QFrame(); f.setObjectName("scheda"); lf = QVBoxLayout(f); lf.setContentsMargins(16, 12, 16, 12); lf.setSpacing(4)
+                a = QLabel(voce.get("titolo", "")); a.setObjectName("sch_t"); a.setWordWrap(True)
+                b = QLabel(voce.get("testo", "")); b.setObjectName("sch_x"); b.setWordWrap(True)
+                lf.addWidget(a); lf.addWidget(b); v.addWidget(f)
+        v.addStretch(); area.setWidget(cont); dx.addWidget(area, 1)
+        piede = QHBoxLayout(); piede.addStretch()
+        ok = QPushButton("Ho capito"); ok.setObjectName("primario"); ok.setCursor(Qt.CursorShape.PointingHandCursor); ok.clicked.connect(self.chiudi); piede.addWidget(ok)
+        dx.addLayout(piede); radice.addLayout(dx, 1)
+
+    def chiudi(self):
+        scrivi_vista(self.corrente); self.close()
+    def closeEvent(self, e):          # chiuderla con la X vale come «ho capito»: non riappare
+        scrivi_vista(self.corrente); super().closeEvent(e)
+
+def main():
+    sempre = "--sempre" in sys.argv
+    corrente = numero(VERSIONE)
+    if not sempre:
+        if LIVE: return 0                              # dalla chiavetta non serve
+        if not os.path.exists(VISTA):                  # primo accesso in assoluto: il benvenuto basta, da qui in poi contano gli aggiornamenti
+            scrivi_vista(corrente); return 0
+    elenco = da_mostrare(corrente, numero(VISTA, corrente), sempre)
+    if not elenco:
+        if not sempre: scrivi_vista(corrente)
+        return 0
+    app = QApplication(sys.argv); app.setApplicationName("sofios-novita"); app.setDesktopFileName("sofios-novita")
+    w = Novita(elenco, corrente); w.show()
+    return app.exec()
+
+if __name__ == "__main__": sys.exit(main())

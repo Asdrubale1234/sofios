@@ -1,0 +1,12 @@
+{
+  "versione": 1,
+  "titolo": "Novità di SofiOS",
+  "sottotitolo": "Ecco cosa è cambiato con questo aggiornamento.",
+  "pose": "festa",
+  "voci": [
+    {"titolo": "Luma ha molte più espressioni", "testo": "Cambia posa quando apri, cerchi, installi o qualcosa non va. La trovi anche nelle pagine di Note, Cassaforte e Dispositivi."},
+    {"titolo": "Decidi tu dove vederla", "testo": "Impostazioni → Luma: puoi toglierla dal desktop e dalle pagine dei programmi, e rimetterla quando vuoi."},
+    {"titolo": "Sfondi nuovi", "testo": "Sei nuovi sfondi da scegliere: Alba, Tramonto, Luna, Mare calmo, Mattina e Nuvole."},
+    {"titolo": "SoStore più bello", "testo": "Un banner e una testata illustrata per ogni categoria di programmi."}
+  ]
+}

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Novità di SofiOS
+Comment=Cosa c'è di nuovo nell'ultimo aggiornamento
+Exec=/usr/local/bin/sofios-novita --sempre
+Icon=sofios-logo
+Categories=Utility;
+Keywords=novità;aggiornamento;cosa c'è di nuovo;
