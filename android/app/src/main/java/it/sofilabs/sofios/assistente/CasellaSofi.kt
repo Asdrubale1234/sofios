@@ -135,7 +135,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         ritardo.removeCallbacks(tornaAscolta); ritardo.postDelayed(tornaAscolta, 3000)
     }
 
-    private fun chiedi(domanda: String, posa: String = "parla", azione: () -> Unit) {
+    private fun chiedi(domanda: String, posa: String = "attendi", azione: () -> Unit) {
         pulisci(); di(domanda, posa); inAttesa = azione; conferma.visibility = View.VISIBLE
     }
 
@@ -197,10 +197,10 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
                     Assistenti.apri(att, a)
                 }
                 else -> att.packageManager.getLaunchIntentForPackage(v.id)?.let { att.startActivity(it) }
-                    ?: run { di("Non riesco ad aprire «${v.nome}».", "preoccupata"); return }
+                    ?: run { di("Non riesco ad aprire «${v.nome}».", "errore"); return }
             }
             chiudiDopo("Apro «${v.nome}».")
-        } catch (e: ActivityNotFoundException) { di("Non riesco ad aprire «${v.nome}».", "preoccupata") }
+        } catch (e: ActivityNotFoundException) { di("Non riesco ad aprire «${v.nome}».", "errore") }
     }
 
     private fun chiudiDopo(testo: String) { di(testo, "apri"); postDelayed({ if (aperta()) chiudi() }, 600) }
@@ -208,7 +208,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
     private fun faApri(nome: String) {
         val t = Comandi.cercaProgrammi(nome, programmi())
         when {
-            t.isEmpty() -> di("Non trovo «${Comandi.paroleUtili(nome).joinToString(" ")}» tra i programmi. Prova con un altro nome.", "preoccupata")
+            t.isEmpty() -> di("Non trovo «${Comandi.paroleUtili(nome).joinToString(" ")}» tra i programmi. Prova con un altro nome.", "non_trovato")
             t.size == 1 -> apriVoce(t[0])
             else -> { di("Quale vuoi aprire?"); for (v in t) voce(v.nome) { apriVoce(v) } }
         }
@@ -218,7 +218,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
 
     private fun faChiudi(nome: String) {
         val tutti = Comandi.cercaProgrammi(nome, programmi())
-        if (tutti.isEmpty()) { di("Non trovo «${Comandi.paroleUtili(nome).joinToString(" ")}».", "preoccupata"); return }
+        if (tutti.isEmpty()) { di("Non trovo «${Comandi.paroleUtili(nome).joinToString(" ")}».", "non_trovato"); return }
         val t = esterne(tutti)
         if (t.isEmpty()) { di("Le app di SofiOS si chiudono con il tasto Indietro.", "parla"); return }
         if (t.size > 1) { di("Quale vuoi chiudere?"); for (v in t) voce(v.nome) { chiudiApp(v) }; return }
@@ -235,7 +235,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
 
     private fun faDisinstalla(nome: String) {
         val tutti = Comandi.cercaProgrammi(nome, programmi())
-        if (tutti.isEmpty()) { di("Non trovo «${Comandi.paroleUtili(nome).joinToString(" ")}».", "preoccupata"); return }
+        if (tutti.isEmpty()) { di("Non trovo «${Comandi.paroleUtili(nome).joinToString(" ")}».", "non_trovato"); return }
         val t = esterne(tutti)
         if (t.isEmpty()) { di("Le app di SofiOS non si disinstallano da qui.", "preoccupata"); return }
         if (t.size > 1) { di("Quale vuoi disinstallare?"); for (v in t) voce(v.nome) { chiediDisinstalla(v) }; return }
@@ -256,7 +256,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
     private fun faInstalla(nome: String) {
         val cerca = Comandi.paroleUtili(nome).joinToString(" ")
         val t = esterne(Comandi.cercaProgrammi(nome, programmi()))
-        if (t.isNotEmpty() && Comandi.norm(t[0].nome) == cerca) { di("«${t[0].nome}» è già installato.", "felice"); return }
+        if (t.isNotEmpty() && Comandi.norm(t[0].nome) == cerca) { di("«${t[0].nome}» è già installato.", "festa"); return }
         chiedi("Vuoi cercare «$cerca» nello store? Android ti chiederà lui l'ultima conferma per installare.") {
             val q = Uri.encode(cerca)
             try { att.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=$q&c=apps"))) }
@@ -296,7 +296,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             trovati.sortByDescending { it.lastModified() }
             att.runOnUiThread {
                 if (!aperta()) return@runOnUiThread
-                if (trovati.isEmpty()) di("Non ho trovato niente nella Cartella SofiOS. Per ora è l'unica cartella che posso guardare.", "nessun_risultato")
+                if (trovati.isEmpty()) di("Non ho trovato niente nella Cartella SofiOS. Per ora è l'unica cartella che posso guardare.", "non_trovato")
                 else {
                     di((if (trovati.size == 1) "Ho trovato 1 file" else "Ho trovato ${trovati.size} file") + " nella Cartella SofiOS. Tocca per aprirlo.", "fatto")
                     for (f in trovati.take(12)) voce("📄  " + f.name) {
@@ -311,7 +311,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         try {
             att.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://duckduckgo.com/?q=" + Uri.encode(testo))))
             chiudiDopo("Apro il browser con la ricerca.")
-        } catch (e: ActivityNotFoundException) { di("Non trovo un browser.", "preoccupata") }
+        } catch (e: ActivityNotFoundException) { di("Non trovo un browser.", "errore") }
     }
 
     private fun faVolume(a: Pair<*, *>) {

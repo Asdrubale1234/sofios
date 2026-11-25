@@ -250,7 +250,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     }
 
     private fun lumaDi(c: LinearLayout, nome: String) {
-        Stile.luma(this, nome)?.let { c.addView(it, LinearLayout.LayoutParams(-2, dp(Stile.ALTEZZA_LUMA_DP)).apply { topMargin = dp(10); gravity = Gravity.CENTER_HORIZONTAL }) }
+        Stile.luma(this, nome)?.let { c.addView(it, LinearLayout.LayoutParams(-2, dp(Stile.ALTEZZA_LUMA_DP)).apply { topMargin = dp(10); gravity = Gravity.END }) }
     }
 
     private fun testoSync(t: String) = Stile.testo(this, t, 14f, Stile.PICCOLO)
@@ -310,7 +310,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     }
 
     private fun nonRisponde(c: LinearLayout, e: Throwable) {
-        lumaDi(c, "offline")
+        lumaDi(c, "senza_internet")
         aggiungi(c, riga("Stato", "L'app di sincronizzazione non risponde"))
         aggiungi(c, testoSync("Aprila una volta e lascia che si avvii, poi tocca «Riprova». Se la chiave è cambiata, scrivila di nuovo."))
         aggiungi(c, Stile.bottone(this, "Apri l'app di sincronizzazione", Stile.SECONDARIO, Stile.TESTO) { apriAppSync() })
@@ -326,8 +326,8 @@ class ImpostazioniActivity : SchermataSofiOS() {
             perc != null && perc < 99.5 -> "Sincronizzo… ${perc.toInt()}%"
             else -> "Tutto aggiornato"
         }
-        if (dispositivi.isEmpty() && attesa.isEmpty()) lumaDi(c, "nessun_dispositivo")
-        else if (stato == "Tutto aggiornato") lumaDi(c, "tutto_fatto")
+        // come sul computer: nessuno collegato = sincronizza, collegati = wifi connesso
+        lumaDi(c, if (dispositivi.any { it.collegato }) "wifi_connesso" else "sincronizza")
         aggiungi(c, riga("Stato", stato))
         for ((codice, nome) in attesa) {
             aggiungi(c, Stile.testo(this, "«$nome» vuole collegarsi. Vuoi fidarti?", 16f, Stile.TESTO, true))

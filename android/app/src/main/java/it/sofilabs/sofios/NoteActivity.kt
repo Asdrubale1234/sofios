@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
@@ -106,6 +107,7 @@ class NoteActivity : SchermataSofiOS() {
                 override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
                 override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
                 override fun afterTextChanged(s: Editable?) {
+                    aggiornaVuota()
                     if (caricando) return
                     ritardo.removeCallbacks(salvaDopo)
                     ritardo.postDelayed(salvaDopo, 600)   // salvataggio automatico
@@ -119,7 +121,18 @@ class NoteActivity : SchermataSofiOS() {
             contentDescription = "Due versioni"
         }
         colonnaTesto.addView(banner, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(10) })
-        colonnaTesto.addView(testo, LinearLayout.LayoutParams(-1, 0, 1f))
+        // nota vuota: Luma con «Nessuna nota qui. Scrivi la prima» (non intercetta i tocchi)
+        vuotaNota = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; isClickable = false; visibility = View.GONE
+            Stile.luma(this@NoteActivity, "note")?.let { addView(it) }
+            addView(TextView(this@NoteActivity).apply {
+                text = "Nessuna nota qui. Scrivi la prima."; textSize = 15f; setTextColor(Stile.PICCOLO); gravity = Gravity.CENTER
+                setPadding(0, dp(8), 0, 0)
+            })
+        }
+        colonnaTesto.addView(FrameLayout(this).apply {
+            addView(testo, FrameLayout.LayoutParams(-1, -1)); addView(vuotaNota, FrameLayout.LayoutParams(-1, -2, Gravity.CENTER))
+        }, LinearLayout.LayoutParams(-1, 0, 1f))
 
         if (stretto) {
             radice.addView(colonnaElenco, LinearLayout.LayoutParams(-1, -1))
@@ -322,6 +335,9 @@ class NoteActivity : SchermataSofiOS() {
     }
 
     private fun bottone(nome: String, sfondo: Int, colore: Int, azione: () -> Unit) = Stile.bottone(this, nome, sfondo, colore, azione)
+
+    private lateinit var vuotaNota: LinearLayout
+    private fun aggiornaVuota() { if (::vuotaNota.isInitialized) vuotaNota.visibility = if (testo.text.isNullOrBlank()) View.VISIBLE else View.GONE }
 
     private fun voceBottone() = LinearLayout.LayoutParams(-1, dp(48)).apply { topMargin = dp(10) }
 
