@@ -89,9 +89,20 @@ class Finestra(QWidget):
     # -------------------------------------------------- utilita'
     def di(self, testo):
         self.risposta.setText(testo)
-        if testo.startswith(("Non ", "Questo schermo", "Su questo")): self.sofi("preoccupata", 3000)
-        elif testo.startswith(("Apro", "Ho chiuso", "Fatto", "Tema", "Ho aperto")) or "è installato" in testo or "disinstallato" in testo: self.sofi("felice", 3000)
-        elif testo.startswith(("Cerco", "Installo", "Disinstallo")): scrivi_stato("concentrata")
+        t = testo
+        if t.startswith(("Non ho capito",)): self.sofi("preoccupata", 3000)
+        elif t.startswith(("Non ho trovato", "Non trovo")): self.sofi("non-trovato", 3500)
+        elif t.startswith(("Non ", "Questo schermo", "Su questo", "Operazione annullata")): self.sofi("errore", 3500)
+        elif t.startswith("Apro") or t.startswith("Ho aperto il browser"): self.sofi("apri", 3000)
+        elif t.startswith("Ho chiuso"): self.sofi("chiudi", 3000)
+        elif t.startswith("Tema"): self.sofi("tema", 3000)
+        elif t.startswith("Ho aperto lo strumento per le schermate"): self.sofi("schermata", 3000)
+        elif t.startswith("Cerco"): scrivi_stato("cerca")
+        elif t.startswith("Installo"): scrivi_stato("scarica")
+        elif t.startswith("Disinstallo"): scrivi_stato("disinstalla")
+        elif "è installato" in t: self.sofi("festa", 3500)
+        elif "disinstallato" in t or t.startswith("Fatto"): self.sofi("fatto", 3000)
+        elif t.startswith("Ho trovato"): self.sofi("felice", 3000)
         else: self.sofi("parla", 3000)
 
     def pulisci(self):
@@ -207,11 +218,13 @@ class Finestra(QWidget):
         tipo, n = arg
         r = C.volume(livello=n if tipo == "livello" else None, delta=n if tipo == "delta" else None, muto=n if tipo == "muto" else None)
         self.di(r or "Su questo computer non riesco a cambiare il volume.")
+        if r: self.sofi("volume", 3000)
 
     def fa_luminosita(self, arg):
         tipo, n = arg
         r = C.luminosita(livello=n if tipo == "livello" else None, delta=n if tipo == "delta" else None)
         self.di(r or "Questo schermo non permette di cambiare la luminosità da qui (succede con gli schermi dei computer fissi).")
+        if r: self.sofi("luminosita", 3000)
 
     def fa_tema(self, arg):
         r = C.tema(arg); self.di("Tema %s impostato." % arg if r else "Non è stato possibile cambiare il tema.")

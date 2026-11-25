@@ -21,8 +21,13 @@ PlasmoidItem {
         onNewData: (sorgente) => disconnectSource(sorgente)
     }
 
-    // lo stato di Luma: neutra, saluta, parla, ascolta, pensa, felice, concentrata, preoccupata
+    // lo stato di Luma: una delle pose elencate qui sotto
     property string stato: "neutra"
+    // tutte le pose che esistono in ../images (sofi-NOME.png)
+    readonly property var pose: ["neutra", "saluta", "parla", "ascolta", "pensa", "felice", "concentrata", "preoccupata",
+        "apri", "chiudi", "volume", "luminosita", "schermata", "tema", "disinstalla",
+        "scarica", "cerca", "errore", "fatto", "senza-internet", "batteria-scarica", "festa", "non-trovato", "attendi", "sincronizza", "note",
+        "cassaforte", "foto", "aggiornamenti", "stampante", "musica", "wifi-connesso", "arrivederci", "schermo-bloccato"]
     P5Support.DataSource {
         id: lettore
         engine: "executable"
@@ -30,7 +35,7 @@ PlasmoidItem {
         connectedSources: ["cat $HOME/.cache/sofios/sofi-stato 2>/dev/null"]
         onNewData: (sorgente, dati) => {
             var v = (dati["stdout"] || "").trim()
-            if (["neutra", "saluta", "parla", "ascolta", "pensa", "felice", "concentrata", "preoccupata"].indexOf(v) < 0) v = "neutra"
+            if (root.pose.indexOf(v) < 0) v = "neutra"
             if (v !== root.stato) root.stato = v
         }
     }
