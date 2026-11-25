@@ -1,1 +1,7 @@
+AK {'aggiunte': 1, 'rimosse': 1, 'vinte_dal_remoto': 1, 'tenute_locali': 1}
+OK: il PC unisce la cassaforte del tablet (con eliminazioni e modifiche) e ottiene lo stesso risultato; voci: 6
+android/app/build/fixture/kotlin-nuovo.kdbx formato (4, 0) voci 2
+OK: il programma del computer legge tutto come previsto
+android/app/build/fixture/kotlin-da-pc.kdbx formato (4, 0) voci 3
+OK: il programma del computer legge tutto come previsto
 manca il file della cassaforte fatto da Android
