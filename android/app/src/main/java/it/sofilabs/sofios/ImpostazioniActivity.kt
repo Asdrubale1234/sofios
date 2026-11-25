@@ -377,7 +377,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     private fun assistenti(): Array<View> {
         val scelti = Assistenti.scelti(this).map { it.id }.toSet()
         val l = ArrayList<View>()
-        l.add(Stile.testo(this, "Si aprono nel browser, con internet e il tuo account. Non si scarica niente e SofiOS non vede cosa scrivi.",
+        l.add(Stile.testo(this, "Si aprono nel browser, con internet e il tuo account (o con la loro app, se la installi). SofiOS non vede cosa scrivi.",
             13f, Stile.PICCOLO))
         for (a in Assistenti.tutti) {
             val acceso = a.id in scelti
