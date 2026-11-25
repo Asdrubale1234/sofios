@@ -578,3 +578,4 @@ grep -q ATTENZIONE "$LOG" && ok=0
 grep -q ERRORE "$LOG" && ok=0
 in_primo_piano | grep -q "$PKG/.MainActivity" || ok=0
 if [ $ok = 1 ]; then scrivi "ESITO FINALE: OK"; else scrivi "ESITO FINALE: NON OK"; fi
+# (nuova esecuzione: la precedente non ha potuto scaricare una libreria di compilazione)
