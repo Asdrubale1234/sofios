@@ -43,18 +43,18 @@ object Novita {
 
     private fun memoria(c: Context) = c.getSharedPreferences("sofios", Context.MODE_PRIVATE)
 
-    /** Le novità ancora da vedere. Alla prima installazione ricorda la versione attuale e non mostra niente. */
+    /** Prima installazione: si ricorda la versione attuale, così la schermata delle novità non compare (c'è già il benvenuto). */
+    fun primaInstallazione(c: Context) {
+        val m = memoria(c)
+        if (!m.contains(VISTA)) m.edit().putInt(VISTA, versioneAttuale(c)).apply()
+    }
+
+    /** Le novità ancora da vedere (dalla più recente). */
     fun daVedere(c: Context): List<Versione> {
         val corrente = versioneAttuale(c)
         val m = memoria(c)
-        if (!m.contains(VISTA)) {
-            // prima installazione (c'è il benvenuto): si segna la versione e basta; chi aggiorna da una versione senza questa funzione vede le novità
-            val aggiornamento = m.getBoolean("benvenuto_visto", false)
-            m.edit().putInt(VISTA, if (aggiornamento) 1 else corrente).apply()
-            if (!aggiornamento) return emptyList()
-        }
-        val vista = m.getInt(VISTA, corrente)
-        return arretrate(vista, corrente) { esiste(c, it) }.mapNotNull { leggi(c, it) }
+        if (!m.contains(VISTA)) { m.edit().putInt(VISTA, corrente).apply(); return emptyList() }
+        return arretrate(m.getInt(VISTA, corrente), corrente) { esiste(c, it) }.mapNotNull { leggi(c, it) }
     }
 
     /** Tutte le novità disponibili, dalla più recente (per rivederle quando si vuole). */

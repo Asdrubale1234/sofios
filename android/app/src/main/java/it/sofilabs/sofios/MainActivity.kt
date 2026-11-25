@@ -151,6 +151,7 @@ class MainActivity : SchermataSofiOS() {
 
     private fun primiPassi() {
         if (passoAperto?.isShowing == true) return    // una domanda alla volta, anche se la schermata si riattiva più volte
+        if (!memoria().getBoolean("benvenuto_visto", false)) Novita.primaInstallazione(this)   // prima volta: niente schermata delle novità
         when {
             !memoria().getBoolean("benvenuto_visto", false) -> benvenuto()
             !memoria().getBoolean("tema_scelto", false) -> sceltaTema()
