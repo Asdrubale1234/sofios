@@ -1,0 +1,169 @@
+20:14:04 OVMF: /usr/share/OVMF/OVMF_CODE_4M.fd /usr/share/OVMF/OVMF_VARS_4M.fd kvm: True
+20:14:05 QMP collegato (mouse assoluto)
+20:14:06 PROVA CORTA: solo schermate e tema
+20:14:06 attendo il menu di avvio
+20:14:06 foto 001-0000s-avvio.png
+20:14:17 foto 002-0011s-avvio.png
+20:14:38 avvio premuto, attendo il caricamento
+20:14:38 foto 003-0032s-caricamento.png
+20:14:49 foto 004-0043s-caricamento.png
+20:14:59 foto 005-0053s-caricamento.png
+20:15:10 foto 006-0064s-caricamento.png
+20:15:41 desktop appena avviato
+20:15:41 foto 007-0095s-desktop.png
+20:16:02 foto 008-0116s-desktop.png
+20:16:23 foto 009-0136s-desktop.png
+20:16:43 foto 010-0157s-desktop.png
+20:17:04 foto 011-0178s-desktop.png
+20:17:25 foto 012-0198s-desktop.png
+20:17:45 foto 013-0219s-desktop.png
+20:18:06 foto 014-0240s-desktop.png
+20:18:27 foto 015-0260s-desktop.png
+20:18:47 foto 016-0281s-desktop.png
+20:19:08 foto 017-0302s-desktop.png
+20:19:29 foto 018-0322s-desktop.png
+20:19:49 foto 019-0343s-desktop.png
+20:20:10 foto 020-0364s-desktop.png
+20:20:31 foto 021-0384s-desktop.png
+20:20:51 foto 022-0405s-desktop.png
+20:21:11 provo a sbloccare con la password della prova (live)
+20:21:28 foto 023-0442s-sbloccato.png
+20:21:41 foto 024-0455s-sbloccato.png
+20:21:54 foto 025-0467s-sbloccato.png
+20:22:06 foto 026-0480s-sbloccato.png
+20:22:19 foto 027-0493s-sbloccato.png
+20:22:31 chiudo il benvenuto e apro l'installer
+20:22:37 foto 028-0510s-dopo-benvenuto.png
+20:22:37 applico le modifiche del ramo (prova veloce)
+20:25:24 foto 029-0677s-dopo-patch.png
+20:25:36 foto 030-0689s-app-mail.png
+20:25:45 foto 031-0698s-app-mail.png
+20:25:53 foto 032-0707s-app-mail.png
+20:26:02 foto 033-0715s-app-mail.png
+20:26:10 foto 034-0724s-app-mail.png
+20:27:04 foto 035-0777s-app-cassaforte.png
+20:27:12 foto 036-0786s-app-cassaforte.png
+20:27:37 foto 037-0811s-app-note.png
+20:27:46 foto 038-0820s-app-note.png
+20:28:13 foto 039-0846s-app-browser.png
+20:28:21 foto 040-0855s-app-browser.png
+20:28:30 foto 041-0864s-app-browser.png
+20:28:38 foto 042-0872s-app-browser.png
+20:28:47 foto 043-0881s-app-browser.png
+20:29:21 schermata: accesso-sddm
+20:30:28 foto 044-0981s-accesso-sddm.png
+20:30:33 schermata: info-sistema
+20:31:12 foto 045-1025s-info-sistema.png
+20:31:13 foto 046-1027s-info-sistema-b.png
+20:31:17 schermata: impostazioni
+20:31:53 foto 047-1067s-impostazioni.png
+20:31:55 foto 048-1069s-impostazioni-b.png
+20:31:59 schermata: utenti
+20:32:39 foto 049-1112s-utenti.png
+20:32:40 foto 050-1114s-utenti-b.png
+20:32:44 schermata: file
+20:33:10 foto 051-1143s-file.png
+20:33:12 foto 052-1145s-file-b.png
+20:33:15 schermata: sostore
+20:33:53 foto 053-1187s-sostore.png
+20:33:55 foto 054-1189s-sostore-b.png
+20:33:59 collaudo automatico nel sistema acceso
+20:34:25 foto 055-1218s-collaudo.png
+20:35:26 foto 056-1279s-collaudo.png
+20:36:55 foto 057-1369s-collaudo-duro.png
+20:37:56 foto 058-1430s-collaudo-duro.png
+20:38:57 foto 059-1491s-collaudo-duro.png
+20:39:57 prova Windows: Notepad++ con Wine
+20:39:57 errore prova Windows RuntimeError('saltato (prova corta)')
+20:39:57 prova Android: attivazione e avvio
+20:39:57 errore prova Android RuntimeError('saltato (prova corta)')
+20:39:57 prova tema chiaro
+20:40:38 foto 060-1591s-tema-chiaro.png
+20:40:48 foto 061-1602s-tema-chiaro.png
+20:41:04 foto 062-1617s-tema-chiaro-menu.png
+20:41:43 foto 063-1657s-tema-chiaro-impostazioni.png
+20:41:54 foto 064-1668s-tema-chiaro-impostazioni.png
+20:42:05 foto 065-1678s-tema-chiaro-impostazioni.png
+20:43:15 foto 066-1748s-tema-chiaro-sostore.png
+20:43:25 foto 067-1759s-tema-chiaro-sostore.png
+20:43:36 foto 068-1770s-tema-chiaro-sostore.png
+20:45:30 foto 069-1884s-tema-scuro-file.png
+20:45:38 foto 070-1891s-tema-scuro-file.png
+20:45:50 foto 071-1904s-tema-scuro-menu.png
+20:46:30 foto 072-1943s-tema-scuro-impostazioni.png
+20:46:40 foto 073-1954s-tema-scuro-impostazioni.png
+20:46:51 foto 074-1964s-tema-scuro-impostazioni.png
+20:47:07 pagine dei temi e del comportamento
+20:47:52 foto 075-2025s-tema-globale.png
+20:48:03 foto 076-2036s-tema-globale.png
+20:48:13 foto 077-2047s-tema-globale.png
+20:48:24 foto 078-2058s-tema-globale.png
+20:49:19 foto 079-2113s-colori.png
+20:49:30 foto 080-2123s-colori.png
+20:49:40 foto 081-2134s-colori.png
+20:49:51 foto 082-2145s-colori.png
+20:50:48 foto 083-2201s-comportamento-generale.png
+20:50:58 foto 084-2212s-comportamento-generale.png
+20:51:09 foto 085-2223s-comportamento-generale.png
+20:51:20 foto 086-2233s-comportamento-generale.png
+20:52:14 foto 087-2288s-icone.png
+20:52:25 foto 088-2299s-icone.png
+20:52:36 foto 089-2309s-icone.png
+20:52:47 foto 090-2320s-icone.png
+20:53:01 icone non nostre
+20:53:38 SoStore: assistenti online
+20:54:34 foto 091-2428s-sostore-assistenti.png
+20:54:45 foto 092-2438s-sostore-assistenti.png
+20:54:55 foto 093-2449s-sostore-assistenti.png
+20:55:09 prova assistenza
+20:55:37 foto 094-2490s-assistenza.png
+20:55:49 foto 095-2503s-assistenza.png
+20:56:35 foto 096-2549s-assistenza-mail.png
+20:56:56 foto 097-2570s-assistenza-mail.png
+20:57:16 foto 098-2590s-assistenza-mail.png
+20:58:00 schermata: menu
+20:58:41 foto 099-2675s-menu-applicazioni.png
+20:58:48 foto 100-2681s-menu-aiuto.png
+20:58:51 controllo dei nomi non nostri (solo lettura)
+20:59:27 prova del Dock (busctl verso la barra)
+21:00:03 foto 101-2756s-dock-prova.png
+21:00:03 mascotte: clic, casella dei comandi
+21:00:11 foto 102-2765s-mascotte-casella.png
+21:00:18 foto 103-2772s-mascotte-aiuto.png
+21:00:30 foto 104-2783s-mascotte-quale.png
+21:00:41 foto 105-2794s-luma-volume.png
+21:00:54 foto 106-2808s-luma-luminosita.png
+21:01:11 foto 107-2825s-luma-non-trovato.png
+21:01:29 foto 108-2842s-luma-apri.png
+21:01:45 foto 109-2858s-luma-cerca.png
+21:02:00 foto 110-2873s-luma-cerca-fine.png
+21:02:16 foto 111-2889s-luma-tema-chiaro.png
+21:02:30 foto 112-2904s-luma-tema-scuro.png
+21:02:42 foto 113-2916s-luma-schermata.png
+21:02:49 foto 114-2922s-mascotte-chiusa.png
+21:02:49 mascotte: passaggio del mouse e X
+21:02:51 foto 115-2924s-mascotte-mouse-sopra.png
+21:02:54 foto 116-2927s-mascotte-x.png
+21:02:59 foto 117-2933s-mascotte-tolta.png
+21:02:59 schermata: blocco
+21:03:30 foto 118-2964s-blocco.png
+21:03:42 foto 119-2975s-dopo-blocco.png
+21:05:34 foto 120-3087s-krunner.png
+21:05:36 foto 121-3089s-installer.png
+21:05:51 foto 122-3105s-installer.png
+21:06:07 foto 123-3121s-installer.png
+21:06:23 foto 124-3136s-installer.png
+21:06:38 foto 125-3152s-installer.png
+21:06:54 foto 126-3168s-installer.png
+21:07:10 foto 127-3183s-installer.png
+21:07:25 foto 128-3199s-installer.png
+21:07:41 foto 129-3215s-installer.png
+21:07:57 foto 130-3230s-installer.png
+21:08:18 foto 131-3252s-pagina1.png
+21:08:33 foto 132-3267s-pagina2.png
+21:08:48 foto 133-3282s-pagina3.png
+21:09:04 foto 134-3297s-pagina4.png
+21:09:19 foto 135-3312s-partizioni.png
+21:09:27 foto 136-3321s-partizioni-cancella.png
+21:09:38 foto 137-3332s-utente.png
+21:09:38 fine
