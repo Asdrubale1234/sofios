@@ -1,6 +1,10 @@
 name: Schermate della ISO
 on:
   workflow_dispatch:
+    inputs:
+      patch:
+        description: "si = applica le modifiche del ramo alla ISO già costruita (prova veloce)"
+        default: "no"
   push:
     branches: [main]
     paths: ['tools/foto-iso.py', '.github/workflows/foto.yml']
@@ -34,7 +38,7 @@ jobs:
           sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm || true
           mkdir -p out
           I=live/config/includes.chroot_after_packages
-          xorriso -as mkisofs -r -V PATCH -o patch.iso -graft-points usr=$I/usr etc=$I/etc applica-patch.sh=tools/applica-patch.sh 2>&1 | tail -2
+          [ "${{ github.event.inputs.patch }}" = si ] && xorriso -as mkisofs -r -V PATCH -o patch.iso -graft-points usr=$I/usr etc=$I/etc applica-patch.sh=tools/applica-patch.sh 2>&1 | tail -2
           python3 tools/foto-iso.py sofios.iso out/foto 190
       - name: Salva le schermate nel ramo schermate
         if: always()
