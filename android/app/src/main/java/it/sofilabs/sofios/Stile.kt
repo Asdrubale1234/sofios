@@ -43,6 +43,17 @@ object Stile {
         try { c.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().putBoolean("tema_chiaro", vuoleChiaro).apply() } catch (e: Exception) {}
     }
 
+    /** Una posa di Luma come immagine (per le schermate vuote e simili); null se la posa non esiste. */
+    fun luma(c: Context, nome: String, altezzaDp: Int): android.widget.ImageView? {
+        val id = c.resources.getIdentifier("luma_" + nome.replace('-', '_'), "drawable", c.packageName)
+        if (id == 0) return null
+        return android.widget.ImageView(c).apply {
+            setImageResource(id); scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            layoutParams = android.widget.LinearLayout.LayoutParams(-2, dp(c, altezzaDp)).apply { gravity = Gravity.CENTER_HORIZONTAL }
+            adjustViewBounds = true
+        }
+    }
+
     fun dp(c: Context, v: Int) = (v * c.resources.displayMetrics.density).toInt()
 
     /** Angoli più morbidi, nello stile dei tablet Apple (il raggio richiesto è ingrandito del 40%). */

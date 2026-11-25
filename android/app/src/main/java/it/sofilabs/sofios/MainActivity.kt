@@ -132,16 +132,75 @@ class MainActivity : SchermataSofiOS() {
 
     private lateinit var zonaApp: LinearLayout
 
+    /** Luma si vede com'è il tablet: batteria quasi scarica e non in carica, oppure senza internet; altrimenti neutra. */
+    private fun posaDiRiposo(): String {
+        val i = registerReceiver(null, android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val livello = i?.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scala = i?.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, 100) ?: 100
+        val stato = i?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+        val inCarica = stato == android.os.BatteryManager.BATTERY_STATUS_CHARGING || stato == android.os.BatteryManager.BATTERY_STATUS_FULL
+        if (livello >= 0 && scala > 0 && livello * 100 / scala <= 15 && !inCarica) return "batteria_scarica"
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+        val rete = try { cm.activeNetwork?.let { cm.getNetworkCapabilities(it) } } catch (e: SecurityException) { null }
+        if (rete == null || !rete.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)) return "senza_internet"
+        return "neutra"
+    }
+
     /** Le domande del primo avvio, una alla volta: aspetto (scuro/chiaro), assistenti online, poi le app nuove per il Dock. */
     private var passoAperto: AlertDialog? = null
 
     private fun primiPassi() {
         if (passoAperto?.isShowing == true) return    // una domanda alla volta, anche se la schermata si riattiva più volte
         when {
+            !memoria().getBoolean("benvenuto_visto", false) -> benvenuto()
             !memoria().getBoolean("tema_scelto", false) -> sceltaTema()
             !memoria().getBoolean("assistenti_chiesti", false) -> sceltaAssistenti()
             else -> Dock.chiediPerLeNuove(this) { riempiApp() }
         }
+    }
+
+    /** Tre pagine di benvenuto, la prima volta: cos'è SofiOS, la sincronizzazione, la sicurezza. */
+    private fun benvenuto() {
+        val pagine = listOf(
+            Triple("benvenuto", "Benvenuto in SofiOS", "Il tuo tablet, semplice e tuo. Note, password, file e Luma, la tua assistente, sono già qui."),
+            Triple("sincronizza", "Tutto uguale su ogni dispositivo", "Note, password, foto e file si sincronizzano con il tuo computer, solo dentro casa tua. Non passa da nessun server."),
+            Triple("sicurezza", "Al sicuro", "Le tue password sono cifrate e le sai solo tu. Niente pubblicità e nessuna raccolta di dati."))
+        var n = 0
+        val altezza = (resources.displayMetrics.heightPixels * 0.5f).toInt()
+        val colonna = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL; setPadding(dp(20), dp(8), dp(20), dp(8)) }
+        val immagine = ImageView(this).apply {
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            outlineProvider = object : android.view.ViewOutlineProvider() {
+                override fun getOutline(v: View, o: android.graphics.Outline) { o.setRoundRect(0, 0, v.width, v.height, dp(18).toFloat()) }
+            }
+            clipToOutline = true
+        }
+        val titolo = TextView(this).apply { textSize = 22f; typeface = Typeface.DEFAULT_BOLD; setTextColor(0xFFF2F2F7.toInt()); gravity = Gravity.CENTER; setPadding(0, dp(14), 0, dp(4)) }
+        val testo = TextView(this).apply { textSize = 15f; setTextColor(0xFF8E8E93.toInt()); gravity = Gravity.CENTER; setPadding(dp(8), 0, dp(8), dp(12)) }
+        var dialogo: AlertDialog? = null
+        val avanti = Stile.bottone(this, "Avanti", Stile.ORO, Stile.SU_ORO) {
+            if (n < pagine.size - 1) { n++; mostraPagina(n, immagine, titolo, testo, pagine) }
+            else { memoria().edit().putBoolean("benvenuto_visto", true).apply(); dialogo?.dismiss(); primiPassi() }
+        }
+        fun aggiorna() { mostraPagina(n, immagine, titolo, testo, pagine); avanti.text = if (n == pagine.size - 1) "Inizia" else "Avanti" }
+        avanti.setOnClickListener {
+            if (n < pagine.size - 1) { n++; aggiorna() }
+            else { memoria().edit().putBoolean("benvenuto_visto", true).apply(); dialogo?.dismiss(); primiPassi() }
+        }
+        aggiorna()
+        colonna.addView(immagine, LinearLayout.LayoutParams(altezza * 9 / 16, altezza))
+        colonna.addView(titolo, LinearLayout.LayoutParams(-1, -2)); colonna.addView(testo, LinearLayout.LayoutParams(-1, -2))
+        colonna.addView(avanti, LinearLayout.LayoutParams(dp(220), dp(48)))
+        dialogo = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+            .setView(ScrollView(this).apply { addView(colonna) }).setCancelable(false).show()
+        passoAperto = dialogo
+    }
+
+    private fun mostraPagina(n: Int, immagine: ImageView, titolo: TextView, testo: TextView, pagine: List<Triple<String, String, String>>) {
+        val (img, t, d) = pagine[n]
+        val id = resources.getIdentifier("benvenuto_$img", "drawable", packageName)
+        if (id != 0) immagine.setImageResource(id)
+        titolo.text = t; testo.text = d
     }
 
     private val descrizioniAssistenti = mapOf(
@@ -280,6 +339,7 @@ class MainActivity : SchermataSofiOS() {
         riempiApp()
         primiPassi()
         sofi.ondeggia(mascotteVisibile())
+        sofi.posaRiposo = posaDiRiposo(); if (!casella.aperta()) sofi.riposo()
         aggiornaCasa()
         if (!Cartella.permesso(this) && !memoria().getBoolean("cartella_chiesta", false)) avvisoCartella()
     }

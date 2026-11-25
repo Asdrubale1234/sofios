@@ -121,7 +121,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         (att.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(campo.windowToken, 0)
         visibility = View.GONE
         pulisci()
-        sofi.posa("neutra")
+        sofi.riposo()
         sofi.mostraX(2500)
     }
 
@@ -135,8 +135,8 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         ritardo.removeCallbacks(tornaAscolta); ritardo.postDelayed(tornaAscolta, 3000)
     }
 
-    private fun chiedi(domanda: String, azione: () -> Unit) {
-        pulisci(); di(domanda); inAttesa = azione; conferma.visibility = View.VISIBLE
+    private fun chiedi(domanda: String, posa: String = "parla", azione: () -> Unit) {
+        pulisci(); di(domanda, posa); inAttesa = azione; conferma.visibility = View.VISIBLE
     }
 
     private fun risolvi(si: Boolean) {
@@ -202,7 +202,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         } catch (e: ActivityNotFoundException) { di("Non riesco ad aprire «${v.nome}».", "preoccupata") }
     }
 
-    private fun chiudiDopo(testo: String) { di(testo, "felice"); postDelayed({ if (aperta()) chiudi() }, 600) }
+    private fun chiudiDopo(testo: String) { di(testo, "apri"); postDelayed({ if (aperta()) chiudi() }, 600) }
 
     private fun faApri(nome: String) {
         val t = Comandi.cercaProgrammi(nome, programmi())
@@ -225,11 +225,11 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
     }
 
     private fun chiudiApp(v: Voce) {
-        sofi.posa("concentrata")
+        sofi.posa("chiudi")
         try {
             (att.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).killBackgroundProcesses(v.id)
-            di("Ho chiesto ad Android di chiudere «${v.nome}». Non posso controllare se l'ha fatto: lo decide Android, di solito solo per i programmi in secondo piano.", "parla")
-        } catch (e: SecurityException) { di("Android non mi lascia chiudere «${v.nome}».", "preoccupata") }
+            di("Ho chiesto ad Android di chiudere «${v.nome}». Non posso controllare se l'ha fatto: lo decide Android, di solito solo per i programmi in secondo piano.", "chiudi")
+        } catch (e: SecurityException) { di("Android non mi lascia chiudere «${v.nome}».", "errore") }
     }
 
     private fun faDisinstalla(nome: String) {
@@ -246,8 +246,8 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
         if (info != null && (info.flags and ApplicationInfo.FLAG_SYSTEM) != 0) {
             di("«${v.nome}» è un programma del sistema: non si può disinstallare.", "preoccupata"); return
         }
-        chiedi("Vuoi disinstallare «${v.nome}»? Poi Android ti chiederà l'ultima conferma.") {
-            try { att.startActivity(Intent(Intent.ACTION_DELETE, Uri.parse("package:" + v.id))); di("Ti ho portato alla conferma di Android.", "felice") }
+        chiedi("Vuoi disinstallare «${v.nome}»? Poi Android ti chiederà l'ultima conferma.", "disinstalla") {
+            try { att.startActivity(Intent(Intent.ACTION_DELETE, Uri.parse("package:" + v.id))); di("Ti ho portato alla conferma di Android.", "disinstalla") }
             catch (e: ActivityNotFoundException) { di("Non riesco a disinstallare «${v.nome}».", "preoccupata") }
         }
     }
@@ -263,7 +263,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
                 try { att.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=$q&c=apps"))) }
                 catch (e2: ActivityNotFoundException) { di("Non trovo uno store o un browser.", "preoccupata"); return@chiedi }
             }
-            di("Ti ho portato allo store.", "felice")
+            di("Ti ho portato allo store.", "scarica")
         }
     }
 
@@ -281,7 +281,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             else if (p !in inutili) nomi.add(p)
         }
         if (nomi.isEmpty() && estensioni == null) { di("Dimmi che file cerchi, per esempio «cerca fattura».", "preoccupata"); return }
-        sofi.posa("concentrata"); risposta.text = "Cerco…"
+        sofi.posa("cerca"); risposta.text = "Cerco…"
         val radice = Cartella.radice(att)
         Thread {
             val trovati = ArrayList<File>()
@@ -295,9 +295,9 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             trovati.sortByDescending { it.lastModified() }
             att.runOnUiThread {
                 if (!aperta()) return@runOnUiThread
-                if (trovati.isEmpty()) di("Non ho trovato niente nella Cartella SofiOS. Per ora è l'unica cartella che posso guardare.", "preoccupata")
+                if (trovati.isEmpty()) di("Non ho trovato niente nella Cartella SofiOS. Per ora è l'unica cartella che posso guardare.", "nessun_risultato")
                 else {
-                    di((if (trovati.size == 1) "Ho trovato 1 file" else "Ho trovato ${trovati.size} file") + " nella Cartella SofiOS. Tocca per aprirlo.", "felice")
+                    di((if (trovati.size == 1) "Ho trovato 1 file" else "Ho trovato ${trovati.size} file") + " nella Cartella SofiOS. Tocca per aprirlo.", "fatto")
                     for (f in trovati.take(12)) voce("📄  " + f.name) {
                         att.startActivity(Intent(att, FileActivity::class.java).putExtra(FileActivity.EXTRA_PERCORSO, f.path))
                     }
@@ -326,8 +326,8 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
                     val nuovo = (am.getStreamVolume(AudioManager.STREAM_MUSIC) + Math.round(max * d / 100f)).coerceIn(0, max)
                     am.setStreamVolume(AudioManager.STREAM_MUSIC, nuovo, 0) }
             }
-            di("Fatto.", "felice")
-        } catch (e: SecurityException) { di("Su questo tablet non riesco a cambiare il volume.", "preoccupata") }
+            di("Fatto.", "volume")
+        } catch (e: SecurityException) { di("Su questo tablet non riesco a cambiare il volume.", "errore") }
     }
 
     private fun faLuminosita(a: Pair<*, *>) {
@@ -344,20 +344,20 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             }.coerceIn(5, 255)
             Settings.System.putInt(att.contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL)
             Settings.System.putInt(att.contentResolver, Settings.System.SCREEN_BRIGHTNESS, nuovo)
-            di("Fatto.", "felice")
-        } catch (e: SecurityException) { di("Questo schermo non si regola da qui.", "preoccupata") }
+            di("Fatto.", "luminosita")
+        } catch (e: SecurityException) { di("Questo schermo non si regola da qui.", "errore") }
     }
 
     private fun faTema(quale: String) {
         val chiaro = quale == "chiaro"
         if (Stile.chiaro == chiaro) { di("Il tema ${if (chiaro) "chiaro" else "scuro"} è già attivo.", "felice"); return }
         Stile.imposta(att, chiaro)
-        di("Metto il tema ${if (chiaro) "chiaro" else "scuro"}.", "felice")
+        di("Metto il tema ${if (chiaro) "chiaro" else "scuro"}.", "tema")
         postDelayed({ att.recreate() }, 500)
     }
 
     private fun faSchermata() {
-        sofi.posa("concentrata")
+        sofi.posa("schermata")
         try {
             val cartella = File(Cartella.radice(att), "File/Schermate").apply { mkdirs() }
             val vista = att.window.decorView
@@ -368,7 +368,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             visibility = prima
             val f = File(cartella, "schermata-" + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(Date()) + ".png")
             FileOutputStream(f).use { bm.compress(Bitmap.CompressFormat.PNG, 100, it) }
-            di("Ho salvato la schermata di SofiOS nella Cartella SofiOS, in «File», dentro «Schermate».", "felice")
-        } catch (e: IOException) { di("Non riesco a salvare la schermata. Controlla lo spazio.", "preoccupata") }
+            di("Ho salvato la schermata di SofiOS nella Cartella SofiOS, in «File», dentro «Schermate».", "schermata")
+        } catch (e: IOException) { di("Non riesco a salvare la schermata. Controlla lo spazio.", "errore") }
     }
 }

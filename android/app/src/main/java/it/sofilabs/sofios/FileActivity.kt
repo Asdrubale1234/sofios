@@ -37,7 +37,7 @@ class FileActivity : SchermataSofiOS() {
     private var voci: List<File> = emptyList()
     private lateinit var percorso: TextView
     private lateinit var elenco: ListView
-    private lateinit var vuoto: TextView
+    private lateinit var vuoto: View
     private lateinit var su: TextView
     private val adattatore = Adattatore()
     private var daAprire: File? = null
@@ -71,7 +71,11 @@ class FileActivity : SchermataSofiOS() {
             setOnItemLongClickListener { _, _, i, _ -> opzioni(voci[i]); true }
         }
         corpo.addView(elenco, FrameLayout.LayoutParams(-1, -1))
-        vuoto = Stile.testo(this, "Questa cartella è vuota.", 16f, Stile.PICCOLO).apply { gravity = Gravity.CENTER }
+        vuoto = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER
+            Stile.luma(this@FileActivity, "nessun_risultato", 150)?.let { addView(it) }
+            addView(Stile.testo(this@FileActivity, "Questa cartella è vuota.", 16f, Stile.PICCOLO).apply { gravity = Gravity.CENTER; setPadding(0, dp(10), 0, 0) })
+        }
         corpo.addView(vuoto, FrameLayout.LayoutParams(-1, -1))
         radice.addView(corpo, LinearLayout.LayoutParams(-1, 0, 1f))
 

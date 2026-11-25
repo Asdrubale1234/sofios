@@ -34,6 +34,14 @@ class SofiView(context: Context) : FrameLayout(context) {
         "pensa" to R.drawable.sofi_pensa, "felice" to R.drawable.sofi_felice, "concentrata" to R.drawable.sofi_concentrata,
         "preoccupata" to R.drawable.sofi_preoccupata, "saluta" to R.drawable.sofi_saluta)
 
+    /** La posa di quando non succede niente: normalmente «neutra», ma anche «batteria_scarica» o «senza_internet». */
+    var posaRiposo = "neutra"
+    fun riposo() = posa(posaRiposo)
+
+    /** Le 8 pose di base, poi tutte le altre (eventi, comandi, funzioni) cercate per nome: luma_<nome>. */
+    private fun risorsaPosa(nome: String): Int =
+        pose[nome] ?: context.resources.getIdentifier("luma_" + nome.replace('-', '_'), "drawable", context.packageName)
+
     init {
         for (v in listOf(a, b)) {
             v.scaleType = ImageView.ScaleType.FIT_CENTER
@@ -74,7 +82,7 @@ class SofiView(context: Context) : FrameLayout(context) {
 
     /** Cambia posa con una dissolvenza di circa un quarto di secondo. */
     fun posa(nome: String) {
-        val risorsa = pose[nome] ?: return
+        val risorsa = risorsaPosa(nome).takeIf { it != 0 } ?: return
         if (nome == posaCorrente) return
         posaCorrente = nome
         val dietro = if (davanti === a) b else a

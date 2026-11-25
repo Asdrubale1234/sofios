@@ -128,6 +128,18 @@ scrivi "== Imposto SofiOS come schermata iniziale"
 adb shell cmd role add-role-holder android.app.role.HOME $PKG 2>&1 | tee -a "$LOG"
 scrivi "schermata iniziale scelta: $(adb shell cmd role get-role-holders android.app.role.HOME | tr -d '\r')"
 
+# primo avvio, passo 0: tre pagine di benvenuto
+sleep 6
+if attendi "Benvenuto in SofiOS" 15; then
+  foto_subito A000-benvenuto-1
+  tocca_testo "Avanti"; sleep 2
+  foto_subito A000b-benvenuto-2
+  tocca_testo "Avanti"; sleep 2
+  foto_subito A000c-benvenuto-3
+  tocca_testo "Inizia"; sleep 2
+else
+  scrivi "ATTENZIONE: le pagine di benvenuto del primo avvio non sono comparse"
+fi
 # primo avvio: SofiOS chiede scuro o chiaro (con l'anteprima degli sfondi)
 sleep 6
 if attendi "Che aspetto preferisci?" 15; then
