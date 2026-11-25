@@ -3,7 +3,7 @@
 La chiave di Google resta sul tuo computer (variabile GEMINI_API_KEY): non viene salvata ne' inviata a nessun altro.
 Uso:  python3 genera.py --prova     (fa UNA sola immagine per controllare che tutto funzioni)
       python3 genera.py             (fa tutte quelle che mancano)
-      python3 genera.py nuovi       (i 28 nuovi: sfondi senza logo, pose funzioni, installatore, sito)
+      python3 genera.py nuovi       (i 28 nuovi: pose funzioni e comandi, volti, installatore, sito, negozio, tablet)
       python3 genera.py sfondi      (solo gli sfondi)   |   python3 genera.py pose   (solo le pose)"""
 import base64, json, os, subprocess, sys, time, urllib.request, urllib.error, zipfile
 
@@ -59,8 +59,6 @@ _SC = {"scuro": ("sfondo-scuro.jpg", (("alba", "l'alba sul mare, cielo che schia
        "chiaro": ("sfondo-chiaro.jpg", (("mare-calmo", "mare molto calmo di giorno, cielo limpido azzurro con pochissime nuvole"), ("mattina", "mattina presto sul mare, cielo chiaro con tonalita' pesca e azzurro"), ("nuvole", "cielo azzurro con grandi nuvole bianche morbide sopra il mare")))}
 _SCENA_INST = "stessa grafica 3D morbida delle immagini di riferimento, con mare e cielo sfumati, la mascotte Luma (il faro di pietra con il viso) a sinistra e spazio libero a destra. Nessun testo, nessun logo, nessuna scritta."
 NUOVI = {
- "6-sfondi-senza-logo": [("%s-%s-%s" % (tema, nome, fmt.replace(":", "x")), "Nuova variante dello sfondo di SofiOS. Stesso stile e stessa grafica dell'immagine di riferimento, con questa scena: %s. %s" % (scena, SENZA_LOGO), [rif], fmt, "2K")
-                         for tema, (rif, scene) in _SC.items() for nome, scena in scene for fmt in ("16:9", "9:16")],
  "7-pose-funzioni": [(n, STILE_LUMA + "Disegnala " + d + ". " + VERDE, REF_LUMA, "1:1", "1K") for n, d in (
     ("cassaforte", "che custodisce un grande lucchetto dorato stretto al petto, con aria protettiva e sicura"),
     ("foto", "che tiene una fotografia incorniciata in una mano e ha un piccolo cestino accanto, con un sorriso"),
@@ -224,7 +222,7 @@ def main():
                         tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
                     else: z.write(pf, cartella + "/" + f)
             print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
-        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 10, ognuno piccolo)."); return 0
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 9, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
