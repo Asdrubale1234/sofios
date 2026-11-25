@@ -62,6 +62,17 @@ object Stile {
             setImageResource(id); scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
             layoutParams = android.widget.LinearLayout.LayoutParams(-2, dp(c, ALTEZZA_LUMA_DP)).apply { gravity = Gravity.CENTER_HORIZONTAL }
             adjustViewBounds = true
+            // pressione lunga: «Nascondi Luma da tutte le pagine» (si rimette da Impostazioni → Schermo o con «mostra Luma»)
+            setOnLongClickListener { v ->
+                android.app.AlertDialog.Builder(c, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                    .setTitle("Luma")
+                    .setItems(arrayOf("Nascondi Luma da tutte le pagine")) { _, _ ->
+                        impostaLumaNelleSchermate(c, false); v.visibility = View.GONE
+                    }
+                    .setNegativeButton("Chiudi", null).show()
+                    .getButton(android.content.DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
+                true
+            }
         }
     }
 
