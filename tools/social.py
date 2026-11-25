@@ -13,10 +13,16 @@ def apri(n):
     p = os.path.join(SC, n)
     return Image.open(p).convert("RGBA") if os.path.exists(p) else None
 def togli_sfondo(im, tol=26):
-    """il marchio nasce su sfondo uniforme: il colore degli angoli diventa trasparente (con bordo morbido)"""
-    a = np.asarray(im.convert("RGB")).astype(float); ang = np.median(np.array([a[2, 2], a[2, -3], a[-3, 2], a[-3, -3]]), axis=0)
-    d = np.sqrt(((a - ang) ** 2).sum(axis=2)); al = np.clip((d - tol) / 28.0, 0, 1)
-    out = im.convert("RGBA"); out.putalpha(Image.fromarray((al * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6)))
+    """toglie lo sfondo uniforme: se e' verde (#00FF00 chiesto a Nano Banana) con il chroma key, altrimenti il colore degli angoli; bordo morbido"""
+    a = np.asarray(im.convert("RGB")).astype(float); r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    ang = np.median(np.array([a[2, 2], a[2, -3], a[-3, 2], a[-3, -3]]), axis=0)
+    if ang[1] > 120 and ang[1] - max(ang[0], ang[2]) > 60:                      # sfondo verde
+        dist = np.clip((g - np.maximum(r, b)) / 200.0, 0, 1); al = 1 - np.clip((dist - 0.12) / 0.20, 0, 1)
+        g2 = np.where(dist > 0.04, np.minimum(g, np.maximum(r, b) * 1.02 + 2), g); a = np.dstack([r, g2, b])
+    else:
+        d = np.sqrt(((a - ang) ** 2).sum(axis=2)); al = np.clip((d - tol) / 28.0, 0, 1)
+    out = Image.fromarray(a.astype(np.uint8), "RGB").convert("RGBA")
+    out.putalpha(Image.fromarray((al * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6)))
     bb = out.getchannel("A").point(lambda v: 255 if v > 40 else 0).getbbox()
     return out.crop(bb) if bb else out
 def riempi(im, w, h, cx=0.5, cy=0.5):
@@ -33,6 +39,8 @@ def salva(im, cart, nome, q=92):
     d = os.path.join(OUT, cart); os.makedirs(d, exist_ok=True); p = os.path.join(d, nome)
     (im.convert("RGB") if nome.endswith(".jpg") else im).save(p, quality=q, optimize=True); print("  ", cart + "/" + nome, "x".join(map(str, im.size)))
 icona = apri("icona.png")
+if icona is not None and icona.getpixel((2, 2))[1] > 120 and icona.getpixel((2, 2))[1] - max(icona.getpixel((2, 2))[0], icona.getpixel((2, 2))[2]) > 60:
+    icona = togli_sfondo(icona.convert("RGB")); s = max(icona.size); q = Image.new("RGBA", (s, s), (0, 0, 0, 0)); q.alpha_composite(icona, ((s - icona.width) // 2, (s - icona.height) // 2)); icona = q   # icona con gli angoli trasparenti
 mar_s, mar_c = apri("marchio-scuro.png"), apri("marchio-chiaro.png")
 mar_s = togli_sfondo(mar_s) if mar_s else None; mar_c = togli_sfondo(mar_c) if mar_c else None
 sig_s, sig_c = apri("sigillo-scuro.png"), apri("sigillo-chiaro.png")
