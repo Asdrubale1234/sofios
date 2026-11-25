@@ -30,6 +30,7 @@ import android.widget.TextView
 import it.sofilabs.sofios.Cartella
 import it.sofilabs.sofios.CassaforteActivity
 import it.sofilabs.sofios.Controlli
+import it.sofilabs.sofios.Novita
 import it.sofilabs.sofios.FileActivity
 import it.sofilabs.sofios.ImpostazioniActivity
 import it.sofilabs.sofios.NoteActivity
@@ -167,6 +168,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
             "luminosita" -> faLuminosita(f.arg as Pair<*, *>)
             "tema" -> faTema(f.arg as String)
             "schermata" -> faSchermata()
+            "novita" -> { chiudi(); Novita.mostra(att, Novita.tutte(att).take(1)) { } }
             "luma-programmi" -> { val si = f.arg == "si"; Stile.impostaLumaNelleSchermate(att, si); di(if (si) "Ora mi vedi nelle pagine dei programmi." else "Va bene, nelle pagine dei programmi non mi vedi più. Per rivedermi scrivi «mostra Luma».", "felice") }
         }
     }

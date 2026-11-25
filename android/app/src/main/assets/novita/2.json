@@ -1,0 +1,11 @@
+{
+  "titolo": "Novità di SofiOS 0.2",
+  "sottotitolo": "Ecco cosa è cambiato.",
+  "posa": "festa",
+  "voci": [
+    {"titolo": "Luma ha un aspetto nuovo", "testo": "Luma cambia posa secondo quello che succede: quando apri un programma, cerchi un file o finisce la batteria. Se non la vuoi nelle pagine, la nascondi da Impostazioni → Schermo."},
+    {"titolo": "Un aspetto più morbido", "testo": "Colori nuovi, icone nuove e due sfondi con il mare, di notte e di giorno. Scegli il tema scuro o chiaro quando vuoi."},
+    {"titolo": "Le stesse cose su ogni dispositivo", "testo": "Note, password, foto e file si possono sincronizzare con il tuo computer, solo dentro casa tua. Si attiva da Impostazioni → Dispositivi."},
+    {"titolo": "Il Dock è tuo", "testo": "Metti le tue app nel Dock: Impostazioni → App, tocca un'app e scegli «Metti nel Dock»."}
+  ]
+}

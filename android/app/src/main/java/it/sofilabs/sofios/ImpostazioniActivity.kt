@@ -377,6 +377,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
             riga("SofiOS", "versione $versione"),
             riga("Android", Build.VERSION.RELEASE),
             riga("Sviluppato da", "Sofi Labs · © 2026 · Tutti i diritti riservati"),
+            Stile.bottone(this, "Novità di SofiOS", Stile.SECONDARIO, Stile.TESTO) { Novita.mostra(this, Novita.tutte(this)) { } },
             Stile.bottone(this, "Componenti e licenze", Stile.SECONDARIO, Stile.TESTO) { licenze() },
         )
     }

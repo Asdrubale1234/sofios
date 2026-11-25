@@ -155,9 +155,16 @@ class MainActivity : SchermataSofiOS() {
             !memoria().getBoolean("benvenuto_visto", false) -> benvenuto()
             !memoria().getBoolean("tema_scelto", false) -> sceltaTema()
             !memoria().getBoolean("assistenti_chiesti", false) -> sceltaAssistenti()
-            else -> Dock.chiediPerLeNuove(this) { riempiApp() }
+            else -> {
+                val novita = if (novitaMostrate) emptyList() else Novita.daVedere(this)
+                novitaMostrate = true
+                if (novita.isNotEmpty()) Novita.mostra(this, novita) { Dock.chiediPerLeNuove(this) { riempiApp() } }
+                else Dock.chiediPerLeNuove(this) { riempiApp() }
+            }
         }
     }
+
+    private var novitaMostrate = false
 
     /** Tre pagine di benvenuto, la prima volta: cos'è SofiOS, la sincronizzazione, la sicurezza. */
     private fun benvenuto() {

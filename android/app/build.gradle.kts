@@ -11,8 +11,8 @@ android {
         applicationId = "it.sofilabs.sofios"
         minSdk = 26          // Android 8.0 in su
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1"
+        versionCode = 2
+        versionName = "0.2"
     }
     // Chiave di PROVA, uguale a ogni costruzione, così gli aggiornamenti si installano uno sopra l'altro.
     // Non è la chiave per il Play Store: quella sarà separata e non entrerà mai nel repository.

@@ -372,6 +372,15 @@ comando "metti%sil%stema%sscuro"
 scrivi "Luma dice: $(risposta_sofi)"
 sleep 3; foto T5-casa-tornata-scura
 apri_sofi
+# novità: il comando «novità» mostra la schermata, «Ho capito» la chiude
+comando "novita"
+if attendi "Ho capito" 15; then
+  foto_subito S3b-novita
+  tocca_testo "Ho capito"; sleep 2
+else
+  scrivi "ATTENZIONE: la schermata delle novità non è comparsa"
+fi
+apri_sofi
 comando "cosa%sfa%squesto"
 scrivi "Luma dice: $(risposta_sofi)"
 adb shell "echo 'Ciao, questa e una fattura di prova' > $CART/fattura-prova.txt"
