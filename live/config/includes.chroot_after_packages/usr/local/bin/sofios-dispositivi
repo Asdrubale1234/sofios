@@ -68,7 +68,7 @@ class Finestra(QWidget):
         self.setObjectName("finestra"); self.setWindowTitle("Dispositivi"); self.setWindowIcon(QIcon(LOGO)); self.resize(560, 620)
         v = QVBoxLayout(self); v.setContentsMargins(26, 22, 26, 22); v.setSpacing(12)
         testa = QHBoxLayout(); t = QLabel("Dispositivi"); t.setObjectName("titolo"); testa.addWidget(t); testa.addStretch(1)
-        self.luma = luma.etichetta("sincronizza", 130); testa.addWidget(self.luma); v.addLayout(testa)
+        self.luma = luma.etichetta("sincronizza"); testa.addWidget(self.luma); v.addLayout(testa)
         s = QLabel("I tuoi dispositivi SofiOS: note, password, foto e file uguali su tutti, sincronizzati solo sulla rete di casa."); s.setObjectName("sottotitolo"); s.setWordWrap(True); v.addWidget(s)
         riga = QHBoxLayout(); self.nome = QLineEdit(D.nome_dispositivo()); self.nome.setMaximumWidth(260); self.nome.editingFinished.connect(self.cambia_nome)
         riga.addWidget(QLabel("Questo dispositivo:")); riga.addWidget(self.nome); riga.addStretch(1); v.addLayout(riga)

@@ -432,7 +432,7 @@ class SoStore(QWidget):
             if ins: self._griglia(v, ins)
             else:
                 e = QLabel("Non hai ancora installato programmi da SoStore."); e.setObjectName("vuoto"); v.addWidget(e)
-                v.addWidget(luma.etichetta("apri", 200), alignment=Qt.AlignmentFlag.AlignHCenter)
+                v.addWidget(luma.etichetta("apri"), alignment=Qt.AlignmentFlag.AlignHCenter)
         v.addStretch()
 
     def esegui_ricerca(self):
@@ -448,7 +448,7 @@ class SoStore(QWidget):
         altri = [r for r in self.fonte.cerca(q) if r["pacchetto"] not in {a["pacchetto"] for a in nostri}]
         if not nostri and not altri:
             e = QLabel("Nessun programma trovato. Prova con un'altra parola."); e.setObjectName("vuoto"); v.addWidget(e)
-            v.addWidget(luma.etichetta("non-trovato", 200), alignment=Qt.AlignmentFlag.AlignHCenter)
+            v.addWidget(luma.etichetta("non-trovato"), alignment=Qt.AlignmentFlag.AlignHCenter)
         if nostri:
             s = QLabel("In evidenza"); s.setObjectName("sezione"); v.addWidget(s); self._griglia(v, nostri)
         if altri:

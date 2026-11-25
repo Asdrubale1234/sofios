@@ -54,7 +54,7 @@ class Note(QWidget):
             b = QPushButton(testo); b.clicked.connect(azione); rb.addWidget(b)
         av.addLayout(rb); self.avviso.hide(); dx.addWidget(self.avviso)
         self.vuota = QWidget(); hv = QHBoxLayout(self.vuota); hv.setContentsMargins(0, 0, 0, 0); hv.setSpacing(14)
-        hv.addWidget(luma.etichetta("note", 140)); tv = QLabel("Nessuna nota qui.\nScrivi la prima: si salva da sola."); tv.setObjectName("sottotitolo"); hv.addWidget(tv, 1)
+        hv.addWidget(luma.etichetta("note")); tv = QLabel("Nessuna nota qui.\nScrivi la prima: si salva da sola."); tv.setObjectName("sottotitolo"); hv.addWidget(tv, 1)
         dx.addWidget(self.vuota); dx.addWidget(self.testo, 1)
         self.testo.textChanged.connect(lambda: self.vuota.setVisible(not self.testo.toPlainText().strip()))
         radice.addLayout(dx, 1)
