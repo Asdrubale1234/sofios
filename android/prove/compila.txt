@@ -29,21 +29,21 @@ Daemon will be stopped at the end of the build
 > Task :app:dexBuilderDebug
 > Task :app:processDebugJavaRes UP-TO-DATE
 > Task :app:mergeDebugGlobalSynthetics
-> Task :app:mergeDebugStartupProfile
 > Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeDebugStartupProfile
 > Task :app:mergeLibDexDebug
 > Task :app:mergeDebugJavaResource
+> Task :app:mergeDebugJniLibFolders
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
+> Task :app:mergeProjectDexDebug
 > Task :app:writeDebugSigningConfigVersions
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
 > Task :finto-fully:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
-> Task :app:mergeProjectDexDebug
 > Task :finto-fully:checkDebugAarMetadata UP-TO-DATE
 > Task :finto-fully:generateDebugResValues UP-TO-DATE
 > Task :finto-fully:mapDebugSourceSetPaths UP-TO-DATE
@@ -67,16 +67,16 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:compressDebugAssets
 > Task :finto-fully:desugarDebugFileDependencies
 > Task :finto-fully:dexBuilderDebug
-> Task :finto-fully:processDebugJavaRes UP-TO-DATE
 > Task :finto-fully:mergeDebugGlobalSynthetics
-> Task :finto-fully:mergeDebugStartupProfile
+> Task :finto-fully:processDebugJavaRes UP-TO-DATE
 > Task :finto-fully:checkDebugDuplicateClasses
+> Task :finto-fully:mergeDebugStartupProfile
 > Task :finto-fully:mergeDebugJavaResource
 > Task :finto-fully:mergeLibDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
-> Task :finto-fully:mergeProjectDexDebug
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
 > Task :finto-fully:stripDebugDebugSymbols NO-SOURCE
+> Task :finto-fully:mergeProjectDexDebug
 > Task :app:mergeExtDexDebug
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:validateSigningDebug
@@ -88,7 +88,7 @@ Daemon will be stopped at the end of the build
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795626489612.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795636762356.json
 
-BUILD SUCCESSFUL in 19s
+BUILD SUCCESSFUL in 25s
 70 actionable tasks: 38 executed, 32 up-to-date
