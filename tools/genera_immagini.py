@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """SofiOS: genera gli sfondi e le pose di Luma con Nano Banana (Google), direttamente dal tuo computer.
 La chiave di Google resta sul tuo computer (variabile GEMINI_API_KEY): non viene salvata ne' inviata a nessun altro.
-Uso:  python3 genera.py --prova     (fa UNA sola immagine per controllare che tutto funzioni)
-      python3 genera.py             (fa tutte quelle che mancano)
+Uso:  python3 genera.py             (fa TUTTE le immagini che mancano, una sola corsa; salta quelle gia' fatte)
+      python3 genera.py --prova     (una sola immagine, per controllare che tutto funzioni)
       python3 genera.py nuovi       (i 28 nuovi: pose funzioni e comandi, volti, installatore, sito, negozio, tablet)
       python3 genera.py sfondi      (solo gli sfondi)   |   python3 genera.py pose   (solo le pose)"""
 import base64, json, os, subprocess, sys, time, urllib.request, urllib.error, zipfile
@@ -117,6 +117,19 @@ NUOVI.update({
                         for tema, rif in (("scuro", "sfondo-scuro.jpg"), ("chiaro", "sfondo-chiaro.jpg")) for fmt in ("16:9", "9:16")],
 })
 
+NUOVI.update({
+ "16-avvio-e-installatore": [
+    ("boot-scuro-4x3", "Sfondo per la schermata di avvio del computer (menu di avvio), formato 4:3: stessa scena dell'immagine di riferimento (notte stellata sul mare, onde morbide con linee di luce). Niente logo e nessuna scritta: lascia libera la zona centrale per il logo. Nessun testo.", ["sfondo-scuro.jpg"], "4:3", "1K"),
+    ("installatore-testata", "Testata larga e bassa per una schermata di installazione: notte stellata sul mare come nell'immagine di riferimento, con la mascotte Luma piccola a destra che saluta e spazio libero a sinistra. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-scuro.jpg"], "21:9", "1K")],
+ "17-avatar": [(n, "Ritratto quadrato di Luma, la mascotte (il faro di pietra con il viso): inquadra il viso e la parte alta della torre da vicino, sorridente, " + d + ". MANTIENI IDENTICI stile, colori e viso dei riferimenti. Nessun testo, nessun logo.", REF_LUMA + [rif], "1:1", "1K")
+               for n, d, rif in (("scuro", "con dietro un mare di notte sfumato e blu", "sfondo-scuro.jpg"), ("chiaro", "con dietro un mare chiaro di giorno sfumato e azzurro", "sfondo-chiaro.jpg"))],
+ "18-livelli": [(n, "Illustrazione per una scheda dell'installatore, formato 16:9: " + d + ". Grafica 3D morbida come le immagini di riferimento, mare e cielo sfumati chiari, Luma a sinistra e spazio libero a destra. Nessun testo, nessun logo, nessuna scritta.", REF_LUMA + ["sfondo-chiaro.jpg"], "16:9", "1K") for n, d in (
+    ("base", "Luma leggera e sorridente che tiene una piccola piuma, per dire che il sistema e' leggero"),
+    ("completo", "Luma felice circondata da piccole finestre, un telefono e un portatile, per dire che c'e' tutto"),
+    ("android", "Luma con un telefono in mano da cui escono piccole icone colorate generiche, senza loghi"),
+    ("windows", "Luma con una grande finestra aperta divisa in quattro riquadri colorati generici, senza loghi"))],
+})
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -183,6 +196,7 @@ def main():
         try: print("Uso Vertex AI, progetto:", progetto(), "- modello:", MODELLO, "- regione:", REGIONE)
         except Exception as e: print("gcloud non risponde:", e); return 1
     os.makedirs(OUT, exist_ok=True); cosa = [a for a in sys.argv[1:] if not a.startswith("--")]; prova = "--prova" in sys.argv; fatte = 0
+    if not cosa or "tutto" in cosa: cosa = ["gruppi", "nuovi"]     # senza parole: fa TUTTO quello che manca
     global errori_di_fila
     errori_di_fila = 0
     if not cosa or "sfondi" in cosa:      # (con «extra» si fanno solo i volti, le pose in piu' e gli sfondi di accesso)
@@ -222,7 +236,7 @@ def main():
                         tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
                     else: z.write(pf, cartella + "/" + f)
             print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
-        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 9, ognuno piccolo)."); return 0
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 12, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
