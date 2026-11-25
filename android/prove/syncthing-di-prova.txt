@@ -1,70 +1,70 @@
-[start] 2026/11/25 20:27:14 INFO: syncthing v1.29.5 "Gold Grasshopper" (go1.25.0 linux-amd64) debian@debian 2025-11-29 20:48:58 UTC
-[GG24W] 2026/11/25 20:27:14 INFO: My ID: GG24WFC-NPV6FB4-YFCDFVE-TLUBNEI-V2AXSNN-T5UVVC7-T3BG7BZ-TNFQ4QY
-[GG24W] 2026/11/25 20:27:15 INFO: Hashing performance is 260.94 MB/s
-[GG24W] 2026/11/25 20:27:15 INFO: Running database migration 14...
-[GG24W] 2026/11/25 20:27:15 INFO: Running database migration 16...
-[GG24W] 2026/11/25 20:27:15 INFO: Running database migration 17...
-[GG24W] 2026/11/25 20:27:15 INFO: Running database migration 19...
-[GG24W] 2026/11/25 20:27:15 INFO: Running database migration 20...
-[GG24W] 2026/11/25 20:27:15 INFO: Compacting database after migration...
-[GG24W] 2026/11/25 20:27:15 INFO: Overall send rate is unlimited, receive rate is unlimited
-[GG24W] 2026/11/25 20:27:15 INFO: Using discovery mechanism: global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
-[GG24W] 2026/11/25 20:27:15 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
-2026/11/25 20:27:15 failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
-[GG24W] 2026/11/25 20:27:15 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
-[GG24W] 2026/11/25 20:27:15 INFO: Using discovery mechanism: IPv4 local broadcast discovery on port 21027
-[GG24W] 2026/11/25 20:27:15 INFO: Using discovery mechanism: IPv6 local multicast discovery on address [ff12::8384]:21027
-[GG24W] 2026/11/25 20:27:15 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) starting
-[GG24W] 2026/11/25 20:27:15 INFO: Loading HTTPS certificate: open /tmp/st/https-cert.pem: no such file or directory
-[GG24W] 2026/11/25 20:27:15 INFO: Creating new HTTPS certificate
-[GG24W] 2026/11/25 20:27:15 INFO: TCP listener ([::]:22000) starting
-[GG24W] 2026/11/25 20:27:15 INFO: QUIC listener ([::]:22000) starting
-[GG24W] 2026/11/25 20:27:15 INFO: GUI and API listening on 127.0.0.1:8384
-[GG24W] 2026/11/25 20:27:15 INFO: Access the GUI via the following URL: http://127.0.0.1:8384/
-[GG24W] 2026/11/25 20:27:15 INFO: My name is "runnervm0hi8g"
-[GG24W] 2026/11/25 20:27:29 INFO: Joined relay relay://38.43.93.33:22067
-[GG24W] 2026/11/25 20:27:35 INFO: Detected 0 NAT services
-[GG24W] 2026/11/25 20:28:46 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
-[GG24W] 2026/11/25 20:28:46 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) shutting down
-[GG24W] 2026/11/25 20:28:46 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
-[GG24W] 2026/11/25 20:28:46 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
-[GG24W] 2026/11/25 20:28:47 INFO: Adding folder "Note" (sofios-note)
-[GG24W] 2026/11/25 20:28:47 INFO: No stored folder metadata for "sofios-note"; recalculating
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
-[GG24W] 2026/11/25 20:28:47 INFO: Adding folder "Password" (sofios-password)
-[GG24W] 2026/11/25 20:28:47 INFO: No stored folder metadata for "sofios-password"; recalculating
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
-[GG24W] 2026/11/25 20:28:47 INFO: Adding folder "Foto" (sofios-foto)
-[GG24W] 2026/11/25 20:28:47 INFO: No stored folder metadata for "sofios-foto"; recalculating
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
-[GG24W] 2026/11/25 20:28:47 INFO: Adding folder "File" (sofios-file)
-[GG24W] 2026/11/25 20:28:47 INFO: No stored folder metadata for "sofios-file"; recalculating
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "File" (sofios-file) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
-[GG24W] 2026/11/25 20:28:47 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Restarted folder "File" (sofios-file) (sendreceive)
-[GG24W] 2026/11/25 20:28:47 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
+[start] 2026/11/25 20:29:44 INFO: syncthing v1.29.5 "Gold Grasshopper" (go1.25.0 linux-amd64) debian@debian 2025-11-29 20:48:58 UTC
+[JAG3A] 2026/11/25 20:29:44 INFO: My ID: JAG3AAY-KQUMV5B-COKQGWY-O6N7FIH-7PIV4K2-SZZPMBN-OYYQT44-QBWGQQ2
+[JAG3A] 2026/11/25 20:29:45 INFO: Hashing performance is 274.57 MB/s
+[JAG3A] 2026/11/25 20:29:45 INFO: Running database migration 14...
+[JAG3A] 2026/11/25 20:29:45 INFO: Running database migration 16...
+[JAG3A] 2026/11/25 20:29:45 INFO: Running database migration 17...
+[JAG3A] 2026/11/25 20:29:45 INFO: Running database migration 19...
+[JAG3A] 2026/11/25 20:29:45 INFO: Running database migration 20...
+[JAG3A] 2026/11/25 20:29:45 INFO: Compacting database after migration...
+[JAG3A] 2026/11/25 20:29:45 INFO: Overall send rate is unlimited, receive rate is unlimited
+[JAG3A] 2026/11/25 20:29:45 INFO: Using discovery mechanism: global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
+[JAG3A] 2026/11/25 20:29:45 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
+[JAG3A] 2026/11/25 20:29:45 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
+[JAG3A] 2026/11/25 20:29:45 INFO: Using discovery mechanism: IPv4 local broadcast discovery on port 21027
+[JAG3A] 2026/11/25 20:29:45 INFO: Using discovery mechanism: IPv6 local multicast discovery on address [ff12::8384]:21027
+[JAG3A] 2026/11/25 20:29:45 INFO: Loading HTTPS certificate: open /tmp/st/https-cert.pem: no such file or directory
+[JAG3A] 2026/11/25 20:29:45 INFO: Creating new HTTPS certificate
+[JAG3A] 2026/11/25 20:29:45 INFO: TCP listener ([::]:22000) starting
+[JAG3A] 2026/11/25 20:29:45 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) starting
+2026/11/25 20:29:45 failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+[JAG3A] 2026/11/25 20:29:45 INFO: QUIC listener ([::]:22000) starting
+[JAG3A] 2026/11/25 20:29:45 INFO: GUI and API listening on 127.0.0.1:8384
+[JAG3A] 2026/11/25 20:29:45 INFO: Access the GUI via the following URL: http://127.0.0.1:8384/
+[JAG3A] 2026/11/25 20:29:45 INFO: My name is "runnervm0hi8g"
+[JAG3A] 2026/11/25 20:29:57 INFO: Joined relay relay://152.53.241.12:22067
+[JAG3A] 2026/11/25 20:30:05 INFO: Detected 0 NAT services
+[JAG3A] 2026/11/25 20:31:07 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) shutting down
+[JAG3A] 2026/11/25 20:31:07 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
+[JAG3A] 2026/11/25 20:31:07 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
+[JAG3A] 2026/11/25 20:31:07 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
+[JAG3A] 2026/11/25 20:31:07 INFO: Adding folder "Note" (sofios-note)
+[JAG3A] 2026/11/25 20:31:07 INFO: No stored folder metadata for "sofios-note"; recalculating
+[JAG3A] 2026/11/25 20:31:07 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
+[JAG3A] 2026/11/25 20:31:07 INFO: Adding folder "Password" (sofios-password)
+[JAG3A] 2026/11/25 20:31:07 INFO: No stored folder metadata for "sofios-password"; recalculating
+[JAG3A] 2026/11/25 20:31:07 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
+[JAG3A] 2026/11/25 20:31:07 INFO: Adding folder "Foto" (sofios-foto)
+[JAG3A] 2026/11/25 20:31:07 INFO: No stored folder metadata for "sofios-foto"; recalculating
+[JAG3A] 2026/11/25 20:31:07 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
+[JAG3A] 2026/11/25 20:31:07 INFO: Adding folder "File" (sofios-file)
+[JAG3A] 2026/11/25 20:31:07 INFO: No stored folder metadata for "sofios-file"; recalculating
+[JAG3A] 2026/11/25 20:31:07 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
+[JAG3A] 2026/11/25 20:31:07 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
+[JAG3A] 2026/11/25 20:31:07 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
+[JAG3A] 2026/11/25 20:31:07 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
+[JAG3A] 2026/11/25 20:31:08 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
+[JAG3A] 2026/11/25 20:31:08 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Restarted folder "File" (sofios-file) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
+[JAG3A] 2026/11/25 20:31:08 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
+[JAG3A] 2026/11/25 20:31:08 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
+[JAG3A] 2026/11/25 20:31:08 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
+[JAG3A] 2026/11/25 20:31:08 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Restarted folder "File" (sofios-file) (sendreceive)
+[JAG3A] 2026/11/25 20:31:08 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
