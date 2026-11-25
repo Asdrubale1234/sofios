@@ -143,6 +143,20 @@ NUOVI.update({
     ("marchio-chiaro", LOGO_BASE + "Marchio orizzontale su sfondo bianco uniforme: a sinistra il simbolo (faro con onda-S) senza il quadrato dell'icona, a destra la scritta «SofiOS» in un carattere moderno, pulito e sottile, blu scuro. La S del simbolo e la S di «SofiOS» devono avere lo stesso disegno. Scrivi esattamente SofiOS, senza altre parole.", ["logo-attuale-chiaro.jpg"], "21:9", "2K")],
 })
 
+LABS_BASE = ("Logo per Sofi Labs, una piccola azienda italiana di software che crea prodotti (un sistema operativo, app, gestionali). Il simbolo parte dall'idea del faro mostrato nei riferimenti (il faro e' l'identita' dell'azienda), "
+             "ma rifatto in modo piu' semplice, elegante e memorabile: forma pulita, un colore principale e al massimo una sfumatura, riconoscibile anche piccolissimo, adatto a comparire accanto al logo di ogni prodotto. "
+             "Il faro NON ha il viso e NON ha la lettera S fatta di onda (quella e' del sistema operativo SofiOS). Stile moderno e curato, nessun effetto vetro esagerato. Nessun altro testo oltre a quello richiesto. ")
+NUOVI.update({
+ "20-sofi-labs": [
+    ("icona-scura", LABS_BASE + "Icona quadrata con angoli morbidi (stile icone Apple), sfondo a sfumatura blu notte, faro chiaro con luce calda. Nessun testo.", ["logo-attuale-scuro.jpg"], "1:1", "2K"),
+    ("icona-chiara", LABS_BASE + "Icona quadrata con angoli morbidi (stile icone Apple), sfondo chiaro azzurro e bianco, faro blu scuro con luce calda. Nessun testo.", ["logo-attuale-chiaro.jpg"], "1:1", "2K"),
+    ("simbolo-monocromo", LABS_BASE + "Solo il simbolo del faro, un unico colore blu scuro su sfondo bianco uniforme, senza sfumature, adatto alla stampa e al timbro. Nessun testo.", ["logo-attuale-chiaro.jpg"], "1:1", "2K"),
+    ("marchio-scuro", LABS_BASE + "Marchio orizzontale su sfondo grafite uniforme: a sinistra il simbolo del faro, a destra la scritta «Sofi Labs» in un carattere moderno, pulito, bianca. Scrivi esattamente «Sofi Labs», senza altre parole.", ["logo-attuale-scuro.jpg"], "21:9", "2K"),
+    ("marchio-chiaro", LABS_BASE + "Marchio orizzontale su sfondo bianco uniforme: a sinistra il simbolo del faro, a destra la scritta «Sofi Labs» in un carattere moderno, pulito, blu scuro. Scrivi esattamente «Sofi Labs», senza altre parole.", ["logo-attuale-chiaro.jpg"], "21:9", "2K"),
+    ("prodotto-di-scuro", LABS_BASE + "Piccolo sigillo da mettere in fondo alle schermate dei prodotti, su sfondo grafite uniforme: il simbolo del faro piccolo, accanto la scritta su due righe: «Un prodotto di» in piccolo e grigio chiaro, sotto «Sofi Labs» piu' grande e bianco. Scrivi esattamente queste parole, senza altro.", ["logo-attuale-scuro.jpg"], "21:9", "1K"),
+    ("prodotto-di-chiaro", LABS_BASE + "Piccolo sigillo da mettere in fondo alle schermate dei prodotti, su sfondo bianco uniforme: il simbolo del faro piccolo, accanto la scritta su due righe: «Un prodotto di» in piccolo e grigio, sotto «Sofi Labs» piu' grande e blu scuro. Scrivi esattamente queste parole, senza altro.", ["logo-attuale-chiaro.jpg"], "21:9", "1K")],
+})
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -249,7 +263,7 @@ def main():
                         tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
                     else: z.write(pf, cartella + "/" + f)
             print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
-        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 13, ognuno piccolo)."); return 0
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 14, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
