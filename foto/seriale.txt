@@ -1,0 +1,567 @@
+[2J[001;001H[=3h[2J[001;001H[2J[001;001H[8;042;160t[2J[001;001H[2J[001;001H[8;056;240t[2J[001;001HBdsDxe: loading Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+BdsDxe: starting Boot0002 "UEFI QEMU DVD-ROM QM00005 " from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+DIAG: servizio avviato 06:03:22
+=== RAPPORTO +70 06:04:32 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1196 user    tty2 no -
+2 1000 sofios -     1214 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   580 25 nov 06.03 .
+drwx------ 15 sofios sofios   460 25 nov 06.03 ..
+drwx------  2 sofios sofios    60 25 nov 06.03 dconf
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 25 nov 06.03 gtkrc
+-rw-rw-r--  1 sofios sofios    86 25 nov 06.03 gtkrc-2.0
+-rw-------  1 sofios sofios   123 25 nov 06.03 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 25 nov 06.03 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 25 nov 06.03 kconf_updaterc
+-rw-------  1 sofios sofios    43 25 nov 06.03 kded5rc
+drwxrwxr-x  2 sofios sofios   140 25 nov 06.03 kdedefaults
+-rw-------  1 sofios sofios  3060 25 nov 06.03 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 kde.org
+-rw-------  1 sofios sofios 14442 25 nov 06.03 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 25 nov 06.03 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 25 nov 06.03 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 25 nov 06.03 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 25 nov 06.03 kwinrc
+-rw-------  1 sofios sofios    27 25 nov 06.03 plasma-localerc
+-rw-------  1 sofios sofios  4321 25 nov 06.03 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1701 25 nov 06.03 plasmashellrc
+-rw-------  1 sofios sofios    51 25 nov 06.03 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 25 nov 06.03 pulse
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.03 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 25 nov 06.03 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 25 nov 06.03 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 25 nov 06.03 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+06:03:32 avvio
+06:03:47 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 25 06:03:09 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 25 06:03:09 sofios kernel:     keyboard-layouts=it
+nov 25 06:03:26 sofios kwin_wayland_wrapper[1323]: kwin_core: Failed to open drm node: ""
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: EGL setup failed, disabling glamor
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: Failed to initialize glamor, falling back to sw
+nov 25 06:03:28 sofios kwin_wayland_wrapper[1392]: Errors from xkbcomp are not fatal to the X server
+nov 25 06:03:29 sofios systemd[1214]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios dbus-daemon[1256]: [session uid=1000 pid=1256 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.27' (uid=1000 pid=1430 comm="/usr/bin/plasmashell --no-respawn")
+nov 25 06:03:30 sofios systemd[1214]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 25 06:03:31 sofios NetworkManager[1093]: <info>  [1795583011.2511] agent-manager: agent[495e82d0597657db,:1.36/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 25 06:03:31 sofios plasmashell[1430]: kf.plasma.quick: Applet preload policy set to 1
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 25 06:03:32 sofios plasmashell[1430]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 25 06:03:32 sofios systemd[1214]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 25 06:03:32 sofios systemd[1214]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 25 06:03:34 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557df2207570
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557df21deda0
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 25 06:03:36 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:37 sofios plasmashell[1430]: kde.plasmashell: Activity added twice "72ed7f5e-33f8-42c0-8c4f-2ece8423cc34"
+nov 25 06:03:37 sofios plasmashell[1430]: Process "cat $HOME/.cache/sofios/sofi-stato 2>/dev/null" already running. Pid: 1657
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:38 sofios plasmashell[1430]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 25 06:03:57 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+=== FINE RAPPORTO +70 ===
+=== RAPPORTO +90 06:06:02 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1196 user    tty2 no -
+2 1000 sofios -     1214 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   600 25 nov 06.05 .
+drwx------ 15 sofios sofios   460 25 nov 06.03 ..
+drwx------  2 sofios sofios    60 25 nov 06.03 dconf
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 25 nov 06.03 gtkrc
+-rw-rw-r--  1 sofios sofios    86 25 nov 06.03 gtkrc-2.0
+-rw-------  1 sofios sofios   123 25 nov 06.03 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 25 nov 06.03 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 25 nov 06.03 kconf_updaterc
+-rw-------  1 sofios sofios    43 25 nov 06.03 kded5rc
+drwxrwxr-x  2 sofios sofios   140 25 nov 06.03 kdedefaults
+-rw-------  1 sofios sofios  3060 25 nov 06.03 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 kde.org
+-rw-------  1 sofios sofios 14442 25 nov 06.03 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 25 nov 06.03 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 25 nov 06.03 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 25 nov 06.03 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 25 nov 06.03 kwinrc
+-rw-------  1 sofios sofios    27 25 nov 06.03 plasma-localerc
+-rw-------  1 sofios sofios  4321 25 nov 06.03 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1701 25 nov 06.03 plasmashellrc
+-rw-------  1 sofios sofios    51 25 nov 06.03 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 25 nov 06.03 pulse
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.05 sofios-benvenuto-fatto
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.03 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 25 nov 06.03 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 25 nov 06.03 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 25 nov 06.03 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+06:03:32 avvio
+06:03:47 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 25 06:03:09 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 25 06:03:09 sofios kernel:     keyboard-layouts=it
+nov 25 06:03:26 sofios kwin_wayland_wrapper[1323]: kwin_core: Failed to open drm node: ""
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: EGL setup failed, disabling glamor
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: Failed to initialize glamor, falling back to sw
+nov 25 06:03:28 sofios kwin_wayland_wrapper[1392]: Errors from xkbcomp are not fatal to the X server
+nov 25 06:03:29 sofios systemd[1214]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios dbus-daemon[1256]: [session uid=1000 pid=1256 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.27' (uid=1000 pid=1430 comm="/usr/bin/plasmashell --no-respawn")
+nov 25 06:03:30 sofios systemd[1214]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 25 06:03:31 sofios NetworkManager[1093]: <info>  [1795583011.2511] agent-manager: agent[495e82d0597657db,:1.36/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 25 06:03:31 sofios plasmashell[1430]: kf.plasma.quick: Applet preload policy set to 1
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 25 06:03:32 sofios plasmashell[1430]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 25 06:03:32 sofios systemd[1214]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 25 06:03:32 sofios systemd[1214]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 25 06:03:34 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557df2207570
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557df21deda0
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 25 06:03:36 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:37 sofios plasmashell[1430]: kde.plasmashell: Activity added twice "72ed7f5e-33f8-42c0-8c4f-2ece8423cc34"
+nov 25 06:03:37 sofios plasmashell[1430]: Process "cat $HOME/.cache/sofios/sofi-stato 2>/dev/null" already running. Pid: 1657
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:38 sofios plasmashell[1430]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 25 06:03:57 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:05:57 sofios krunner[2135]: org.kde.plasma.runner.bookmarks: No default firefox profile found
+=== FINE RAPPORTO +90 ===
+=== RAPPORTO +150 06:08:32 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1196 user    tty2 no -
+2 1000 sofios -     1214 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   600 25 nov 06.05 .
+drwx------ 15 sofios sofios   480 25 nov 06.06 ..
+drwx------  2 sofios sofios    60 25 nov 06.03 dconf
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 25 nov 06.03 gtkrc
+-rw-rw-r--  1 sofios sofios    86 25 nov 06.03 gtkrc-2.0
+-rw-------  1 sofios sofios   123 25 nov 06.03 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 25 nov 06.03 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 25 nov 06.03 kconf_updaterc
+-rw-------  1 sofios sofios    43 25 nov 06.03 kded5rc
+drwxrwxr-x  2 sofios sofios   140 25 nov 06.03 kdedefaults
+-rw-------  1 sofios sofios  3060 25 nov 06.03 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 kde.org
+-rw-------  1 sofios sofios 14442 25 nov 06.03 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 25 nov 06.03 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 25 nov 06.03 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 25 nov 06.03 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 25 nov 06.03 kwinrc
+-rw-------  1 sofios sofios    27 25 nov 06.03 plasma-localerc
+-rw-------  1 sofios sofios  4321 25 nov 06.03 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1701 25 nov 06.03 plasmashellrc
+-rw-------  1 sofios sofios    51 25 nov 06.03 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 25 nov 06.03 pulse
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.05 sofios-benvenuto-fatto
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.03 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 25 nov 06.03 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 25 nov 06.03 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 25 nov 06.03 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+06:03:32 avvio
+06:03:47 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 25 06:03:09 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 25 06:03:09 sofios kernel:     keyboard-layouts=it
+nov 25 06:03:26 sofios kwin_wayland_wrapper[1323]: kwin_core: Failed to open drm node: ""
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: EGL setup failed, disabling glamor
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: Failed to initialize glamor, falling back to sw
+nov 25 06:03:28 sofios kwin_wayland_wrapper[1392]: Errors from xkbcomp are not fatal to the X server
+nov 25 06:03:29 sofios systemd[1214]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios dbus-daemon[1256]: [session uid=1000 pid=1256 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.27' (uid=1000 pid=1430 comm="/usr/bin/plasmashell --no-respawn")
+nov 25 06:03:30 sofios systemd[1214]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 25 06:03:31 sofios NetworkManager[1093]: <info>  [1795583011.2511] agent-manager: agent[495e82d0597657db,:1.36/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 25 06:03:31 sofios plasmashell[1430]: kf.plasma.quick: Applet preload policy set to 1
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 25 06:03:32 sofios plasmashell[1430]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 25 06:03:32 sofios systemd[1214]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 25 06:03:32 sofios systemd[1214]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 25 06:03:34 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557df2207570
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557df21deda0
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 25 06:03:36 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:37 sofios plasmashell[1430]: kde.plasmashell: Activity added twice "72ed7f5e-33f8-42c0-8c4f-2ece8423cc34"
+nov 25 06:03:37 sofios plasmashell[1430]: Process "cat $HOME/.cache/sofios/sofi-stato 2>/dev/null" already running. Pid: 1657
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:38 sofios plasmashell[1430]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 25 06:03:57 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:05:57 sofios krunner[2135]: org.kde.plasma.runner.bookmarks: No default firefox profile found
+=== FINE RAPPORTO +150 ===
+=== RAPPORTO +120 06:10:33 virt=kvm uid=1000 ===
+--- sessioni
+1 1000 sofios seat0 1196 user    tty2 no -
+2 1000 sofios -     1214 manager -    no -
+--- pannelli
+s "2"
+--- look and feel
+/etc/xdg/kdeglobals:DefaultDarkLookAndFeel=org.sofios.desktop
+/etc/xdg/kdeglobals:DefaultLightLookAndFeel=org.sofios.light
+/etc/xdg/kdeglobals:LookAndFeelPackage=org.sofios.desktop
+org.sofios.desktop  org.sofios.light
+--- config live
+totale 92
+drwxr-xr-x  9 sofios sofios   600 25 nov 06.05 .
+drwx------ 15 sofios sofios   480 25 nov 06.06 ..
+drwx------  2 sofios sofios    60 25 nov 06.03 dconf
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-3.0
+drwxrwxr-x  2 sofios sofios   100 25 nov 06.03 gtk-4.0
+-rw-rw-r--  1 sofios sofios    51 25 nov 06.03 gtkrc
+-rw-rw-r--  1 sofios sofios    86 25 nov 06.03 gtkrc-2.0
+-rw-------  1 sofios sofios   123 25 nov 06.03 kactivitymanagerdrc
+-rw-------  1 sofios sofios   407 25 nov 06.03 kactivitymanagerd-statsrc
+-rw-------  1 sofios sofios  2074 25 nov 06.03 kconf_updaterc
+-rw-------  1 sofios sofios    43 25 nov 06.03 kded5rc
+drwxrwxr-x  2 sofios sofios   140 25 nov 06.03 kdedefaults
+-rw-------  1 sofios sofios  3060 25 nov 06.03 kdeglobals
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 kde.org
+-rw-------  1 sofios sofios 14442 25 nov 06.03 kglobalshortcutsrc
+-rw-------  1 sofios sofios   103 25 nov 06.03 ktimezonedrc
+-rw-r--r--  1 sofios sofios    39 25 nov 06.03 kwalletrc
+-rw-rw-r--  1 sofios sofios  1514 25 nov 06.03 kwinoutputconfig.json
+-rw-------  1 sofios sofios   250 25 nov 06.03 kwinrc
+-rw-------  1 sofios sofios    27 25 nov 06.03 plasma-localerc
+-rw-------  1 sofios sofios  4321 25 nov 06.03 plasma-org.kde.plasma.desktop-appletsrc
+-rw-------  1 sofios sofios  1701 25 nov 06.03 plasmashellrc
+-rw-------  1 sofios sofios    51 25 nov 06.03 powermanagementprofilesrc
+drwx------  2 sofios sofios    60 25 nov 06.03 pulse
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.05 sofios-benvenuto-fatto
+-rw-rw-r--  1 sofios sofios     0 25 nov 06.03 sofios-pannelli-fatto
+-rw-rw-r--  1 sofios sofios  1077 25 nov 06.03 Trolltech.conf
+-rw-r--r--  1 sofios sofios   360 25 nov 06.03 user-dirs.dirs
+-rw-r--r--  1 sofios sofios     6 25 nov 06.03 user-dirs.locale
+drwxrwxr-x  2 sofios sofios    60 25 nov 06.03 xsettingsd
+--- appletsrc
+[Containments][1]
+formfactor=0
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+plugin=org.sofios.mascotte
+[Containments][18]
+formfactor=2
+lastScreen=0
+location=4
+plugin=org.kde.panel
+plugin=org.kde.plasma.icontasks
+[Containments][3]
+formfactor=2
+lastScreen=0
+location=3
+plugin=org.kde.panel
+plugin=org.kde.plasma.digitalclock
+plugin=org.kde.plasma.kickoff
+plugin=org.kde.plasma.panelspacer
+plugin=org.kde.plasma.systemtray
+[Containments][7]
+formfactor=2
+lastScreen=-1
+location=3
+plugin=org.kde.plasma.private.systemtray
+plugin=org.kde.plasma.clipboard
+plugin=org.kde.plasma.devicenotifier
+plugin=org.kde.plasma.keyboardlayout
+plugin=org.kde.plasma.manage-inputmethod
+plugin=org.kde.plasma.notifications
+plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.volume
+plugin=org.kde.plasma.brightness
+plugin=org.kde.plasma.battery
+plugin=org.kde.plasma.networkmanagement
+plugin=org.kde.kscreen
+plugin=org.kde.plasma.cameraindicator
+--- sofios-pannelli
+06:03:32 avvio
+06:03:47 pannelli trovati: s "2"
+--- blocco schermo
+[Greeter]
+WallpaperPlugin=org.kde.image
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SofiOS
+
+[Daemon]
+Autolock=false
+LockOnResume=false
+inactive
+--- journal plasmashell
+nov 25 06:03:09 sofios kernel: Command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Kernel command line: BOOT_IMAGE=/live/vmlinuz-6.12.118+deb13-amd64 boot=live components quiet splash locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios hostname=sofios user-fullname=SofiOS findiso=
+nov 25 06:03:09 sofios kernel: Unknown kernel command line parameters "components splash boot=live locales=it_IT.UTF-8 keyboard-layouts=it timezone=Europe/Rome username=sofios user-fullname=SofiOS findiso=", will be passed to user space.
+nov 25 06:03:09 sofios kernel:     keyboard-layouts=it
+nov 25 06:03:26 sofios kwin_wayland_wrapper[1323]: kwin_core: Failed to open drm node: ""
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: EGL setup failed, disabling glamor
+nov 25 06:03:27 sofios kwin_wayland_wrapper[1371]: Failed to initialize glamor, falling back to sw
+nov 25 06:03:28 sofios kwin_wayland_wrapper[1392]: Errors from xkbcomp are not fatal to the X server
+nov 25 06:03:29 sofios systemd[1214]: Starting plasma-plasmashell.service - KDE Plasma Workspace...
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: pci id for fd 14: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios plasmashell[1430]: pci id for fd 15: 1234:1111, driver (null)
+nov 25 06:03:29 sofios plasmashell[1430]: kmsro: driver missing
+nov 25 06:03:29 sofios plasmashell[1430]: libEGL warning: egl: failed to create dri2 screen
+nov 25 06:03:29 sofios dbus-daemon[1256]: [session uid=1000 pid=1256 pidfd=5] Activating via systemd: service name='org.kde.ActivityManager' unit='plasma-kactivitymanagerd.service' requested by ':1.27' (uid=1000 pid=1430 comm="/usr/bin/plasmashell --no-respawn")
+nov 25 06:03:30 sofios systemd[1214]: Started plasma-plasmashell.service - KDE Plasma Workspace.
+nov 25 06:03:31 sofios NetworkManager[1093]: <info>  [1795583011.2511] agent-manager: agent[495e82d0597657db,:1.36/org.kde.plasma.networkmanagement/1000]: agent registered
+nov 25 06:03:31 sofios plasmashell[1430]: kf.plasma.quick: Applet preload policy set to 1
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:178:25: QML FolderViewDropArea (parent or ancestor of QQuickLayoutAttached): Binding loop detected for property "minimumWidth":
+nov 25 06:03:31 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.desktopcontainment/contents/ui/main.qml:201:9
+nov 25 06:03:32 sofios plasmashell[1430]: Toolbox not loading, toolbox package is either invalid or disabled.
+nov 25 06:03:32 sofios systemd[1214]: Starting app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore...
+nov 25 06:03:32 sofios systemd[1214]: Started app-org.kde.plasma\x2dfallback\x2dsession\x2drestore@autostart.service - Plasma Session Restore.
+nov 25 06:03:34 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/start-here-kde-symbolic
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557df2207570
+nov 25 06:03:34 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557df21deda0
+nov 25 06:03:34 sofios plasmashell[1430]: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/main.qml:310:13: QML Image: Cannot open: file:///usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/ui/sofios-logo
+nov 25 06:03:36 sofios plasmashell[1430]: This plugin does not support setting window opacity
+nov 25 06:03:37 sofios plasmashell[1430]: kde.plasmashell: Activity added twice "72ed7f5e-33f8-42c0-8c4f-2ece8423cc34"
+nov 25 06:03:37 sofios plasmashell[1430]: Process "cat $HOME/.cache/sofios/sofi-stato 2>/dev/null" already running. Pid: 1657
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.kontact.desktop" 0x557dea59e460
+nov 25 06:03:37 sofios plasmashell[1430]: org.kde.plasma.kicker: Entry is not valid "org.kde.discover.desktop" 0x557dea59e460
+nov 25 06:03:38 sofios plasmashell[1430]: org.kde.pulseaudio: No object for name "auto_null.monitor"
+nov 25 06:03:57 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:05:57 sofios krunner[2135]: org.kde.plasma.runner.bookmarks: No default firefox profile found
+nov 25 06:08:54 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:08:54 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:09:37 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:09:43 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:09:54 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:10:01 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:10:12 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:10:12 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:10:12 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+nov 25 06:10:23 sofios kwin_wayland_wrapper[1323]: kwin_wayland_drm: Failed to create framebuffer: Argomento non valido
+=== FINE RAPPORTO +120 ===
