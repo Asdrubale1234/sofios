@@ -305,6 +305,14 @@ try:
         clic(1140, 520); time.sleep(5); foto("mascotte-casella")
         scrivi("aiuto"); tasti("ret"); time.sleep(2); foto("mascotte-aiuto")
         scrivi("apri office"); tasti("ret"); time.sleep(2); foto("mascotte-quale")
+        # le pose nuove di Luma: un comando alla volta, una foto per ognuno (la posa si vede sul desktop e nella casella)
+        for nome, cmd, att in (("volume", "volume 40", 3), ("luminosita", "luminosita 60", 3), ("non-trovato", "disinstalla zzqxkj", 3), ("apri", "apri impostazioni", 4)):
+            try: scrivi(cmd); tasti("ret"); time.sleep(att); foto("luma-" + nome)
+            except Exception as e: L("errore luma", nome, repr(e))
+        tasti("alt-f4"); time.sleep(2)       # chiude le Impostazioni aperte da «apri»
+        scrivi("cerca zzqxkjw"); tasti("ret"); time.sleep(3); foto("luma-cerca"); time.sleep(14); foto("luma-cerca-fine")
+        scrivi("tema chiaro"); tasti("ret"); time.sleep(6); foto("luma-tema-chiaro"); scrivi("tema scuro"); tasti("ret"); time.sleep(6); foto("luma-tema-scuro")
+        scrivi("schermata"); tasti("ret"); time.sleep(4); foto("luma-schermata"); tasti("alt-f4"); time.sleep(2)
         tasti("esc"); time.sleep(2); foto("mascotte-chiusa")
         L("mascotte: passaggio del mouse e X")
         muovi(1140, 520); foto("mascotte-mouse-sopra")
