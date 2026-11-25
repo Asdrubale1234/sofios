@@ -4,10 +4,12 @@ La chiave di Google resta sul tuo computer (variabile GEMINI_API_KEY): non viene
 Uso:  python3 genera.py --prova     (fa UNA sola immagine per controllare che tutto funzioni)
       python3 genera.py             (fa tutte quelle che mancano)
       python3 genera.py sfondi      (solo gli sfondi)   |   python3 genera.py pose   (solo le pose)"""
-import base64, json, os, sys, time, urllib.request, urllib.error, zipfile
+import base64, json, os, subprocess, sys, time, urllib.request, urllib.error, zipfile
 
-CHIAVE = os.environ.get("GEMINI_API_KEY", "").strip()
-MODELLO = os.environ.get("MODELLO", "gemini-3-pro-image-preview")      # «Nano Banana Pro»: arriva fino a 4K. Alternativa piu' economica: gemini-2.5-flash-image
+CHIAVE = os.environ.get("GEMINI_API_KEY", "").strip()                   # solo se usi --aistudio (il servizio a prepagamento di AI Studio)
+USA_AISTUDIO = "--aistudio" in sys.argv
+MODELLO = os.environ.get("MODELLO", "gemini-nano-banana-2.1")           # il modello che su Vertex AI ha gia' funzionato per Luca
+REGIONE = os.environ.get("REGIONE", "global")
 QUI = os.path.dirname(os.path.abspath(__file__)); RIF = os.path.join(QUI, "riferimenti"); OUT = os.path.join(QUI, "uscita")
 SFONDI = [("pc-tv-16x9", "16:9", "4K"), ("pc-tablet-3x2", "3:2", "2K"), ("schermo-largo-21x9", "21:9", "2K"), ("tablet-verticale-3x4", "3:4", "2K"), ("telefono-9x16", "9:16", "2K"), ("orologio-quadrato", "1:1", "2K")]
 NOTE_FORMATO = {"pc-tv-16x9": "Per computer e televisione.", "pc-tablet-3x2": "Per computer e tablet.", "schermo-largo-21x9": "Per schermo molto largo: il logo resta al centro, la scena si allarga ai lati.",
@@ -20,14 +22,35 @@ POSE = [("neutra", "in posa neutra, ferma e serena, braccia lungo i fianchi"), (
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
+_token = {"v": None}
+def gcloud(*args):
+    r = subprocess.run(["gcloud"] + list(args), capture_output=True, text=True)
+    if r.returncode != 0: raise RuntimeError((r.stderr or r.stdout).strip()[:300])
+    return r.stdout.strip()
+def token(rinnova=False):
+    if rinnova or not _token["v"]: _token["v"] = gcloud("auth", "print-access-token")
+    return _token["v"]
+def progetto():
+    return os.environ.get("PROGETTO") or gcloud("config", "get-value", "project")
+
 def chiedi(testo, riferimenti, rapporto, qualita):
-    parti = [{"text": testo}] + [{"inline_data": {"mime_type": "image/jpeg", "data": immagine_b64(r)}} for r in riferimenti]
-    corpo = {"contents": [{"parts": parti}], "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": rapporto, "imageSize": qualita}}}
-    if "2.5" in MODELLO: corpo["generationConfig"]["imageConfig"].pop("imageSize")     # il modello economico non sceglie la qualita'
-    rq = urllib.request.Request("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent" % MODELLO, data=json.dumps(corpo).encode(),
-                                headers={"Content-Type": "application/json", "x-goog-api-key": CHIAVE})
+    parti = [{"text": testo}] + [{"inlineData": {"mimeType": "image/jpeg", "data": immagine_b64(r)}} for r in riferimenti]
+    cfg = {"responseModalities": ["TEXT", "IMAGE"], "imageConfig": {"aspectRatio": rapporto, "imageSize": qualita}}
+    corpo = {"contents": [{"role": "user", "parts": parti}], "generationConfig": cfg}
+    q = os.environ.get("QUALITA", "").strip()
+    if q.lower() in ("nessuna", "no"): cfg["imageConfig"].pop("imageSize")          # se il modello non accetta la dimensione, la tolgo
+    elif q: cfg["imageConfig"]["imageSize"] = q
+    if "2.5" in MODELLO: cfg["imageConfig"].pop("imageSize", None)
+    if USA_AISTUDIO:
+        url = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent" % MODELLO
+        intest = lambda: {"Content-Type": "application/json", "x-goog-api-key": CHIAVE}
+    else:
+        host = "aiplatform.googleapis.com" if REGIONE == "global" else "%s-aiplatform.googleapis.com" % REGIONE
+        url = "https://%s/v1/projects/%s/locations/%s/publishers/google/models/%s:generateContent" % (host, progetto(), REGIONE, MODELLO)
+        intest = lambda: {"Content-Type": "application/json", "Authorization": "Bearer " + token()}
     for tentativo in range(4):
         try:
+            rq = urllib.request.Request(url, data=json.dumps(corpo).encode(), headers=intest())
             with urllib.request.urlopen(rq, timeout=300) as r: d = json.loads(r.read().decode())
             for c in d.get("candidates", []):
                 for p in c.get("content", {}).get("parts", []):
@@ -35,25 +58,35 @@ def chiedi(testo, riferimenti, rapporto, qualita):
                     if dati: return base64.b64decode(dati["data"])
             print("   nessuna immagine nella risposta:", json.dumps(d)[:300]); return None
         except urllib.error.HTTPError as e:
-            msg = e.read().decode(errors="replace")[:400]
+            msg = e.read().decode(errors="replace")[:500]
+            if e.code == 401 and not USA_AISTUDIO: print("   rinnovo il token…"); token(True); continue
             if e.code in (429, 500, 503): print("   il servizio e' occupato, riprovo tra poco…"); time.sleep(20 * (tentativo + 1)); continue
             print("   ERRORE %s: %s" % (e.code, msg)); return None
         except Exception as e:
-            print("   errore di rete:", e); time.sleep(10)
+            print("   errore:", e); time.sleep(10)
     return None
 
+errori_di_fila = 0
 def lavoro(nome, testo, rif, rapporto, qualita):
+    global errori_di_fila
     percorso = os.path.join(OUT, nome + ".png")
     if os.path.exists(percorso): print("gia' fatta:", nome); return True
+    if errori_di_fila >= 3: print("Mi fermo: 3 errori di fila. Controlla il messaggio qui sopra."); raise SystemExit(1)
     print("sto creando:", nome, "(%s, %s)" % (rapporto, qualita))
     dati = chiedi(testo, rif, rapporto, qualita)
-    if not dati: return False
+    if not dati: errori_di_fila += 1; time.sleep(5); return False
+    errori_di_fila = 0
     open(percorso, "wb").write(dati); print("   salvata:", percorso); return True
 
 def main():
-    if not CHIAVE:
-        print("Manca la chiave. In Terminale scrivi:  export GEMINI_API_KEY=\"la-tua-chiave\"   e poi rilancia."); return 1
+    if USA_AISTUDIO and not CHIAVE:
+        print("Con --aistudio serve la chiave: export GEMINI_API_KEY=..."); return 1
+    if not USA_AISTUDIO:
+        try: print("Uso Vertex AI, progetto:", progetto(), "- modello:", MODELLO, "- regione:", REGIONE)
+        except Exception as e: print("gcloud non risponde:", e); return 1
     os.makedirs(OUT, exist_ok=True); cosa = [a for a in sys.argv[1:] if not a.startswith("--")]; prova = "--prova" in sys.argv; fatte = 0
+    global errori_di_fila
+    errori_di_fila = 0
     if not cosa or "sfondi" in cosa:
         for tema, rif in (("scuro", "sfondo-scuro.jpg"), ("chiaro", "sfondo-chiaro.jpg")):
             for nome, rapporto, q in SFONDI:
