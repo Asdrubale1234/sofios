@@ -406,11 +406,15 @@ class ImpostazioniActivity : SchermataSofiOS() {
             riga.addView(Stile.testo(this, a.nome, 18f, if (acceso) Stile.BIANCO else Stile.TESTO, true).apply { setPadding(dp(14), 0, 0, 0) },
                 LinearLayout.LayoutParams(0, -2, 1f))
             riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.BIANCO else Stile.PICCOLO))
+            // facoltativo: tastino a destra per l'app ufficiale (Play Store, con la conferma di Android); se c'è, SofiOS apre quella
+            if (Assistenti.appInstallata(this, a)) {
+                riga.addView(Stile.testo(this, "App installata", 13f, Stile.PICCOLO).apply { setPadding(dp(14), 0, 0, 0) })
+            } else {
+                riga.addView(Stile.bottone(this, "Installa l'app", Stile.SECONDARIO, Stile.TESTO) { Assistenti.installa(this, a) }
+                    .apply { textSize = 13f; minimumHeight = dp(36); setPadding(dp(14), 0, dp(14), 0) },
+                    LinearLayout.LayoutParams(-2, dp(36)).apply { leftMargin = dp(14) })
+            }
             l.add(riga)
-            // facoltativo: l'app ufficiale (si installa dal Play Store, con la conferma di Android); se c'è, SofiOS apre quella
-            if (Assistenti.appInstallata(this, a)) l.add(Stile.testo(this, "App di ${a.nome} installata: SofiOS apre quella.", 13f, Stile.PICCOLO))
-            else l.add(Stile.bottone(this, "Installa l'app di ${a.nome}", Stile.SECONDARIO, Stile.TESTO) { Assistenti.installa(this, a) }
-                .apply { textSize = 13f; minimumHeight = dp(40) })
         }
         l.add(Stile.testo(this, "Le app sono facoltative: il browser va sempre bene. Le app chiedono più permessi (microfono, foto) e si aggiornano da sole.", 13f, Stile.PICCOLO))
         return l.toTypedArray()
