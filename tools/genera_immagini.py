@@ -130,6 +130,19 @@ NUOVI.update({
     ("windows", "Luma accanto a una grande finestra di legno aperta, con un solo grande vetro azzurro e luminoso, SENZA riquadri colorati e senza nessun logo"))],
 })
 
+LOGO_BASE = ("Nuovo logo di SofiOS, sistema operativo italiano. Mantieni l'idea del logo attuale mostrato nei riferimenti: un faro e, ai suoi piedi, un'onda del mare la cui forma disegna chiaramente la lettera S. "
+             "Rifallo con uno stile unico e coerente con la mascotte Luma (3D morbido: pietra chiara calda e lanterna dorata, niente rosso, niente vetro): linee pulite, forme semplici, riconoscibile anche molto piccolo. "
+             "Il faro NON ha il viso. Nessun altro testo oltre a quello richiesto. ")
+NUOVI.update({
+ "19-logo": [
+    ("icona-scura", LOGO_BASE + "Icona quadrata con angoli morbidi (stile icone Apple), sfondo a sfumatura blu notte e azzurro mare, luce calda dalla lanterna, onda-S chiara in primo piano. Nessun testo.", ["logo-attuale-scuro.jpg"] + REF_LUMA, "1:1", "2K"),
+    ("icona-chiara", LOGO_BASE + "Icona quadrata con angoli morbidi (stile icone Apple), sfondo a sfumatura azzurro cielo e bianco, onda-S azzurra e bianca in primo piano. Nessun testo.", ["logo-attuale-chiaro.jpg"] + REF_LUMA, "1:1", "2K"),
+    ("icona-semplice", LOGO_BASE + "Versione ancora piu' semplice, quasi piatta: solo due o tre colori, faro stilizzato e onda-S grande e nitida, adatta a una icona di 32 pixel. Icona quadrata con angoli morbidi. Nessun testo.", ["logo-attuale-scuro.jpg"] + REF_LUMA, "1:1", "2K"),
+    ("icona-onda-grande", LOGO_BASE + "Variante in cui l'onda-S e' la protagonista e occupa gran parte dell'icona, con il faro piu' piccolo sopra la cresta. Icona quadrata con angoli morbidi. Nessun testo.", ["logo-attuale-scuro.jpg"] + REF_LUMA, "1:1", "2K"),
+    ("marchio-scuro", LOGO_BASE + "Marchio orizzontale su sfondo grafite uniforme: a sinistra il simbolo (faro con onda-S) senza il quadrato dell'icona, a destra la scritta «SofiOS» in un carattere moderno, pulito e sottile, bianca. La S del simbolo e la S di «SofiOS» devono avere lo stesso disegno. Scrivi esattamente SofiOS, senza altre parole.", ["logo-attuale-scuro.jpg"], "21:9", "2K"),
+    ("marchio-chiaro", LOGO_BASE + "Marchio orizzontale su sfondo bianco uniforme: a sinistra il simbolo (faro con onda-S) senza il quadrato dell'icona, a destra la scritta «SofiOS» in un carattere moderno, pulito e sottile, blu scuro. La S del simbolo e la S di «SofiOS» devono avere lo stesso disegno. Scrivi esattamente SofiOS, senza altre parole.", ["logo-attuale-chiaro.jpg"], "21:9", "2K")],
+})
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -236,7 +249,7 @@ def main():
                         tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
                     else: z.write(pf, cartella + "/" + f)
             print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
-        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 12, ognuno piccolo)."); return 0
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 13, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
