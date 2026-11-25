@@ -3,6 +3,7 @@
 La chiave di Google resta sul tuo computer (variabile GEMINI_API_KEY): non viene salvata ne' inviata a nessun altro.
 Uso:  python3 genera.py --prova     (fa UNA sola immagine per controllare che tutto funzioni)
       python3 genera.py             (fa tutte quelle che mancano)
+      python3 genera.py nuovi       (i 28 nuovi: sfondi senza logo, pose funzioni, installatore, sito)
       python3 genera.py sfondi      (solo gli sfondi)   |   python3 genera.py pose   (solo le pose)"""
 import base64, json, os, subprocess, sys, time, urllib.request, urllib.error, zipfile
 
@@ -50,6 +51,34 @@ GRUPPI = {
     ("offline", "con le braccia incrociate e lo sguardo verso l'alto, in attesa di un segnale che non arriva"),
     ("nessun-risultato", "con una lente d'ingrandimento e le spalle un po' alzate, come chi non ha trovato niente"),
     ("tutto-fatto", "con le braccia alzate in segno di festa e piccoli coriandoli attorno"))],
+}
+
+# --- Gruppi nuovi (6-9): tutto SENZA logo e SENZA scritte; il faro ufficiale lo mette il programma di Claude ---
+SENZA_LOGO = "SENZA logo e SENZA nessuna scritta: lascia libera la zona centrale, tranquilla, per metterci sopra un logo. Nessun testo, nessuna cornice, nessun dispositivo. Massima nitidezza."
+_SC = {"scuro": ("sfondo-scuro.jpg", (("alba", "l'alba sul mare, cielo che schiarisce in blu e viola con una luce calda all'orizzonte"), ("tramonto", "il tramonto sul mare, cielo blu profondo e arancio all'orizzonte"), ("luna", "notte con una luna piena sopra il mare che riflette la luce sulle onde"))),
+       "chiaro": ("sfondo-chiaro.jpg", (("mare-calmo", "mare molto calmo di giorno, cielo limpido azzurro con pochissime nuvole"), ("mattina", "mattina presto sul mare, cielo chiaro con tonalita' pesca e azzurro"), ("nuvole", "cielo azzurro con grandi nuvole bianche morbide sopra il mare")))}
+_SCENA_INST = "stessa grafica 3D morbida delle immagini di riferimento, con mare e cielo sfumati, la mascotte Luma (il faro di pietra con il viso) a sinistra e spazio libero a destra. Nessun testo, nessun logo, nessuna scritta."
+NUOVI = {
+ "6-sfondi-senza-logo": [("%s-%s-%s" % (tema, nome, fmt.replace(":", "x")), "Nuova variante dello sfondo di SofiOS. Stesso stile e stessa grafica dell'immagine di riferimento, con questa scena: %s. %s" % (scena, SENZA_LOGO), [rif], fmt, "2K")
+                         for tema, (rif, scene) in _SC.items() for nome, scena in scene for fmt in ("16:9", "9:16")],
+ "7-pose-funzioni": [(n, STILE_LUMA + "Disegnala " + d + ". " + VERDE, REF_LUMA, "1:1", "1K") for n, d in (
+    ("cassaforte", "che custodisce un grande lucchetto dorato stretto al petto, con aria protettiva e sicura"),
+    ("foto", "che tiene una fotografia incorniciata in una mano e ha un piccolo cestino accanto, con un sorriso"),
+    ("aggiornamenti", "che regge un piccolo globo terrestre con due frecce che girano attorno, con aria attiva"),
+    ("stampante", "che porge un foglio di carta appena uscito da una piccola stampante accanto a lei, con aria gentile"),
+    ("musica", "con grandi cuffie sopra la lanterna e qualche nota musicale intorno, felice e a ritmo"),
+    ("wifi-connesso", "soddisfatta, con tre archi di segnale wi-fi luminosi sopra la lanterna"),
+    ("arrivederci", "che saluta con un grande gesto della mano, con aria affettuosa, come quando si spegne il computer"),
+    ("schermo-bloccato", "che dorme in piedi, occhi chiusi, la testa reclinata, la lanterna SPENTA e un piccolo lucchetto ai piedi"))],
+ "8-installatore": [(n, "Illustrazione larga per una schermata dell'installatore: " + d + ". " + _SCENA_INST, REF_LUMA + ["sfondo-chiaro.jpg"], "16:9", "2K") for n, d in (
+    ("benvenuto", "Luma che accoglie e saluta con un braccio alzato, sulla riva al tramonto"),
+    ("aspetto", "Luma al centro tra due meta': a sinistra una scena chiara di giorno, a destra la stessa scena scura di notte"),
+    ("assistenti", "Luma circondata da sette piccole nuvolette di dialogo vuote, senza nessun logo e senza testo dentro"),
+    ("sicurezza", "Luma con davanti uno scudo luminoso con un lucchetto, con aria protettiva"),
+    ("dispositivi", "Luma con a fianco un portatile, un tablet e un telefono collegati tra loro da sottili linee di luce"))],
+ "9-sito-social": [("anteprima-social", "Immagine per la condivisione sui social, formato largo: la mascotte Luma sulla roccia di un piccolo faro con il mare al tramonto, grafica 3D morbida come le immagini di riferimento, con spazio libero a destra. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-chiaro.jpg"], "16:9", "2K"),
+                   ("google-play", "Immagine larga e bassa per un negozio di app: la mascotte Luma a sinistra che saluta, a destra mare calmo e cielo sfumato in blu e azzurro, con spazio libero al centro. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-chiaro.jpg"], "21:9", "2K"),
+                   ("sofi-labs", "Immagine quadrata e pulita per un'azienda di software: il faro luminoso di Luma, ma senza viso, stilizzato, di notte sul mare con la luce che si allarga. Nessun testo, nessun logo.", ["sfondo-scuro.jpg", "luma-pose.jpg"], "1:1", "2K")],
 }
 
 def immagine_b64(nome):
@@ -139,6 +168,25 @@ def main():
         for cartella, voci in GRUPPI.items():
             for nome, testo, rif, rapporto, q in voci:
                 if lavoro("%s/%s" % (cartella, nome), testo, rif, rapporto, q): fatte += 1
+    if "nuovi" in cosa:
+        for cartella, voci in NUOVI.items():
+            for nome, testo, rif, rapporto, q in voci:
+                if lavoro("%s/%s" % (cartella, nome), testo, rif, rapporto, q): fatte += 1
+        # zip piccoli: uno per cartella, gli sfondi in JPEG per stare sotto i 30 MB
+        try:
+            from PIL import Image
+        except Exception: Image = None
+        for cartella in sorted(NUOVI):
+            d = os.path.join(OUT, cartella); zp = os.path.join(QUI, "nuovi-%s.zip" % cartella)
+            with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
+                for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
+                    if not f.endswith(".png"): continue
+                    pf = os.path.join(d, f)
+                    if Image and not cartella.startswith("7-"):
+                        tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
+                    else: z.write(pf, cartella + "/" + f)
+            print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 4, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
