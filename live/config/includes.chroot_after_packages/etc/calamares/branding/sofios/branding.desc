@@ -19,7 +19,7 @@ images:
     productWelcome:      "welcome.png"
 slideshow:               "show.qml"
 style:
-    SidebarBackground:        "#0b2740"
-    SidebarText:              "#e6f1ff"
-    SidebarTextCurrent:       "#0b2740"
-    SidebarBackgroundCurrent: "#ffd479"
+    SidebarBackground:        "#1c1c1e"
+    SidebarText:              "#f5f5f7"
+    SidebarTextCurrent:       "#ffffff"
+    SidebarBackgroundCurrent: "#0a84ff"

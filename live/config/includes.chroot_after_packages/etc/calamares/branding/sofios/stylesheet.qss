@@ -1,26 +1,26 @@
-/* Aspetto SofiOS dell'installer: blu mare, giallo faro */
-QWidget { background-color: #0b2740; color: #e6f1ff; font-family: "Inter"; }
+/* Aspetto SofiOS dell'installer: grafite e blu come il resto del sistema */
+QWidget { background-color: #1c1c1e; color: #f5f5f7; font-family: "Inter"; }
 QLabel { background: transparent; }
 QComboBox, QLineEdit, QListView, QTreeView, QPlainTextEdit, QTextEdit, QAbstractItemView {
-  background-color: #12365a; color: #e6f1ff; border: 1px solid #1e4f7c; border-radius: 6px;
-  selection-background-color: #1e6fa8; selection-color: #ffffff; }
-QComboBox QAbstractItemView { background-color: #12365a; }
-QPushButton { background-color: #1e4f7c; color: #ffffff; border: none; border-radius: 8px; padding: 7px 16px; }
-QPushButton:hover { background-color: #2a82c2; }
-QPushButton:disabled { background-color: #12365a; color: #6f8fae; }
-QPushButton:default, QPushButton#nextButton { background-color: #ffd479; color: #0b2740; font-weight: 600; }
-QPushButton:default:disabled, QPushButton#nextButton:disabled { background-color: #4b4a3e; color: #8c8a78; }
+  background-color: #2c2c2e; color: #f5f5f7; border: 1px solid #3a3a3c; border-radius: 8px;
+  selection-background-color: #0a84ff; selection-color: #ffffff; }
+QComboBox QAbstractItemView { background-color: #2c2c2e; }
+QPushButton { background-color: #3a3a3c; color: #ffffff; border: none; border-radius: 10px; padding: 8px 18px; }
+QPushButton:hover { background-color: #48484a; }
+QPushButton:disabled { background-color: #2c2c2e; color: #636366; }
+QPushButton:default, QPushButton#nextButton { background-color: #0a84ff; color: #ffffff; font-weight: 600; }
+QPushButton:default:disabled, QPushButton#nextButton:disabled { background-color: #3a3a3c; color: #8e8e93; }
 QCheckBox, QRadioButton { background: transparent; }
-QScrollBar:vertical { background: #0b2740; width: 12px; }
-QScrollBar::handle:vertical { background: #1e4f7c; border-radius: 5px; min-height: 24px; }
-QProgressBar { background: #12365a; border: none; border-radius: 6px; text-align: center; }
-QProgressBar::chunk { background: #ffd479; border-radius: 6px; }
+QScrollBar:vertical { background: #1c1c1e; width: 12px; }
+QScrollBar::handle:vertical { background: #3a3a3c; border-radius: 5px; min-height: 24px; }
+QProgressBar { background: #2c2c2e; border: none; border-radius: 8px; text-align: center; }
+QProgressBar::chunk { background: #0a84ff; border-radius: 8px; }
 
 /* Il pulsante "Informazioni su" mostra i crediti di Calamares: lo nascondiamo (dimensione zero). */
 QPushButton#aboutButton { min-width: 0px; max-width: 0px; min-height: 0px; max-height: 0px; padding: 0px; margin: 0px; border: none; }
 
 /* caselle da spuntare ben visibili (es. "Accedere automaticamente") */
-QCheckBox { color: #e6f1ff; spacing: 10px; }
-QCheckBox::indicator { width: 18px; height: 18px; border: 2px solid #8fb3d4; border-radius: 5px; background: #12365a; }
-QCheckBox::indicator:hover { border-color: #ffd479; }
-QCheckBox::indicator:checked { background: #ffd479; border-color: #ffd479; image: url(/etc/calamares/branding/sofios/spunta.svg); }
+QCheckBox { color: #f5f5f7; spacing: 10px; }
+QCheckBox::indicator { width: 18px; height: 18px; border: 2px solid #8e8e93; border-radius: 5px; background: #2c2c2e; }
+QCheckBox::indicator:hover { border-color: #0a84ff; }
+QCheckBox::indicator:checked { background: #0a84ff; border-color: #0a84ff; image: url(/etc/calamares/branding/sofios/spunta.svg); }
