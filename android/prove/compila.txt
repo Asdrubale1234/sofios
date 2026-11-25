@@ -32,14 +32,16 @@ Daemon will be stopped at the end of the build
 > Task :app:mergeDebugStartupProfile
 > Task :app:mergeDebugJniLibFolders
 > Task :app:checkDebugDuplicateClasses
-> Task :app:mergeLibDexDebug
 > Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:mergeLibDexDebug
 > Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:mergeDebugJavaResource
 > Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
+> Task :app:mergeProjectDexDebug
 > Task :finto-fully:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:checkDebugAarMetadata UP-TO-DATE
@@ -58,14 +60,12 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:compileDebugKotlin UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebug UP-TO-DATE
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
-> Task :app:mergeDebugJavaResource
 > Task :finto-fully:mergeDebugShaders
 > Task :finto-fully:compileDebugShaders NO-SOURCE
 > Task :finto-fully:generateDebugAssets UP-TO-DATE
 > Task :finto-fully:mergeDebugAssets
 > Task :finto-fully:compressDebugAssets
 > Task :finto-fully:desugarDebugFileDependencies
-> Task :app:mergeProjectDexDebug
 > Task :finto-fully:dexBuilderDebug
 > Task :finto-fully:mergeDebugGlobalSynthetics
 > Task :finto-fully:processDebugJavaRes UP-TO-DATE
@@ -73,12 +73,12 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugStartupProfile
 > Task :finto-fully:mergeDebugJavaResource
 > Task :finto-fully:mergeLibDexDebug
-> Task :finto-fully:mergeProjectDexDebug
 > Task :finto-fully:mergeDebugJniLibFolders
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
 > Task :finto-fully:stripDebugDebugSymbols NO-SOURCE
-> Task :finto-fully:mergeExtDexDebug
+> Task :finto-fully:mergeProjectDexDebug
 > Task :app:mergeExtDexDebug
+> Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:validateSigningDebug
 > Task :finto-fully:writeDebugAppMetadata
 > Task :finto-fully:writeDebugSigningConfigVersions
@@ -88,7 +88,7 @@ Daemon will be stopped at the end of the build
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795583212574.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795584838025.json
 
-BUILD SUCCESSFUL in 26s
+BUILD SUCCESSFUL in 27s
 70 actionable tasks: 38 executed, 32 up-to-date
