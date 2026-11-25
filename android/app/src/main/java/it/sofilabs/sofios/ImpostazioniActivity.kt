@@ -260,6 +260,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
         c.removeAllViews()
         aggiungi(c, testoSync("Per avere le stesse note, password, foto e file sul computer e sugli altri tablet, SofiOS usa un'app a parte che sincronizza soltanto dentro casa. Non passa da nessun server."))
         if (!appSyncInstallata()) {
+            lumaDi(c, "senza_internet")   // sincronizzazione spenta
             aggiungi(c, riga("Stato", "L'app di sincronizzazione non è installata"))
             aggiungi(c, Stile.bottone(this, "Installa l'app di sincronizzazione", Stile.ORO, Stile.SU_ORO) { installaAppSync() }.apply {
                 setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_download, 0, 0, 0); compoundDrawablePadding = dp(10)
@@ -294,6 +295,7 @@ class ImpostazioniActivity : SchermataSofiOS() {
     }
 
     private fun schermataChiave(c: LinearLayout) {
+        lumaDi(c, "senza_internet")   // sincronizzazione spenta
         aggiungi(c, riga("Stato", "Manca il collegamento con l'app di sincronizzazione"))
         aggiungi(c, testoSync("1. Apri l'app di sincronizzazione.\n2. Dal menu apri «Interfaccia web» → Azioni → Impostazioni.\n3. Copia la «Chiave API» e incollala qui sotto."))
         aggiungi(c, Stile.bottone(this, "Apri l'app di sincronizzazione", Stile.SECONDARIO, Stile.TESTO) { apriAppSync() })
