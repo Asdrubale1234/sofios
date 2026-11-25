@@ -133,7 +133,10 @@ class MainActivity : SchermataSofiOS() {
     private lateinit var zonaApp: LinearLayout
 
     /** Le domande del primo avvio, una alla volta: aspetto (scuro/chiaro), assistenti online, poi le app nuove per il Dock. */
+    private var passoAperto: AlertDialog? = null
+
     private fun primiPassi() {
+        if (passoAperto?.isShowing == true) return    // una domanda alla volta, anche se la schermata si riattiva più volte
         when {
             !memoria().getBoolean("tema_scelto", false) -> sceltaTema()
             !memoria().getBoolean("assistenti_chiesti", false) -> sceltaAssistenti()
@@ -199,6 +202,7 @@ class MainActivity : SchermataSofiOS() {
                 .setCancelable(false).show()
             d.getButton(android.content.DialogInterface.BUTTON_POSITIVE).isAllCaps = false
             d.getButton(android.content.DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
+            passoAperto = d
         }
     }
 
@@ -231,6 +235,7 @@ class MainActivity : SchermataSofiOS() {
         riga.addView(carta("Scuro", R.drawable.sfondo, false)); riga.addView(carta("Chiaro", R.drawable.sfondo_chiaro, true))
         d = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
             .setTitle("Che aspetto preferisci?").setView(riga).setCancelable(false).show()
+        passoAperto = d
     }
 
     /** Le app che l'utente ha messo nel Dock (si toglie con una pressione lunga). */

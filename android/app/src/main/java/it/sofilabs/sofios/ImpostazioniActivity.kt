@@ -408,10 +408,12 @@ class ImpostazioniActivity : SchermataSofiOS() {
             riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.BIANCO else Stile.PICCOLO))
             // facoltativo: tastino a destra per l'app ufficiale (Play Store, con la conferma di Android); se c'è, SofiOS apre quella
             if (Assistenti.appInstallata(this, a)) {
-                riga.addView(Stile.testo(this, "App installata", 13f, Stile.PICCOLO).apply { setPadding(dp(14), 0, 0, 0) })
+                riga.addView(Stile.testo(this, "App installata", 13f, if (acceso) Stile.BIANCO else Stile.PICCOLO).apply { setPadding(dp(14), 0, 0, 0) })
             } else {
-                riga.addView(Stile.bottone(this, "Installa l'app", Stile.SECONDARIO, Stile.TESTO) { Assistenti.installa(this, a) }
-                    .apply { textSize = 13f; minimumHeight = dp(36); setPadding(dp(14), 0, dp(14), 0) },
+                // sulla riga blu (assistente attivo) il tastino è bianco trasparente, altrimenti il blu non si vedrebbe
+                val tastino = if (acceso) Stile.bottone(this, "Installa l'app", 0x33FFFFFF, Stile.BIANCO) { Assistenti.installa(this, a) }
+                    else Stile.bottone(this, "Installa l'app", Stile.SECONDARIO, Stile.TESTO) { Assistenti.installa(this, a) }
+                riga.addView(tastino.apply { textSize = 13f; minimumHeight = dp(36); setPadding(dp(14), 0, dp(14), 0) },
                     LinearLayout.LayoutParams(-2, dp(36)).apply { leftMargin = dp(14) })
             }
             l.add(riga)
