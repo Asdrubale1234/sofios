@@ -24,6 +24,34 @@ VOLTI = [("felice", "felice, con un grande sorriso"), ("concentrata", "concentra
 POSE_EXTRA = [("sorpresa", "sorpresa, con gli occhi spalancati, la bocca a O e le mani alzate"), ("dorme", "che dorme in piedi, con gli occhi chiusi, la testa un po' reclinata e la lanterna SPENTA")]
 ACCESSO = [("scuro", "sfondo-scuro.jpg", "notte stellata sul mare"), ("chiaro", "sfondo-chiaro.jpg", "cielo azzurro sul mare")]
 
+REF_LUMA = ["luma-pose.jpg", "luma-concentrata.jpg"]
+STILE_LUMA = ("Usa come riferimento la mascotte Luma (il faro di pietra con il viso, il tetto dorato e le piccole braccia): MANTIENI IDENTICI stile, colori, materiali, proporzioni e viso. ")
+VERDE = "Figura intera, centrata, stessa grandezza delle altre pose, base alla stessa altezza. Sfondo verde uniforme #00FF00, senza ombre sul verde, nessun testo, nessuna etichetta."
+GRUPPI = {
+ "1-pose-eventi": [(n, STILE_LUMA + "Disegnala " + d + ". " + VERDE, REF_LUMA, "1:1", "1K") for n, d in (
+    ("scarica", "mentre scarica qualcosa: tiene tra le braccia un grande pacco con una freccia verso il basso, espressione concentrata"),
+    ("cerca", "mentre cerca qualcosa con una grande lente d'ingrandimento in mano, un occhio incuriosito"),
+    ("batteria-scarica", "stanca e un po' afflosciata, con la lanterna quasi spenta e una piccola batteria scarica ai piedi"),
+    ("senza-internet", "perplessa, con una mano a visiera sopra gli occhi come chi cerca il segnale lontano, e una piccola antenna spenta accanto"),
+    ("fatto", "soddisfatta, con il pollice alzato e un sorriso sicuro"),
+    ("errore", "dispiaciuta, con le mani aperte come per scusarsi e un sopracciglio inclinato"))],
+ "2-avvio": [("avvio-sfondo-scuro", "Rifai questa immagine di riferimento (notte stellata sul mare) mantenendo identici scena, colori e stile, ma SENZA logo e SENZA scritte: solo cielo stellato e mare scuro, con il centro tranquillo, per metterci sopra un logo che compare all'accensione. Nessun testo.", ["sfondo-scuro.jpg"], "16:9", "4K"),
+             ("avvio-sfondo-scuro-verticale", "Stessa scena (notte stellata sul mare), senza logo e senza scritte, in formato verticale per un tablet o un telefono. Nessun testo.", ["sfondo-scuro.jpg"], "9:16", "2K")],
+ "3-sfondi-extra": [("%s-%s-%s" % (tema, nome, fmt.replace(":", "x")), ("Nuova variante dello sfondo di SofiOS. Stesso stile e stessa grafica dell'immagine di riferimento, con il logo «S + SofiOS» al centro e le stesse proporzioni, ma con questa scena: %s. Nessun altro testo, nessuna cornice." % scena), [rif], fmt, "2K")
+                    for tema, rif, scene in (("scuro", "sfondo-scuro.jpg", (("alba", "l'alba sul mare, cielo che schiarisce in blu e viola con una luce calda all'orizzonte"), ("tramonto", "il tramonto sul mare, cielo blu profondo e arancio all'orizzonte"), ("luna", "notte con una luna piena sopra il mare che riflette la luce sulle onde"))),
+                                             ("chiaro", "sfondo-chiaro.jpg", (("mare-calmo", "mare molto calmo di giorno, cielo limpido azzurro con pochissime nuvole"), ("mattina", "mattina presto sul mare, cielo chiaro con tonalita' pesca e azzurro"), ("nuvole", "cielo azzurro con grandi nuvole bianche morbide sopra il mare")))
+                                             ) for nome, scena in scene for fmt in ("16:9", "9:16")],
+ "4-sito-e-negozi": [("banner-sostore", "Banner largo per un negozio di programmi, senza nessun testo: la mascotte Luma (il faro di pietra con il viso) a sinistra sulla riva, che saluta, e a destra un mare calmo al tramonto con lo stesso stile delle immagini di riferimento. Spazio libero al centro.", REF_LUMA + ["sfondo-scuro.jpg"], "21:9", "2K"),
+                     ("copertina-sito", "Immagine di copertina per un sito: la mascotte Luma sulla roccia di un piccolo faro con il mare azzurro e il cielo al tramonto, stessa grafica 3D morbida delle immagini di riferimento. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-chiaro.jpg"], "16:9", "2K"),
+                     ("presentazione", "Immagine pulita per una presentazione: mare e cielo molto sfumati, in tonalita' blu e azzurro come gli sfondi di riferimento, con spazio libero per scrivere. Nessun testo, nessun logo.", ["sfondo-chiaro.jpg"], "16:9", "2K")],
+ "5-schermate-vuote": [(n, STILE_LUMA + "Disegnala " + d + ". " + VERDE, REF_LUMA, "1:1", "1K") for n, d in (
+    ("nessuna-nota", "che tiene aperto un taccuino con le pagine vuote e una matita, con aria incoraggiante"),
+    ("nessun-dispositivo", "che guarda in lontananza un piccolo tablet e un piccolo telefono, con le braccia leggermente aperte come per invitarli"),
+    ("offline", "con le braccia incrociate e lo sguardo verso l'alto, in attesa di un segnale che non arriva"),
+    ("nessun-risultato", "con una lente d'ingrandimento e le spalle un po' alzate, come chi non ha trovato niente"),
+    ("tutto-fatto", "con le braccia alzate in segno di festa e piccoli coriandoli attorno"))],
+}
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -74,7 +102,7 @@ def chiedi(testo, riferimenti, rapporto, qualita):
 errori_di_fila = 0
 def lavoro(nome, testo, rif, rapporto, qualita):
     global errori_di_fila
-    percorso = os.path.join(OUT, nome + ".png")
+    percorso = os.path.join(OUT, nome + ".png"); os.makedirs(os.path.dirname(percorso), exist_ok=True)
     if os.path.exists(percorso): print("gia' fatta:", nome); return True
     if errori_di_fila >= 3: print("Mi fermo: 3 errori di fila. Controlla il messaggio qui sopra."); raise SystemExit(1)
     print("sto creando:", nome, "(%s, %s)" % (rapporto, qualita))
@@ -107,6 +135,10 @@ def main():
                      "nessun testo, nessuna etichetta." % descr)
             if lavoro("luma-%s" % nome, testo, ["luma-pose.jpg", "luma-concentrata.jpg"], "1:1", "1K"): fatte += 1
             if prova and fatte: print("Prova fatta: controlla la cartella «uscita»."); return 0
+    if "gruppi" in cosa:
+        for cartella, voci in GRUPPI.items():
+            for nome, testo, rif, rapporto, q in voci:
+                if lavoro("%s/%s" % (cartella, nome), testo, rif, rapporto, q): fatte += 1
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
@@ -120,10 +152,16 @@ def main():
             testo = ("Rifai questa immagine di riferimento (%s) mantenendo IDENTICI scena, colori e stile, ma SENZA il logo e SENZA nessuna scritta al centro: solo cielo e mare. "
                      "Lascia la parte centrale visivamente tranquilla, per metterci sopra la casella della password. Nessun testo, nessuna cornice." % scena)
             if lavoro("accesso-%s" % tema, testo, [rif], "16:9", "4K"): fatte += 1
-    zp = os.path.join(QUI, "risultati-extra.zip" if "extra" in cosa else "risultati.zip")
+    zp = os.path.join(QUI, "risultati-gruppi.zip" if "gruppi" in cosa else ("risultati-extra.zip" if "extra" in cosa else "risultati.zip"))
     with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
-        for f in sorted(os.listdir(OUT)):
-            if f.endswith(".png") and (("extra" not in cosa) or f.startswith(("volto-", "accesso-", "luma-sorpresa", "luma-dorme"))): z.write(os.path.join(OUT, f), f)
+        if "gruppi" in cosa:
+            for cartella in sorted(GRUPPI):
+                d = os.path.join(OUT, cartella)
+                for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
+                    if f.endswith(".png"): z.write(os.path.join(d, f), cartella + "/" + f)
+        else:
+            for f in sorted(os.listdir(OUT)):
+                if f.endswith(".png") and (("extra" not in cosa) or f.startswith(("volto-", "accesso-", "luma-sorpresa", "luma-dorme"))): z.write(os.path.join(OUT, f), f)
     print("\nFinito. Manda a Claude il file:", zp); return 0
 
 if __name__ == "__main__":
