@@ -157,6 +157,19 @@ NUOVI.update({
     ("prodotto-di-chiaro", LABS_BASE + "Piccolo sigillo da mettere in fondo alle schermate dei prodotti, su sfondo bianco uniforme: il simbolo del faro piccolo, accanto la scritta su due righe: «Un prodotto di» in piccolo e grigio, sotto «Sofi Labs» piu' grande e blu scuro. Scrivi esattamente queste parole, senza altro.", ["logo-attuale-chiaro.jpg"], "21:9", "1K")],
 })
 
+SOCIAL_BASE = ("Immagine di sfondo per le copertine dei social di Sofi Labs, piccola azienda italiana di software. Scena elegante e pulita: un faro lontano e sottile sul mare, "
+               "grafica 3D morbida come le immagini di riferimento, nessun personaggio col viso. La parte CENTRALE e' tranquilla e vuota (ci metteremo sopra il logo), il faro sta ai lati o in basso, mai al centro. "
+               "Nessun testo, nessun logo, nessuna scritta. ")
+NUOVI.update({
+ "21-social-e-sito": [
+    ("youtube-banner-scuro", SOCIAL_BASE + "Notte stellata sul mare, faro con luce calda a destra, grande spazio libero al centro. Formato 16:9, il contenuto importante solo nella fascia centrale.", ["sfondo-scuro.jpg", "logo-attuale-scuro.jpg"], "16:9", "2K"),
+    ("banner-largo-scuro", SOCIAL_BASE + "Notte stellata sul mare, faro con luce calda a sinistra in basso, mare calmo e cielo vuoto al centro. Formato molto largo, orizzonte basso.", ["sfondo-scuro.jpg", "logo-attuale-scuro.jpg"], "21:9", "2K"),
+    ("banner-largo-chiaro", SOCIAL_BASE + "Mattina limpida sul mare, cielo azzurro e pesca, faro chiaro a destra in basso, spazio libero al centro. Formato molto largo, orizzonte basso.", ["sfondo-chiaro.jpg", "logo-attuale-chiaro.jpg"], "21:9", "2K"),
+    ("sito-header-scuro", SOCIAL_BASE + "Testata larga per il sito web, notte sul mare con onde morbide e linee di luce, faro lontano a destra, spazio libero a sinistra e al centro per un titolo.", ["sfondo-scuro.jpg", "logo-attuale-scuro.jpg"], "21:9", "2K"),
+    ("sito-header-chiaro", SOCIAL_BASE + "Testata larga per il sito web, giorno luminoso sul mare, onde morbide, faro lontano a destra, spazio libero a sinistra e al centro per un titolo.", ["sfondo-chiaro.jpg", "logo-attuale-chiaro.jpg"], "21:9", "2K"),
+    ("miniatura-youtube-modello", SOCIAL_BASE + "Modello per le miniature dei video: mare e cielo al tramonto, faro sul lato destro, tutto il lato sinistro libero per scrivere un titolo grande. Formato 16:9.", ["sfondo-chiaro.jpg", "logo-attuale-chiaro.jpg"], "16:9", "2K")],
+})
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -263,7 +276,7 @@ def main():
                         tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
                     else: z.write(pf, cartella + "/" + f)
             print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
-        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 14, ognuno piccolo)."); return 0
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 15, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
