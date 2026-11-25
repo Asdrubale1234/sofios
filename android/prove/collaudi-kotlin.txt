@@ -15,8 +15,8 @@ Daemon will be stopped at the end of the build
 > Task :app:checkKotlinGradlePluginConfigurationErrors
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
-> Task :app:checkDebugAarMetadata
 > Task :app:generateDebugResValues
+> Task :app:checkDebugAarMetadata
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
@@ -26,13 +26,13 @@ Daemon will be stopped at the end of the build
 > Task :app:parseDebugLocalResources
 > Task :app:processDebugMainManifest
 > Task :app:processDebugManifest
-> Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebug
-> Task :app:javaPreCompileDebugUnitTest
+> Task :app:processDebugManifestForPackage
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
 > Task :finto-fully:preBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
 > Task :finto-fully:preDebugBuild UP-TO-DATE
-> Task :app:processDebugManifestForPackage
 > Task :finto-fully:checkDebugAarMetadata
 > Task :finto-fully:generateDebugResValues
 > Task :finto-fully:mapDebugSourceSetPaths
@@ -40,8 +40,8 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:mergeDebugResources
 > Task :finto-fully:packageDebugResources
 > Task :finto-fully:createDebugCompatibleScreenManifests
-> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:parseDebugLocalResources
+> Task :finto-fully:extractDeepLinksDebug
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
 > Task :finto-fully:processDebugManifestForPackage
@@ -52,8 +52,8 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:processDebugResources
 > Task :finto-fully:compileDebugKotlin
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
-> Task :finto-fully:bundleDebugClassesToRuntimeJar
 > Task :finto-fully:bundleDebugClassesToCompileJar
+> Task :finto-fully:bundleDebugClassesToRuntimeJar
 > Task :finto-fully:processDebugJavaRes
 > Task :finto-fully:compileDebugUnitTestKotlin NO-SOURCE
 > Task :finto-fully:compileDebugUnitTestJavaWithJavac NO-SOURCE
@@ -72,13 +72,13 @@ w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/
 
 > Task :app:compileDebugJavaWithJavac NO-SOURCE
 > Task :app:processDebugJavaRes
-> Task :app:bundleDebugClassesToCompileJar
 > Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
 > Task :app:compileDebugUnitTestKotlin
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795588213798.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795625220668.json
 
-BUILD SUCCESSFUL in 1m 29s
+BUILD SUCCESSFUL in 1m 22s
 43 actionable tasks: 43 executed
