@@ -9,6 +9,7 @@ from PyQt6.QtGui import QIcon, QDesktopServices
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QListWidget, QListWidgetItem)
 import tema_app
+import luma
 
 CATALOGHI = (os.environ.get("SOFIOS_CATALOGO", ""), os.path.expanduser("~/.local/share/sofios/store/catalogo.json"), "/usr/share/sofios/store/catalogo.json")
 ELENCO_MIEI = os.path.expanduser("~/.local/share/sofios/store/miei.json")
@@ -66,7 +67,8 @@ class Finestra(QWidget):
         self.in_attesa = None          # funzione da eseguire se l'utente conferma
         self.ponte = Ponte(); self.ponte.risultati.connect(self.mostra_file)
         v = QVBoxLayout(self); v.setContentsMargins(18, 16, 18, 16); v.setSpacing(10)
-        t = QLabel("Ciao, sono Luma. Cosa vuoi fare?"); t.setObjectName("titolo"); v.addWidget(t)
+        testa = QHBoxLayout(); t = QLabel("Ciao, sono Luma.\nCosa vuoi fare?"); t.setObjectName("titolo"); testa.addWidget(t, 1)
+        self.luma = luma.etichetta("saluta", 110); testa.addWidget(self.luma); v.addLayout(testa)
         n = QLabel("Scrivi, per esempio: «apri il browser», «cerca fattura», «volume al 40». Scrivi «aiuto» per l'elenco."); n.setObjectName("nota"); n.setWordWrap(True); v.addWidget(n)
         self.riga = QLineEdit(); self.riga.setPlaceholderText("Scrivi qui e premi Invio…"); self.riga.returnPressed.connect(self.invia); self.riga.textEdited.connect(lambda _: scrivi_stato("ascolta")); v.addWidget(self.riga)
         self.risposta = QLabel(""); self.risposta.setWordWrap(True); self.risposta.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse); v.addWidget(self.risposta)
@@ -77,11 +79,11 @@ class Finestra(QWidget):
         h.addWidget(self.si); h.addWidget(self.no); h.addStretch(1); self.conferma.hide(); v.addWidget(self.conferma)
         v.addStretch(0)
         self.riga.setFocus()
-        self.t_stato = QTimer(self); self.t_stato.setSingleShot(True); self.t_stato.timeout.connect(lambda: scrivi_stato("ascolta"))
+        self.t_stato = QTimer(self); self.t_stato.setSingleShot(True); self.t_stato.timeout.connect(lambda: (scrivi_stato("ascolta"), luma.imposta(self.luma, "ascolta")))
         scrivi_stato("saluta"); self.t_stato.start(1400)
 
     def sofi(self, v, poi=2500):
-        scrivi_stato(v); self.t_stato.start(poi)
+        scrivi_stato(v); luma.imposta(self.luma, v); self.t_stato.start(poi)
 
     def closeEvent(self, e):
         scrivi_stato("neutra"); super().closeEvent(e)

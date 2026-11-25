@@ -5,6 +5,7 @@ Installa / apre / rimuove con PackageKit (pkcon): la password la chiede il siste
 import json, os, re, shlex, shutil, subprocess, sys, glob, tarfile
 sys.path.insert(0, os.environ.get("SOFIOS_LIB", "/usr/local/lib/sofios"))
 import tema_app
+import luma
 import dock as DOCK
 from sofios_info import bottone_informazioni
 import store_android as AND
@@ -431,6 +432,7 @@ class SoStore(QWidget):
             if ins: self._griglia(v, ins)
             else:
                 e = QLabel("Non hai ancora installato programmi da SoStore."); e.setObjectName("vuoto"); v.addWidget(e)
+                v.addWidget(luma.etichetta("apri", 200), alignment=Qt.AlignmentFlag.AlignHCenter)
         v.addStretch()
 
     def esegui_ricerca(self):
@@ -446,6 +448,7 @@ class SoStore(QWidget):
         altri = [r for r in self.fonte.cerca(q) if r["pacchetto"] not in {a["pacchetto"] for a in nostri}]
         if not nostri and not altri:
             e = QLabel("Nessun programma trovato. Prova con un'altra parola."); e.setObjectName("vuoto"); v.addWidget(e)
+            v.addWidget(luma.etichetta("non-trovato", 200), alignment=Qt.AlignmentFlag.AlignHCenter)
         if nostri:
             s = QLabel("In evidenza"); s.setObjectName("sezione"); v.addWidget(s); self._griglia(v, nostri)
         if altri:

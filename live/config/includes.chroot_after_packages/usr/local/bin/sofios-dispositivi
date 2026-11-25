@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QIcon, QPixmap, QImage
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QListWidget, QListWidgetItem, QDialog, QMessageBox, QStackedWidget)
 import tema_app
+import luma
 
 LOGO = os.environ.get("SOFIOS_LOGO", "/usr/share/sofios/logo.png")
 STILE = """
@@ -66,7 +67,8 @@ class Finestra(QWidget):
         super().__init__()
         self.setObjectName("finestra"); self.setWindowTitle("Dispositivi"); self.setWindowIcon(QIcon(LOGO)); self.resize(560, 620)
         v = QVBoxLayout(self); v.setContentsMargins(26, 22, 26, 22); v.setSpacing(12)
-        t = QLabel("Dispositivi"); t.setObjectName("titolo"); v.addWidget(t)
+        testa = QHBoxLayout(); t = QLabel("Dispositivi"); t.setObjectName("titolo"); testa.addWidget(t); testa.addStretch(1)
+        self.luma = luma.etichetta("sincronizza", 130); testa.addWidget(self.luma); v.addLayout(testa)
         s = QLabel("I tuoi dispositivi SofiOS: note, password, foto e file uguali su tutti, sincronizzati solo sulla rete di casa."); s.setObjectName("sottotitolo"); s.setWordWrap(True); v.addWidget(s)
         riga = QHBoxLayout(); self.nome = QLineEdit(D.nome_dispositivo()); self.nome.setMaximumWidth(260); self.nome.editingFinished.connect(self.cambia_nome)
         riga.addWidget(QLabel("Questo dispositivo:")); riga.addWidget(self.nome); riga.addStretch(1); v.addLayout(riga)
@@ -99,11 +101,12 @@ class Finestra(QWidget):
         Collega(self).exec(); self.aggiorna()
 
     def aggiorna(self):
-        if not D.acceso(): self.stato.setText("La sincronizzazione non è attiva."); return
+        if not D.acceso(): self.stato.setText("La sincronizzazione non è attiva."); luma.imposta(self.luma, "senza-internet"); return
         try:
             elenco = D.collegati(); self.elenco.clear()
             for cod, nome, st in elenco:
                 it = QListWidgetItem("%s   —   %s" % (nome, st)); it.setData(Qt.ItemDataRole.UserRole, cod); self.elenco.addItem(it)
+            luma.imposta(self.luma, "sincronizza" if not elenco else "wifi-connesso")
             if not elenco: self.stato.setText("Nessun dispositivo collegato. Premi «Collega un nuovo dispositivo».")
             else:
                 p = D.sincronizzato()

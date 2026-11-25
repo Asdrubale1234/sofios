@@ -3,6 +3,7 @@
 import os, sys, time
 sys.path.insert(0, "/usr/local/lib/sofios")
 import tema_app
+import luma
 from sofios_info import bottone_informazioni
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QIcon
@@ -51,7 +52,11 @@ class Note(QWidget):
         rb = QHBoxLayout()
         for testo, azione in (("Tieni questa", self.tieni_questa), ("Tieni l'altra", self.tieni_altra), ("Tieni tutte e due", self.tieni_entrambe)):
             b = QPushButton(testo); b.clicked.connect(azione); rb.addWidget(b)
-        av.addLayout(rb); self.avviso.hide(); dx.addWidget(self.avviso); dx.addWidget(self.testo, 1)
+        av.addLayout(rb); self.avviso.hide(); dx.addWidget(self.avviso)
+        self.vuota = QWidget(); hv = QHBoxLayout(self.vuota); hv.setContentsMargins(0, 0, 0, 0); hv.setSpacing(14)
+        hv.addWidget(luma.etichetta("note", 140)); tv = QLabel("Nessuna nota qui.\nScrivi la prima: si salva da sola."); tv.setObjectName("sottotitolo"); hv.addWidget(tv, 1)
+        dx.addWidget(self.vuota); dx.addWidget(self.testo, 1)
+        self.testo.textChanged.connect(lambda: self.vuota.setVisible(not self.testo.toPlainText().strip()))
         radice.addLayout(dx, 1)
         self.salva_t = QTimer(self); self.salva_t.setSingleShot(True); self.salva_t.setInterval(600); self.salva_t.timeout.connect(self.salva)
         self.testo.textChanged.connect(self.salva_t.start)
