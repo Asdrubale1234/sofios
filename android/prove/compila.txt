@@ -47,12 +47,12 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:generateDebugResValues UP-TO-DATE
 > Task :finto-fully:mapDebugSourceSetPaths UP-TO-DATE
 > Task :finto-fully:generateDebugResources UP-TO-DATE
+> Task :app:mergeProjectDexDebug
 > Task :finto-fully:mergeDebugResources UP-TO-DATE
 > Task :finto-fully:packageDebugResources UP-TO-DATE
 > Task :finto-fully:parseDebugLocalResources UP-TO-DATE
 > Task :finto-fully:createDebugCompatibleScreenManifests UP-TO-DATE
 > Task :finto-fully:extractDeepLinksDebug UP-TO-DATE
-> Task :app:mergeProjectDexDebug
 > Task :finto-fully:processDebugMainManifest UP-TO-DATE
 > Task :finto-fully:processDebugManifest UP-TO-DATE
 > Task :finto-fully:processDebugManifestForPackage UP-TO-DATE
@@ -69,15 +69,15 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:dexBuilderDebug
 > Task :finto-fully:mergeDebugGlobalSynthetics
 > Task :finto-fully:processDebugJavaRes UP-TO-DATE
-> Task :finto-fully:mergeDebugStartupProfile
 > Task :finto-fully:checkDebugDuplicateClasses
-> Task :finto-fully:mergeDebugJniLibFolders
+> Task :finto-fully:mergeDebugStartupProfile
 > Task :finto-fully:mergeDebugJavaResource
 > Task :finto-fully:mergeLibDexDebug
+> Task :finto-fully:mergeProjectDexDebug
+> Task :finto-fully:mergeDebugJniLibFolders
 > Task :finto-fully:mergeDebugNativeLibs NO-SOURCE
 > Task :finto-fully:stripDebugDebugSymbols NO-SOURCE
 > Task :app:mergeExtDexDebug
-> Task :finto-fully:mergeProjectDexDebug
 > Task :finto-fully:mergeExtDexDebug
 > Task :finto-fully:validateSigningDebug
 > Task :finto-fully:writeDebugAppMetadata
@@ -88,7 +88,7 @@ Daemon will be stopped at the end of the build
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795638672898.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795639826443.json
 
-BUILD SUCCESSFUL in 14s
+BUILD SUCCESSFUL in 23s
 70 actionable tasks: 38 executed, 32 up-to-date
