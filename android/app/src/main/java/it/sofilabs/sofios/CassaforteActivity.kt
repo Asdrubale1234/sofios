@@ -139,7 +139,11 @@ class CassaforteActivity : SchermataSofiOS() {
         avvisoSblocco = Stile.testo(this, "Se la dimentichi, nessuno può recuperare le tue password: nemmeno noi.", 13f, Stile.ORO_TESTO)
         erroreSblocco = Stile.testo(this, "", 14f, Stile.ORO_TESTO).apply { gravity = Gravity.CENTER; contentDescription = "Errore" }
         bottoneSblocco = Stile.bottone(this, "", Stile.ORO, Stile.SU_ORO) { sblocca() }
-        Stile.luma(this, "cassaforte", 150)?.let { colonna.addView(it) }
+        // Luma sopra il titolo; sparisce quando si scrive (la tastiera ha bisogno dello spazio)
+        val lumaCassaforte = Stile.luma(this, "cassaforte", 150)
+        lumaCassaforte?.let { colonna.addView(it) }
+        val seFuoco = View.OnFocusChangeListener { _, ha -> lumaCassaforte?.visibility = if (ha) View.GONE else View.VISIBLE }
+        campoPw.onFocusChangeListener = seFuoco; campoPw2.onFocusChangeListener = seFuoco
         colonna.addView(titoloSblocco, largo); colonna.addView(testoSblocco, largo)
         colonna.addView(campoPw, largo); colonna.addView(campoPw2, largo)
         colonna.addView(avvisoSblocco, largo); colonna.addView(erroreSblocco, largo)
