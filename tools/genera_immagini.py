@@ -94,7 +94,7 @@ NUOVI.update({
     ("triste", "triste, con gli occhi lucidi e le sopracciglia inclinate"),
     ("arrabbiata", "un po' arrabbiata, con le sopracciglia abbassate e la bocca stretta"),
     ("furba", "furba, con un occhiolino e un sorrisetto"),
-    ("ok", "con un sorriso sicuro e un sopracciglio alzato, come per dire va bene"))],
+    ("ok", "con un sorriso sicuro e un sopracciglio alzato, come per dire va bene. IMPORTANTE: primo piano molto ravvicinato come le altre, il viso grande che riempie quasi tutta l'immagine, NON la figura intera"))],
  "12-sito-illustrazioni": [(n, "Illustrazione per il sito di SofiOS, formato 4:3: " + d + ". Grafica 3D morbida come le immagini di riferimento, con mare e cielo sfumati. Nessun testo, nessun logo, nessuna scritta.", REF_LUMA + ["sfondo-chiaro.jpg"], "4:3", "2K") for n, d in (
     ("sicurezza", "Luma accanto a un grande scudo luminoso con un lucchetto"),
     ("privacy", "Luma che tiene un piccolo occhio con una barra sopra, come simbolo di niente spionaggio"),
@@ -107,7 +107,7 @@ NUOVI.update({
     ("ufficio", "Luma con una piccola scrivania, un foglio e una matita"),
     ("internet", "Luma con un globo terrestre luminoso in mano"),
     ("foto-e-video", "Luma con una macchina fotografica e una pellicola"),
-    ("musica", "Luma con cuffie e note musicali"),
+    ("musica", "la mascotte Luma, il faro di pietra con il viso e il tetto dorato (NON una stella, NON un altro personaggio), con grandi cuffie sopra la lanterna e qualche nota musicale intorno"),
     ("sviluppo", "Luma con un piccolo portatile e simboli di codice luminosi"))],
  "14-tablet-primo-avvio": [(n, "Illustrazione verticale per il primo avvio di un'app per tablet: " + d + ". Grafica 3D morbida come le immagini di riferimento, mare e cielo sfumati, Luma in basso e spazio libero in alto. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-chiaro.jpg"], "9:16", "2K") for n, d in (
     ("benvenuto", "Luma che saluta con un braccio alzato"),
@@ -127,7 +127,7 @@ NUOVI.update({
     ("base", "Luma leggera e sorridente che tiene una piccola piuma, per dire che il sistema e' leggero"),
     ("completo", "Luma felice circondata da piccole finestre, un telefono e un portatile, per dire che c'e' tutto"),
     ("android", "Luma con un telefono in mano da cui escono piccole icone colorate generiche, senza loghi"),
-    ("windows", "Luma con una grande finestra aperta divisa in quattro riquadri colorati generici, senza loghi"))],
+    ("windows", "Luma accanto a una grande finestra di legno aperta, con un solo grande vetro azzurro e luminoso, SENZA riquadri colorati e senza nessun logo"))],
 })
 
 def immagine_b64(nome):
