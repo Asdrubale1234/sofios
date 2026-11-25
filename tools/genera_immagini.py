@@ -81,6 +81,44 @@ NUOVI = {
                    ("sofi-labs", "Immagine quadrata e pulita per un'azienda di software: il faro luminoso di Luma, ma senza viso, stilizzato, di notte sul mare con la luce che si allarga. Nessun testo, nessun logo.", ["sfondo-scuro.jpg", "luma-pose.jpg"], "1:1", "2K")],
 }
 
+NUOVI.update({
+ "10-pose-comandi": [(n, STILE_LUMA + "Disegnala " + d + ". " + VERDE, REF_LUMA, "1:1", "1K") for n, d in (
+    ("volume", "con un piccolo altoparlante in mano e due archi sonori accanto, con aria attenta"),
+    ("luminosita", "che tiene in alto un piccolo sole luminoso, con gli occhi socchiusi per la luce"),
+    ("schermata", "che regge una piccola macchina fotografica e fa una foto, con un occhio chiuso"),
+    ("tema", "che tiene in una mano un sole e nell'altra una mezzaluna, con aria curiosa"),
+    ("disinstalla", "che butta con cura un pacchetto in un piccolo cestino, con aria ordinata"),
+    ("apri", "che spalanca una grande finestra luminosa con le due braccia, con aria accogliente"),
+    ("chiudi", "che chiude con delicatezza una finestra, con un piccolo gesto gentile"))],
+ "11-volti-chat": [(n, "Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre. Espressione: " + d + ". Sfondo verde uniforme #00FF00, nessun testo, nessuna etichetta.", REF_LUMA, "1:1", "1K") for n, d in (
+    ("ride", "che ride di gusto, con gli occhi chiusi dalla gioia"),
+    ("innamorata", "con occhi a forma di cuore e un sorriso dolce"),
+    ("triste", "triste, con gli occhi lucidi e le sopracciglia inclinate"),
+    ("arrabbiata", "un po' arrabbiata, con le sopracciglia abbassate e la bocca stretta"),
+    ("furba", "furba, con un occhiolino e un sorrisetto"),
+    ("ok", "con un sorriso sicuro e un sopracciglio alzato, come per dire va bene"))],
+ "12-sito-illustrazioni": [(n, "Illustrazione per il sito di SofiOS, formato 4:3: " + d + ". Grafica 3D morbida come le immagini di riferimento, con mare e cielo sfumati. Nessun testo, nessun logo, nessuna scritta.", REF_LUMA + ["sfondo-chiaro.jpg"], "4:3", "2K") for n, d in (
+    ("sicurezza", "Luma accanto a un grande scudo luminoso con un lucchetto"),
+    ("privacy", "Luma che tiene un piccolo occhio con una barra sopra, come simbolo di niente spionaggio"),
+    ("rete-di-casa", "Luma con una casetta, un portatile, un tablet e un telefono collegati da linee di luce"),
+    ("foto", "Luma con una piccola cornice e tante foto che volano dolcemente verso di lei"),
+    ("assistenti", "Luma con intorno sette nuvolette di dialogo vuote, senza loghi e senza testo"),
+    ("italiano", "Luma sotto un grande cielo, con una piccola bandiera italiana in mano e un'aria orgogliosa"))],
+ "13-sostore-categorie": [(n, "Testata larga e bassa per una categoria di un negozio di programmi: " + d + ". Stessa grafica 3D morbida delle immagini di riferimento, mare e cielo sfumati, spazio libero a sinistra per mettere un titolo. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-scuro.jpg"], "21:9", "1K") for n, d in (
+    ("giochi", "Luma con un piccolo controller in mano"),
+    ("ufficio", "Luma con una piccola scrivania, un foglio e una matita"),
+    ("internet", "Luma con un globo terrestre luminoso in mano"),
+    ("foto-e-video", "Luma con una macchina fotografica e una pellicola"),
+    ("musica", "Luma con cuffie e note musicali"),
+    ("sviluppo", "Luma con un piccolo portatile e simboli di codice luminosi"))],
+ "14-tablet-primo-avvio": [(n, "Illustrazione verticale per il primo avvio di un'app per tablet: " + d + ". Grafica 3D morbida come le immagini di riferimento, mare e cielo sfumati, Luma in basso e spazio libero in alto. Nessun testo, nessun logo.", REF_LUMA + ["sfondo-chiaro.jpg"], "9:16", "2K") for n, d in (
+    ("benvenuto", "Luma che saluta con un braccio alzato"),
+    ("sincronizza", "Luma con un tablet e un portatile collegati da linee di luce"),
+    ("sicurezza", "Luma con uno scudo luminoso e un lucchetto"))],
+ "15-sfondi-con-luma": [("%s-%s" % (tema, fmt.replace(":", "x")), "Sfondo per computer e tablet: mare e cielo come nell'immagine di riferimento, con la mascotte Luma molto piccola (circa un decimo dell'altezza) sul bordo di un piccolo scoglio in basso a sinistra, che guarda l'orizzonte. Niente logo, nessun testo, zona centrale libera.", REF_LUMA + [rif], fmt, "2K")
+                        for tema, rif in (("scuro", "sfondo-scuro.jpg"), ("chiaro", "sfondo-chiaro.jpg")) for fmt in ("16:9", "9:16")],
+})
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -182,11 +220,11 @@ def main():
                 for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
                     if not f.endswith(".png"): continue
                     pf = os.path.join(d, f)
-                    if Image and not cartella.startswith("7-"):
+                    if Image and not cartella.startswith(("7-", "10-", "11-")):
                         tmp = pf[:-4] + ".jpg"; Image.open(pf).convert("RGB").save(tmp, quality=90); z.write(tmp, cartella + "/" + f[:-4] + ".jpg"); os.remove(tmp)
                     else: z.write(pf, cartella + "/" + f)
             print("zip pronto:", zp, "(%d MB)" % (os.path.getsize(zp) // 1000000))
-        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 4, ognuno piccolo)."); return 0
+        print("\nFinito. Manda a Claude i file nuovi-*.zip (sono 10, ognuno piccolo)."); return 0
     if "extra" in cosa:
         for nome, descr in VOLTI:
             testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
