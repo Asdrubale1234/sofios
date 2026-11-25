@@ -255,4 +255,5 @@ AIUTO = ("Posso fare queste cose:\n"
          "• volume: «volume al 40», «alza il volume», «muto»\n"
          "• luminosità dello schermo: «luminosità 70», «abbassa la luminosità»\n"
          "• tema: «metti il tema scuro», «tema chiaro»\n"
-         "• «fai una schermata»; «cerca su internet…» apre il browser")
+         "• «fai una schermata»; «cerca su internet…» apre il browser\n"
+         "• se non vuoi vedermi nelle pagine dei programmi: «nascondi Luma» (per rimettermi: «mostra Luma»), o la casella qui sotto")

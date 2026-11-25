@@ -7,7 +7,7 @@ import mascotte_comandi as C
 from PyQt6.QtCore import Qt, QProcess, QTimer, QUrl, pyqtSignal, QObject
 from PyQt6.QtGui import QIcon, QDesktopServices
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
-from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QListWidget, QListWidgetItem)
+from PyQt6.QtWidgets import (QCheckBox, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QListWidget, QListWidgetItem)
 import tema_app
 import luma
 
@@ -78,9 +78,14 @@ class Finestra(QWidget):
         self.si.clicked.connect(lambda: self.risolvi(True)); self.no.clicked.connect(lambda: self.risolvi(False))
         h.addWidget(self.si); h.addWidget(self.no); h.addStretch(1); self.conferma.hide(); v.addWidget(self.conferma)
         v.addStretch(0)
+        self.vedi = QCheckBox("Mostra Luma nelle pagine dei programmi"); self.vedi.setChecked(luma.attiva()); self.vedi.toggled.connect(self.cambia_vedi); v.addWidget(self.vedi)
         self.riga.setFocus()
         self.t_stato = QTimer(self); self.t_stato.setSingleShot(True); self.t_stato.timeout.connect(lambda: (scrivi_stato("ascolta"), luma.imposta(self.luma, "ascolta")))
         scrivi_stato("saluta"); self.t_stato.start(1400)
+
+    def cambia_vedi(self, v):
+        luma.salva_attiva(v); luma.mostra_tutte(v)
+        self.risposta.setText("Va bene: Luma si vede di nuovo nelle pagine dei programmi." if v else "Va bene: non mi vedrai più nelle pagine dei programmi. Resto qui e sul desktop, se vuoi.")
 
     def sofi(self, v, poi=2500):
         scrivi_stato(v); luma.imposta(self.luma, v); self.t_stato.start(poi)
@@ -126,6 +131,9 @@ class Finestra(QWidget):
     # -------------------------------------------------- comandi
     def invia(self):
         frase = self.riga.text().strip(); self.riga.clear(); self.pulisci(); scrivi_stato("pensa")
+        f = frase.lower()
+        if "luma" in f and any(k in f for k in ("nascondi", "togli", "disattiva", "non mostrare")): self.vedi.setChecked(False); return
+        if "luma" in f and any(k in f for k in ("mostra", "attiva", "rimetti")): self.vedi.setChecked(True); return
         azione, arg = C.interpreta(frase)
         if azione == "niente": self.di("Non ho capito. Scrivi «aiuto» per vedere cosa so fare."); return
         if azione == "aiuto": self.di(C.AIUTO); return
