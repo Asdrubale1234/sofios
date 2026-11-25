@@ -50,10 +50,8 @@ MAP = {
  "SofiOS": ["sofios-logo", "start-here-sofios", "start-here-kde", "start-here", "distributor-logo-sofios", "calamares"],
 }
 def svg(a, b, stroke, path):
-    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="128" height="128">'
-      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient></defs>'
-      '<rect x="0.5" y="0.5" width="23" height="23" rx="6" fill="url(#g)"/>'
-      '<g transform="translate(4.8 4.8) scale(0.6)" fill="none" stroke="%s" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % (a, b, stroke, path)
+    import sys as _s, os as _o; _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__))); from stile_icone import quadrato
+    return quadrato(a, path)
 for d in ("SofiOS/scalable/apps", "hicolor/scalable/apps"):
     os.makedirs(os.path.join(out, d), exist_ok=True)
 n = 0
@@ -63,7 +61,7 @@ for key, names in MAP.items():
     for nm in names:
         for d in ("SofiOS/scalable/apps", "hicolor/scalable/apps"):
             open(os.path.join(out, d, nm + ".svg"), "w").write(s); n += 1
-open(os.path.join(out, "SofiOS/index.theme"), "w").write(
+if not os.path.exists(os.path.join(out, "SofiOS/index.theme")): open(os.path.join(out, "SofiOS/index.theme"), "w").write(
 """[Icon Theme]
 Name=SofiOS
 Comment=Icone di SofiOS

@@ -12,8 +12,8 @@ def tracciati(nome):
     t = open(p).read()
     return "".join(re.findall(r"<(?:path|circle|rect|line|polyline|polygon|ellipse)\b[^>]*/>", t))
 
-C = {"blu": ("#6fb3ff", "#2b6fd6"), "azzurro": ("#7cd4ff", "#2a8fd0"), "verde": ("#8be37a", "#2e9e4f"), "arancio": ("#ffd479", "#e8a33a"),
-     "rosa": ("#ff8fb8", "#d6457f"), "viola": ("#c9a2ff", "#6b3fd1"), "petrolio": ("#3fc1c9", "#1d7f8c"), "rosso": ("#ff8a80", "#d6453a"), "grigio": ("#aab6c4", "#5b6b7d")}
+C = {"blu": ("#4da3ff", "#0a6cdf"), "azzurro": ("#7ad7ff", "#0a84ff"), "verde": ("#4be06a", "#1f9d40"), "arancio": ("#ffc040", "#ff8a00"),
+     "rosa": ("#ff6fa0", "#ff2d55"), "viola": ("#c27bff", "#7a3fe0"), "petrolio": ("#5fd0d8", "#1d8f9a"), "rosso": ("#ff6b60", "#ff3b30"), "grigio": ("#a2a2a8", "#636366")}
 
 # ---- icone colorate: nome-icona(e) -> (simbolo, colore)
 COLORATE = {
@@ -150,12 +150,18 @@ SEMPLICI = {
 }
 
 def squircle(simbolo, colore):
+    """stile «Apple» di SofiOS: quadrato morbido con sfumatura, filo di luce sul bordo, riflesso in alto e simbolo bianco con un'ombra leggera"""
     a, b = C[colore]; t = tracciati(simbolo)
     if t is None: return None
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="128" height="128">'
-      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient></defs>'
-      '<rect x="0.5" y="0.5" width="23" height="23" rx="6" fill="url(#g)"/>'
-      '<g transform="translate(4.8 4.8) scale(0.6)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % (a, b, t)
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>'
+      '<linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+      '<linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>'
+      '<rect width="24" height="24" rx="5.4" fill="url(#g)"/>'
+      '<path d="M0,12 V5.4 A5.4,5.4 0 0 1 5.4,0 H18.6 A5.4,5.4 0 0 1 24,5.4 V12 Z" fill="url(#v)"/>'
+      '<rect x="0.12" y="0.12" width="23.76" height="23.76" rx="5.3" fill="none" stroke="url(#b)" stroke-width="0.25"/>'
+      '<g transform="translate(5.28 5.55) scale(0.56)" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">%s</g>'
+      '<g transform="translate(5.28 5.28) scale(0.56)" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % (a, b, t, t)
 
 def semplice(simbolo, colore="#e6edf3"):
     t = tracciati(simbolo)
@@ -170,7 +176,13 @@ def scrivi(cartella, nomi, svg):
         open(os.path.join(out, cartella, n + ".svg"), "w").write(svg)
 
 # non sovrascrive le icone già fatte a mano
-esistenti = set(os.listdir(os.path.join(out, "SofiOS/scalable/apps"))) if os.path.isdir(os.path.join(out, "SofiOS/scalable/apps")) else set()
+def _fatta_a_mano(percorso):
+    """True se il file non l'ha generato questo programma (ne' con lo stile vecchio ne' con quello nuovo)"""
+    try: t = open(percorso).read()
+    except OSError: return False
+    return "translate(4.8 4.8) scale(0.6)" not in t and "translate(5.28 5.28) scale(0.56)" not in t
+_cartella = os.path.join(out, "SofiOS/scalable/apps")
+esistenti = {f for f in os.listdir(_cartella) if _fatta_a_mano(os.path.join(_cartella, f))} if os.path.isdir(_cartella) else set()
 n_c = n_s = 0
 for nomi, (sim, col) in COLORATE.items():
     s = squircle(sim, col)

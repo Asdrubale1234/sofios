@@ -11,10 +11,8 @@ ICONE = {
  "sofios-password": ("#3fc1c9", "#1d7f8c", "#fff",    '<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3M12 15v2"/>', ["sofios-password", "keepassxc", "org.keepassxc.KeePassXC"]),
 }
 def svg(a, b, st, p):
-    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="128" height="128">'
-      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient></defs>'
-      '<rect x="0.5" y="0.5" width="23" height="23" rx="6" fill="url(#g)"/>'
-      '<g transform="translate(4.8 4.8) scale(0.6)" fill="none" stroke="%s" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">%s</g></svg>') % (a, b, st, p)
+    import sys as _s, os as _o; _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__))); from stile_icone import quadrato
+    return quadrato(a, p)
 for chiave, (a, b, st, p, nomi) in ICONE.items():
     for d in ("SofiOS/scalable/apps", "hicolor/scalable/apps"):
         os.makedirs(os.path.join(out, d), exist_ok=True)
