@@ -381,6 +381,25 @@ class SoStore(QWidget):
         g.setColumnStretch(0, 1); g.setColumnStretch(1, 1)
         v.addLayout(g)
 
+
+    # testate illustrate (Luma) per la vetrina: immagine ritagliata a misura, angoli arrotondati, testo bianco a sinistra
+    IMMAGINI = "/usr/share/sofios/store/immagini"
+    CAT_IMG = {"Foto e disegno": "foto.jpg", "Video e musica": "musica.jpg", "Internet": "internet.jpg", "Ufficio": "ufficio.jpg", "Giochi": "giochi.jpg"}
+    def _testata(self, v, file, testo=None, alt=84, grande=False):
+        from PyQt6.QtGui import QPixmap, QPainter, QPainterPath, QColor, QFont
+        from PyQt6.QtCore import QRectF
+        f = os.path.join(os.environ.get("SOFIOS_IMMAGINI", self.IMMAGINI), file)
+        if not os.path.exists(f): return False
+        w = 754; pm = QPixmap(f).scaled(w, alt, Qt.AspectRatioMode.KeepAspectRatioByExpanding, Qt.TransformationMode.SmoothTransformation)
+        out = QPixmap(w, alt); out.fill(Qt.GlobalColor.transparent); p = QPainter(out); p.setRenderHint(QPainter.RenderHint.Antialiasing); p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        cam = QPainterPath(); cam.addRoundedRect(QRectF(0, 0, w, alt), 14, 14); p.setClipPath(cam)
+        p.drawPixmap((w - pm.width()) // 2, (alt - pm.height()) // 2, pm)
+        if testo:
+            p.setClipping(False); fnt = QFont(); fnt.setPixelSize(22 if not grande else 28); fnt.setWeight(QFont.Weight.DemiBold); p.setFont(fnt)
+            p.setPen(QColor(0, 0, 0, 90)); p.drawText(QRectF(21, 1, w - 40, alt), int(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft), testo)
+            p.setPen(QColor(255, 255, 255)); p.drawText(QRectF(20, 0, w - 40, alt), int(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft), testo)
+        p.end(); et = QLabel(); et.setPixmap(out); et.setFixedSize(w, alt); et.setAccessibleName(testo or "Banner di SoStore"); v.addWidget(et); return True
+
     def vai(self, chiave):
         self.pagina = chiave
         self.cerca.blockSignals(True); self.cerca.clear(); self.cerca.blockSignals(False)
@@ -395,12 +414,14 @@ class SoStore(QWidget):
         if chiave == "assistenti":
             self.pagina_assistenti(v); return
         if chiave == "vetrina":
-            t = QLabel("In evidenza"); t.setObjectName("titolo"); v.addWidget(t)
+            if not self._testata(v, "banner.jpg", "Programmi scelti per te", 150, True):
+                t = QLabel("In evidenza"); t.setObjectName("titolo"); v.addWidget(t)
             cat = []
             for a in apps:
                 if a.get("categoria") not in cat: cat.append(a.get("categoria"))
             for c in cat:
-                s = QLabel(c); s.setObjectName("sezione"); v.addWidget(s)
+                if not (c in self.CAT_IMG and self._testata(v, self.CAT_IMG[c], c)):
+                    s = QLabel(c); s.setObjectName("sezione"); v.addWidget(s)
                 self._griglia(v, [a for a in apps if a.get("categoria") == c])
         else:
             t = QLabel("Installati"); t.setObjectName("titolo"); v.addWidget(t)
