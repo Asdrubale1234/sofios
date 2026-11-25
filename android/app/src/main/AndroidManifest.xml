@@ -18,6 +18,10 @@
     <queries>
         <package android:name="de.ozerov.fully" />
         <package android:name="com.github.catfriend1.syncthingandroid" />
+        <!-- app ufficiali degli assistenti online (facoltative): per sapere se sono installate -->
+        <package android:name="com.anthropic.claude" /><package android:name="com.openai.chatgpt" />
+        <package android:name="com.google.android.apps.bard" /><package android:name="com.microsoft.copilot" />
+        <package android:name="com.deepseek.chat" /><package android:name="ai.mistral.chat" /><package android:name="ai.perplexity.app.android" />
         <intent><action android:name="android.settings.SETTINGS" /></intent>
         <!-- Per riconoscere Fully anche se il pacchetto avesse un nome diverso -->
         <intent>

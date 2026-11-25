@@ -407,7 +407,12 @@ class ImpostazioniActivity : SchermataSofiOS() {
                 LinearLayout.LayoutParams(0, -2, 1f))
             riga.addView(Stile.testo(this, if (acceso) "Attivo ✓" else "Spento", 15f, if (acceso) Stile.BIANCO else Stile.PICCOLO))
             l.add(riga)
+            // facoltativo: l'app ufficiale (si installa dal Play Store, con la conferma di Android); se c'è, SofiOS apre quella
+            if (Assistenti.appInstallata(this, a)) l.add(Stile.testo(this, "App di ${a.nome} installata: SofiOS apre quella.", 13f, Stile.PICCOLO))
+            else l.add(Stile.bottone(this, "Installa l'app di ${a.nome}", Stile.SECONDARIO, Stile.TESTO) { Assistenti.installa(this, a) }
+                .apply { textSize = 13f; minimumHeight = dp(40) })
         }
+        l.add(Stile.testo(this, "Le app sono facoltative: il browser va sempre bene. Le app chiedono più permessi (microfono, foto) e si aggiornano da sole.", 13f, Stile.PICCOLO))
         return l.toTypedArray()
     }
 

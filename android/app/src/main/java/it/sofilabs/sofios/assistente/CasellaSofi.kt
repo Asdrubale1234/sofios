@@ -193,7 +193,7 @@ class CasellaSofi(private val att: SchermataSofiOS, private val sofi: SofiView) 
                 v.id == "sofios:impostazioni" -> att.startActivity(Intent(att, ImpostazioniActivity::class.java))
                 v.id.startsWith("assistente:") -> {
                     val a = Assistenti.tutti.first { it.id == v.id.removePrefix("assistente:") }
-                    att.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(a.indirizzo)))
+                    Assistenti.apri(att, a)
                 }
                 else -> att.packageManager.getLaunchIntentForPackage(v.id)?.let { att.startActivity(it) }
                     ?: run { di("Non riesco ad aprire «${v.nome}».", "preoccupata"); return }

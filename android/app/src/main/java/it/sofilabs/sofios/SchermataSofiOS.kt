@@ -76,7 +76,7 @@ open class SchermataSofiOS : Activity() {
     /** Scorciatoie mostrate nel pannello; le schermate possono cambiarle. */
     protected fun scorciatoieAssistenti(): List<Scorciatoia> = Assistenti.scelti(this).map { a ->
         Scorciatoia(a.nome) {
-            try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(a.indirizzo))) } catch (e: ActivityNotFoundException) { }
+            Assistenti.apri(this, a)
         }
     }
 
