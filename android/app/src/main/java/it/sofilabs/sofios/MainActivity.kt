@@ -81,7 +81,7 @@ class MainActivity : SchermataSofiOS() {
         }
         // Casa (Fully): si vede solo se Fully è installato. Dopo il primo tocco, parte sempre da solo
         // all'accensione. Tenendo premuto si spegne e si riaccende (puntino verde = parte da solo).
-        val tastoCasa = icona("Casa", R.drawable.ic_casa, ORO, ORO_SCURO) { tocchiCasa() }
+        val tastoCasa = icona("Casa", R.drawable.ic_s_casa, BLU_A, BLU_B) { tocchiCasa() }
         tastoCasa.setOnLongClickListener {
             memoria().edit().putBoolean("casa_auto", !casaAuto()).apply()
             aggiornaCasa()
@@ -99,21 +99,21 @@ class MainActivity : SchermataSofiOS() {
             })
         }
         barra.addView(casa)
-        barra.addView(icona("Impostazioni", R.drawable.ic_impostazioni, GRIGIO, GRIGIO_SCURO) {
+        barra.addView(icona("Impostazioni", R.drawable.ic_s_impostazioni, GRIGIO_A, GRIGIO_B) {
             startActivity(Intent(this, ImpostazioniActivity::class.java))
         })
         // Note: stesse note e stesso aspetto del computer
-        barra.addView(icona("Note", R.drawable.ic_note, ROSA, ROSA_SCURO, piena = true) {
+        barra.addView(icona("Note", R.drawable.ic_s_note, ARANCIO_A, ARANCIO_B) {
             startActivity(Intent(this, NoteActivity::class.java))
         })
-        barra.addView(icona("File", R.drawable.ic_file, ORO_FILE, ORO_FILE_SCURO, piena = true) {
+        barra.addView(icona("File", R.drawable.ic_s_file, ARANCIO_A, ARANCIO_B) {
             startActivity(Intent(this, FileActivity::class.java))
         })
-        barra.addView(icona("Cassaforte", R.drawable.ic_password, TURCHESE, TURCHESE_SCURO, piena = true) {
+        barra.addView(icona("Cassaforte", R.drawable.ic_s_cassaforte, VERDE_A, VERDE_B) {
             startActivity(Intent(this, CassaforteActivity::class.java))
         })
         // Icona di Luma: la toglie o la rimette (sul computer è «Aggiungi widget»).
-        barra.addView(icona("Mostra o nascondi Luma", R.drawable.sofi_volto, MARE, MARE_SCURO, piena = true, etichetta = "Luma") {
+        barra.addView(icona("Mostra o nascondi Luma", R.drawable.sofi_volto, ARANCIO_A, ARANCIO_B, foto = true, etichetta = "Luma") {
             impostaMascotte(!mascotteVisibile())
         })
         zonaApp = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -343,18 +343,12 @@ class MainActivity : SchermataSofiOS() {
         packageManager.getLaunchIntentForPackage(nome)?.let { startActivity(it) }
     }
 
-    /** Icona nello stile del computer: riquadro colorato con simbolo bianco. */
-    /** Icona del dock: riquadro colorato con simbolo bianco e il nome sotto, come sui tablet Apple. */
-    private fun icona(nome: String, immagine: Int, chiaro: Int, scuro: Int, piena: Boolean = false,
+    /** Icona del Dock nello stile Apple (uguale al computer), con il nome sotto. */
+    private fun icona(nome: String, simbolo: Int, alto: Int, basso: Int, foto: Boolean = false,
                       etichetta: String = nome, azione: () -> Unit): LinearLayout {
         val tessera = ImageView(this).apply {
-            setImageResource(immagine)
-            scaleType = ImageView.ScaleType.CENTER_INSIDE
-            val m = if (piena) dp(7) else dp(15)
-            setPadding(m, m, m, m)
-            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(chiaro, scuro)).apply {
-                cornerRadius = dp(18).toFloat()
-            }
+            setImageDrawable(IconaApple(this@MainActivity, simbolo, alto, basso, foto))
+            scaleType = ImageView.ScaleType.FIT_XY
             elevation = dp(3).toFloat()
         }
         val nomeSotto = TextView(this).apply {
@@ -415,6 +409,11 @@ class MainActivity : SchermataSofiOS() {
     }
 
     companion object {
+        // palette delle icone (alto → basso), uguale al computer
+        private val BLU_A = 0xFF4DA3FF.toInt(); private val BLU_B = 0xFF0A6CDF.toInt()
+        private val ARANCIO_A = 0xFFFFC040.toInt(); private val ARANCIO_B = 0xFFFF8A00.toInt()
+        private val VERDE_A = 0xFF4BE06A.toInt(); private val VERDE_B = 0xFF1F9D40.toInt()
+        private val GRIGIO_A = 0xFFA2A2A8.toInt(); private val GRIGIO_B = 0xFF636366.toInt()
         private const val FONDO = 0xFF1C1C1E.toInt()
         private const val BARRA = 0xB32C2C2E.toInt()
         private const val TESTO = 0xFFE8F1F8.toInt()
