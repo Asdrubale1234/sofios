@@ -17,57 +17,60 @@ tocco «Perplexity» in 1279 1197
 foto: A02-assistente-scelto.png
 tocco «Continua» in 1879 1327
 == A. Prima di toccare Casa: SofiOS non apre niente da solo
-in primo piano: topResumedActivity=ActivityRecord{6f2d5b u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{e8a8b31 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: A-prima-di-toccare-casa.png
 == A2. Tocco Casa: si apre Fully (e da ora parte sempre da solo)
-tocco «Casa» in 780 1450
+ERRORE: non trovo «Casa» sullo schermo
+ATTENZIONE: Casa non si è aperta
 foto: A2-casa-aperta.png
 == B. Chiudo Casa (tasto Indietro): sotto trovo SofiOS, con il puntino verde
-in primo piano: topResumedActivity=ActivityRecord{6f2d5b u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{e8a8b31 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: B-schermata-iniziale.png
 == B2. Luma: un tocco fa comparire la X (e apre la casella); la X la toglie, l'icona nella barra la rimette
-tocco «Luma» in 2285 1112
+ERRORE: non trovo «Luma» sullo schermo
+ATTENZIONE: la X non è comparsa dopo il tocco su Luma
 foto: B2-sofi-con-x.png
-tocco «Nascondi Luma» in 2408 204
+ERRORE: non trovo «Nascondi Luma» sullo schermo
 foto: B3-sofi-tolta.png
-tocco «Mostra o nascondi Luma» in 1780 1450
+ERRORE: non trovo «Mostra o nascondi Luma» sullo schermo
 foto: B5-sofi-rimessa.png
 == C. Tasto Home non riapre Casa
-in primo piano: topResumedActivity=ActivityRecord{6f2d5b u0 it.sofilabs.sofios/.MainActivity t9}
+in primo piano: topResumedActivity=ActivityRecord{e8a8b31 u0 it.sofilabs.sofios/.MainActivity t9}
 foto: C-tasto-home.png
 == M. Migrazione: una nota della versione 0.1 deve finire nella Cartella SofiOS comune
-tocco «Note» in 1180 1450
-migrazione: la nota vecchia è nella Cartella SofiOS (e l'originale è rimasto)
+ERRORE: non trovo «Note» sullo schermo
+ATTENZIONE: la nota della versione 0.1 non è stata copiata
 foto: M1-nota-migrata.png
 == N. Note: scrivo, seconda nota, chiudo e riapro, elimino
-tocco «Note» in 1180 1450
+ERRORE: non trovo «Note» sullo schermo
 foto: N1-note-vuota.png
 foto: N2-prima-nota.png
 file sul tablet dopo la prima nota:
-/sdcard/SofiOS/Note/nota-20261125-055734.txt: Spesa del sabato
-tocco «Nuova nota» in 290 660
+cat: /sdcard/SofiOS/Note/*.txt: No such file or directory
+/sdcard/SofiOS/Note/*.txt: 
+ERRORE: non trovo «Nuova nota» sullo schermo
 foto: N3-due-note.png
 file sul tablet dopo la seconda nota:
-/sdcard/SofiOS/Note/nota-20261125-055734.txt: Spesa del sabato
-/sdcard/SofiOS/Note/nota-20261125-055746.txt: Chiamare Luca
+cat: /sdcard/SofiOS/Note/*.txt: No such file or directory
+/sdcard/SofiOS/Note/*.txt: 
 tocco «Note» in 1180 1450
 foto: N4-dopo-chiusura-e-riapertura.png
-tocco «Spesa del sabato» in 290 347
+ERRORE: non trovo «Spesa del sabato» sullo schermo
 foto: N5-riaperta-la-prima-nota.png
 tocco «Elimina nota» in 290 1516
 foto: N6-conferma-eliminazione.png
 tocco «Sì» in 1736 901
 foto: N7-dopo-eliminazione.png
 file sul tablet dopo l'eliminazione:
-/sdcard/SofiOS/Note/nota-20261125-055746.txt: Chiamare Luca
+/sdcard/SofiOS/Note/nota-20261125-061557.txt: 
 == N2. Due versioni di una nota (la sincronizzazione lascia una copia «sync-conflict»)
 tocco «Note» in 1180 1450
 foto: N8-due-versioni.png
 tocco «Tieni tutte e due» in 2176 374
 foto: N9-tenute-tutte-e-due.png
 note dopo «Tieni tutte e due»:
-/sdcard/SofiOS/Note/nota-20261125-055746.txt: Chiamare Luca
-/sdcard/SofiOS/Note/nota-20261125-055833.txt: Versione arrivata da un altro dispositivo
+/sdcard/SofiOS/Note/nota-20261125-061557.txt: 
+/sdcard/SofiOS/Note/nota-20261125-061614.txt: Versione arrivata da un altro dispositivo
 == P. Pannello SofiOS (si apre dalla barra in alto)
 tocco «Barra SofiOS» in 1280 36
 foto: P1-pannello.png
@@ -78,7 +81,7 @@ foto: P2-pannello-dopo-cursori.png
 tocco «Barra SofiOS» in 1280 36
 tocco «File» (ultimo) in 1000 781
 foto: P3-file-dal-pannello.png
-in primo piano: topResumedActivity=ActivityRecord{d34576e u0 it.sofilabs.sofios/.FileActivity t14}
+in primo piano: topResumedActivity=ActivityRecord{26e0e15 u0 it.sofilabs.sofios/.FileActivity t13}
 == I. Impostazioni nostre
 tocco «Impostazioni» in 980 1450
 foto: I1-impostazioni-schermo.png
@@ -161,27 +164,27 @@ Luma dice: Non ho capito. Scrivi «aiuto» per vedere cosa so fare.
 foto: S4-trovato-il-file.png
 tocco «📄  fattura-prova.txt» in 1280 491
 foto: S5-file-aperto.png
-in primo piano: topResumedActivity=ActivityRecord{f5a28ce u0 it.sofilabs.sofios/.FileActivity t14}
+in primo piano: topResumedActivity=ActivityRecord{ca96866 u0 it.sofilabs.sofios/.FileActivity t13}
 tocco «Chiudi» (ultimo) in 2442 132
 tocco «Luma» in 2285 1112
 «apri note»: si è aperta l'app Note
 foto: S6-apri-note.png
-processo del finto Fully prima di «chiudi»: 5616
+processo del finto Fully prima di «chiudi»: 8775
 tocco «Luma» in 2285 1112
 Luma dice: Ho chiesto ad Android di chiudere «Fully (FINTO, solo prova)». Non posso controllare se l'ha fatto: lo decide Android, di solito solo per i programmi in secondo piano.
-NOTA: Android non ha chiuso il programma (processo 5616). Controllo cosa dice il sistema:
-     mLastReportedConfiguration={1.0 310mcc260mnc [en_US] ldltr sw800dp w1280dp h776dp 320dpi xlrg land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 2560, 1600) mAppBounds=Rect(0, 0 - 2560, 1600) mMaxBounds=Rect(0, 0 - 2560, 1600) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.2 s.305 fontWeightAdjustment=0}
-  *APP* UID 10193 ProcessRecord{f356ecf 5616:de.ozerov.fully/u0a193}
+NOTA: Android non ha chiuso il programma (processo 8775). Controllo cosa dice il sistema:
+     mLastReportedConfiguration={1.0 310mcc260mnc [en_US] ldltr sw800dp w1280dp h776dp 320dpi xlrg land finger qwerty/v/v -nav/h winConfig={ mBounds=Rect(0, 0 - 2560, 1600) mAppBounds=Rect(0, 0 - 2560, 1600) mMaxBounds=Rect(0, 0 - 2560, 1600) mDisplayRotation=ROTATION_0 mWindowingMode=fullscreen mDisplayWindowingMode=fullscreen mActivityType=undefined mAlwaysOnTop=undefined mRotation=ROTATION_0} as.2 s.317 fontWeightAdjustment=0}
+  *APP* UID 10193 ProcessRecord{bcb813f 8775:de.ozerov.fully/u0a193}
     user #0 uid=10193 gids={50193, 20193, 9997}
     mRequiredAbi=x86_64 instructionSet=null
-    dir=/data/app/~~ava7TnRSCXdxDo-Nqh8GdQ==/de.ozerov.fully-koXXi6iZO1qXbxrP4pp_8Q==/base.apk publicDir=/data/app/~~ava7TnRSCXdxDo-Nqh8GdQ==/de.ozerov.fully-koXXi6iZO1qXbxrP4pp_8Q==/base.apk data=/data/user/0/de.ozerov.fully
+    dir=/data/app/~~F4ocJbImTxZrtxF75Tieaw==/de.ozerov.fully-a80Z1Dvu0r58wPwmhEpceg==/base.apk publicDir=/data/app/~~F4ocJbImTxZrtxF75Tieaw==/de.ozerov.fully-a80Z1Dvu0r58wPwmhEpceg==/base.apk data=/data/user/0/de.ozerov.fully
     packageList={de.ozerov.fully}
 --
-  mHomeProcess: ProcessRecord{7357749 6636:it.sofilabs.sofios/u0a192}
-  mPreviousProcess: ProcessRecord{f356ecf 5616:de.ozerov.fully/u0a193}
+  mHomeProcess: ProcessRecord{bacfe19 6647:it.sofilabs.sofios/u0a192}
+  mPreviousProcess: ProcessRecord{bcb813f 8775:de.ozerov.fully/u0a193}
 
   UID states:
-    UID 1000: UidRecord{86951ae 1000 PER  change:procadj procs:0 seq(48141,1284)} caps=LCMNFU
+    UID 1000: UidRecord{f63a64b 1000 PER  change:procadj procs:0 seq(40199,2319)} caps=LCMNFU
       curProcState=0 curCapability=LCMNFU
 --
 dopo il comando «am kill» del sistema il processo è: '' (vuoto = chiuso)
@@ -198,12 +201,12 @@ tocco «Impostazioni» in 980 1450
 tocco «Assistenti online» in 290 1024
 foto: S10-assistenti.png
 tocco «Claude» in 1546 384
-tocco «Gemini» in 1546 880
+tocco «Gemini» in 1546 688
 foto: S11-assistenti-scelti.png
 tocco «Barra SofiOS» in 1280 36
 foto: S12-pannello-con-assistenti.png
 tocco «Luma» in 2285 1112
-dopo «apri claude» in primo piano: topResumedActivity=ActivityRecord{2d317a5 u0 com.android.chrome/org.chromium.chrome.browser.firstrun.TabbedModeFirstRunActivity t15}
+dopo «apri claude» in primo piano: topResumedActivity=ActivityRecord{2469e23 u0 com.android.chrome/org.chromium.chrome.browser.firstrun.TabbedModeFirstRunActivity t15}
 == C. Cassaforte Password (formato del computer)
 tocco «Cassaforte» in 1580 1450
 foto: C1-crea-cassaforte.png
@@ -230,7 +233,7 @@ foto: C6-bloccata.png
 tocco «Password principale» in 1280 831
 foto: C7-password-sbagliata.png
 tocco «Password principale» in 1280 461
-TEMPO sblocco della cassaforte fatta dal tablet: circa -0.1 secondi (simulatore)
+TEMPO sblocco della cassaforte fatta dal tablet: circa -0.3 secondi (simulatore)
 foto: C8-sbloccata-di-nuovo.png
 file della cassaforte fatto da Android: 1397 byte
 -- cassaforte fatta dal programma del computer, aperta su Android
@@ -247,10 +250,24 @@ foto: C11-unione-dei-due-dispositivi.png
 cartella Password dopo l'unione: .conflitti cassaforte.kdbx cassaforte.kdbx.bak 
 == D. Tocco su Impostazioni e ritorno
 tocco «Impostazioni» in 980 1450
-in primo piano: topResumedActivity=ActivityRecord{a75d0c1 u0 it.sofilabs.sofios/.ImpostazioniActivity t17}
+in primo piano: topResumedActivity=ActivityRecord{bea1b1 u0 it.sofilabs.sofios/.ImpostazioniActivity t17}
 tocco «Altre impostazioni» in 290 1134
 tocco «Tutte le impostazioni di Android» in 1546 1036
-in primo piano: topResumedActivity=ActivityRecord{bc99e02 u0 com.android.settings/.homepage.SettingsHomepageActivity t17}
+in primo piano: topResumedActivity=ActivityRecord{229b118 u0 com.android.settings/.homepage.SettingsHomepageActivity t17}
 foto: D-impostazioni-di-android.png
-dopo Home: topResumedActivity=ActivityRecord{1721239 u0 it.sofilabs.sofios/.MainActivity t17}
+dopo Home: topResumedActivity=ActivityRecord{5f327fe u0 it.sofilabs.sofios/.MainActivity t17}
 == E. Riavvio del tablet: Casa deve riaprirsi da sola
+schermata iniziale scelta dopo il riavvio: it.sofilabs.sofios
+ATTENZIONE: Casa non si è aperta
+in primo piano: topResumedActivity=ActivityRecord{a20da8f u0 it.sofilabs.sofios/.MainActivity t15}
+foto: E-dopo-riavvio-casa.png
+== F. Chiudo Casa dopo il riavvio: sotto trovo SofiOS
+in primo piano: topResumedActivity=ActivityRecord{a20da8f u0 it.sofilabs.sofios/.MainActivity t15}
+foto: F-dopo-riavvio-schermata-iniziale.png
+== G. Tengo premuto su Casa: Fully non deve più partire da solo
+tocco lungo «Casa» in 780 1450
+foto: G-puntino-spento.png
+in primo piano dopo il riavvio: topResumedActivity=ActivityRecord{490faf5 u0 de.ozerov.fully/.FintoFully t16}
+ATTENZIONE: dopo il riavvio Fully è partito anche se l'avevo spento
+foto: G2-dopo-riavvio-senza-casa.png
+ESITO FINALE: NON OK
