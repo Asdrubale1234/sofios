@@ -15,8 +15,8 @@ Daemon will be stopped at the end of the build
 > Task :app:checkKotlinGradlePluginConfigurationErrors
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
-> Task :app:checkDebugAarMetadata
 > Task :app:generateDebugResValues
+> Task :app:checkDebugAarMetadata
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
 > Task :app:packageDebugResources
@@ -28,12 +28,12 @@ Daemon will be stopped at the end of the build
 > Task :app:processDebugManifest
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:checkKotlinGradlePluginConfigurationErrors
-> Task :app:javaPreCompileDebugUnitTest
-> Task :app:processDebugManifestForPackage
 > Task :app:javaPreCompileDebug
 > Task :finto-fully:preBuild UP-TO-DATE
 > Task :finto-fully:preDebugBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
 > Task :finto-fully:checkDebugAarMetadata
+> Task :app:processDebugManifestForPackage
 > Task :finto-fully:generateDebugResValues
 > Task :finto-fully:mapDebugSourceSetPaths
 > Task :finto-fully:generateDebugResources
@@ -45,15 +45,15 @@ Daemon will be stopped at the end of the build
 > Task :finto-fully:processDebugMainManifest
 > Task :finto-fully:processDebugManifest
 > Task :finto-fully:processDebugManifestForPackage
-> Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebug
+> Task :finto-fully:preDebugUnitTestBuild UP-TO-DATE
 > Task :finto-fully:javaPreCompileDebugUnitTest
 > Task :app:processDebugResources
 > Task :finto-fully:processDebugResources
 > Task :finto-fully:compileDebugKotlin
 > Task :finto-fully:compileDebugJavaWithJavac NO-SOURCE
-> Task :finto-fully:bundleDebugClassesToRuntimeJar
 > Task :finto-fully:bundleDebugClassesToCompileJar
+> Task :finto-fully:bundleDebugClassesToRuntimeJar
 > Task :finto-fully:processDebugJavaRes
 > Task :finto-fully:compileDebugUnitTestKotlin NO-SOURCE
 > Task :finto-fully:compileDebugUnitTestJavaWithJavac NO-SOURCE
@@ -78,7 +78,7 @@ w: file:///home/runner/work/sofios/sofios/android/app/src/main/java/it/sofilabs/
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes
 > Task :app:testDebugUnitTest
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795584720096.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1795585925038.json
 
-BUILD SUCCESSFUL in 2m 1s
+BUILD SUCCESSFUL in 1m 58s
 43 actionable tasks: 43 executed
