@@ -137,6 +137,16 @@ else
   scrivi "ATTENZIONE: la scelta scuro/chiaro del primo avvio non è comparsa"
 fi
 
+# primo avvio, passo 2: assistenti online (facoltativo, scelta multipla)
+if attendi "Assistenti online" 15; then
+  foto_subito A01-scelta-assistenti
+  tocca_testo "Perplexity"; sleep 1
+  foto_subito A02-assistente-scelto
+  tocca_testo "Continua"; sleep 2
+else
+  scrivi "ATTENZIONE: la scelta degli assistenti online del primo avvio non è comparsa"
+fi
+
 scrivi "== A. Prima di toccare Casa: SofiOS non apre niente da solo"
 sleep 8
 in_primo_piano | grep -q "$PKG" || adb shell input keyevent KEYCODE_HOME

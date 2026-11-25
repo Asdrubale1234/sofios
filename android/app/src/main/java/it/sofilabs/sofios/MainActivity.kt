@@ -12,8 +12,10 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextClock
 import android.widget.TextView
+import it.sofilabs.sofios.assistente.Assistenti
 import it.sofilabs.sofios.assistente.CasellaSofi
 
 /** Schermata iniziale di SofiOS: stile del computer, nessuna libreria, nessun servizio acceso. */
@@ -130,6 +132,76 @@ class MainActivity : SchermataSofiOS() {
 
     private lateinit var zonaApp: LinearLayout
 
+    /** Le domande del primo avvio, una alla volta: aspetto (scuro/chiaro), assistenti online, poi le app nuove per il Dock. */
+    private fun primiPassi() {
+        when {
+            !memoria().getBoolean("tema_scelto", false) -> sceltaTema()
+            !memoria().getBoolean("assistenti_chiesti", false) -> sceltaAssistenti()
+            else -> Dock.chiediPerLeNuove(this) { riempiApp() }
+        }
+    }
+
+    private val descrizioniAssistenti = mapOf(
+        "claude" to "Scrive, riassume e spiega; aiuta con documenti e programmi. Si entra con un account: c'è una parte gratuita.",
+        "chatgpt" to "Risponde alle domande, scrive testi e traduce. Si entra con un account: c'è una parte gratuita.",
+        "gemini" to "L'assistente di Google, anche per immagini. Si entra con l'account Google.",
+        "copilot" to "L'assistente di Microsoft. Gratuito, si può provare anche senza account.",
+        "deepseek" to "Gratuito, con un account. Attenzione: è un servizio con sede in Cina, quello che scrivi viene trattato lì.",
+        "mistral" to "Assistente europeo (Francia). Ha una parte gratuita, con un account.",
+        "perplexity" to "Cerca sul web e risponde indicando le fonti. Ha una parte gratuita, anche senza account.")
+
+    /** Facoltativo, scelta multipla, niente da scaricare: gli assistenti si aprono nel browser (stessi testi dell'installazione del computer). */
+    private fun sceltaAssistenti() {
+        val scelti = HashSet<String>(Assistenti.scelti(this).map { it.id })
+        val colonna = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(4), dp(16), dp(4)) }
+        colonna.addView(TextView(this).apply {
+            text = "Facoltativo. Si aprono nel browser, con internet e il tuo account: non si scarica niente."
+            textSize = 13f; setTextColor(0xFF8E8E93.toInt()); setPadding(dp(4), 0, dp(4), dp(8))
+        })
+        for (a in Assistenti.tutti) {
+            val riga = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL; isClickable = true
+                contentDescription = a.nome; setPadding(dp(10), dp(8), dp(10), dp(8))
+            }
+            fun colora() { riga.background = GradientDrawable().apply {
+                setColor(if (a.id in scelti) 0x440A84FF else 0x00000000); cornerRadius = dp(14).toFloat()
+                if (a.id in scelti) setStroke(dp(1), 0xFF0A84FF.toInt()) } }
+            colora()
+            riga.addView(ImageView(this).apply {
+                val o = Assistenti.iconaOriginale(this@MainActivity, a)
+                if (o != null) setImageDrawable(o) else setImageResource(a.icona)
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                outlineProvider = object : android.view.ViewOutlineProvider() {
+                    override fun getOutline(v: View, ou: android.graphics.Outline) { ou.setRoundRect(0, 0, v.width, v.height, dp(10).toFloat()) }
+                }
+                clipToOutline = true
+            }, LinearLayout.LayoutParams(dp(44), dp(44)))
+            val testi = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), 0, 0, 0) }
+            testi.addView(TextView(this).apply { text = a.nome; textSize = 16f; typeface = Typeface.DEFAULT_BOLD; setTextColor(0xFFF2F2F7.toInt()) })
+            testi.addView(TextView(this).apply { text = descrizioniAssistenti[a.id] ?: ""; textSize = 12.5f; setTextColor(0xFF8E8E93.toInt()) })
+            riga.addView(testi, LinearLayout.LayoutParams(0, -2, 1f))
+            val spunta = TextView(this).apply { textSize = 18f; setTextColor(0xFF0A84FF.toInt()); text = if (a.id in scelti) "✓" else "" }
+            riga.addView(spunta)
+            riga.setOnClickListener {
+                if (!scelti.add(a.id)) scelti.remove(a.id)
+                spunta.text = if (a.id in scelti) "✓" else ""; colora()
+            }
+            colonna.addView(riga, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
+        }
+        fine@ run {
+            val d = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
+                .setTitle("Assistenti online").setView(ScrollView(this).apply { addView(colonna) })
+                .setPositiveButton("Continua") { _, _ ->
+                    for (a in Assistenti.tutti) Assistenti.imposta(this, a.id, a.id in scelti)
+                    memoria().edit().putBoolean("assistenti_chiesti", true).apply(); primiPassi()
+                }
+                .setNegativeButton("Non ora") { _, _ -> memoria().edit().putBoolean("assistenti_chiesti", true).apply(); primiPassi() }
+                .setCancelable(false).show()
+            d.getButton(android.content.DialogInterface.BUTTON_POSITIVE).isAllCaps = false
+            d.getButton(android.content.DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
+        }
+    }
+
     /** Primo avvio: scuro o chiaro, con l'anteprima dello sfondo (come nell'installazione del computer). */
     private fun sceltaTema() {
         var d: AlertDialog? = null
@@ -152,7 +224,7 @@ class MainActivity : SchermataSofiOS() {
                 memoria().edit().putBoolean("tema_scelto", true).apply()
                 d?.dismiss()
                 if (Stile.chiaro != chiaro) { Stile.imposta(this@MainActivity, chiaro); recreate() }
-                else Dock.chiediPerLeNuove(this@MainActivity) { riempiApp() }
+                else primiPassi()
             }
         }
         val riga = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(8)) }
@@ -201,7 +273,7 @@ class MainActivity : SchermataSofiOS() {
     override fun onResume() {
         super.onResume()
         riempiApp()
-        if (!memoria().getBoolean("tema_scelto", false)) sceltaTema() else Dock.chiediPerLeNuove(this) { riempiApp() }
+        primiPassi()
         sofi.ondeggia(mascotteVisibile())
         aggiornaCasa()
         if (!Cartella.permesso(this) && !memoria().getBoolean("cartella_chiesta", false)) avvisoCartella()
