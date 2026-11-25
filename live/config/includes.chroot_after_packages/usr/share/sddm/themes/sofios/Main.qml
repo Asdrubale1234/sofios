@@ -4,7 +4,7 @@ import QtQuick
 Rectangle {
     id: radice
     width: 1280; height: 800
-    color: "#0b2740"
+    color: "#1c1c1e"
     property string fam: "Inter"
     property bool errore: false
     property int utenteIdx: (typeof userModel !== "undefined" && userModel.lastIndex >= 0) ? userModel.lastIndex : 0
@@ -43,9 +43,9 @@ Rectangle {
 
     Image { anchors.fill: parent; source: "sfondo.png"; fillMode: Image.PreserveAspectCrop }
     Rectangle { anchors.fill: parent; gradient: Gradient {
-        GradientStop { position: 0.0; color: "#660b2740" }
-        GradientStop { position: 0.55; color: "#aa0b2740" }
-        GradientStop { position: 1.0; color: "#330b2740" } } }
+        GradientStop { position: 0.0; color: "#661c1c1e" }
+        GradientStop { position: 0.55; color: "#aa1c1c1e" }
+        GradientStop { position: 1.0; color: "#331c1c1e" } } }
 
     Connections {
         target: (typeof sddm !== "undefined") ? sddm : null
@@ -67,7 +67,7 @@ Rectangle {
         spacing: 2
         Text { id: ora; anchors.horizontalCenter: parent.horizontalCenter; color: "#ffffff"; font.family: radice.fam; font.pixelSize: 84; font.weight: Font.DemiBold
             text: Qt.formatTime(new Date(), "hh:mm") }
-        Text { id: data; anchors.horizontalCenter: parent.horizontalCenter; color: "#cfe3f7"; font.family: radice.fam; font.pixelSize: 20
+        Text { id: data; anchors.horizontalCenter: parent.horizontalCenter; color: "#e5e5ea"; font.family: radice.fam; font.pixelSize: 20
             text: radice.dataItaliana() }
     }
     Timer { interval: 1000; running: true; repeat: true; onTriggered: { ora.text = Qt.formatTime(new Date(), "hh:mm"); data.text = radice.dataItaliana() } }
@@ -86,27 +86,27 @@ Rectangle {
             spacing: 8
             Rectangle {
                 width: 300; height: 46; radius: 12
-                color: "#cc12365a"; border.width: campo.activeFocus ? 2 : 1; border.color: campo.activeFocus ? "#ffd479" : "#1e4f7c"
+                color: "#cc2c2c2e"; border.width: campo.activeFocus ? 2 : 1; border.color: campo.activeFocus ? "#ff9f0a" : "#48484a"
                 TextInput {
                     id: campo
                     anchors.fill: parent; anchors.leftMargin: 16; anchors.rightMargin: 16
                     verticalAlignment: TextInput.AlignVCenter
                     echoMode: TextInput.Password; passwordCharacter: "•"
-                    color: "#ffffff"; font.family: radice.fam; font.pixelSize: 18; selectionColor: "#1e6fa8"; clip: true
+                    color: "#ffffff"; font.family: radice.fam; font.pixelSize: 18; selectionColor: "#0a84ff"; clip: true
                     onAccepted: radice.accedi()
                     onTextChanged: radice.errore = false
-                    Text { visible: campo.text.length === 0; anchors.verticalCenter: parent.verticalCenter; text: "Password"; color: "#8fb3d4"; font.family: radice.fam; font.pixelSize: 18 }
+                    Text { visible: campo.text.length === 0; anchors.verticalCenter: parent.verticalCenter; text: "Password"; color: "#8e8e93"; font.family: radice.fam; font.pixelSize: 18 }
                 }
             }
             Rectangle {
-                width: 46; height: 46; radius: 12; color: frecciaArea.pressed ? "#ffe19e" : "#ffd479"
-                Text { anchors.centerIn: parent; text: "→"; color: "#0b2740"; font.pixelSize: 24; font.weight: Font.Bold; font.family: radice.fam }
+                width: 46; height: 46; radius: 12; color: frecciaArea.pressed ? "#ffb340" : "#ff9f0a"
+                Text { anchors.centerIn: parent; text: "→"; color: "#1c1c1e"; font.pixelSize: 24; font.weight: Font.Bold; font.family: radice.fam }
                 MouseArea { id: frecciaArea; anchors.fill: parent; onClicked: radice.accedi() }
             }
         }
-        Text { anchors.horizontalCenter: parent.horizontalCenter; height: 20; color: "#ffd479"; font.family: radice.fam; font.pixelSize: 14
+        Text { anchors.horizontalCenter: parent.horizontalCenter; height: 20; color: "#ff9f0a"; font.family: radice.fam; font.pixelSize: 14
             text: radice.errore ? "Password sbagliata. Riprova." : "" }
-        Text { anchors.horizontalCenter: parent.horizontalCenter; height: 18; color: "#cfe3f7"; font.family: radice.fam; font.pixelSize: 13
+        Text { anchors.horizontalCenter: parent.horizontalCenter; height: 18; color: "#e5e5ea"; font.family: radice.fam; font.pixelSize: 13
             text: (typeof keyboard !== "undefined" && keyboard.capsLock) ? "Attenzione: il tasto Bloc Maiusc è attivo" : "" }
     }
 
@@ -114,9 +114,9 @@ Rectangle {
     Row {
         visible: (typeof userModel !== "undefined") && userModel.count > 1
         anchors.horizontalCenter: parent.horizontalCenter; y: parent.height * 0.82; spacing: 10
-        Rectangle { width: 40; height: 36; radius: 10; color: "#cc12365a"; Text { anchors.centerIn: parent; text: "‹"; color: "#ffffff"; font.pixelSize: 24 }
+        Rectangle { width: 40; height: 36; radius: 10; color: "#cc2c2c2e"; Text { anchors.centerIn: parent; text: "‹"; color: "#ffffff"; font.pixelSize: 24 }
             MouseArea { anchors.fill: parent; onClicked: { radice.utenteIdx = (radice.utenteIdx + userModel.count - 1) % userModel.count; radice.leggiUtente(); campo.forceActiveFocus() } } }
-        Rectangle { width: 40; height: 36; radius: 10; color: "#cc12365a"; Text { anchors.centerIn: parent; text: "›"; color: "#ffffff"; font.pixelSize: 24 }
+        Rectangle { width: 40; height: 36; radius: 10; color: "#cc2c2c2e"; Text { anchors.centerIn: parent; text: "›"; color: "#ffffff"; font.pixelSize: 24 }
             MouseArea { anchors.fill: parent; onClicked: { radice.utenteIdx = (radice.utenteIdx + 1) % userModel.count; radice.leggiUtente(); campo.forceActiveFocus() } } }
     }
 
@@ -127,7 +127,7 @@ Rectangle {
             model: [ { t: "Sospendi", a: 0 }, { t: "Riavvia", a: 1 }, { t: "Spegni", a: 2 } ]
             delegate: Rectangle {
                 width: etichetta.implicitWidth + 28; height: 36; radius: 10
-                color: area.containsMouse ? "#2a82c2" : "#cc12365a"
+                color: area.containsMouse ? "#3a3a3c" : "#cc2c2c2e"
                 Text { id: etichetta; anchors.centerIn: parent; text: modelData.t; color: "#ffffff"; font.family: radice.fam; font.pixelSize: 14; font.weight: Font.DemiBold }
                 MouseArea { id: area; anchors.fill: parent; hoverEnabled: true
                     onClicked: { if (typeof sddm === "undefined") return; if (modelData.a === 0) sddm.suspend(); else if (modelData.a === 1) sddm.reboot(); else sddm.powerOff() } }

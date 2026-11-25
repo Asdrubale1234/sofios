@@ -19,6 +19,11 @@ POSE = [("neutra", "in posa neutra, ferma e serena, braccia lungo i fianchi"), (
         ("parla", "mentre parla, con la lanterna accesa di luce gialla e un'espressione di chi sta dicendo qualcosa"), ("ascolta", "mentre ascolta, con la lanterna accesa di luce turchese e una mano all'orecchio"),
         ("pensa", "mentre pensa, con la lanterna accesa di luce viola e una mano al mento"), ("felice", "felice, con le braccia alzate e un grande sorriso"), ("preoccupata", "preoccupata, con le mani strette davanti al petto")]
 
+VOLTI = [("felice", "felice, con un grande sorriso"), ("concentrata", "concentrata, con le sopracciglia leggermente abbassate e lo sguardo fisso"), ("curiosa", "curiosa, con un sopracciglio alzato e lo sguardo di lato"),
+         ("preoccupata", "preoccupata, con le sopracciglia inclinate e la bocca storta"), ("soddisfatta", "soddisfatta, con gli occhi socchiusi e un piccolo sorriso"), ("attenta", "attenta, con gli occhi ben aperti e un'espressione vigile")]
+POSE_EXTRA = [("sorpresa", "sorpresa, con gli occhi spalancati, la bocca a O e le mani alzate"), ("dorme", "che dorme in piedi, con gli occhi chiusi, la testa un po' reclinata e la lanterna SPENTA")]
+ACCESSO = [("scuro", "sfondo-scuro.jpg", "notte stellata sul mare"), ("chiaro", "sfondo-chiaro.jpg", "cielo azzurro sul mare")]
+
 def immagine_b64(nome):
     with open(os.path.join(RIF, nome), "rb") as f: return base64.b64encode(f.read()).decode()
 
@@ -87,7 +92,7 @@ def main():
     os.makedirs(OUT, exist_ok=True); cosa = [a for a in sys.argv[1:] if not a.startswith("--")]; prova = "--prova" in sys.argv; fatte = 0
     global errori_di_fila
     errori_di_fila = 0
-    if not cosa or "sfondi" in cosa:
+    if not cosa or "sfondi" in cosa:      # (con «extra» si fanno solo i volti, le pose in piu' e gli sfondi di accesso)
         for tema, rif in (("scuro", "sfondo-scuro.jpg"), ("chiaro", "sfondo-chiaro.jpg")):
             for nome, rapporto, q in SFONDI:
                 testo = ("Rifai questa immagine di riferimento mantenendo IDENTICI la scena, i colori, lo stile e il logo «S + SofiOS» al centro. Cambia solo l'inquadratura per il formato richiesto (%s). %s "
@@ -102,10 +107,23 @@ def main():
                      "nessun testo, nessuna etichetta." % descr)
             if lavoro("luma-%s" % nome, testo, ["luma-pose.jpg", "luma-concentrata.jpg"], "1:1", "1K"): fatte += 1
             if prova and fatte: print("Prova fatta: controlla la cartella «uscita»."); return 0
-    zp = os.path.join(QUI, "risultati.zip")
+    if "extra" in cosa:
+        for nome, descr in VOLTI:
+            testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, materiali e viso. Primo piano del volto: solo il viso e la parte alta della torre, inquadrato da vicino. Espressione: %s. "
+                     "Sfondo verde uniforme #00FF00, nessun testo, nessuna etichetta." % descr)
+            if lavoro("volto-%s" % nome, testo, ["luma-pose.jpg", "luma-concentrata.jpg"], "1:1", "1K"): fatte += 1
+        for nome, descr in POSE_EXTRA:
+            testo = ("Usa come riferimento la mascotte Luma: MANTIENI IDENTICI stile, colori, proporzioni e viso. Disegnala %s. Figura intera, centrata, stessa grandezza delle altre pose, base alla stessa altezza. "
+                     "Sfondo verde uniforme #00FF00, senza ombre sul verde, nessun testo." % descr)
+            if lavoro("luma-%s" % nome, testo, ["luma-pose.jpg", "luma-concentrata.jpg"], "1:1", "1K"): fatte += 1
+        for tema, rif, scena in ACCESSO:
+            testo = ("Rifai questa immagine di riferimento (%s) mantenendo IDENTICI scena, colori e stile, ma SENZA il logo e SENZA nessuna scritta al centro: solo cielo e mare. "
+                     "Lascia la parte centrale visivamente tranquilla, per metterci sopra la casella della password. Nessun testo, nessuna cornice." % scena)
+            if lavoro("accesso-%s" % tema, testo, [rif], "16:9", "4K"): fatte += 1
+    zp = os.path.join(QUI, "risultati-extra.zip" if "extra" in cosa else "risultati.zip")
     with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(os.listdir(OUT)):
-            if f.endswith(".png"): z.write(os.path.join(OUT, f), f)
+            if f.endswith(".png") and (("extra" not in cosa) or f.startswith(("volto-", "accesso-", "luma-sorpresa", "luma-dorme"))): z.write(os.path.join(OUT, f), f)
     print("\nFinito. Manda a Claude il file:", zp); return 0
 
 if __name__ == "__main__":
