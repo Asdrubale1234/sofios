@@ -1,70 +1,25 @@
-[start] 2026/11/25 21:30:48 INFO: syncthing v1.29.5 "Gold Grasshopper" (go1.25.0 linux-amd64) debian@debian 2025-11-29 20:48:58 UTC
-[HYX3K] 2026/11/25 21:30:48 INFO: My ID: HYX3KSQ-Q3ODQGZ-XUO2HLK-6D6CBIN-ROUOZJQ-4XXF4N6-2RT2PRV-56OKFQ3
-[HYX3K] 2026/11/25 21:30:48 INFO: Hashing performance is 194.43 MB/s
-[HYX3K] 2026/11/25 21:30:48 INFO: Running database migration 14...
-[HYX3K] 2026/11/25 21:30:48 INFO: Running database migration 16...
-[HYX3K] 2026/11/25 21:30:48 INFO: Running database migration 17...
-[HYX3K] 2026/11/25 21:30:48 INFO: Running database migration 19...
-[HYX3K] 2026/11/25 21:30:48 INFO: Running database migration 20...
-[HYX3K] 2026/11/25 21:30:48 INFO: Compacting database after migration...
-[HYX3K] 2026/11/25 21:30:48 INFO: Overall send rate is unlimited, receive rate is unlimited
-[HYX3K] 2026/11/25 21:30:48 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) starting
-[HYX3K] 2026/11/25 21:30:48 INFO: Using discovery mechanism: global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
-[HYX3K] 2026/11/25 21:30:48 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
-[HYX3K] 2026/11/25 21:30:48 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
-[HYX3K] 2026/11/25 21:30:48 INFO: Using discovery mechanism: IPv4 local broadcast discovery on port 21027
-[HYX3K] 2026/11/25 21:30:48 INFO: Using discovery mechanism: IPv6 local multicast discovery on address [ff12::8384]:21027
-[HYX3K] 2026/11/25 21:30:48 INFO: Loading HTTPS certificate: open /tmp/st/https-cert.pem: no such file or directory
-[HYX3K] 2026/11/25 21:30:48 INFO: Creating new HTTPS certificate
-2026/11/25 21:30:48 failed to sufficiently increase receive buffer size (was: 1024 kiB, wanted: 7168 kiB, got: 2048 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
-[HYX3K] 2026/11/25 21:30:48 INFO: TCP listener ([::]:22000) starting
-[HYX3K] 2026/11/25 21:30:48 INFO: QUIC listener ([::]:22000) starting
-[HYX3K] 2026/11/25 21:30:48 INFO: GUI and API listening on 127.0.0.1:8384
-[HYX3K] 2026/11/25 21:30:48 INFO: Access the GUI via the following URL: http://127.0.0.1:8384/
-[HYX3K] 2026/11/25 21:30:48 INFO: My name is "runnervm0hi8g"
-[HYX3K] 2026/11/25 21:31:00 INFO: Joined relay relay://108.5.107.31:22067
-[HYX3K] 2026/11/25 21:31:08 INFO: Detected 0 NAT services
-[HYX3K] 2026/11/25 21:32:28 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
-[HYX3K] 2026/11/25 21:32:28 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
-[HYX3K] 2026/11/25 21:32:28 INFO: Stopped using discovery mechanism:  global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
-[HYX3K] 2026/11/25 21:32:28 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) shutting down
-[HYX3K] 2026/11/25 21:32:28 INFO: Adding folder "Note" (sofios-note)
-[HYX3K] 2026/11/25 21:32:28 INFO: No stored folder metadata for "sofios-note"; recalculating
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
-[HYX3K] 2026/11/25 21:32:28 INFO: Adding folder "Password" (sofios-password)
-[HYX3K] 2026/11/25 21:32:28 INFO: No stored folder metadata for "sofios-password"; recalculating
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
-[HYX3K] 2026/11/25 21:32:28 INFO: Adding folder "Foto" (sofios-foto)
-[HYX3K] 2026/11/25 21:32:28 INFO: No stored folder metadata for "sofios-foto"; recalculating
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
-[HYX3K] 2026/11/25 21:32:28 INFO: Adding folder "File" (sofios-file)
-[HYX3K] 2026/11/25 21:32:28 INFO: No stored folder metadata for "sofios-file"; recalculating
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
-[HYX3K] 2026/11/25 21:32:28 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Restarted folder "File" (sofios-file) (sendreceive)
-[HYX3K] 2026/11/25 21:32:28 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
-[HYX3K] 2026/11/25 21:32:29 INFO: Ready to synchronize "Note" (sofios-note) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Restarted folder "Note" (sofios-note) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Completed initial scan of sendreceive folder "Note" (sofios-note)
-[HYX3K] 2026/11/25 21:32:29 INFO: Ready to synchronize "Password" (sofios-password) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Restarted folder "Password" (sofios-password) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Completed initial scan of sendreceive folder "Password" (sofios-password)
-[HYX3K] 2026/11/25 21:32:29 INFO: Ready to synchronize "Foto" (sofios-foto) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Restarted folder "Foto" (sofios-foto) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Completed initial scan of sendreceive folder "Foto" (sofios-foto)
-[HYX3K] 2026/11/25 21:32:29 INFO: Ready to synchronize "File" (sofios-file) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Restarted folder "File" (sofios-file) (sendreceive)
-[HYX3K] 2026/11/25 21:32:29 INFO: Completed initial scan of sendreceive folder "File" (sofios-file)
+[start] 2026/11/25 21:56:55 INFO: syncthing v1.29.5 "Gold Grasshopper" (go1.25.0 linux-amd64) debian@debian 2025-11-29 20:48:58 UTC
+[L5Q7Q] 2026/11/25 21:56:55 INFO: My ID: L5Q7QE2-3O56TPF-IY2BGVQ-TSJVA4O-7YNHMKF-AUL6SAD-VKKJCU2-DF5CTAH
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Hashing performance is 221.78 MB/s
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Running database migration 14...
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Running database migration 16...
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Running database migration 17...
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Running database migration 19...
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Running database migration 20...
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Compacting database after migration...
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Overall send rate is unlimited, receive rate is unlimited
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Using discovery mechanism: global discovery server https://discovery-lookup.syncthing.net/v2/?noannounce
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v4.syncthing.net/v2/?nolookup
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Using discovery mechanism: global discovery server https://discovery-announce-v6.syncthing.net/v2/?nolookup
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Using discovery mechanism: IPv4 local broadcast discovery on port 21027
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Using discovery mechanism: IPv6 local multicast discovery on address [ff12::8384]:21027
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Relay listener (dynamic+https://relays.syncthing.net/endpoint) starting
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Loading HTTPS certificate: open /tmp/st/https-cert.pem: no such file or directory
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Creating new HTTPS certificate
+[L5Q7Q] 2026/11/25 21:56:55 INFO: QUIC listener ([::]:22000) starting
+[L5Q7Q] 2026/11/25 21:56:55 INFO: TCP listener ([::]:22000) starting
+[L5Q7Q] 2026/11/25 21:56:55 INFO: GUI and API listening on 127.0.0.1:8384
+[L5Q7Q] 2026/11/25 21:56:55 INFO: Access the GUI via the following URL: http://127.0.0.1:8384/
+[L5Q7Q] 2026/11/25 21:56:55 INFO: My name is "ip-10-0-128-104"
+[L5Q7Q] 2026/11/25 21:57:07 INFO: Joined relay relay://198.98.62.56:22067
+[L5Q7Q] 2026/11/25 21:57:15 INFO: Detected 0 NAT services
